@@ -46,6 +46,9 @@
 // import { getUUID } from '@/utils';
 import { requestLogin } from '../../api/api';
 import { getCaptcha1 } from '../../api/api';
+import { get_user_info } from '../../api/api';
+
+
 export default {
  data () {
    return {
@@ -71,6 +74,7 @@ export default {
    }
  },
  created () {
+   this.islogin(),
    this.getCaptcha()
  },
  methods: {
@@ -102,7 +106,7 @@ export default {
            if (data && data.status === 0) {
              console.log(data)
              // sessionStorage.setItem('user', JSON.stringify(user));
-             this.$router.push({ path: '/home' });
+           this.$router.push({ path: '/home' });
              console.log(data)
            }  else {
              this.getCaptcha()
@@ -117,6 +121,24 @@ export default {
 
      })
    },
+
+   //判断是否登录
+   islogin(){
+     get_user_info().then((res) => {
+
+       let status=res.data.status;
+       if (status === 0) {
+         console.log(res)
+         // sessionStorage.setItem('user', JSON.stringify(user));
+          this.$router.push({ path: '/home' });
+         console.log(res)
+       }else{
+         console.log(res)
+         this.$router.push({ path: '/login/sign' });
+       }
+     });
+   },
+
 
    // 获取验证码
    getCaptcha () {

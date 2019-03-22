@@ -25,6 +25,20 @@ export const getCaptcha1 = params => { return axios({
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
 
 })};
+
+//get_user_info
+
+export const get_user_info = params => {
+
+  return axios({
+    url: `${base}/api/user/get_user_info`,
+    // params: { uuid: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+
+  })};
+
 //获取权限
 export const getPermission = params => {
 

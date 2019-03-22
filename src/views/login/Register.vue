@@ -27,9 +27,11 @@
     <el-radio-group v-model="ruleForm.role">
       <el-radio :label="2">餐饮/酒店等企业</el-radio>
       <el-radio :label="4">蔬菜/调料/酒水等销售商</el-radio>
+      <el-radio :label="5">厨房用具/电器维修/清洁用品</el-radio>
       <el-radio :label="6">商铺出租/求职</el-radio>
+      <el-radio :label="7">装修/菜谱广告制作/杀虫</el-radio>
       <el-radio :label="8">无店面自由直供</el-radio>
-      <el-radio :label="10">淘特色农产品</el-radio>
+      <!--<el-radio :label="10">淘特色农产品</el-radio> -->
     </el-radio-group>
   </el-form-item>
 
@@ -228,7 +230,7 @@
               if (data && data.status === 0) {
                 console.log(data)
                 // sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/home' });
+               // this.$router.push({ path: '/home' });
                 console.log(data)
               }  else {
                 this.getCaptcha()
