@@ -1,81 +1,31 @@
 <template>
-	<el-row class="container">
-    <el-menu
-      style="background-color: #2e3d64"
-    >
-      <div v-for="(item, index) in menuList" :key="index">
-        <el-submenu
-          style="background-color: #2e3d64"
-          :index="item.resourceCode"
-          v-if="item.children.length > 0"
-        >
-          <template slot="title">
-            <div
-              @mouseover="toggleIcon(index, item, 'over')"
-              @mouseout="toggleIcon(index, item, 'out')"
-            >
-              <i
-                v-if="!item.parentCode"
-                :style="{
-                      'background-image':
-                        activeIndex[index] ||
-                        user.openMenu === item.resourceCode
-                          ? `url(${item.iconHover})`
-                          : `url(${item.icon})`,
-                    }"
-              ></i>
-              {{ item.name }}
-            </div
-              @mouseover="toggleIcon(index, item, 'over')"
-              @mouseout="toggleIcon(index, item, 'out')"
-            >
-          </template>
-          <el-menu-item-group style="background-color: #2e3d64">
-            <el-menu-item
-              v-for="(citem, cindex) in item.children"
-              :key="cindex"
-              :index="citem.resourceCode"
-              :class="{
-                    'is-active': activeMenu === citem.resourceCode,
-                    'isnot-active': activeMenu !== citem.resourceCode,
-                  }"
-              @click="sendOmega(citem.resourceCode)"
-            >
-              <router-link :to="{ path: citem.url }">{{
-                citem.name
-                }}</router-link>
-            </el-menu-item>
+  <el-container style="height: 500px; border: 1px solid #eee">
+    <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+      <el-menu >
+
+        <div v-for="(item, index) in menuList" :key="index">
+        <el-submenu  :index= "item.name"  >
+          <template slot="title"><i   class="111" ></i>{{ item.name }}</template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">选项1</el-menu-item>
+            <el-menu-item index="1-2">选项2</el-menu-item>
+            <el-menu-item index="1-3">选项3</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item
-          @click="oneMenu(item.resourceCode)"
-          v-if="item.children.length === 0"
-          :class="{ 'is-active': user.openMenu === item.resourceCode }"
-          :index="item.resourceCode"
-          :key="item.resourceCode"
-          class="no-children-item"
-        >
-          <div
-            @mouseover="toggleIcon(index, item, 'over')"
-            @mouseout="toggleIcon(index, item, 'type')"
-          >
-            <i
-              v-if="!item.parentCode"
-              :style="{
-                    'background-image':
-                      activeIndex[index] || user.openMenu === item.resourceCode
-                        ? `url(${item.iconHover})`
-                        : `url(${item.icon})`,
-                  }"
-            ></i>
-            <router-link :to="{ path: item.url }">{{
-              item.name
-              }}</router-link>
-          </div>
-        </el-menu-item>
-      </div>
-    </el-menu>
-  </el-row>
+
+        </div>
+
+      </el-menu>
+    </el-aside>
+
+    <el-container>
+      <el-header style="text-align: right; font-size: 19px">
+
+        <span>王小虎</span> <span>退出登陆</span>
+      </el-header>
+
+    </el-container>
+  </el-container>
 </template>
 
 <script>
@@ -83,21 +33,8 @@
 	export default {
 		data() {
 			return {
-			  menuList: [],
-				sysName:'VUEADMIN',
-				collapsed:false,
-				sysUserName: '',
-				sysUserAvatar: '',
-				form: {
-					name: '',
-					region: '',
-					date1: '',
-					date2: '',
-					delivery: false,
-					type: [],
-					resource: '',
-					desc: ''
-				}
+			  menuList: []
+
 			}
 		},
     created () {
@@ -112,7 +49,8 @@
 
           let status=res.data.status;
           if (status === 0) {
-
+            console.log(res);
+            console.log(1)
             this.menuList = res.data.data
             console.log(this.menuList)
             // sessionStorage.setItem('user', JSON.stringify(user));
@@ -129,7 +67,17 @@
 
 </script>
 
-<style >
 
+
+<style >
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    line-height: 60px;
+  }
+
+  .el-aside {
+    color: #333;
+  }
 
 </style>
