@@ -4,8 +4,13 @@
       <el-menu >
 
         <div v-for="(item, index) in menuList" :key="index">
-        <el-submenu  :index= "item.name"  >
-          <template slot="title"><i   class="111" ></i>{{ item.name }}</template>
+        <el-submenu  :index= "item.name"  v-if=" item.pid===1 "  >  <!--唯一标识-->
+          <template slot="title"  ><i   class="111" ></i>{{ item.name }}</template>
+
+
+          <router-link to="/home/news"     v-if=" item.url != '' ">News</router-link>
+
+
           <el-menu-item-group>
             <el-menu-item index="1-1">选项1</el-menu-item>
             <el-menu-item index="1-2">选项2</el-menu-item>
