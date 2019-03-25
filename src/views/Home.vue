@@ -4,17 +4,23 @@
       <el-menu >
 
         <div v-for="(item, index) in menuList" :key="index">
-        <el-submenu  :index= "item.name"  v-if=" item.pid===1 "  >  <!--唯一标识-->
-          <template slot="title"  ><i   class="111" ></i>{{ item.name }}</template>
+  <!--一级菜单导航-->
+          <el-menu-item :index= "item.name"  v-if=" item.pid===1 && item.parentCode==null && item.url != '' " >
+            <span slot="title">
+            <router-link :to="item.url"     >{{ item.name }}</router-link>
+            </span>
+          </el-menu-item>
+          <!--一级菜单下拉-->
+        <el-submenu  :index= "item.name"  v-if=" item.pid===1 && item.parentCode===null && item.url === ''"  >  <!--唯一标识-->
 
-
-          <router-link to="/home/news"     v-if=" item.url != '' ">News</router-link>
-
+          <template slot="title"  >{{ item.name }}</template>
 
           <el-menu-item-group>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-            <el-menu-item index="1-3">选项3</el-menu-item>
+            <div v-for="(itemSon, indexSon) in menuList" :key="indexSon">
+            <el-menu-item :index="itemSon.name"  v-if=" item.resourceCode === itemSon.parentCode " >
+            <router-link :to="itemSon.url"     >{{ itemSon.name }}</router-link>
+            </el-menu-item>
+            </div>
           </el-menu-item-group>
         </el-submenu>
 
@@ -26,8 +32,17 @@
     <el-container>
       <el-header style="text-align: right; font-size: 19px">
 
-        <span>王小虎</span> <span>退出登陆</span>
+          <span>退出登陆</span>
       </el-header>
+
+      <div  id="body">
+        <!--显示当前组件  自己的内容  router中设置默认显示的子组件-->
+        <keep-alive>
+          <router-view ></router-view>
+        </keep-alive>
+
+      </div>
+
 
     </el-container>
   </el-container>

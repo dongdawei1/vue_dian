@@ -47,6 +47,10 @@ import Characteristic from '../views/home/Characteristic'
 import ToExamine from '../views/home/administration/ToExamine'
 import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 
+import GrainAndOilPage from '../views/home/releasePage/GrainAndOilPage'
+
+
+
 
 //   全局挂载
 Vue.use(VueRouter)
@@ -144,6 +148,7 @@ export default new VueRouter ({
               path: '/home/aquaticProduct',
               component: AquaticProduct  //水产禽蛋
            },
+
         /*市场区结束*/
 
 
@@ -228,7 +233,22 @@ export default new VueRouter ({
         {
           path: '',
           redirect: '/home/Release'
+        },
+
+//  跳转的页面
+        {
+          hidden: true , //隐藏的 根据状态判断是否隐藏该入口
+          path: '/home/grainAndOilPage',
+          component:  GrainAndOilPage  //发布信息粮油
         }
+
+
+
+
+
+
+
+
       ]
     },
     {

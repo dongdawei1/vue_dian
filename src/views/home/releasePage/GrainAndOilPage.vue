@@ -1,11 +1,9 @@
 <template>
   <dev>
-  <p class="page-container">粮油</p>
-  <el-row  v-if="isbutten">
-    <el-button type="primary"><router-link to="/home/GrainAndOilPage">发布信息</router-link></el-button>
-  </el-row>
+    <p class="page-container">发发发反反复复付付付付</p>
 
-    </dev>
+
+  </dev>
 </template>
 
 
@@ -17,7 +15,7 @@
       return {
         permission:'',
         role:'',
-       isbutten:false
+        isbutten:false
 
       }
     },
@@ -33,12 +31,12 @@
 
           let status=res.data.status;
           if (status === 0) {
-           this.permission=JSON.parse(res.data.data);  //字符串转换为 对象
-          this.role=this.permission.role;
-           if(this.role===1 ||this.role===4){
-             this.isbutten=true;
+            this.permission=JSON.parse(res.data.data);  //字符串转换为 对象
+            this.role=this.permission.role;
+            if(this.role===1 ||this.role===4){
+              this.isbutten=true;
 
-           }
+            }
 
           }else{
             console.log(res)

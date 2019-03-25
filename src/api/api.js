@@ -2,6 +2,13 @@ import axios from 'axios';
 
 let base = '';
 //登陆
+
+
+axios.defaults.timeout = 6000;
+
+
+
+
 export const requestLogin = params => { return axios.post(`${base}/api/user/login`, params).then(res => res.data); };
 
 export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
@@ -18,6 +25,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //获取验证码
 export const getCaptcha1 = params => { return axios({
+
     url: `${base}/api/user/captcha`,
     params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
