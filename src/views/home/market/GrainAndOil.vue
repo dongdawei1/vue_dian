@@ -37,7 +37,6 @@
           this.role=this.permission.role;
            if(this.role===1 ||this.role===4){
              this.isbutten=true;
-
            }
 
           }else{

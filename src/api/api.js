@@ -4,7 +4,7 @@ let base = '';
 //登陆
 
 
-axios.defaults.timeout = 6000;
+axios.defaults.timeout = 15000;
 
 
 
