@@ -53,8 +53,8 @@
           action="/api/uploadDown/upload"
           name="picture"
           list-type="picture-card"
-          :limit="2"
-          :file-list="ruleForm.fileList"
+          :limit="5"
+
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -63,8 +63,8 @@
         >
           <i class="el-icon-plus"></i>
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
+        <el-dialog :visible.sync="dialogVisible"   >
+          <img width="100%"   :src="dialogImageUrl" alt="">
         </el-dialog>
       </el-form-item>
 
@@ -97,7 +97,7 @@
         dialogImageUrl: '',
         dialogVisible: false,
         //图片列表（用于在上传组件中回显图片）
-
+        fileList1: {name: '', url: ''},
 
         ruleForm: {
           commodityName: '', //名
@@ -109,13 +109,13 @@
           priceEffectiveStart: '', //开始
           priceEffectiveEnd: '', //结束
           type: '', //类型
-          fileList: [{name: '', url: ''}],
+          pictureUrl: [],
 
         },
 
 
 
-
+        count_list:0,
         permission:'',
         role:'',
         rules: {
@@ -128,15 +128,15 @@
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
           ],
           brand: [
-        { required: true, message: '请输入品牌', trigger: 'blur' },
-        { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-      ],
+            { required: true, message: '请输入品牌', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          ],
 
 
           specifications: [
             { required: true, message: '请输入规格', trigger: 'blur' },
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-            ],
+          ],
           price: [
             { required: true, message: '请输入价格', trigger: 'blur' },
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
@@ -203,29 +203,37 @@
         });
       },
 
- //图片上传相关
+      //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-        // this.$message({
-        //   type: 'info',
-        //   message: '图片上传成功',
-        //   duration: 1000
-        // });
-        console.log("res");
-        console.log(res);
-        console.log("res-----");
-        console.log(this.ruleForm.fileList);
 
-        console.log(file)
-        // if (file.response.success) {
-        //   this.editor.picture = file.response.message; //将返回的文件储存路径赋值picture字段
-        // }
+        console.log(file.name);
+        if (res.message!=null && res.message!='') {
+
+
+          this.fileList1.name=file.name;
+          this.fileList1.url=res.message;
+          this.ruleForm.pictureUrl[this.count_list]=this.fileList1;
+          console.log( this.ruleForm.pictureUrl);
+          this.count_list +=1;
+        }
       },
 
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
+        console.log(file);
 
-        console.log("删除图片");
+        console.log("删除图片"+file.name);
+        console.log(fileList);
+        console.log(this.ruleForm.pictureUrl[0].name);
+        for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
+         if(file.name===this.ruleForm.pictureUrl[i].name){
+
+         }
+
+
+        }
+
         console.log("直接调用后端把图片删了没有暂时没有实现");
       },
       //点击列表中已上传的文件事的钩子函数
@@ -236,9 +244,8 @@
 
         this.$message({
 
-
           type: 'info',
-          message: '最多只能上传2个图片',
+          message: '最多只能上传5张图片',
           duration: 2000
         });
 
@@ -246,6 +253,7 @@
       //文件上传前的前的钩子函数
       //参数是上传的文件，若返回false，或返回Primary且被reject，则停止上传
       beforeUpload(file) {
+
         const isJPG = file.type === 'image/jpeg';
         const isGIF = file.type === 'image/gif';
         const isPNG = file.type === 'image/png';
