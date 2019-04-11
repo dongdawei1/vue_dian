@@ -34,6 +34,10 @@ export const getCaptcha1 = params => { return axios({
 
 })};
 
+
+//上传图片时删除
+export const uploadDown_update = params   => { return axios.post( `${base}/api/uploadDown/update`, params).then(res => res.data); };
+
 //get_user_info
 
 export const get_user_info = params => {

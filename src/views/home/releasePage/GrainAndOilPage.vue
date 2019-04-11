@@ -89,6 +89,7 @@
 <script>
 
   import { get_user_info } from '../../../api/api';
+  import { uploadDown_update } from '../../../api/api';
   export default {
     data() {
       return {
@@ -97,7 +98,7 @@
         dialogImageUrl: '',
         dialogVisible: false,
         //图片列表（用于在上传组件中回显图片）
-        fileList1: {name: '', url: ''},
+      // fileList: {name: '', url: ''},
 
         ruleForm: {
           commodityName: '', //名
@@ -113,9 +114,6 @@
 
         },
 
-
-
-        count_list:0,
         permission:'',
         role:'',
         rules: {
@@ -210,12 +208,7 @@
         console.log(file.name);
         if (res.message!=null && res.message!='') {
 
-
-          this.fileList1.name=file.name;
-          this.fileList1.url=res.message;
-          this.ruleForm.pictureUrl[this.count_list]=this.fileList1;
-          console.log( this.ruleForm.pictureUrl);
-          this.count_list +=1;
+          this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
         }
       },
 
@@ -223,12 +216,19 @@
       handleRemove(file,fileList) {
         console.log(file);
 
-        console.log("删除图片"+file.name);
+
         console.log(fileList);
         console.log(this.ruleForm.pictureUrl[0].name);
+        console.log(this.ruleForm.pictureUrl[0].url);
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-         if(file.name===this.ruleForm.pictureUrl[i].name){
+         if(file.name===this.ruleForm.pictureUrl[i].name  && file.response.message===this.ruleForm.pictureUrl[i].url ){
 
+           uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
+             this.ruleForm.pictureUrl.splice(i,1);
+             console.log(this.ruleForm.pictureUrl);
+           //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
+             console.log("删除图片"+file.name);
+           });
          }
 
 
