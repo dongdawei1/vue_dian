@@ -2,8 +2,8 @@
   <dev>
     Form 组件提供了表单验证的功能，只需要通过 rules 属性传入约定的验证规则，并将 Form-Item 的 prop 属性设置为需校验的字段名即可。校验规则参见 async-validator
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="商品类别" prop="type">
-        <el-radio-group v-model="ruleForm.type">
+      <el-form-item label="商品类别" prop="commoditytype">
+        <el-radio-group v-model="ruleForm.commoditytype">
           <el-radio label="米/面"></el-radio>
           <el-radio label="油"></el-radio>
         </el-radio-group>
@@ -76,7 +76,7 @@
         <el-input  v-model="ruleForm.remarks"  placeholder="10字以内"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -90,6 +90,8 @@
 
   import { get_user_info } from '../../../api/api';
   import { uploadDown_update } from '../../../api/api';
+  import { grainAndOil } from '../../../api/api';
+
   export default {
     data() {
       return {
@@ -109,16 +111,16 @@
           remarks: '', //备注
           priceEffectiveStart: '', //开始
           priceEffectiveEnd: '', //结束
-          type: '', //类型
+          commoditytype: '', //类型
           pictureUrl: [],
-
+          permissionid : 5,
         },
 
         permission:'',
         role:'',
         rules: {
           commodityName: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { required: true, message: '请输入商品名称', trigger: 'blur' },
             { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
           ],
           placeOfOrigin: [
@@ -147,12 +149,11 @@
           priceEffectiveEnd: [
             { type: 'date', required: true, message: '结束日期', trigger: 'change' }
           ],
-          type: [
-            { type: 'array', required: true, message: '请至少选择一个商品类别', trigger: 'change' }
+          commoditytype: [
+            { required: true, message: '请至少选择一个商品类别', trigger: 'change' }
           ],
 
           remarks: [
-            { message: '请填写活动形式', trigger: 'blur' },
             { min: 1, max: 10, message: '备注不能超过10个字', trigger: 'blur' }
           ]
         }
@@ -190,10 +191,32 @@
         });
       },
 
+
+
+
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            console.log(this.ruleForm);
+            const data = this.ruleForm;
+            console.log(data);
+            grainAndOil(data).then(data => {
+
+              console.log(data)
+              //let { msg, code, user } = data;
+              if (data && data.status === 0) {
+                console.log(data)
+                // sessionStorage.setItem('user', JSON.stringify(user));
+                // this.$router.push({ path: '/home' });
+                console.log(data)
+              }  else {
+
+                this.$message.error(data.msg)
+              }
+            });
+
+
+
           } else {
             console.log('error submit!!');
             return false;
