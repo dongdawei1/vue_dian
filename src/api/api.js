@@ -66,5 +66,5 @@ export const getPermission = params => {
 //注册
 export const requestCreate = params => { return axios.post(`${base}/api/user/create`, params).then(res => res.data); };
 
-//注册
-export const grainAndOil = params => { return axios.post(`${base}/api/release/grainAndOil`, params).then(res => res.data); };
+//发布
+export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };

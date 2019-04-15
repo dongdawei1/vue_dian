@@ -130,7 +130,7 @@ export default {
        if (status === 0) {
          console.log(res)
          // sessionStorage.setItem('user', JSON.stringify(user));
-          this.$router.push({ path: '/home' });
+          this.$router.push({ path: '/home/release' });
          console.log(res)
        }else{
          console.log(res)

@@ -139,7 +139,7 @@
           ],
           price: [
             { required: true, message: '请输入价格', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
           ],
 
 
@@ -182,7 +182,7 @@
             if(this.role===1 ||this.role===4){
               this.isbutten=true;
             }else{
-              this.$router.push({ path: '/home/Release' });
+              this.$router.push({ path: '/home' });
             }
           }else{
             console.log(res)
@@ -208,10 +208,16 @@
                 console.log(data)
                 // sessionStorage.setItem('user', JSON.stringify(user));
                 // this.$router.push({ path: '/home' });
-                console.log(data)
-              }  else {
 
-                this.$message.error(data.msg)
+              }  else {
+                   this.$message.error(data.msg);
+                   let dataerror=data.msg;
+                     if(dataerror==='用户登陆已过期'){
+                       this.$router.push({ path: '/login/sign' });
+                } if(dataerror==='没有此权限'){
+                  this.$router.push({ path: '/home' });
+                }
+
               }
             });
 
@@ -228,21 +234,17 @@
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
 
-        console.log(file.name);
+
         if (res.message!=null && res.message!='') {
 
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
+          console.log(this.ruleForm.pictureUrl);
         }
       },
 
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        console.log(file);
 
-
-        console.log(fileList);
-        console.log(this.ruleForm.pictureUrl[0].name);
-        console.log(this.ruleForm.pictureUrl[0].url);
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
          if(file.name===this.ruleForm.pictureUrl[i].name  && file.response.message===this.ruleForm.pictureUrl[i].url ){
 
@@ -257,7 +259,6 @@
 
         }
 
-        console.log("直接调用后端把图片删了没有暂时没有实现");
       },
       //点击列表中已上传的文件事的钩子函数
       handlePreview(file) {
@@ -266,7 +267,6 @@
       onExceed(files, fileList) {
 
         this.$message({
-
           type: 'info',
           message: '最多只能上传5张图片',
           duration: 2000
