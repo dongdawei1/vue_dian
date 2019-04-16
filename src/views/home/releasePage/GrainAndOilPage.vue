@@ -236,8 +236,8 @@
 
 
         if (res.message!=null && res.message!='') {
-
-          this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
+          var picture={"name":file.name ,"url": res.message};
+          this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
           console.log(this.ruleForm.pictureUrl);
         }
       },
@@ -252,7 +252,7 @@
              this.ruleForm.pictureUrl.splice(i,1);
              console.log(this.ruleForm.pictureUrl);
            //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
-             console.log("删除图片"+file.name);
+
            });
          }
 
