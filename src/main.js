@@ -7,25 +7,40 @@ import router from './router'  //引入路由器
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import iView from 'iview'
+
 import axios from 'axios';
 //import VueRouter from "vue-router";
 
 Vue.use(ElementUI)
-
+Vue.use(iView)
 
 
 // router.beforeEach((to, from, next) => {
-//   //NProgress.start();
-//   if (to.path == '/home') {
-//     sessionStorage.removeItem('user');
+//
+//   if(to.fullPath.indexOf("home")!=-1){
+//     console.log(12232233323233);
+//     console.log(to.fullPath);
+//     console.log(to);
+//     console.log(from.fullPath);
+//     next();
+//
 //   }
-//   let user = JSON.parse(sessionStorage.getItem('user'));
-//   if (!user && to.path != '/login') {
-//     next({ path: '/login' })
-//   } else {
-//     next()
-//   }
-// })
+//
+//
+//
+//   next();
+  //NProgress.start();
+  // if (to.path == '/home') {
+  //   sessionStorage.removeItem('user');
+  // }
+  // let user = JSON.parse(sessionStorage.getItem('user'));
+  // if (!user && to.path != '/login') {
+  //   next({ path: '/login' })
+  // } else {
+  //   next()
+  // }
+//})
 
 /* eslint-disable no-new */
 new Vue({

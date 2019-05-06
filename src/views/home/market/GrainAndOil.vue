@@ -1,27 +1,143 @@
 <template>
-  <dev>
+  <div>
   <p class="page-container">粮油</p>
   <el-row  v-if="isbutten">
     <el-button type="primary"><router-link
       v-on:click.native="isAuthenticationM"
       to="/home/grainAndOil">发布信息</router-link></el-button>
+
   </el-row>
+    <VmImageList :data="dataImageList" class="vm-margin"></VmImageList>
 
 
-
-    </dev>
+    </div>
 </template>
 
 
 <script>
-
+  import VmImageList from '../../../components/vm-image-list'
   import { get_user_info } from '../../../api/api';
+
   export default {
+
+    name: 'ImageList',
+    components: {
+      VmImageList
+    },
+
+
     data() {
       return {
         permission:'',
         role:'',
-       isbutten:false
+       isbutten:false,
+
+
+
+        dataImageList: [
+          {
+            id: '201707101552',
+            title: 'Title1',
+           img: '../static/img/1.jpg',
+            desc: 'Lorndustry,y tly dummy t',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101553',
+            title: 'Title2',
+            img: '../static/img/img-2.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101554',
+            title: 'Title3',
+            img: '../static/img/img-3.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101555',
+            title: 'Title4',
+            img: '../static/img/img-4.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101556',
+            title: 'Title5',
+            img: '../static/img/img-2.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101557',
+            title: 'Title6',
+            img: '../static/img/img-2.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101558',
+            title: 'Title7',
+            img: '../static/img/img-3.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101559',
+            title: 'Title8',
+            img: '../static/img/img-4.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '2017071015510',
+            title: 'Title9',
+            img: '../static/img/1.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '2017071015511',
+            title: 'Title10',
+            img: '../static/img/img-2.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '2017071015512',
+            title: 'Title11',
+            img: '../static/img/img-2.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          },
+          {
+            id: '201707101513',
+            title: 'Title12',
+            img: '../static/img/img-2.jpg',
+            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+            detailUrl: '#',
+            editUrl: '#'
+          }
+        ]
+
+
+
+
+
+
 
       }
     },
