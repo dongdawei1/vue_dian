@@ -1,5 +1,5 @@
 <template>
-  <dev>
+  <div>
     Form 组件提供了表单验证的功能，只需要通过 rules 属性传入约定的验证规则，并将 Form-Item 的 prop 属性设置为需校验的字段名即可。校验规则参见 async-validator
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="商品类别" prop="commoditytype">
@@ -47,7 +47,7 @@
 
 
 
-      <el-form-item label="图片">
+      <el-form-item label="图片" prop="pictureUrl">
         <el-upload
           ref="upload"
           action="/api/uploadDown/upload"
@@ -82,7 +82,7 @@
     </el-form>
 
 
-  </dev>
+  </div>
 </template>
 
 
@@ -132,7 +132,10 @@
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
           ],
 
+          pictureUrl:[
+            { required: true, message: '请上传图片', trigger: 'blur' },
 
+          ],
           specifications: [
             { required: true, message: '请输入规格', trigger: 'blur' },
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }

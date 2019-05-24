@@ -1,13 +1,31 @@
 <template>
   <div>
   <p class="page-container">粮油</p>
+    类别，品牌，产地，价格，是否在价格有效期，
   <el-row  v-if="isbutten">
     <el-button type="primary"><router-link
       v-on:click.native="isAuthenticationM"
       to="/home/grainAndOil">发布信息</router-link></el-button>
 
   </el-row>
-    <VmImageList :data="dataImageList" class="vm-margin"></VmImageList>
+    <!-- 筛选区 -->
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item label="审批人">
+        <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+      </el-form-item>
+      <el-form-item label="活动区域">
+        <el-select v-model="formInline.region" placeholder="活动区域">
+          <el-option label="区域一" value="shanghai"></el-option>
+          <el-option label="区域二" value="beijing"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
+      </el-form-item>
+    </el-form>
+
+
+    <VmImageList :dataInline="formInline" class="vm-margin"></VmImageList>
 
 
     </div>
@@ -32,106 +50,12 @@
         role:'',
        isbutten:false,
 
+        formInline: {
+          permissionid:5,
+          user: '',
+          region: ''
+        }
 
-
-        dataImageList: [
-          {
-            id: '201707101552',
-            title: 'Title1',
-           img: '../static/img/1.jpg',
-            desc: 'Lorndustry,y tly dummy t',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101553',
-            title: 'Title2',
-            img: '../static/img/img-2.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101554',
-            title: 'Title3',
-            img: '../static/img/img-3.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101555',
-            title: 'Title4',
-            img: '../static/img/img-4.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101556',
-            title: 'Title5',
-            img: '../static/img/img-2.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101557',
-            title: 'Title6',
-            img: '../static/img/img-2.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101558',
-            title: 'Title7',
-            img: '../static/img/img-3.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101559',
-            title: 'Title8',
-            img: '../static/img/img-4.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '2017071015510',
-            title: 'Title9',
-            img: '../static/img/1.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '2017071015511',
-            title: 'Title10',
-            img: '../static/img/img-2.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '2017071015512',
-            title: 'Title11',
-            img: '../static/img/img-2.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          },
-          {
-            id: '201707101513',
-            title: 'Title12',
-            img: '../static/img/img-2.jpg',
-            desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-            detailUrl: '#',
-            editUrl: '#'
-          }
-        ]
 
 
 
@@ -146,6 +70,9 @@
       this.islogin()
     },
     methods: {
+      onSubmit() {
+        console.log('submit!');
+      },
 
       isAuthenticationM(){
          let isAuthentication= this.permission.isAuthentication;
@@ -169,8 +96,14 @@
         get_user_info().then((res) => {
 
           let status=res.data.status;
+          console.log(res);
+
           if (status === 0) {
            this.permission=JSON.parse(res.data.data);  //字符串转换为 对象
+
+
+
+
           this.role=this.permission.role;
            if(this.role===1 ||this.role===4){
              this.isbutten=true;

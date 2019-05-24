@@ -68,3 +68,7 @@ export const requestCreate = params => { return axios.post(`${base}/api/user/cre
 
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
+
+//查询所有发布
+
+export const getPublishings = params => { return axios.post(`${base}/api/getPublishings/getGoods`, params).then(res => res.data);};
