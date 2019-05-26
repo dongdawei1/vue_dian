@@ -1,6 +1,6 @@
+<!--登陆页-->
+
 <template>
-
-
   <div class="site-wrapper site-page--login">
     <div class="site-content__wrapper">
 
@@ -100,24 +100,17 @@ export default {
 
 
              this.fullscreenLoading = false;
-
-
            let { msg, code, user } = data;
            if (data && data.status === 0) {
-             console.log(data)
-             // sessionStorage.setItem('user', JSON.stringify(user));
-           this.$router.push({ path: '/home' });
-             console.log(data)
+           this.$router.push({ path: '/home/release' });
            }  else {
              this.getCaptcha()
              this.$message.error(data.msg)
            }
          });
        } else {
-         console.log('error submit!!');
          return false;
        }
-
 
      })
    },
@@ -125,15 +118,10 @@ export default {
    //判断是否登录
    islogin(){
      get_user_info().then((res) => {
-
-       let status=res.data.status;
+       let status=res.status;
        if (status === 0) {
-         console.log(res)
-         // sessionStorage.setItem('user', JSON.stringify(user));
           this.$router.push({ path: '/home/release' });
-         console.log(res)
        }else{
-         console.log(res)
          this.$router.push({ path: '/login/sign' });
        }
      });

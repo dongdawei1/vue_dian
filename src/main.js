@@ -49,3 +49,5 @@ new Vue({
   template: '<App/>', // 指定需要渲染到页面的模板
   router              // 注册路由器
 })
+
+

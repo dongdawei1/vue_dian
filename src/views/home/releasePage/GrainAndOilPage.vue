@@ -88,14 +88,14 @@
 
 <script>
 
-  import { get_user_info } from '../../../api/api';
   import { uploadDown_update } from '../../../api/api';
   import { grainAndOil } from '../../../api/api';
-
+  import { get_user_info_jurisdiction } from '../../../api/api';
   export default {
     data() {
       return {
-
+        resdata:'',//获取的用户信息
+        pathString:'/home/GrainAndOilPage',
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
@@ -160,39 +160,29 @@
             { min: 1, max: 10, message: '备注不能超过10个字', trigger: 'blur' }
           ]
         }
-
-
-
-
-
       }
     },
 
     created () {
-      this.islogin()
-
+      this.jurisdiction()
     },
     methods: {
 
-      //判断是否登录 获取用户权限
-      islogin(){
-        get_user_info().then((res) => {
-
-          let status=res.data.status;
-          if (status === 0) {
-            this.permission=JSON.parse(res.data.data);  //字符串转换为 对象
-            this.role=this.permission.role;
-            if(this.role===1 ||this.role===4){
-              this.isbutten=true;
-            }else{
-              this.$router.push({ path: '/home' });
-            }
+      //判断是否登录 获取用户权限，防止用户直接通过url访问
+      jurisdiction(){
+        get_user_info_jurisdiction(this.pathString).then((res) => {
+          if(res.isbutten===true){
+            this.resdata=res;
           }else{
-            console.log(res)
-            this.$router.push({ path: '/login/sign' });
+            this.$router.push({ path: '/home/release' });
+          }
+          if(res.isAuthentication!=1){
+            this.$router.push({ path: '/home/myAccount' });
           }
         });
       },
+
+
 
 
 
@@ -218,7 +208,7 @@
                      if(dataerror==='用户登陆已过期'){
                        this.$router.push({ path: '/login/sign' });
                 } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home' });
+                  this.$router.push({ path: '/home/release' });
                 }
 
               }

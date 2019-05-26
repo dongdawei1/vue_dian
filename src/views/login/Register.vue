@@ -1,12 +1,10 @@
 
-
+<!--注册页-->
 <template>
 
   <div>
 
 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-
-
   <el-form-item label="店/用户名" prop="name"  >
     <el-input v-model="ruleForm.name"  placeholder="手机号/邮箱注册,8-18位"></el-input>
   </el-form-item>
@@ -26,11 +24,14 @@
   <el-form-item label="选择角色" prop="role">
     <el-radio-group v-model="ruleForm.role">
       <el-radio :label="2">餐饮/酒店等企业</el-radio>
-      <el-radio :label="4">蔬菜/调料/酒水等销售商</el-radio>
-      <el-radio :label="5">厨房用具/电器维修/清洁用品</el-radio>
-      <el-radio :label="6">商铺出租/求职</el-radio>
-      <el-radio :label="7">装修/菜谱广告制作/杀虫</el-radio>
+      <el-radio :label="3">厨具/电器/设备维修</el-radio>
+      <el-radio :label="4">蔬菜/调料/水产禽蛋</el-radio>
+      <el-radio :label="5">酒水/消毒餐具/清洁用品</el-radio>
+      <el-radio :label="6">商铺/摊位出租</el-radio>
+      <el-radio :label="7">装修/菜谱/广告牌/杀虫灭蟑</el-radio>
       <el-radio :label="8">无店面自由直供</el-radio>
+      <el-radio :label="11">求职</el-radio>
+      <el-radio :label="12">工服/百货</el-radio>
       <!--<el-radio :label="10">淘特色农产品</el-radio> -->
     </el-radio-group>
   </el-form-item>
@@ -111,6 +112,21 @@
     <el-button @click="resetForm('ruleForm')">重置</el-button>
   </el-form-item>
 </el-form>
+
+<!--注册成功时弹窗-->
+    <el-dialog
+      title="注册成功"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>请您牢记用户名和密码，并定期更换密码！</span>
+      <span>关闭弹窗进入控制台</span>
+      <span slot="footer" class="dialog-footer">
+  </span>
+    </el-dialog>
+
+
+
     </div>
   </template>
 <script>
@@ -189,7 +205,8 @@
          //  ]
         },
         captchaPath: '',
-        fullscreenLoading: false
+        fullscreenLoading: false,
+        dialogVisible: false //注册成功后弹窗
       };
 
     },
@@ -229,8 +246,9 @@
               let { msg, code, user } = data;
               if (data && data.status === 0) {
                 console.log(data)
+                this.dialogVisible= true;
                 // sessionStorage.setItem('user', JSON.stringify(user));
-               // this.$router.push({ path: '/home' });
+               //this.$router.push({ path: '/home' });
                 console.log(data)
               }  else {
                 this.getCaptcha()
@@ -243,7 +261,11 @@
           }
         });
       },
-
+      //注册成功后弹窗
+      handleClose(done) {
+        done();
+        this.$router.push({ path: '/home' });
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },

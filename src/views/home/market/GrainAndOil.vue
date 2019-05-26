@@ -5,7 +5,7 @@
   <el-row  v-if="isbutten">
     <el-button type="primary"><router-link
       v-on:click.native="isAuthenticationM"
-      to="/home/grainAndOil">发布信息</router-link></el-button>
+      to="">发布信息</router-link></el-button>
 
   </el-row>
     <!-- 筛选区 -->
@@ -34,8 +34,8 @@
 
 <script>
   import VmImageList from '../../../components/vm-image-list'
-  import { get_user_info } from '../../../api/api';
-
+  import { get_user_info_sign } from '../../../api/api';
+  import { get_user_info_jurisdiction } from '../../../api/api';
   export default {
 
     name: 'ImageList',
@@ -46,7 +46,7 @@
 
     data() {
       return {
-        permission:'',
+        resdata:'',
         role:'',
        isbutten:false,
 
@@ -54,66 +54,41 @@
           permissionid:5,
           user: '',
           region: ''
-        }
-
-
-
-
-
-
-
+        },
+        pathString:'/home/GrainAndOilPage'
 
       }
     },
 
     created () {
-      this.islogin()
+      this.jurisdiction()
     },
     methods: {
       onSubmit() {
         console.log('submit!');
       },
-
+      //判断是否实名和登陆状态
       isAuthenticationM(){
-         let isAuthentication= this.permission.isAuthentication;
-        console.log(isAuthentication);
-        console.log(this.permission.isAuthentication);
-
-        if(isAuthentication!=1){
+        if(this.resdata.isAuthentication !=1 ){
           this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
             dangerouslyUseHTMLString: true
           });
           this.$router.push({ path: '/home/myAccount' });
         }else{
-           this.$router.push({ path: '/home/GrainAndOilPage' });
+          get_user_info_sign(this.pathString);
         }
 
       },
 
-
-      //判断是否登录 获取用户权限
-      islogin(){
-        get_user_info().then((res) => {
-
-          let status=res.data.status;
-          console.log(res);
-
-          if (status === 0) {
-           this.permission=JSON.parse(res.data.data);  //字符串转换为 对象
-
-
-
-
-          this.role=this.permission.role;
-           if(this.role===1 ||this.role===4){
-             this.isbutten=true;
-           }
-
-          }else{
-            console.log(res)
-            this.$router.push({ path: '/login/sign' });
+      //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
+      jurisdiction(){
+        get_user_info_jurisdiction(this.pathString).then((res) => {
+          if(res.isbutten===true){
+            this.isbutten=true;
           }
+          this.resdata=res;
         });
+
       },
 
 

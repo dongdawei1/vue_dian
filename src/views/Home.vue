@@ -31,8 +31,7 @@
 
     <el-container>
       <el-header style="text-align: right; font-size: 19px">
-
-          <span>退出登陆</span>
+        <el-button type="primary" @click="logout">退出登陆</el-button>
       </el-header>
 
       <div  id="body">
@@ -40,16 +39,14 @@
         <keep-alive>
           <router-view ></router-view>
         </keep-alive>
-
       </div>
-
-
     </el-container>
   </el-container>
 </template>
 
 <script>
   import { getPermission } from '../api/api';
+  import { userlogout } from '../api/api';
 	export default {
 		data() {
 			return {
@@ -63,25 +60,35 @@
     },
 		methods: {
 
-      //判断是否登录
+      //获取菜单列表，登陆失效后返回首页
       getpermission(){
         getPermission().then((res) => {
-
-          let status=res.data.status;
+          let status=res.status;
           if (status === 0) {
-            console.log(res);
-            console.log(1)
-            this.menuList = res.data.data
-            console.log(this.menuList)
-            // sessionStorage.setItem('user', JSON.stringify(user));
-         //   this.$router.push({ path: '/home' });
-
+            this.menuList = res.data
           }else{
-            console.log(res)
-            this.$router.push({ path: '/login/sign' });
+            if(res.msg==='用户未登录,无法获取当前用户的信息'){
+              this.$router.push({ path: '/login/sign' });
+            }
+
           }
         });
       },
+      //退出
+      logout(){
+        userlogout().then((res) => {
+          let status=res.status;
+          if (status === 0) {
+            this.$router.push({ path: '/login/sign' });
+          }else{
+            this.$message.error(res.msg)
+          }
+        });
+
+
+      }
+
+
 		}
 	}
 
