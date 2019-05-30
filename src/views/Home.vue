@@ -7,7 +7,7 @@
   <!--一级菜单导航-->
           <el-menu-item :index= "item.name"  v-if=" item.pid===1 && item.parentCode==null && item.url != '' " >
             <span slot="title">
-            <router-link :to="item.url"     >{{ item.name }}</router-link>
+            <router-link :to="item.url"   class="a"   >{{ item.name }}</router-link>
             </span>
           </el-menu-item>
           <!--一级菜单下拉-->
@@ -18,7 +18,7 @@
           <el-menu-item-group>
             <div v-for="(itemSon, indexSon) in menuList" :key="indexSon">
             <el-menu-item :index="itemSon.name"  v-if=" item.resourceCode === itemSon.parentCode " >
-            <router-link :to="itemSon.url"     >{{ itemSon.name }}</router-link>
+            <router-link :to="itemSon.url"   class="a"   >{{ itemSon.name }}</router-link>
             </el-menu-item>
             </div>
           </el-menu-item-group>
@@ -67,10 +67,7 @@
           if (status === 0) {
             this.menuList = res.data
           }else{
-            if(res.msg==='用户未登录,无法获取当前用户的信息'){
               this.$router.push({ path: '/login/sign' });
-            }
-
           }
         });
       },

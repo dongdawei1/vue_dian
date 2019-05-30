@@ -5,7 +5,7 @@
   <el-row  v-if="isbutten">
     <el-button type="primary"><router-link
       v-on:click.native="isAuthenticationM"
-      to="">发布信息</router-link></el-button>
+      to="" class="a" >发布信息</router-link></el-button>
 
   </el-row>
     <!-- 筛选区 -->

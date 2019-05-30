@@ -93,8 +93,6 @@
 
 
 
-
-
   <el-form-item label="验证码"   prop="captcha">
     <el-row :gutter="20">
       <el-col :span="14">

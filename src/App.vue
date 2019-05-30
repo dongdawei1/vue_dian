@@ -18,5 +18,8 @@
 </script>
 
 <style >
-
+  .a{
+    text-decoration: none;
+  /**设置所有的链接class=a没有下划线 */
+  }
 </style>

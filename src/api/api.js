@@ -110,6 +110,8 @@ export const getPermission = params => {
 
 //注册
 export const requestCreate = params => { return axios.post(`${base}/api/user/create`, params).then(res => res.data); };
+//修改用户基本信息
+export const update_information = params => { return axios.post(`${base}/api/user/update_information`, params).then(res => res.data); };
 //退出
 export const userlogout = params => { return axios.post(`${base}/api/user/logout`, params).then(res => res.data); };
 //发布
@@ -118,3 +120,15 @@ export const grainAndOil = params => { return axios.post(`${base}/api/commodity/
 //查询所有发布
 
 export const getPublishings = params => { return axios.post(`${base}/api/getPublishings/getGoods`, params).then(res => res.data);};
+
+
+//参数n为休眠时间，单位为毫秒:
+export const  sleep = params =>{
+        var start = new Date().getTime();
+             //  console.log('休眠前：' + start);
+               while (true) {
+                   if (new Date().getTime() - start > params) {
+                   break;
+                  }}
+              // console.log('休眠后：' + new Date().getTime());
+               }

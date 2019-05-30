@@ -12,7 +12,7 @@
          <el-dialog title="编辑基本信息" :visible.sync="dialogFormVisible">
            <el-form :model="form" :rules="rules" ref="form">
              <el-form-item label="用户名" :label-width="formLabelWidth"  prop="username"  >
-               <el-input v-model="form.username" autocomplete="off" :placeholder="form.username"></el-input>
+               <el-input v-model="form.username" autocomplete="off" :placeholder="form.username" readonly="readonly"  :disabled="true"></el-input>
              </el-form-item>
              <el-form-item label="手机号" :label-width="formLabelWidth"  prop="mobilePhone"  >
                <el-input v-model="form.mobilePhone" autocomplete="off" :placeholder="form.mobilePhone"></el-input>
@@ -23,23 +23,22 @@
              </el-form-item>
 
              <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
-               <el-input type="password" v-model="form.newPassword" autocomplete="off" placeholder="数字和字母"></el-input>
+               <el-input type="password" v-model="form.newPassword" autocomplete="off" placeholder="若不修改密码可以不填写"></el-input>
              </el-form-item>
              <el-form-item label="确认新密码" :label-width="formLabelWidth" prop="checkenewPassword">
-               <el-input type="password" v-model="form.checkenewPassword" autocomplete="off" placeholder="请再输入一次密码"></el-input>
+               <el-input type="password" v-model="form.checkenewPassword" autocomplete="off" placeholder="密码修改成功后会跳转至登陆页"></el-input>
              </el-form-item>
 
            </el-form>
            <div slot="footer" class="dialog-footer">
              <el-button @click="dialogFormVisible = false">取 消</el-button>
-             <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+             <el-button type="primary" @click="submitForm('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
            </div>
          </el-dialog>
 
-
-
-
-        <el-button type="info" plain  v-if="isButtenRealName">立即实名</el-button>
+        <el-button type="info" plain  v-if="isButtenRealName" ><router-link
+          v-on:click.native=""
+          to="/home/realName"  class="a">立即实名 </router-link></el-button>
        </el-row>
     </div>
     <div   v-if="isButtenRealInif"   >
@@ -61,29 +60,10 @@
 
 <script>
   import { get_user_info } from '../../../api/api';
+  import { update_information } from '../../../api/api';
+
   export default {
     data() {
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
-          }
-          callback();
-        }
-      };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleForm.pass) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
-
-
 
       return {
 
@@ -91,7 +71,8 @@
         isButtenRealName:false,
         isButtenRealInif:false,
         dialogFormVisible: false, //修改 用户基本信息弹窗
-
+        logining : false,
+        fullscreenLoading: false,
         form: {
           username: '',
           mobilePhone: '',
@@ -114,11 +95,11 @@
             { min: 8, max: 18, message: '长度在 8 到 18 个字符', trigger: 'blur' }
           ],
           newPassword: [
-            { validator: validatePass,required: true, trigger: 'blur' },
+            {  trigger: 'blur' },
             { min: 8, max: 18, message: '长度在 8 到 18 个字符', trigger: 'blur' }
           ],
           checkenewPassword: [
-            { validator: validatePass2, required: true,trigger: 'blur' }
+            {  trigger: 'blur' }
           ]
         },
       }
@@ -150,13 +131,56 @@
           }
         });
       },
+      //修改基本信息
       submitForm() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
+            //this.logining = true;
+            console.log(this.form)
+            let loginParams = {
+              'username': this.form.username,
+              'mobilePhone': this.form.mobilePhone,
+              'rowPassword': this.form.rowPassword,
+              'newPassword': this.form.newPassword,
+              'checkenewPassword':  this.form.checkenewPassword
+            };
+            this.fullscreenLoading = true;
+            update_information(loginParams).then(data => {
+              this.fullscreenLoading = false;
+             console.log(data)
+              let status=data.status;
+              let msg=data.msg;
+              if(status===0){
+                  if(msg==="编辑成功重新登陆"){
+                    this.$message.success("修改密码成功请重新登陆");
+                  //  sleep(2000);
+                    this.dialogFormVisible = false;
+                    this.$router.push({ path: '/login/sign' });
+                  }else{
+                    this.dialogFormVisible = false;
+                    this.islogin_getuserinif()
+                    this.$message.success(msg);
+                    this.form.rowPassword='';
+                    this.form.newPassword='';
+                    this.form.checkenewPassword='';
+                  }
+              }else{
+                if(msg==="登录过期"){
+                  this.$router.push({ path: '/login/sign' });
+                }else{
+                  this.$message.error(msg)
+                }
+              }
 
+            });
+          } else {
+            console.log('系统异常');
+            return false;
           }
         });
-      }
+      },
+
+
     }
   }
 </script>

@@ -40,6 +40,7 @@ import PestControl from '../views/home/PestControl'
 import MyRelease from '../views/home/userCenter/MyRelease'
 import MyAccount from '../views/home/userCenter/MyAccount'
 import Detailed from '../views/home/userCenter/Detailed'
+import RealName  from '../views/home/userCenter/RealName'
 
 import Integral from '../views/home/Integral'
 import Characteristic from '../views/home/Characteristic'
@@ -240,11 +241,15 @@ export default new VueRouter ({
           hidden: true , //隐藏的 根据状态判断是否隐藏该入口
           path: '/home/grainAndOilPage',
           component:  GrainAndOilPage  //发布信息粮油
+        },
+
+        //
+
+        {
+          hidden: true , //用户包中
+          path: '/home/realName',
+          component:  RealName  //实名认证
         }
-
-
-
-
 
 
 
