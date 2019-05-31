@@ -1,60 +1,29 @@
 <template>
   <div>
   实名页
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="商品类别" prop="commoditytype">
-        <el-radio-group v-model="ruleForm.commoditytype">
-          <el-radio label="米/面"></el-radio>
-          <el-radio label="油"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="商品名称" prop="commodityName" >
-        <el-input v-model="ruleForm.commodityName"  placeholder="如：某某品牌大米"></el-input>
-      </el-form-item>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isbusiness" class="demo-ruleForm">
 
 
-      <el-form-item label="商品产地" prop="placeOfOrigin" >
-        <el-input v-model="ruleForm.placeOfOrigin" ></el-input>
-      </el-form-item>
 
-      <el-form-item label="商品品牌" prop="brand" >
-        <el-input v-model="ruleForm.brand" ></el-input>
-      </el-form-item>
 
-      <el-form-item label="商品规格" prop="specifications" >
-        <el-input v-model="ruleForm.specifications" ></el-input>公斤/升
+
+      <el-form-item label="城区"   prop="selectedOptions">
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="ruleForm.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
       </el-form-item>
 
 
-      <el-form-item label="商品价格" prop="price" >
-        <el-input v-model="ruleForm.price" placeholder="元" ></el-input>
-      </el-form-item>
-
-      <el-form-item label="价格有效期" required>
-        <el-col :span="11">
-          <el-form-item prop="priceEffectiveStart">
-            <el-date-picker type="date" placeholder="开始日期" v-model="ruleForm.priceEffectiveStart" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-form-item prop="priceEffectiveEnd">
-            <el-date-picker  type="date" placeholder="结束日期" v-model="ruleForm.priceEffectiveEnd" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-
-
-
-      <el-form-item label="图片" prop="pictureUrl">
+      <el-form-item label="营业执照" prop="pictureUrl">
         <el-upload
           ref="upload"
           action="/api/uploadDown/upload"
           name="picture"
           list-type="picture-card"
-          :limit="5"
-
+          :limit="2"
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -68,19 +37,15 @@
         </el-dialog>
       </el-form-item>
 
-
-
-
-
-      <el-form-item label="备注" prop="remarks">
-        <el-input  v-model="ruleForm.remarks"  placeholder="10字以内"></el-input>
-      </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">立即实名</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
 
+
+    <el-form :model="ruleFormnotbusiness" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isnotbusiness" class="demo-ruleForm">
+    </el-form>
 
   </div>
 </template>
@@ -91,82 +56,88 @@
   import { uploadDown_update } from '../../../api/api';
   import { grainAndOil } from '../../../api/api';
   import { get_user_info_jurisdiction } from '../../../api/api';
+  import { get_user_info } from '../../../api/api';
+  import { regionData } from 'element-china-area-data'
   export default {
     data() {
       return {
+        isbusiness: false, //是否是商家
+        isnotbusiness:false,//非商家
         resdata:'',//获取的用户信息
         pathString:'/home/GrainAndOilPage',
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
-        //图片列表（用于在上传组件中回显图片）
-        // fileList: {name: '', url: ''},
-
+        //城市组件相关开始
+        options: regionData,
+        //城市组件相关结束
         ruleForm: {
-          commodityName: '', //名
-          placeOfOrigin: '',//产地
-          brand:'',//品牌
-          specifications:'',//规格
-          price:'',//价格
-          remarks: '', //备注
-          priceEffectiveStart: '', //开始
-          priceEffectiveEnd: '', //结束
-          commoditytype: '', //类型
-          pictureUrl: [],
-          permissionid : 5,
+          selectedOptions: [], //三级联动城市
+          city: '', //城市   npm install element-china-area-data -S  城市联动组件 @4.1.2
+          address: '',//收/送货地址
+          trading_area:'',//商圈
+          contact:'',//收送货人联系方式
+          consignee_name:'', //收/送货人姓名
+          license:'',//营业执照图片
+          email:'',//邮箱
+
         },
 
         permission:'',
         role:'',
         rules: {
-          commodityName: [
-            { required: true, message: '请输入商品名称', trigger: 'blur' },
-            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
-          ],
-          placeOfOrigin: [
-            { required: true, message: '请输入产地', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-          ],
-          brand: [
-            { required: true, message: '请输入品牌', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          selectedOptions: [
+            { required: true, message: '请选择城市和地区', trigger: 'blur' }
           ],
 
           pictureUrl:[
             { required: true, message: '请上传图片', trigger: 'blur' },
-
-          ],
-          specifications: [
-            { required: true, message: '请输入规格', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-          ],
-          price: [
-            { required: true, message: '请输入价格', trigger: 'blur' },
-            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
-          ],
-
-
-          priceEffectiveStart: [
-            { type: 'date', required: true, message: '开始日期', trigger: 'change' }
-          ],
-          priceEffectiveEnd: [
-            { type: 'date', required: true, message: '结束日期', trigger: 'change' }
-          ],
-          commoditytype: [
-            { required: true, message: '请至少选择一个商品类别', trigger: 'change' }
-          ],
-
-          remarks: [
-            { min: 1, max: 10, message: '备注不能超过10个字', trigger: 'blur' }
           ]
+
         }
       }
     },
 
     created () {
-      this.jurisdiction()
+      this.islogin_getuserinif();
     },
     methods: {
+      //判断是否登录
+      islogin_getuserinif(){
+        get_user_info().then((res) => {
+          let status=res.status;
+          if (status === 0) {
+            let user=JSON.parse(res.data);
+            let role=user.role;
+            console.log( user);
+            if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
+              this.isbusiness=true;
+            }else{
+              this.isnotbusiness=true;
+            }
+          }else{
+            this.$router.push({ path: '/login/sign' });
+          }
+        });
+      },
+
+    //城市组件
+      handleChange (value) {
+        console.log(111111111)
+        console.log(this.ruleForm.selectedOptions)
+        console.log(value)
+      },
+
+
+
+
+
+
+
+
+
+
+
 
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction(){
@@ -189,37 +160,41 @@
 
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.ruleForm);
-            const data = this.ruleForm;
-            console.log(data);
-            grainAndOil(data).then(data => {
-
-              console.log(data)
-              //let { msg, code, user } = data;
-              if (data && data.status === 0) {
-                console.log(data)
-                // sessionStorage.setItem('user', JSON.stringify(user));
-                // this.$router.push({ path: '/home' });
-
-              }  else {
-                this.$message.error(data.msg);
-                let dataerror=data.msg;
-                if(dataerror==='用户登陆已过期'){
-                  this.$router.push({ path: '/login/sign' });
-                } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home/release' });
-                }
-
-              }
-            });
+          console.log(this.ruleForm.selectedOptions)
 
 
 
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
+          // if (valid) {
+          //   console.log(this.ruleForm);
+          //   const data = this.ruleForm;
+          //   console.log(data);
+          //   grainAndOil(data).then(data => {
+          //
+          //     console.log(data)
+          //     //let { msg, code, user } = data;
+          //     if (data && data.status === 0) {
+          //       console.log(data)
+          //       // sessionStorage.setItem('user', JSON.stringify(user));
+          //       // this.$router.push({ path: '/home' });
+          //
+          //     }  else {
+          //       this.$message.error(data.msg);
+          //       let dataerror=data.msg;
+          //       if(dataerror==='用户登陆已过期'){
+          //         this.$router.push({ path: '/login/sign' });
+          //       } if(dataerror==='没有此权限'){
+          //         this.$router.push({ path: '/home/release' });
+          //       }
+          //
+          //     }
+          //   });
+          //
+          //
+          //
+          // } else {
+          //   console.log('error submit!!');
+          //   return false;
+          // }
         });
       },
 
@@ -250,14 +225,10 @@
               console.log(this.ruleForm.pictureUrl);
               console.log(111111111111);
               //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
-
             });
             break;
           }
-
-
         }
-
       },
       //点击列表中已上传的文件事的钩子函数
       handlePreview(file) {

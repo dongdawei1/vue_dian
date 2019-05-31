@@ -36,63 +36,6 @@
     </el-radio-group>
   </el-form-item>
 
-
-  <!-- 根据用户角色判断是否显示 营业执照      -->
-
-  <!-- 下拉城市选择列表开始   城市，送货地址，送货方式 在下单时录入 ,营业执照在接单或者下单时录入
-  <el-form-item label="省/城市/区" prop="region">
-    <el-select
-      v-model="sheng"
-      @change="choseProvince"
-      placeholder="省级地区">
-      <el-option
-        v-for="item in province"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
-    <el-select
-      v-model="shi"
-      @change="choseCity"
-      placeholder="市级地区">
-      <el-option
-        v-for="item in shi1"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
-    <el-select
-      v-model="qu"
-      @change="choseBlock"
-      placeholder="区级地区">
-      <el-option
-        v-for="item in qu1"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
-
-  </el-form-item>
-
-  <el-form-item label="收货地址" prop="address"  >
-    <el-input v-model="ruleForm.city"  placeholder="街道-市场名摊位号/店名"></el-input>
-  </el-form-item>
-
-    <el-form-item label="联系方式" prop="contact"  >
-    <el-input v-model="ruleForm.contact"  placeholder="收/送货备用联系方式"></el-input>
-  </el-form-item>
-
-
-   -->
-
-  <!--下来选择城市结束-->
-
-
-
-
   <el-form-item label="验证码"   prop="captcha">
     <el-row :gutter="20">
       <el-col :span="14">
@@ -164,11 +107,6 @@
           role: '' ,  //角色
           captcha:'', //验证码
           uuid: ''    //生成验证码对应的 id
-          // region: '',      //省/城市/区
-          // city :'',        //详细地址
-          // contact:''   //备用联系方式
-
-
         },
         rules: {
           name: [
@@ -192,15 +130,6 @@
           captcha: [
          { required: true, message: '验证码不能为空', trigger: 'blur' }
           ]
-
-         // city: [
-         //    { required: true, message: '请输入地址', trigger: 'blur' },
-         //    { min: 10, max: 40, message: '长度在 10 到 40 个字符', trigger: 'blur' }
-         //  ],
-         //  contact: [
-         //    { required: true, message: '请输入联系方式', trigger: 'blur' },
-         //    { min: 10, max: 40, message: '长度在 10 到 40 个字符', trigger: 'blur' }
-         //  ]
         },
         captchaPath: '',
         fullscreenLoading: false,
@@ -213,8 +142,6 @@
     },
     methods: {
       submitForm() {
-
-
         this.$refs['ruleForm'].validate((valid) => {
 
           if (valid) {
@@ -222,9 +149,6 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = {
-
-
-
              'name': this.ruleForm.name,
               'pass': this.ruleForm.pass,
               'checkPass': this.ruleForm.checkPass,
