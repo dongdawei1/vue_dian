@@ -62,7 +62,11 @@
 
   import { uploadDown_update } from '../../../api/api';
   import { get_user_info } from '../../../api/api';
+  import {  newRealName } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
+
+
+
   export default {
     data() {
       return {
@@ -78,9 +82,9 @@
         //城市组件相关结束
         ruleForm: {
           selectedOptions: [], //三级联动城市
-          // provinces_id:'',
-          // city_id:'',
-          // district_county_id:'',
+          provinces_id:'',
+          city_id:'',
+          district_county_id:'',
           address_detailed: '',//详细地址收/送货地址
           contact:'',//收送货人联系方式
           consignee_name:'', //收/送货人姓名
@@ -142,9 +146,9 @@
     //城市组件
       handleChange (value) {
         console.log(this.selectedOptions);
-        // this.ruleForm.provinces_id=this.ruleForm.selectedOptions[0];
-        // this.ruleForm.city_id=this.ruleForm.selectedOptions[1];
-        // this.ruleForm.district_county_id=this.ruleForm.selectedOptions[2];
+        this.ruleForm.provinces_id=this.ruleForm.selectedOptions[0];
+        this.ruleForm.city_id=this.ruleForm.selectedOptions[1];
+        this.ruleForm.district_county_id=this.ruleForm.selectedOptions[2];
       },
 
 
@@ -153,39 +157,40 @@
         this.$refs[formName].validate((valid) => {
 
           console.log(this.ruleForm);
-          var data ={ 'ruleForm': this.ruleForm}
-          console.log( data);
-          console.log( valid);
+          var data ={
+            'ruleForm': this.ruleForm,
+            'isbusiness':this.isbusiness   //是否是商家
+                      }
           if (valid) {
            // var data ={ 'ruleForm': this.ruleForm}
             console.log( data);
-            // grainAndOil(data).then(data => {
-            //
-            //   console.log(data)
-            //   //let { msg, code, user } = data;
-            //   if (data && data.status === 0) {
-            //     console.log(data)
-            //     // sessionStorage.setItem('user', JSON.stringify(user));
-            //     // this.$router.push({ path: '/home' });
-            //
-            //   }  else {
-            //     this.$message.error(data.msg);
-            //     let dataerror=data.msg;
-            //     if(dataerror==='用户登陆已过期'){
-            //       this.$router.push({ path: '/login/sign' });
-            //     } if(dataerror==='没有此权限'){
-            //       this.$router.push({ path: '/home/release' });
-            //     }
+            newRealName(data).then(data => {
+
+              console.log(data)
+              //let { msg, code, user } = data;
+              if (data && data.status === 0) {
+                console.log(data)
+                // sessionStorage.setItem('user', JSON.stringify(user));
+                // this.$router.push({ path: '/home' });
+
+              }  else {
+                this.$message.error(data.msg);
+                let dataerror=data.msg;
+                if(dataerror==='用户登陆已过期'){
+                  this.$router.push({ path: '/login/sign' });
+                } if(dataerror==='没有此权限'){
+                  this.$router.push({ path: '/home/release' });
+                }
 
               }
-            //});
+            });
 
 
 
-        //   } else {
-        //     console.log('error submit!!');
-        //     return false;
-        //   }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
        });
       },
 

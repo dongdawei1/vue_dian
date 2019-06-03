@@ -114,6 +114,9 @@ export const requestCreate = params => { return axios.post(`${base}/api/user/cre
 export const update_information = params => { return axios.post(`${base}/api/user/update_information`, params).then(res => res.data); };
 //退出
 export const userlogout = params => { return axios.post(`${base}/api/user/logout`, params).then(res => res.data); };
+//s实名
+export const newRealName = params => { return axios.post(`${base}/api/realName/newRealName`, params).then(res => res.data); };
+
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 
