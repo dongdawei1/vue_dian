@@ -162,17 +162,13 @@
             'isbusiness':this.isbusiness   //是否是商家
                       }
           if (valid) {
-           // var data ={ 'ruleForm': this.ruleForm}
-            console.log( data);
             newRealName(data).then(data => {
 
               console.log(data)
-              //let { msg, code, user } = data;
               if (data && data.status === 0) {
                 console.log(data)
-                // sessionStorage.setItem('user', JSON.stringify(user));
-                // this.$router.push({ path: '/home' });
-
+                this.$message.success(data.msg);
+               this.$router.push({ path: '/home/myAccount' });
               }  else {
                 this.$message.error(data.msg);
                 let dataerror=data.msg;
@@ -184,9 +180,6 @@
 
               }
             });
-
-
-
           } else {
             console.log('error submit!!');
             return false;

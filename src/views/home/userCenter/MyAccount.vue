@@ -41,7 +41,7 @@
           to="/home/realName"  class="a">立即实名 </router-link></el-button>
        </el-row>
     </div>
-    <div   v-if="isButtenRealInif"   >
+    <div   v-if="isbusiness"   > <!--商户实名信息-->
       <span>用户实名信息</span>
       <div  class="gerentablecss_content">
         <span>用户名 : {{ user.username }}</span><br>
@@ -69,11 +69,19 @@
 
         user: '',
         isButtenRealName:false,
-        isButtenRealInif:false,
         dialogFormVisible: false, //修改 用户基本信息弹窗
         logining : false,
         fullscreenLoading: false,
+        isbusiness: false, //是否是商家展示商家 信息
+        isnotbusiness:false,//非商家
         form: {
+          username: '',
+          mobilePhone: '',
+          rowPassword: '',
+          newPassword: '',
+          checkenewPassword: '',
+        },
+        formRealName: {
           username: '',
           mobilePhone: '',
           rowPassword: '',
@@ -121,8 +129,13 @@
             console.log( this.user);
             if(this.user.isAuthentication===1){
               //拉取实名信息
-              this.isButtenRealInif=true;
+              let role=this.user.role;
+              if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
+                this.isbusiness=true;  //显示商家信息
 
+              }else{
+                this.isnotbusiness=true;
+              }
             }else {
               this.isButtenRealName=true;
             }
