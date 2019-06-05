@@ -44,12 +44,16 @@
     <div   v-if="isbusiness"   > <!--商户实名信息-->
       <span>用户实名信息</span>
       <div  class="gerentablecss_content">
-        <span>用户名 : {{ user.username }}</span><br>
-        <span>手机号 : {{ user.mobilePhone}}</span><br>
+        <span>城  区 : {{realName.detailed }}</span><br>
+        <span>收/送货地址 : {{ realName.addressDetailed}}</span><br>
+        <span>收/送人姓名 : {{ realName.contact}}</span><br>
+        <span>邮箱 : {{ realName.email}}</span><br>
+        <span>实名状态 : {{ realName.authentiCationStatus}}</span><br>
+        <span v-if="authentication_status">审核失败原因 : {{ realName.authentiCationFailure}}</span><br>
       </div>
-      <div  class="gerentablecss_butten">
+      <div  class="gerentablecss_butten"  v-if="authentication_status" >
         <el-row>
-          <el-button type="info" plain>修改实名信息</el-button>
+          <el-button type="info" plain>重新发起实名</el-button>
         </el-row>
       </div>
     </div>
@@ -61,12 +65,13 @@
 <script>
   import { get_user_info } from '../../../api/api';
   import { update_information } from '../../../api/api';
+  import { getRealName } from '../../../api/api';
 
   export default {
     data() {
 
       return {
-
+        realName:'',
         user: '',
         isButtenRealName:false,
         dialogFormVisible: false, //修改 用户基本信息弹窗
@@ -74,6 +79,9 @@
         fullscreenLoading: false,
         isbusiness: false, //是否是商家展示商家 信息
         isnotbusiness:false,//非商家
+        authentication_status:false, //审核是失败的状态
+
+
         form: {
           username: '',
           mobilePhone: '',
@@ -126,11 +134,29 @@
             this.user=JSON.parse(res.data);
             this.form.username=this.user.username;
             this.form.mobilePhone=this.user.mobilePhone;
-            console.log( this.user);
             if(this.user.isAuthentication===1){
               //拉取实名信息
+              getRealName().then((res) => {
+                if(res.status ===0 ){
+                  this. realName=res.data;
+                  let authentiCationStatus=this.realName.authentiCationStatus;
+                  if(authentiCationStatus===1){
+                    this.realName.authentiCationStatus='审核中';
+                    this.authentication_status=false;
+                  }if(authentiCationStatus===2){
+                    this.realName.authentiCationStatus='审核通过';
+                    this.authentication_status=false;
+                  }if(authentiCationStatus===3){
+                    this.realName.authentiCationStatus='审核失败';
+                    this.authentication_status=true;
+                  }
+                }else{
+                  this.$message.error(res.msg);
+                }
+              })
               let role=this.user.role;
               if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
+
                 this.isbusiness=true;  //显示商家信息
 
               }else{
@@ -192,7 +218,11 @@
           }
         });
       },
+      //城市组件
+      handleChange (value) {
+        console.log(this.selectedOptions);
 
+      },
 
     }
   }

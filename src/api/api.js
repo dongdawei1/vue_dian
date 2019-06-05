@@ -116,7 +116,17 @@ export const update_information = params => { return axios.post(`${base}/api/use
 export const userlogout = params => { return axios.post(`${base}/api/user/logout`, params).then(res => res.data); };
 //s实名
 export const newRealName = params => { return axios.post(`${base}/api/realName/newRealName`, params).then(res => res.data); };
+//获取实名信息
+export const getRealName = params => {
 
+  return axios({
+    url: `${base}/api/realName/getRealName`,
+    // params: { uuid: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+
+  }).then(res => res.data); };
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 
