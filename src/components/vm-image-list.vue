@@ -1,8 +1,5 @@
 <template>
 
-
-
-
   <div class="vm-image-list">
     <el-row >
 
@@ -97,13 +94,11 @@
         getPublishings(this.dataInline).then((res) => {
 
           if(res.status===0) {
-            console.log(res)
-            console.log( res.data)
+            // console.log(res)
+            // console.log( res.data)
             this.total = res.data.totalno; //总条数
-            console.log(this.total)
-
+           // console.log(this.total)
             this.movieInfoList = res.data.datas;
-
           }
         });
 
@@ -119,7 +114,7 @@
         getPublishings(this.dataInline).then((res) => {
 
           if(res.status===0) {
-            console.log(res.data.datas)
+           // console.log(res.data.datas)
             this.movieInfoList = res.data.datas;
           }
         });

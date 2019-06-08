@@ -24,16 +24,13 @@
       </el-form-item>
     </el-form>
 
-
     <VmImageList :dataInline="formInline" class="vm-margin"></VmImageList>
-
-
     </div>
 </template>
 
 
 <script>
-  import VmImageList from '../../../components/vm-image-list'
+  import VmImageList from '../../../components/vm-image-list';
   import { get_user_info_sign } from '../../../api/api';
   import { get_user_info_jurisdiction } from '../../../api/api';
   export default {
@@ -65,11 +62,10 @@
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        if(this.resdata.isAuthentication !=1 ){
+        if(this.resdata.isAuthentication !=2 ){
           this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
             dangerouslyUseHTMLString: true
           });
@@ -77,7 +73,6 @@
         }else{
           get_user_info_sign(this.pathString);
         }
-
       },
 
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
@@ -90,9 +85,6 @@
         });
 
       },
-
-
-
     }
 
   }

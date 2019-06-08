@@ -1,6 +1,7 @@
 <template>
   <div>
-  实名页
+    重新实名页
+    <!--商户重新实名开始-->
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isbusiness" class="demo-ruleForm">
       <el-form-item label="城区"   prop="selectedOptions">
         <el-cascader
@@ -10,6 +11,7 @@
           @change="handleChange">
         </el-cascader>
       </el-form-item>
+
       <el-form-item label="收/送货地址"    prop="address_detailed"  >
         <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
@@ -48,10 +50,9 @@
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
-
-  <!--如果是求职就展示下边的开始-->
+    <!--商户重新实名结束-->
+    <!--如果是求职就展示下边的开始-->
     <el-form :model="ruleFormnotbusiness" :rules="rules" ref="ruleFormnotbusiness" label-width="100px"   v-if ="iswanted" class="demo-ruleForm">
-
       <el-form-item label="求职地域"   prop="selectedOptions">
         <el-cascader
           size="large"
@@ -76,11 +77,10 @@
         <el-input v-model="ruleFormnotbusiness.eag"  placeholder="请输入年龄"></el-input>
       </el-form-item>
 
-
-        <el-form-item label="性别"        placeholder="请选择性别" >
+      <el-form-item label="性别"        placeholder="请选择性别" >
         <el-radio v-model="ruleFormnotbusiness.gender" label="男">男</el-radio>
         <el-radio v-model="ruleFormnotbusiness.gender" label="女">女</el-radio>
-        </el-form-item>
+      </el-form-item>
 
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleFormnotbusiness.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
@@ -92,8 +92,8 @@
         <el-button @click="resetFormWanted('ruleFormnotbusiness')">重置</el-button>
       </el-form-item>
     </el-form>
-    <!--如果是求职就展示下边的结束-->
-    <!--如果是租房就展示下边的结束-->
+
+    <!--租房重新实名开始-->
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="islease" class="demo-ruleForm">
       <el-form-item label="城区"   prop="selectedOptions">
         <el-cascader
@@ -103,6 +103,7 @@
           @change="handleChange">
         </el-cascader>
       </el-form-item>
+
       <el-form-item label="详细地址"    prop="address_detailed"  >
         <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
@@ -111,7 +112,7 @@
         <el-input v-model="ruleForm.contact"  placeholder="请输入联系方式"></el-input>
       </el-form-item>
       <el-form-item label="联系人姓名"    prop="consignee_name"  >
-        <el-input v-model="ruleForm.consignee_name"  placeholder="请输入姓名"></el-input>
+        <el-input v-model="ruleForm.consignee_name"  placeholder="请输入联系人人姓名"></el-input>
       </el-form-item>
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
@@ -141,6 +142,7 @@
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
+    <!--商户重新实名结束-->
   </div>
 </template>
 
@@ -149,7 +151,7 @@
 
   import { uploadDown_update } from '../../../api/api';
   import { get_user_info } from '../../../api/api';
-  import {  newRealName } from '../../../api/api';
+  import {  updateRealName } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
 
 
@@ -157,7 +159,7 @@
   export default {
     data() {
       return {
-        isbusiness:false, //商家
+        isbusiness:false,//商家
         iswanted:false,//求职
         islease:false,//出租
         isnotbusiness:false,//非商家
@@ -170,7 +172,7 @@
         options: regionData,//城市   npm install element-china-area-data -S  城市联动组件 @4.1.2
 
         //城市组件相关结束
-        ruleForm: { //商家
+        ruleForm: {　//商家
           selectedOptions: [], //三级联动城市
           provinces_id:'',
           city_id:'',
@@ -181,8 +183,7 @@
           email:'',//邮箱
           licenseUrl: [],//营业执照图片
         },
-
-        ruleFormnotbusiness: {   //非商家
+        ruleFormnotbusiness: {   //求职
           selectedOptions: [], //三级联动城市
           provinces_id:'',
           city_id:'',
@@ -205,11 +206,11 @@
             { max: 100, message: '不能超过100个字', trigger: 'blur' }
           ],
           contact:[
-            { required: true, message: '请输入联系方式', trigger: 'blur' },
+            { required: true, message: '请输入收/送货人联系方式', trigger: 'blur' },
             { min:6 ,max: 12, message: '长度在6至11位之间', trigger: 'blur' }
           ],
           consignee_name:[
-            { required: true, message: '请输入姓名', trigger: 'blur' },
+            { required: true, message: '请输入收/送货人姓名', trigger: 'blur' },
             { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],
           email:[
@@ -238,17 +239,16 @@
           if (status === 0) {
 
             let user=JSON.parse(res.data);
-            if( user.isAuthentication!=4){
+            if( user.isAuthentication!=3){
               this.$router.push({ path: '/home/myAccount' });
             }
-
             let role=user.role;
             if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
               this.isbusiness=true;
             }else if(role===11){
               this.iswanted=true;
             }else if(role===6){
-              this.islease=true;
+              this.islease=true;//出租
             }else{
               this.$router.push({ path: '/home/myAccount' });
             }
@@ -258,9 +258,8 @@
         });
       },
 
-    //城市组件
+      //城市组件
       handleChange (value) {
-       // console.log(this.selectedOptions);
         this.ruleForm.provinces_id=this.ruleForm.selectedOptions[0];
         this.ruleForm.city_id=this.ruleForm.selectedOptions[1];
         this.ruleForm.district_county_id=this.ruleForm.selectedOptions[2];
@@ -271,18 +270,18 @@
       },
 
 
-     //商家提交
+      //商家
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           var data ={
             'ruleForm': this.ruleForm,
-            'isbusiness': 2   //是否是商家
-                      }
+            'isbusiness':2   //是否是商家
+          }
           if (valid) {
-            newRealName(data).then(data => {
+            updateRealName(data).then(data => {
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
-               this.$router.push({ path: '/home/myAccount' });
+                this.$router.push({ path: '/home/myAccount' });
               }  else {
                 this.$message.error(data.msg);
                 let dataerror=data.msg;
@@ -296,48 +295,43 @@
           } else {
             return false;
           }
-       });
+        });
       },
-
-
       //求职提交
 
       resetFormWanted(ruleFormnotbusiness) {
-    this.$refs[ruleFormnotbusiness].validate((valid) => {
-      var data ={
-        'ruleForm': this.ruleFormnotbusiness,
-        'isbusiness': 11
-      }
-      if (valid) {
-        newRealName(data).then(data => {
-          if (data && data.status === 0) {
-            this.$message.success(data.msg);
-            this.$router.push({ path: '/home/myAccount' });
-          }  else {
-            this.$message.error(data.msg);
-            let dataerror=data.msg;
-            if(dataerror==='用户登陆已过期'){
-              this.$router.push({ path: '/login/sign' });
-            } if(dataerror==='没有此权限'){
-              this.$router.push({ path: '/home/release' });
-            }
-
+        this.$refs[ruleFormnotbusiness].validate((valid) => {
+          var data ={
+            'ruleForm': this.ruleFormnotbusiness,
+            'isbusiness':11   //是否是商家
+          }
+          if (valid) {
+            updateRealName(data).then(data => {
+              if (data && data.status === 0) {
+                this.$message.success(data.msg);
+                this.$router.push({ path: '/home/myAccount' });
+              }  else {
+                this.$message.error(data.msg);
+                let dataerror=data.msg;
+                if(dataerror==='用户登陆已过期'){
+                  this.$router.push({ path: '/login/sign' });
+                } if(dataerror==='没有此权限'){
+                  this.$router.push({ path: '/home/release' });
+                }
+              }
+            });
+          } else {
+            return false;
           }
         });
-      } else {
-        return false;
-      }
-    });
-  },
+      },
+
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-
-
         if (res.message!=null && res.message!='') {
           var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
           this.ruleForm.licenseUrl= this.ruleForm.licenseUrl.concat(picture);
-          console.log(this.ruleForm.licenseUrl);
         }
       },
 

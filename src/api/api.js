@@ -66,13 +66,7 @@ export const get_user_info_jurisdiction = params => {
     if (res.msg==='用户未登录,无法获取当前用户的信息') {
       router.push('/login/sign')
     }
-     console.log(999999999999)
-    console.log(res)
-
-
     let status=res.status;
-
-    // router.push('/home/release')
     if (status === 0) {
       //获取用户权限
       let resdata=JSON.parse(res.data);  //字符串转换为 对象
@@ -89,11 +83,7 @@ export const get_user_info_jurisdiction = params => {
            return res;
          }
        }
-
-
     }
-
-
   }).then(res => res); };
 
 //获取菜单
@@ -116,6 +106,8 @@ export const update_information = params => { return axios.post(`${base}/api/use
 export const userlogout = params => { return axios.post(`${base}/api/user/logout`, params).then(res => res.data); };
 //s实名
 export const newRealName = params => { return axios.post(`${base}/api/realName/newRealName`, params).then(res => res.data); };
+//重新实名
+export const updateRealName = params => { return axios.post(`${base}/api/realName/updateRealName`, params).then(res => res.data); };
 //获取实名信息
 export const getRealName = params => {
 

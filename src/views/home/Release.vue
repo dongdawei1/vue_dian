@@ -24,7 +24,6 @@
       islogin(){
         get_user_info().then((res) => {
           let status=res.status;
-          console.log(status)
           if (status === 0) {
             this.permission=JSON.parse(res.data);  //字符串转换为 对象
             this.role=this.permission.role;
@@ -33,7 +32,6 @@
             }
           }else{
             if(res.msg==='用户未登录,无法获取当前用户的信息'){
-              console.log(res.msg)
               this.$router.push({ path: '/login/sign' });
             }
           }

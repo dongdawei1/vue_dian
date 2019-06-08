@@ -5,6 +5,7 @@
       <span>用户名 : {{ user.username }}</span><br>
       <span>手机号 : {{ user.mobilePhone}}</span><br>
     </div>
+    <!--编辑基本信息弹窗开始-->
     <div  class="gerentablecss_butten">
        <el-row>
         <el-button type="info" plain   @click="dialogFormVisible = true">修改基础信息</el-button>
@@ -35,28 +36,89 @@
              <el-button type="primary" @click="submitForm('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
            </div>
          </el-dialog>
-
+         <!--编辑基本信息弹窗结束-->
         <el-button type="info" plain  v-if="isButtenRealName" ><router-link
           v-on:click.native=""
           to="/home/realName"  class="a">立即实名 </router-link></el-button>
        </el-row>
     </div>
-    <div   v-if="isbusiness"   > <!--商户实名信息-->
+    <!--商户实名信息开始-->
+    <div   v-if="isbusiness"   >
       <span>用户实名信息</span>
       <div  class="gerentablecss_content">
         <span>城  区 : {{realName.detailed }}</span><br>
         <span>收/送货地址 : {{ realName.addressDetailed}}</span><br>
-        <span>收/送人姓名 : {{ realName.contact}}</span><br>
+        <span>收/送货姓名 : {{ realName.consigneeName}}</span><br>
+        <span>收/送人手机 : {{ realName.contact}}</span><br>
         <span>邮箱 : {{ realName.email}}</span><br>
         <span>实名状态 : {{ realName.authentiCationStatus}}</span><br>
         <span v-if="authentication_status">审核失败原因 : {{ realName.authentiCationFailure}}</span><br>
       </div>
       <div  class="gerentablecss_butten"  v-if="authentication_status" >
         <el-row>
-          <el-button type="info" plain>重新发起实名</el-button>
+          <el-button type="info" plain>
+            <router-link
+              v-on:click.native=""
+              to="/home/updateRealName"  class="a">重新发起实名 </router-link></el-button>
         </el-row>
       </div>
     </div>
+    <!--商户实名信息结束-->
+    <!--求职实名信息开始-->
+    <div   v-if="iswanted"   >
+      <span>用户实名信息</span>
+      <div  class="gerentablecss_content">
+        <span>求职地域 : {{realName.detailed }}</span><br>
+        <span>现居住地: {{ realName.addressDetailed}}</span><br>
+        <span>姓名 : {{ realName.consigneeName}}</span><br>
+        <span>手机 : {{ realName.contact}}</span><br>
+        <span>性别 : {{ realName.gender}}</span><br>
+        <span>年龄 : {{ realName.eag}}</span><br>
+        <span>邮箱 : {{ realName.email}}</span><br>
+        <span>实名状态 : {{ realName.authentiCationStatus}}</span><br>
+        <span v-if="authentication_status">审核失败原因 : {{ realName.authentiCationFailure}}</span><br>
+      </div>
+      <div  class="gerentablecss_butten"  v-if="authentication_status" >
+        <el-row>
+          <el-button type="info" plain>
+            <router-link
+              v-on:click.native=""
+              to="/home/updateRealName"  class="a">重新发起实名 </router-link></el-button>
+        </el-row>
+      </div>
+    </div>
+    <!--求职实名信息结束-->
+
+    <!--租房实名信息开始-->
+    <div   v-if="islease"   >
+      <span>用户实名信息</span>
+      <div  class="gerentablecss_content">
+        <span>城  区 : {{realName.detailed }}</span><br>
+        <span>详细地址 : {{ realName.addressDetailed}}</span><br>
+        <span>联系人姓名 : {{ realName.consigneeName}}</span><br>
+        <span>联系方式 : {{ realName.contact}}</span><br>
+        <span>邮箱 : {{ realName.email}}</span><br>
+        <span>实名状态 : {{ realName.authentiCationStatus}}</span><br>
+        <span v-if="authentication_status">审核失败原因 : {{ realName.authentiCationFailure}}</span><br>
+      </div>
+      <div  class="gerentablecss_butten"  v-if="authentication_status" >
+        <el-row>
+          <el-button type="info" plain>
+            <router-link
+              v-on:click.native=""
+              to="/home/updateRealName"  class="a">重新发起实名 </router-link></el-button>
+        </el-row>
+      </div>
+    </div>
+    <!--租房实名信息结束-->
+    <!--租房实名信息开始-->
+    <div   v-if="isnotbusiness"   >
+      <span>用户实名信息</span>
+      <div  class="gerentablecss_content">
+        <span>请联系客服进行线下实名</span><br>
+      </div>
+    </div>
+    <!--租房实名信息结束-->
   </div>
 
 </template>
@@ -77,10 +139,11 @@
         dialogFormVisible: false, //修改 用户基本信息弹窗
         logining : false,
         fullscreenLoading: false,
-        isbusiness: false, //是否是商家展示商家 信息
+        isbusiness: false, //商家
+        iswanted:false,//求职
+        islease:false,//出租
         isnotbusiness:false,//非商家
         authentication_status:false, //审核是失败的状态
-
 
         form: {
           username: '',
@@ -125,20 +188,20 @@
     },
 
     methods: {
-
       //判断是否登录
       islogin_getuserinif(){
         get_user_info().then((res) => {
           let status=res.status;
           if (status === 0) {
             this.user=JSON.parse(res.data);
+            let role=this.user.role;
             this.form.username=this.user.username;
             this.form.mobilePhone=this.user.mobilePhone;
-            if(this.user.isAuthentication===1){
+            if(this.user.isAuthentication!=4){
               //拉取实名信息
               getRealName().then((res) => {
                 if(res.status ===0 ){
-                  this. realName=res.data;
+                  this.realName=res.data;
                   let authentiCationStatus=this.realName.authentiCationStatus;
                   if(authentiCationStatus===1){
                     this.realName.authentiCationStatus='审核中';
@@ -154,16 +217,23 @@
                   this.$message.error(res.msg);
                 }
               })
-              let role=this.user.role;
+
               if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
-
                 this.isbusiness=true;  //显示商家信息
-
+              }else if(role===11){
+                this.iswanted=true;
+              }else if(role===6){
+                this.islease=true;
+              }else{
+                this.$message.error("获取用户信息失败");
+              }
+            }else {
+              if(role!=8){
+                this.isButtenRealName=true;
               }else{
                 this.isnotbusiness=true;
               }
-            }else {
-              this.isButtenRealName=true;
+
             }
           }else{
             this.$router.push({ path: '/login/sign' });
@@ -186,7 +256,6 @@
             this.fullscreenLoading = true;
             update_information(loginParams).then(data => {
               this.fullscreenLoading = false;
-             console.log(data)
               let status=data.status;
               let msg=data.msg;
               if(status===0){
@@ -213,15 +282,12 @@
 
             });
           } else {
-            console.log('系统异常');
             return false;
           }
         });
       },
       //城市组件
       handleChange (value) {
-        console.log(this.selectedOptions);
-
       },
 
     }

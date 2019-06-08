@@ -167,11 +167,7 @@
 
               let { msg, code, user } = data;
               if (data && data.status === 0) {
-                console.log(data)
                 this.dialogVisible= true;
-                // sessionStorage.setItem('user', JSON.stringify(user));
-               //this.$router.push({ path: '/home' });
-                console.log(data)
               }  else {
                 this.getCaptcha()
                 this.$message.error(data.msg)

@@ -176,29 +176,19 @@
           }else{
             this.$router.push({ path: '/home/release' });
           }
-          if(res.isAuthentication!=1){
+          if(res.isAuthentication!=2){
             this.$router.push({ path: '/home/myAccount' });
           }
         });
       },
 
-
-
-
-
-
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.ruleForm);
             const data = this.ruleForm;
-            console.log(data);
             grainAndOil(data).then(data => {
-
-              console.log(data)
               //let { msg, code, user } = data;
               if (data && data.status === 0) {
-                console.log(data)
                 // sessionStorage.setItem('user', JSON.stringify(user));
                 // this.$router.push({ path: '/home' });
 
@@ -214,8 +204,6 @@
               }
             });
 
-
-
           } else {
             console.log('error submit!!');
             return false;
@@ -226,29 +214,21 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-
-
         if (res.message!=null && res.message!='') {
           var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
-          console.log(this.ruleForm.pictureUrl);
         }
       },
 
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        console.log(file);
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
          if(file.name===this.ruleForm.pictureUrl[i].picture_name  && file.response.message===this.ruleForm.pictureUrl[i].picture_url){
-           console.log(this.ruleForm.pictureUrl[i] );
-           console.log(this.ruleForm.pictureUrl[i].picture_name );
+           // console.log(this.ruleForm.pictureUrl[i] );
+           // console.log(this.ruleForm.pictureUrl[i].picture_name );
            uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
              this.ruleForm.pictureUrl[i].use_status=2;
              //this.ruleForm.pictureUrl.splice(i,1);
-             console.log(111111111111);
-             console.log(this.ruleForm.pictureUrl[i].use_status);
-             console.log(this.ruleForm.pictureUrl);
-             console.log(111111111111);
            //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
 
            });
@@ -290,12 +270,6 @@
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt3M;
       },
-
-
-
-
-
-
 
     }
   }
