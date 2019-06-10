@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="用户管理" name="first">
+    <el-tab-pane label="用户实名审批" name="first">
       <First ></First>
     </el-tab-pane>
 
@@ -15,6 +15,7 @@
 <script>
   import First from './First'
   import { get_user_info } from '../../../api/api';
+
   export default {
     components: {
       First

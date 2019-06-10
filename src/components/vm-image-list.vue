@@ -11,14 +11,6 @@
       </el-row>
     </el-row>
 
-
-
-
-
-
-
-
-
     <el-row  :gutter="20"  >
       <el-col  :span="6"   v-for="item in movieInfoList" :key="item.id">
         <div  class="grid-content bg-purple">
@@ -35,9 +27,6 @@
           </div>
 
           显示商品名称   同行规格，换行 品牌，产地，换行价格，是否在价格有效期，
-
-
-
 
         </div>
       </el-col>
@@ -69,7 +58,6 @@
         type: String,
         default: 'Image List'
       },
-      // origin data
       dataInline: {
         type: Object
       }
@@ -78,21 +66,18 @@
       return {
         total: 0,
         currentPage: 1,
-
         infoList: [],
         movieInfoList: [],
-        pageSize: 4,//每页显示的数量
+        pageSize: 20,//每页显示的数量
 
       }
     },
     methods: {
 
       async getHotMovieList() {
-
         this.dataInline.pageSize=this.pageSize;
         this.dataInline.currentPage=this.currentPage;
         getPublishings(this.dataInline).then((res) => {
-
           if(res.status===0) {
             // console.log(res)
             // console.log( res.data)
@@ -101,18 +86,13 @@
             this.movieInfoList = res.data.datas;
           }
         });
-
-
       },
-
 
       handleCurrentChange(currentPage) {
         // currentPage为当前的页数
         // 显示当前页数对应的数据
-
         this.dataInline.currentPage=currentPage;
         getPublishings(this.dataInline).then((res) => {
-
           if(res.status===0) {
            // console.log(res.data.datas)
             this.movieInfoList = res.data.datas;

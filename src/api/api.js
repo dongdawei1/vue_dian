@@ -108,6 +108,7 @@ export const userlogout = params => { return axios.post(`${base}/api/user/logout
 export const newRealName = params => { return axios.post(`${base}/api/realName/newRealName`, params).then(res => res.data); };
 //重新实名
 export const updateRealName = params => { return axios.post(`${base}/api/realName/updateRealName`, params).then(res => res.data); };
+
 //获取实名信息
 export const getRealName = params => {
 
@@ -119,6 +120,10 @@ export const getRealName = params => {
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
 
   }).then(res => res.data); };
+//审核分页查询实名
+export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => res.data); };
+//实名审核
+export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 

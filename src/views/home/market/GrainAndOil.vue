@@ -1,12 +1,10 @@
 <template>
   <div>
-  <p class="page-container">粮油</p>
     类别，品牌，产地，价格，是否在价格有效期，
   <el-row  v-if="isbutten">
     <el-button type="primary"><router-link
       v-on:click.native="isAuthenticationM"
       to="" class="a" >发布信息</router-link></el-button>
-
   </el-row>
     <!-- 筛选区 -->
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -45,15 +43,14 @@
       return {
         resdata:'',
         role:'',
-       isbutten:false,
+        isbutten:false,
 
-        formInline: {
+        formInline: { //分页查询条件
           permissionid:5,
           user: '',
           region: ''
         },
         pathString:'/home/GrainAndOilPage'
-
       }
     },
 
