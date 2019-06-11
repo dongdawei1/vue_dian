@@ -10,6 +10,9 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" plain> <router-link
+          v-on:click.native=""
+          to="/home/addRealName"  class="a">添加实名 </router-link></el-button>
       </el-form-item>
     </el-form>
     <!--c查询框结束-->
@@ -217,6 +220,7 @@
         this.$refs[form].validate((valid) => {
           if (valid) {
            this.form.userId=this.realNameNo.userId;
+            this.form.isArtificial=1;
            console.log(this.form);
             examineRealName(this.form).then(data => {
               console.log(data);

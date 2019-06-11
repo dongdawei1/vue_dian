@@ -42,6 +42,7 @@ import MyAccount from '../views/home/userCenter/MyAccount'
 import Detailed from '../views/home/userCenter/Detailed'
 import RealName  from '../views/home/userCenter/RealName'
 import UpdateRealName  from '../views/home/userCenter/updateRealName'
+import AddRealName  from '../views/home/userCenter/addRealName'
 
 import Integral from '../views/home/Integral'
 import Characteristic from '../views/home/Characteristic'
@@ -256,6 +257,12 @@ export default new VueRouter ({
           hidden: true , //用户包中
           path: '/home/updateRealName',
           component:  UpdateRealName  //重新实名认证
+        },
+
+        {
+          hidden: true , //用户包中
+          path: '/home/addRealName',
+          component:  AddRealName  //重新实名认证
         }
 
 
