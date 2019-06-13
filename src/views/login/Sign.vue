@@ -92,13 +92,8 @@ export default {
            'uuid':1,
            'captcha': this.dataForm.captcha
          };
-         
          this.fullscreenLoading = true;
-
-
          requestLogin(loginParams).then(data => {
-
-
              this.fullscreenLoading = false;
            let { msg, code, user } = data;
            if (data && data.status === 0) {

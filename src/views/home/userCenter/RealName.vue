@@ -14,8 +14,8 @@
         <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
-      <el-form-item label="收/送人电话"    prop="contact"  >
-        <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人联系方式"></el-input>
+      <el-form-item label="收/送人手机"    prop="contact"  >
+        <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人手机"></el-input>
       </el-form-item>
       <el-form-item label="收/送人姓名"    prop="consignee_name"  >
         <el-input v-model="ruleForm.consignee_name"  placeholder="请输入收/送货人姓名"></el-input>
@@ -44,7 +44,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -65,8 +65,8 @@
         <el-input v-model="ruleFormnotbusiness.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
-      <el-form-item label="电话"    prop="contact"  >
-        <el-input v-model="ruleFormnotbusiness.contact"  placeholder="请输入联系方式"></el-input>
+      <el-form-item label="手机"    prop="contact"  >
+        <el-input v-model="ruleFormnotbusiness.contact"  placeholder="请输入手机"></el-input>
       </el-form-item>
       <el-form-item label="姓名"    prop="consignee_name"  >
         <el-input v-model="ruleFormnotbusiness.consignee_name"  placeholder="请输入姓名"></el-input>
@@ -88,7 +88,7 @@
 
 
       <el-form-item>
-        <el-button type="primary" @click="resetFormWanted('ruleFormnotbusiness')">立即实名</el-button>
+        <el-button type="primary" @click="resetFormWanted('ruleFormnotbusiness')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
         <el-button @click="resetFormWanted('ruleFormnotbusiness')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -107,8 +107,8 @@
         <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
-      <el-form-item label="联系方式"    prop="contact"  >
-        <el-input v-model="ruleForm.contact"  placeholder="请输入联系方式"></el-input>
+      <el-form-item label="联系手机"    prop="contact"  >
+        <el-input v-model="ruleForm.contact"  placeholder="请输入手机"></el-input>
       </el-form-item>
       <el-form-item label="联系人姓名"    prop="consignee_name"  >
         <el-input v-model="ruleForm.consignee_name"  placeholder="请输入姓名"></el-input>
@@ -137,7 +137,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -157,6 +157,7 @@
   export default {
     data() {
       return {
+        fullscreenLoading:false,
         isbusiness:false, //商家
         iswanted:false,//求职
         islease:false,//出租
@@ -205,8 +206,8 @@
             { max: 100, message: '不能超过100个字', trigger: 'blur' }
           ],
           contact:[
-            { required: true, message: '请输入联系方式', trigger: 'blur' },
-            { min:6 ,max: 12, message: '长度在6至11位之间', trigger: 'blur' }
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
           ],
           consignee_name:[
             { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -236,12 +237,10 @@
         get_user_info().then((res) => {
           let status=res.status;
           if (status === 0) {
-
             let user=JSON.parse(res.data);
             if( user.isAuthentication!=4){
               this.$router.push({ path: '/home/myAccount' });
             }
-
             let role=user.role;
             if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
               this.isbusiness=true;
@@ -279,7 +278,9 @@
             'isbusiness': 2   //是否是商家
                       }
           if (valid) {
+            this.fullscreenLoading = true;
             newRealName(data).then(data => {
+              this.fullscreenLoading = false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
                this.$router.push({ path: '/home/myAccount' });
@@ -301,15 +302,16 @@
 
 
       //求职提交
-
       resetFormWanted(ruleFormnotbusiness) {
-    this.$refs[ruleFormnotbusiness].validate((valid) => {
+        this.$refs[ruleFormnotbusiness].validate((valid) => {
       var data ={
         'ruleForm': this.ruleFormnotbusiness,
         'isbusiness': 11
       }
       if (valid) {
+        this.fullscreenLoading = true;
         newRealName(data).then(data => {
+          this.fullscreenLoading = false;
           if (data && data.status === 0) {
             this.$message.success(data.msg);
             this.$router.push({ path: '/home/myAccount' });
@@ -321,7 +323,6 @@
             } if(dataerror==='没有此权限'){
               this.$router.push({ path: '/home/release' });
             }
-
           }
         });
       } else {

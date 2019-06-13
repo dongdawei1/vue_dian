@@ -135,7 +135,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('form')">提交</el-button>
+        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
       </div>
     </el-dialog>
     <!--审核弹窗结束-->
@@ -152,7 +152,6 @@
 
   </div>
 </template>
-
 <script>
   import {  getRealNameAll } from '../../../api/api';
   import {  examineRealName } from '../../../api/api';
@@ -160,6 +159,7 @@
   export default {
     data() {
       return {
+        fullscreenLoading:false,
         //分页开始
         total: 0,
         currentPage: 1,
@@ -216,15 +216,13 @@
       },
       //审批提交
       submitForm(form) {
-
         this.$refs[form].validate((valid) => {
           if (valid) {
+            this.fullscreenLoading=true;
            this.form.userId=this.realNameNo.userId;
             this.form.isArtificial=1;
-           console.log(this.form);
             examineRealName(this.form).then(data => {
-              console.log(data);
-              //let { msg, code, user } = data;
+              this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
                 this.getHotMovieList(); //刷新列表

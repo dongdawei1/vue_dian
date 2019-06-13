@@ -111,14 +111,38 @@
       </div>
     </div>
     <!--租房实名信息结束-->
-    <!--租房实名信息开始-->
+
+    <!--自由供货者已实名-->
+    <div   v-if="isfree"   >
+      <span>用户实名信息</span>
+      <div  class="gerentablecss_content">
+        <span>城  区 : {{realName.detailed }}</span><br>
+        <span>送货范围 : {{ realName.addressDetailed}}</span><br>
+        <span>联系人姓名 : {{ realName.consigneeName}}</span><br>
+        <span>联系方式 : {{ realName.contact}}</span><br>
+        <span>邮箱 : {{ realName.email}}</span><br>
+        <span>实名状态 : {{ realName.authentiCationStatus}}</span><br>
+        <span v-if="authentication_status">审核失败原因 : {{ realName.authentiCationFailure}}</span><br>
+      </div>
+      <div  class="gerentablecss_butten"  v-if="authentication_status" >
+        <el-row>
+          <el-button type="info" plain>
+            <router-link
+              v-on:click.native=""
+              to="/home/updateRealName"  class="a">重新发起实名 </router-link></el-button>
+        </el-row>
+      </div>
+    </div>
+    <!--自由供货者已实名-->
+
+    <!--自由供货者未实名-->
     <div   v-if="isnotbusiness"   >
       <span>用户实名信息</span>
       <div  class="gerentablecss_content">
         <span>请联系客服进行线下实名</span><br>
       </div>
     </div>
-    <!--租房实名信息结束-->
+    <!--自由供货者未实名-->
   </div>
 
 </template>
@@ -131,18 +155,19 @@
 
   export default {
     data() {
-
       return {
         realName:'',
         user: '',
-        isButtenRealName:false,
+        isButtenRealName:false,   //没有实名显示立即实名按键
+        isnotbusiness:false,//自由供货者显示这个
         dialogFormVisible: false, //修改 用户基本信息弹窗
-        logining : false,
         fullscreenLoading: false,
+        //根据不同的角色显示不同的 详情
         isbusiness: false, //商家
         iswanted:false,//求职
         islease:false,//出租
-        isnotbusiness:false,//非商家
+        isfree:false,//自由供货者
+
         authentication_status:false, //审核是失败的状态
 
         form: {
@@ -224,7 +249,9 @@
                 this.iswanted=true;
               }else if(role===6){
                 this.islease=true;
-              }else{
+              }else if(role===8){
+                this.isfree=true;
+              }  else{
                 this.$message.error("获取用户信息失败");
               }
             }else {
@@ -244,8 +271,6 @@
       submitForm() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            //this.logining = true;
-            console.log(this.form)
             let loginParams = {
               'username': this.form.username,
               'mobilePhone': this.form.mobilePhone,
@@ -261,7 +286,6 @@
               if(status===0){
                   if(msg==="编辑成功重新登陆"){
                     this.$message.success("修改密码成功请重新登陆");
-                  //  sleep(2000);
                     this.dialogFormVisible = false;
                     this.$router.push({ path: '/login/sign' });
                   }else{

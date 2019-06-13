@@ -18,7 +18,7 @@
 
 
   <el-form-item label="联系手机" prop="mobilePhone"  >
-    <el-input v-model="ruleForm.mobilePhone"  placeholder="手机号"></el-input>
+    <el-input v-model="ruleForm.mobilePhone"  placeholder="请输入手机号"></el-input>
   </el-form-item>
 
   <el-form-item label="选择角色" prop="role">
@@ -146,8 +146,6 @@
 
           if (valid) {
 
-            this.logining = true;
-            //NProgress.start();
             var loginParams = {
              'name': this.ruleForm.name,
               'pass': this.ruleForm.pass,

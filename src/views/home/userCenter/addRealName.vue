@@ -3,7 +3,7 @@
     <p>人工录入实名信息</p>
     <!--增加实名页开始-->
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"    class="demo-ruleForm">
-      <el-form-item label="城区"   prop="selectedOptions">
+      <el-form-item label="区域"   prop="selectedOptions">
         <el-cascader
           size="large"
           :options="options"
@@ -12,16 +12,23 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="送货区域"    prop="address_detailed"  >
-        <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
+      <el-form-item label="送货范围"    prop="address_detailed"  >
+        <el-radio v-model="ruleForm.address_detailed" label="全市">全市</el-radio>
+        <el-radio v-model="ruleForm.address_detailed" label="本区">本区</el-radio>
+      </el-form-item>
+      <el-form-item label="注册手机"    prop="mobilePhone"  >
+        <el-input v-model="ruleForm.mobilePhone"  placeholder="注册时手机号"></el-input>
       </el-form-item>
 
-      <el-form-item label="电话"    prop="contact"  >
-        <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人联系方式"></el-input>
+      <el-form-item label="注册姓名"    prop="userName"  >
+        <el-input v-model="ruleForm.userName"  placeholder="送货人姓名"></el-input>
       </el-form-item>
-      <el-form-item label="姓名"    prop="consignee_name"  >
-        <el-input v-model="ruleForm.consignee_name"  placeholder="请输入收/送货人姓名"></el-input>
+
+      <el-form-item label="送货手机"    prop="contact"  >
+        <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人手机号"></el-input>
       </el-form-item>
+
+
       <el-form-item label="年龄"    prop="eag"    placeholder="请输入年龄" >
         <el-input v-model="ruleForm.eag"  placeholder="请输入年龄"></el-input>
       </el-form-item>
@@ -53,7 +60,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -74,6 +81,7 @@
   export default {
     data() {
       return {
+       fullscreenLoading:false,
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
@@ -88,7 +96,8 @@
           district_county_id:'',
           address_detailed: '',//详细地址收/送货地址
           contact:'',//收送货人联系方式
-          consignee_name:'', //收/送货人姓名
+          userName:'',//注册时用户名
+          mobilePhone:'',//注册时手机号
           email:'',//邮箱
           licenseUrl: [],//营业执照图片
           eag:'', // 年龄
@@ -102,16 +111,19 @@
             { required: true, message: '请选择城市和地区', trigger: 'blur' }
           ],
           address_detailed:[
-            { required: true, message: '请输入详细地址', trigger: 'blur' },
-            { max: 100, message: '不能超过100个字', trigger: 'blur' }
+            { required: true, message: '请选择送货范围', trigger: 'blur' }
           ],
           contact:[
-            { required: true, message: '请输入收/送货人联系方式', trigger: 'blur' },
-            { min:6 ,max: 12, message: '长度在6至11位之间', trigger: 'blur' }
+            { required: true, message: '送货人手机号码', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
           ],
-          consignee_name:[
-            { required: true, message: '请输入收/送货人姓名', trigger: 'blur' },
-            { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
+          mobilePhone:[
+            { required: true, message: '注册时手机号', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
+          ],
+          userName:[
+            { required: true, message: '注册用户名', trigger: 'blur' },
+            { min:8,max: 18, message: '长度在8至18位之间', trigger: 'blur' }
           ],
           email:[
             { min:8,max: 30, message: '长度在8至30位之间', trigger: 'blur' }
@@ -140,7 +152,6 @@
           if (status != 0) {
             this.$router.push({ path: '/login/sign' });
           }else{
-            let user=JSON.parse(res.data);
             let role=user.role;
             if(role!=1){
               this.$router.push({ path: '/home/release' });
@@ -162,11 +173,10 @@
 
         this.$refs[ruleForm].validate((valid) => {
           if (valid) {
+            this.fullscreenLoading=true;
             this.ruleForm.isArtificial=2;
-            console.log(this.ruleForm);
             examineRealName(this.ruleForm).then(data => {
-              console.log(data);
-              //let { msg, code, user } = data;
+              this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
               }  else {
