@@ -31,6 +31,7 @@ import RentalBooth from '../views/home/RentalBooth'
 
 import RecruitWorkers from '../views/home/recruit/RecruitWorkers'
 import JobWanted from '../views/home/recruit/JobWanted'
+import ReleaseWelfare from '../views/home/recruit/ReleaseWelfare'
 
 import Renovation from '../views/home/Renovation'
 import Repair from '../views/home/Repair'
@@ -263,8 +264,13 @@ export default new VueRouter ({
           hidden: true , //用户包中
           path: '/home/addRealName',
           component:  AddRealName  //重新实名认证
-        }
+        },
 
+        {
+          hidden: true , //用户包中
+          path: '/home/releaseWelfare',
+          component:   ReleaseWelfare  //发布招聘
+        }
 
       ]
     },

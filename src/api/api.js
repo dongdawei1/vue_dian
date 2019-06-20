@@ -52,6 +52,7 @@ export const get_user_info = params => {
 //登陆过期跳登陆页，为过期跳传入的地址
 export const get_user_info_sign = params => {
   get_user_info().then((res) => {
+
     if (res.msg==='用户未登录,无法获取当前用户的信息') {
       router.push('/login/sign')
     }else{
@@ -70,6 +71,7 @@ export const get_user_info_jurisdiction = params => {
     if (status === 0) {
       //获取用户权限
       let resdata=JSON.parse(res.data);  //字符串转换为 对象
+      //JSON.stringify(jsonobj)  对象转换为字符串
       let role=resdata.role;
        //米面按钮权限
        if(params ==='/home/GrainAndOilPage'){
@@ -82,6 +84,17 @@ export const get_user_info_jurisdiction = params => {
            res.isAuthentication=resdata.isAuthentication;
            return res;
          }
+       }else if(params ==='/home/releaseWelfare'){
+         if(role===1 ||role===2 || role===5){
+           res.isbutten=true;
+           res.isAuthentication=resdata.isAuthentication;
+           return res;
+         }else{
+           res.isbutten=false;
+           res.isAuthentication=resdata.isAuthentication;
+           return res;
+         }
+
        }
     }
   }).then(res => res); };
@@ -130,8 +143,15 @@ export const grainAndOil = params => { return axios.post(`${base}/api/commodity/
 //查询所有发布
 
 export const getPublishings = params => { return axios.post(`${base}/api/getPublishings/getGoods`, params).then(res => res.data);};
-
-
+//获取职位类型
+export const get_position = params => {
+  return axios({
+    url: `${base}/api/releaseWelfare/get_position`,
+    // params: { uuid: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+  }).then(res => res.data); };
 //参数n为休眠时间，单位为毫秒:
 export const  sleep = params =>{
         var start = new Date().getTime();

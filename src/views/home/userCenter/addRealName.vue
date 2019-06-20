@@ -179,6 +179,7 @@
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
+
               }  else {
                 this.$message.error(data.msg);
                 let dataerror=data.msg;

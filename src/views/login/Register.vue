@@ -156,10 +156,7 @@
               'uuid': 2,
               'captcha': this.ruleForm.captcha
             };
-
             this.fullscreenLoading = true;
-
-
             requestCreate(loginParams).then(data => {
               this.fullscreenLoading = false;
 
@@ -180,7 +177,7 @@
       //注册成功后弹窗
       handleClose(done) {
         done();
-        this.$router.push({ path: '/home' });
+        this.$router.push({ path: '/home/release' });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

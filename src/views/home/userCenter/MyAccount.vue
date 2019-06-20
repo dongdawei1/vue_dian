@@ -229,7 +229,7 @@
                   this.realName=res.data;
                   let authentiCationStatus=this.realName.authentiCationStatus;
                   if(authentiCationStatus===1){
-                    this.realName.authentiCationStatus='审核中';
+                    this.realName.authentiCationStatus='审核中,请您关注客服来电';
                     this.authentication_status=false;
                   }if(authentiCationStatus===2){
                     this.realName.authentiCationStatus='审核通过';
