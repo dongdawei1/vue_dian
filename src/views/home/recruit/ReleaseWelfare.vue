@@ -20,7 +20,7 @@
         </template>
         </el-form-item>
 
-      <el-form-item label="职位工资" prop="salary">
+      <el-form-item label="职位工资"  prop="salary">
         <el-select v-model="ruleForm.salary" placeholder="请选择工资">
           <el-option label="2000元以上" value="2000元以上"></el-option>
           <el-option label="3000元以上" value="3000元以上"></el-option>
@@ -89,11 +89,12 @@
 
       <el-form-item label="介绍奖励" prop="introductoryAward">
         <el-select v-model="ruleForm.introductoryAward" placeholder="介绍人奖励可不选">
-          <el-option label="100元入职一个月后奖励" value="100元入职一个月后奖励"></el-option>
-          <el-option label="200元入职一个月后奖励" value="200元入职一个月后奖励"></el-option>
-          <el-option label="300元入职一个月后奖励" value="300元入职一个月后奖励"></el-option>
-          <el-option label="400元入职一个月后奖励" value="400元入职一个月后奖励"></el-option>
-          <el-option label="500元入职一个月后奖励" value="500元入职一个月后奖励"></el-option>
+          <el-option label="无" value="无"></el-option>
+          <el-option label="每人100元入职一个月后奖励" value="每人100元入职一个月后奖励"></el-option>
+          <el-option label="每人200元入职一个月后奖励" value="每人200元入职一个月后奖励"></el-option>
+          <el-option label="每人300元入职一个月后奖励" value="每人300元入职一个月后奖励"></el-option>
+          <el-option label="每人400元入职一个月后奖励" value="每人400元入职一个月后奖励"></el-option>
+          <el-option label="每人500元入职一个月后奖励" value="每人500元入职一个月后奖励"></el-option>
         </el-select>
       </el-form-item>
 
@@ -105,11 +106,11 @@
         <el-input v-model="ruleForm.workingAddress" placeholder="请输工作地址"></el-input>
       </el-form-item>
 
-      <el-form-item label="职位描述" prop="describe">
+      <el-form-item label="职位描述" prop="describeOne">
       <el-input
         type="textarea"
         placeholder="如：具体工作范围，或者具体年龄等不超过100字"
-        v-model="ruleForm.describe"
+        v-model="ruleForm.describeOne"
         maxlength="100"
         show-word-limit
       >
@@ -143,14 +144,30 @@
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
-
+     <!-- 成功弹窗  -->
+    <el-dialog
+      title="发布成功"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+      :before-close="cntinue"
+    >
+      <span>请关注审核状态，约24小时内完成审核</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="cntinue">继续发布</el-button>
+    <el-button type="primary" >    <router-link
+        v-on:click.native=""
+        to="/home/myRelease"  class="a">查看我的发布 </router-link></el-button>
+     </span>
+    </el-dialog>
+    <!-- 成功弹窗结束  -->
   </div>
 </template>
 
 
 <script>
 
-  import { grainAndOil } from '../../../api/api';
+  import { create_position } from '../../../api/api';
   import { get_user_info_jurisdiction } from '../../../api/api';
   import { get_position } from '../../../api/api';
   import { getRealName } from '../../../api/api';
@@ -162,7 +179,7 @@
         resdata:'',//获取的用户信息
         realName:'',//用户实名信息
         pathString:'/home/releaseWelfare',
-
+        centerDialogVisible: false,//成功弹窗
         ruleForm: {
           userId:'',
           userName:'',
@@ -174,7 +191,7 @@
           experience:'不限', //工作年限
           age:'',//年龄范围
           gender:'',//性别
-          describe:'',//职位描述 100字以下
+          describeOne:'',//职位描述 100字以下
           introductoryAward:'',//介绍人奖励  非必填
           email:'',  //非必填
           isPublishContact:'', // 是否公开手机 1公开，2隐藏
@@ -219,12 +236,15 @@
             {  required: true, message: '工作地址不能为空', trigger: 'change' },
             { min: 1, max: 100, message: '地址不能超过100个字', trigger: 'blur' }
           ],
-          describe:[
+          describeOne:[
             {  required: true, message: '职位描述不能为空', trigger: 'change' },
             { min: 1, max: 100, message: '职位描述不能超过100个字', trigger: 'blur' }
           ],
           isPublishContact: [
             { required: true, message: '请勾选是否公开电话', trigger: 'blur' }
+          ],
+          introductoryAward: [
+            { required: true, message: '请选择是否有介绍奖励', trigger: 'blur' }
           ],
         }
       }
@@ -235,12 +255,17 @@
       this.jurisdiction();
     },
     methods: {
+      cntinue(){  //留在本页继续发布
+        this.centerDialogVisible=false;
+     },
 
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction() {
         get_user_info_jurisdiction(this.pathString).then((res) => {
           if (res.isbutten === true) {
-            this.resdata = res;
+            this.resdata =JSON.parse(res.data);
+            this.ruleForm.userId=this.resdata.id;
+            this.ruleForm.userName=this.resdata.username;
           } else {
             this.$router.push({path: '/home/release'});
           }
@@ -252,20 +277,22 @@
       },
 
       submitForm(ruleForm) {
+        console.log(this.ruleForm);
         this.$refs[ruleForm].validate((valid) => {
           if (valid) {
             const data = this.ruleForm;
-            grainAndOil(data).then(data => {
+            create_position(data).then(data => {
 
               if (data && data.status === 0) {
-
+               //成功弹窗
+                this.centerDialogVisible=true;
               } else {
                 this.$message.error(data.msg);
                 let dataerror = data.msg;
-                if (dataerror === '用户登陆已过期') {
+                if (dataerror === '登录过期') {
                   this.$router.push({path: '/login/sign'});
                 }
-                if (dataerror === '没有此权限') {
+                if (dataerror === '没有发布权限') {
                   this.$router.push({path: '/home/release'});
                 }
               }

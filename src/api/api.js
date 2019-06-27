@@ -135,8 +135,14 @@ export const getRealName = params => {
   }).then(res => res.data); };
 //审核分页查询实名
 export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => res.data); };
+//分页查询待审批招聘
+export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => res.data); };
+
 //实名审核
 export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
+//审核发布招聘
+export const examineReleaseWelfare = params => { return axios.post(`${base}/api/toExamine/examineReleaseWelfare`, params).then(res => res.data); };
+
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 
@@ -152,6 +158,9 @@ export const get_position = params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
   }).then(res => res.data); };
+//发布职位
+export const create_position = params => { return axios.post(`${base}/api/releaseWelfare/create_position`, params).then(res => res.data); };
+
 //参数n为休眠时间，单位为毫秒:
 export const  sleep = params =>{
         var start = new Date().getTime();
