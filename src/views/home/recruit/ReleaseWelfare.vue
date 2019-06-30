@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <p>职位信息</p>
+      <p>职位信息,有效期30天，在我的发布刷新即可增加有效期</p>
       <el-form-item label="职位类型"  prop="position" >
       <template>
         <el-select v-model="ruleForm.position" filterable placeholder="请输入或点击选择职位类型">

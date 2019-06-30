@@ -66,10 +66,12 @@ export const get_user_info_jurisdiction = params => {
 
     if (res.msg==='用户未登录,无法获取当前用户的信息') {
       router.push('/login/sign')
+      return null;
     }
     let status=res.status;
     if (status === 0) {
       //获取用户权限
+
       let resdata=JSON.parse(res.data);  //字符串转换为 对象
       //JSON.stringify(jsonobj)  对象转换为字符串
       let role=resdata.role;
@@ -77,25 +79,18 @@ export const get_user_info_jurisdiction = params => {
        if(params ==='/home/GrainAndOilPage'){
          if(role===1 ||role===4){
            res.isbutten=true;
-           res.isAuthentication=resdata.isAuthentication;
-          return res;
          }else{
            res.isbutten=false;
-           res.isAuthentication=resdata.isAuthentication;
-           return res;
          }
        }else if(params ==='/home/releaseWelfare'){
          if(role===1 ||role===2 || role===5){
            res.isbutten=true;
-           res.isAuthentication=resdata.isAuthentication;
-           return res;
          }else{
            res.isbutten=false;
-           res.isAuthentication=resdata.isAuthentication;
-           return res;
          }
-
        }
+      res.isAuthentication=resdata.isAuthentication;
+      return res;
     }
   }).then(res => res); };
 
@@ -160,7 +155,8 @@ export const get_position = params => {
   }).then(res => res.data); };
 //发布职位
 export const create_position = params => { return axios.post(`${base}/api/releaseWelfare/create_position`, params).then(res => res.data); };
-
+//用户分页查询自己发布的职位
+export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res => res.data); };
 //参数n为休眠时间，单位为毫秒:
 export const  sleep = params =>{
         var start = new Date().getTime();
