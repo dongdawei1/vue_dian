@@ -154,7 +154,7 @@
 <script>
   import {  getRealNameAll } from '../../../api/api';
   import {  examineRealName } from '../../../api/api';
-
+  import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
       return {
@@ -215,7 +215,7 @@
       },
       //审批提交
       submitForm(form) {
-        this.$refs[form].validate((valid) => {
+        this.$refs['form'].validate((valid) => {
           if (valid) {
             this.fullscreenLoading=true;
            this.form.userId=this.realNameNo.userId;
@@ -227,13 +227,7 @@
                 this.getHotMovieList(); //刷新列表
                 this.dialogFormVisible=false;
               }  else {
-                this.$message.error(data.msg);
-                let dataerror=data.msg;
-                if(dataerror==='用户登陆已过期'){
-                  this.$router.push({ path: '/login/sign' });
-                } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home/release' });
-                }
+                isRoleMessage(data.msg);
               }
             });
 
@@ -254,14 +248,7 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-
-            let dataerror=res.msg;
-            this.$message.error(dataerror);
-            if(dataerror==='用户登陆已过期'){
-              this.$router.push({ path: '/login/sign' });
-            } if(dataerror==='没有此权限'){
-              this.$router.push({ path: '/home/release' });
-            }
+            isRoleMessage(res.msg);
           }
         });
       },

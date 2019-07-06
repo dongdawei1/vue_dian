@@ -6,37 +6,37 @@
       <span>手机号 : {{ user.mobilePhone}}</span><br>
     </div>
     <!--编辑基本信息弹窗开始-->
+    <!--修改基本信息弹窗-->
+    <el-dialog title="编辑基本信息" :visible.sync="dialogFormVisible">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="用户名" :label-width="formLabelWidth"  prop="username"  >
+          <el-input v-model="form.username" autocomplete="off" :placeholder="form.username" readonly="readonly"  :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" :label-width="formLabelWidth"  prop="mobilePhone"  >
+          <el-input v-model="form.mobilePhone" autocomplete="off" :placeholder="form.mobilePhone"></el-input>
+        </el-form-item>
+
+        <el-form-item label="原始密码" :label-width="formLabelWidth" prop="rowPassword">
+          <el-input type="password" v-model="form.rowPassword" autocomplete="off" placeholder="请输入原始密码"></el-input>
+        </el-form-item>
+
+        <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
+          <el-input type="password" v-model="form.newPassword" autocomplete="off" placeholder="若不修改密码可以不填写"></el-input>
+        </el-form-item>
+        <el-form-item label="确认新密码" :label-width="formLabelWidth" prop="checkenewPassword">
+          <el-input type="password" v-model="form.checkenewPassword" autocomplete="off" placeholder="密码修改成功后会跳转至登陆页"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--编辑基本信息弹窗结束-->
     <div  class="gerentablecss_butten">
        <el-row>
         <el-button type="info" plain   @click="dialogFormVisible = true">修改基础信息</el-button>
-         <!--修改基本信息弹窗-->
-         <el-dialog title="编辑基本信息" :visible.sync="dialogFormVisible">
-           <el-form :model="form" :rules="rules" ref="form">
-             <el-form-item label="用户名" :label-width="formLabelWidth"  prop="username"  >
-               <el-input v-model="form.username" autocomplete="off" :placeholder="form.username" readonly="readonly"  :disabled="true"></el-input>
-             </el-form-item>
-             <el-form-item label="手机号" :label-width="formLabelWidth"  prop="mobilePhone"  >
-               <el-input v-model="form.mobilePhone" autocomplete="off" :placeholder="form.mobilePhone"></el-input>
-             </el-form-item>
-
-             <el-form-item label="原始密码" :label-width="formLabelWidth" prop="rowPassword">
-               <el-input type="password" v-model="form.rowPassword" autocomplete="off" placeholder="请输入原始密码"></el-input>
-             </el-form-item>
-
-             <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
-               <el-input type="password" v-model="form.newPassword" autocomplete="off" placeholder="若不修改密码可以不填写"></el-input>
-             </el-form-item>
-             <el-form-item label="确认新密码" :label-width="formLabelWidth" prop="checkenewPassword">
-               <el-input type="password" v-model="form.checkenewPassword" autocomplete="off" placeholder="密码修改成功后会跳转至登陆页"></el-input>
-             </el-form-item>
-
-           </el-form>
-           <div slot="footer" class="dialog-footer">
-             <el-button @click="dialogFormVisible = false">取 消</el-button>
-             <el-button type="primary" @click="submitForm('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
-           </div>
-         </el-dialog>
-         <!--编辑基本信息弹窗结束-->
         <el-button type="info" plain  v-if="isButtenRealName" ><router-link
           v-on:click.native=""
           to="/home/realName"  class="a">立即实名 </router-link></el-button>

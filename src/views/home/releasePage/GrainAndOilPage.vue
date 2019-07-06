@@ -91,6 +91,7 @@
   import { uploadDown_update } from '../../../api/api';
   import { grainAndOil } from '../../../api/api';
   import { get_user_info_jurisdiction } from '../../../api/api';
+  import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
       return {
@@ -193,14 +194,7 @@
                 // this.$router.push({ path: '/home' });
 
               }  else {
-                   this.$message.error(data.msg);
-                   let dataerror=data.msg;
-                     if(dataerror==='用户登陆已过期'){
-                       this.$router.push({ path: '/login/sign' });
-                } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home/release' });
-                }
-
+                isRoleMessage(data.msg);
               }
             });
 

@@ -153,7 +153,7 @@
   import { get_user_info } from '../../../api/api';
   import {  updateRealName } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
-
+  import {  isRoleMessage} from '../../../api/api';
 
 
   export default {
@@ -286,13 +286,7 @@
                 this.$message.success(data.msg);
                 this.$router.push({ path: '/home/myAccount' });
               }  else {
-                this.$message.error(data.msg);
-                let dataerror=data.msg;
-                if(dataerror==='用户登陆已过期'){
-                  this.$router.push({ path: '/login/sign' });
-                } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home/release' });
-                }
+                isRoleMessage(data.msg);
               }
             });
           } else {
@@ -316,13 +310,7 @@
                 this.$message.success(data.msg);
                 this.$router.push({ path: '/home/myAccount' });
               }  else {
-                this.$message.error(data.msg);
-                let dataerror=data.msg;
-                if(dataerror==='用户登陆已过期'){
-                  this.$router.push({ path: '/login/sign' });
-                } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home/release' });
-                }
+                isRoleMessage(data.msg);
               }
             });
           } else {

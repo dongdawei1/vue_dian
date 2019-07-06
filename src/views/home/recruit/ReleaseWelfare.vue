@@ -132,12 +132,12 @@
         <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
       <el-form-item label="公开电话" prop="isPublishContact"  >
-        <template>
+
           <el-radio-group v-model="ruleForm.isPublishContact">
             <el-radio :label="1">公开</el-radio>
             <el-radio :label="2">不公开</el-radio>
           </el-radio-group>
-        </template>
+
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
@@ -171,6 +171,7 @@
   import { get_user_info_jurisdiction } from '../../../api/api';
   import { get_position } from '../../../api/api';
   import { getRealName } from '../../../api/api';
+  import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
       return {
@@ -207,30 +208,30 @@
         role:'',
         rules: {
           position: [
-            { required: true, message: '职位类型不能为空', trigger: 'blur' },
+            { required: true, message: '职位类型不能为空', trigger: 'change' },
           ],
           number: [
             { required: true, message: '请输入招聘人数', trigger: 'blur' }
           ],
           salary: [
-            { required: true, message: '请选择工资', trigger: 'blur' }
+            { required: true, message: '请选择工资', trigger: 'change' }
           ],
 
           welfare:[
-            { required: true, message: '福利不能为空', trigger: 'blur' },
+            { required: true, message: '福利不能为空', trigger: 'change' },
 
           ],
           education: [
-            { required: true, message: '学历不能为空', trigger: 'blur' }
+            { required: true, message: '学历不能为空', trigger: 'change' }
           ],
           experience: [
-            { required: true, message: '工作经验不能为空', trigger: 'blur' }
+            { required: true, message: '工作经验不能为空', trigger: 'change' }
           ],
           age: [
-            { required: true, message: '年龄范围不能为空', trigger: 'blur' }
+            { required: true, message: '年龄范围不能为空', trigger: 'change' }
           ],
           gender: [
-            { required: true, message: '性别不能为空', trigger: 'blur' }
+            { required: true, message: '性别不能为空', trigger: 'change' }
           ],
           workingAddress: [
             {  required: true, message: '工作地址不能为空', trigger: 'change' },
@@ -241,10 +242,10 @@
             { min: 1, max: 100, message: '职位描述不能超过100个字', trigger: 'blur' }
           ],
           isPublishContact: [
-            { required: true, message: '请勾选是否公开电话', trigger: 'blur' }
+            { required: true, message: '请勾选是否公开电话', trigger: 'change' }
           ],
           introductoryAward: [
-            { required: true, message: '请选择是否有介绍奖励', trigger: 'blur' }
+            { required: true, message: '请选择是否有介绍奖励', trigger: 'change' }
           ],
         }
       }
@@ -277,7 +278,6 @@
       },
 
       submitForm(ruleForm) {
-        console.log(this.ruleForm);
         this.$refs[ruleForm].validate((valid) => {
           if (valid) {
             const data = this.ruleForm;
@@ -287,18 +287,10 @@
                //成功弹窗
                 this.centerDialogVisible=true;
               } else {
-                this.$message.error(data.msg);
-                let dataerror = data.msg;
-                if (dataerror === '登录过期') {
-                  this.$router.push({path: '/login/sign'});
-                }
-                if (dataerror === '没有发布权限') {
-                  this.$router.push({path: '/home/release'});
-                }
+                isRoleMessage(data.msg);
               }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -306,11 +298,9 @@
       getRealName(){
               getRealName().then((res) => {
                 if(res.status ===0 ) {
-                  console.log(res);
                   this.realName=res.data;
-                  console.log( this.realName);
                   let  em=this.realName.email;
-                      if(em!=''){
+                      if(em!='' && em!=null){
                         this.ruleForm.email=em;
                       }
                    this.ruleForm.workingAddress= this.realName.addressDetailed;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import router from "../router";
-
+import { Message } from 'element-ui';
 let base = '';
 //登陆
 
@@ -156,7 +156,75 @@ export const get_position = params => {
 //发布职位
 export const create_position = params => { return axios.post(`${base}/api/releaseWelfare/create_position`, params).then(res => res.data); };
 //用户分页查询自己发布的职位
-export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res => res.data); };
+export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res =>isButtonAndList(res.data) ); };
+//用户操作自己发布的职位
+export const position_operation = params => { return axios.post(`${base}/api/releaseWelfare/position_operation`, params).then(res =>res.data) };
+
+function isButtonAndList(res){
+
+  if(res.status===0) {
+    let list=res.data.datas;
+
+    for(let a=0;a<list.length;a++){
+      let welfareStatus= list[a].welfareStatus;
+      if( welfareStatus===1){
+        list[a].welfareStatus='发布中';
+        list[a].authentiCationFailure='';
+        list[a].isDisplayRefresh=true;
+        list[a].isDisplayHide=true;
+      }else if( welfareStatus===2){
+        list[a].welfareStatus='隐藏中';
+        list[a].authentiCationFailure='';
+        list[a].isDisplayRelease=true;
+      }else if( welfareStatus===4){
+        let authentiCationStatus=list[a].authentiCationStatus;
+        list[a].isDisplayHide=true;
+        if(authentiCationStatus===3){
+          list[a].welfareStatus='审核失败';
+          list[a].isDisplayEdit=true;}
+        else{
+          list[a].welfareStatus='审核中'
+          list[a].authentiCationFailure='';}
+      }else if( welfareStatus===5){
+        list[a].welfareStatus='已过期';
+        list[a].authentiCationFailure='';
+        list[a].isDisplayDelay=true;
+      }
+
+      list[a].isDisplaySee=true;
+      list[a].isDisplayDelete=true;
+      let isPublishContact=list[a].isPublishContact;
+      if(isPublishContact===1){
+        list[a].isPublishContact='公开';
+      }else{list[a].isPublishContact='隐藏';}
+
+
+    }
+    res.data.datas= list;
+    return res;
+    //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
+  }else{
+    return res;
+  }
+
+
+
+
+
+
+}
+
+//根据错误跳转页面和报错
+export const  isRoleMessage = params =>{
+  Message.error(params);
+  if(params==='用户登陆已过期'){
+    this.$router.push({ path: '/login/sign' });
+  } else if(params==='没有权限'){
+    this.$router.push({ path: '/home/release' });
+  }else{
+
+  }
+}
 //参数n为休眠时间，单位为毫秒:
 export const  sleep = params =>{
         var start = new Date().getTime();

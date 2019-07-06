@@ -116,17 +116,14 @@
         label="操作"
         width="210">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <!-- 隐藏状态不显示刷新键 -->
-          <el-button @click="examineClick(scope.row)" type="text" size="small">刷新</el-button>
-          <!-- 状态不是失效的不显示延期键 -->
-          <el-button @click="examineClick(scope.row)" type="text" size="small">延期</el-button>
-          <!-- 隐藏和发布互斥 -->
-          <el-button @click="examineClick(scope.row)" type="text" size="small">隐藏</el-button>
-          <el-button @click="examineClick(scope.row)" type="text" size="small">发布</el-button>
-          <el-button @click="examineClick(scope.row)" type="text" size="small">删除</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
+          <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
+          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" >延期</el-button>
+          <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide">隐藏</el-button>
+          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" >发布</el-button>
+          <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   >删除</el-button>
           <!-- 只有失败的才显示 编辑键 -->
-          <el-button @click="examineClick(scope.row)" type="text" size="small">编辑</el-button>
+          <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -138,7 +135,7 @@
       width="60%"
       :before-close="handleClose">
 
-      <span>用户名 : {{realNameNo.userName }}</span><br>
+      <span>联系人 : {{realNameNo.consigneeName }}</span><br>
       <span>职位类型 : {{realNameNo.position }}</span><br>
       <span>联系方式 : {{realNameNo.contact }}</span><br>
       <span>城区 : {{realNameNo.detailed }}</span><br>
@@ -169,27 +166,47 @@
   </span>
     </el-dialog>
     <!--查看详情弹窗结束-->
+    <!--编辑弹窗开始-->
 
-    <!--审核弹窗开始-->
-    <el-dialog title="审核" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="审批状态" prop="authentiCationStatus">
-          <el-radio-group v-model="form.authentiCationStatus" >
-            <el-radio label="2">通过</el-radio>
-            <el-radio label="3">不通过</el-radio>
+   <!--邮箱，公开电话，职位描述，工作地址，四个框-->
+    <el-dialog title="修改招聘信息" :visible.sync="dialogFormVisible">
+      <el-form :model="realNameNo" :rules="rules" ref="form"  >
+
+        <!-- placeholder="如：具体工作范围，或者具体年龄等不超过100字"-->
+        <el-form-item label="职位描述" prop="describeOne" :label-width="formLabelWidth">
+          <el-input
+            type="textarea"
+            v-model="realNameNo.describeOne"
+            :placeholder="realNameNo.describeOne"
+            maxlength="100"
+            show-word-limit
+          >
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="工作地址" prop="workingAddress" :label-width="formLabelWidth">
+          <el-input v-model="realNameNo.workingAddress" :placeholder="realNameNo.workingAddress"></el-input>
+        </el-form-item>
+
+        <el-form-item label="公开电话" prop="isPublishContact"  :label-width="formLabelWidth" >
+          <el-radio-group v-model="realNameNo.isPublishContact"  :placeholder="realNameNo.isPublishContact"  >
+            <el-radio :label="1">公开</el-radio>
+            <el-radio :label="2">不公开</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="失败原因" prop="authentiCationFailure"  >
-          <el-input v-model="form.authentiCationFailure"  placeholder="选择不通过时必须输入，小于15个字"></el-input>
+
+        <el-form-item label="邮箱" :label-width="formLabelWidth"  prop="email"  >
+          <el-input v-model="realNameNo.email" autocomplete="off" :placeholder="realNameNo.email"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
+        <el-button type="primary" @click=" submitFormEdit('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
       </div>
     </el-dialog>
-    <!--审核弹窗结束-->
+    <!--编辑弹窗结束-->
+
     <!-- 分页 -->
     <el-pagination
       background
@@ -205,11 +222,13 @@
 </template>
 <script>
   import {  getReleaseWelfareAll } from '../../../../api/api';
-  import {  examineReleaseWelfare } from '../../../../api/api';
+  import {  position_operation } from '../../../../api/api';
   import { get_position } from '../../../../api/api';
   import { get_user_info_jurisdiction } from '../../../../api/api';
 
   import { get_position_list } from '../../../../api/api';
+  import { isRoleMessage } from '../../../../api/api';
+
   export default {
     data() {
       return {
@@ -238,22 +257,28 @@
           type: Object
         },
         tableData:[], //全部数据
-        realNameNo:'', //某一个审批
+        realNameNo:'', //某一个数据
         dialogVisible: false,  //查看详情弹窗
-        dialogFormVisible: false, //审批弹窗
-        form: {   //审核表单
-          authentiCationStatus: '',
-          authentiCationFailure:'', //失败原因
-        },
+        dialogFormVisible: false, //编辑弹窗
         formLabelWidth: '120px',
+        form:{
+
+        },
         rules: {
-          authentiCationStatus: [
-            { required: true, message: '请选择是否通过', trigger: 'change' }
+          workingAddress: [
+            {  required: true, message: '工作地址不能为空', trigger: 'change' },
+            { min: 1, max: 100, message: '地址不能超过100个字', trigger: 'blur' }
           ],
-          authentiCationFailure: [
-            { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
-          ]
-        }
+          describeOne:[
+            {  required: true, message: '职位描述不能为空', trigger: 'change' },
+            { min: 1, max: 100, message: '职位描述不能超过100个字', trigger: 'blur' }
+          ],
+          isPublishContact: [
+            { required: true, message: '请勾选是否公开电话', trigger: 'blur' }
+          ],},
+        //下边没有用到
+
+
       }
     },
     created () {
@@ -262,6 +287,7 @@
     },
 
     methods: {
+
       handleClick(row) {  //点击查看详细
         this.realNameNo=row;
         this.dialogVisible=true;
@@ -269,90 +295,97 @@
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
       },
-      examineClick(row){ //点击审批打开弹窗
-        this.realNameNo=row;
-        console.log(this.realNameNo);
-        this.dialogFormVisible=true;
-      },
+
       //查询提交
       onSubmit() {
         this.getHotMovieList();
       },
-      //审批提交
-      submitForm(form) {
-        this.$refs[form].validate((valid) => {
+      //编辑Edit
+      examineClick(row){
+        this.realNameNo=row;
+        if(this.realNameNo.isPublishContact=== '公开'){
+          this.realNameNo.isPublishContact=1;
+        }else{
+          this.realNameNo.isPublishContact=2;
+        }
+        this.dialogFormVisible = true;
+      },
+      submitFormEdit(form){
+        this.$refs['form'].validate((valid) => {
           if (valid) {
-            this.fullscreenLoading=true;
-            this.form.userId=this.realNameNo.userId;
-            this.form.id=this.realNameNo.id;
-            examineReleaseWelfare(this.form).then(data => {
+            let data={};
+            data.type=6;
+            data.userId= this.realNameNo.userId;
+            data.id=this.realNameNo.id;
+            data.workingAddress=this.realNameNo.workingAddress;
+            data.describeOne=this.realNameNo.describeOne;
+            data.isPublishContact=this.realNameNo.isPublishContact;
+            data.email=this.realNameNo.email;
+            position_operation(data).then(data => {
+              this.fullscreenLoading=false;
+              let msg=data.msg;
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
-                this.$message.success(data.msg);
+                this.$message.success(msg);
+                this.dialogFormVisible = false;
                 this.getHotMovieList(); //刷新列表
-                this.dialogFormVisible=false;
               }  else {
-                this.$message.error(data.msg);
-                let dataerror=data.msg;
-                if(dataerror==='用户登陆已过期'){
-                  this.$router.push({ path: '/login/sign' });
-                } if(dataerror==='没有此权限'){
-                  this.$router.push({ path: '/home/release' });
-                }
+                isRoleMessage(msg);
               }
             });
+          } else { return false; }
+        });
 
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
+
+
+      },
+      //操作
+      submitForm(form,type) {
+        this.fullscreenLoading=true;
+        let data={};
+        data.type=type;
+        data.userId= form.userId;
+        data.id=form.id;
+        if(type===1 || type===2 || type===3|| type===4 || type===5){
+          position_operation(data).then(data => {
+              this.fullscreenLoading=false;
+              let msg=data.msg;
+              if (data && data.status === 0) {
+                this.$message.success(msg);
+              }  else {
+
+                isRoleMessage(msg);
+              }
+            });
+        }else{
+          this.$message.error("操作类型错误");
+        }
+        this.getHotMovieList(); //刷新列表
+      },
+   //删除
+      open(form,type) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this. submitForm(form,type);
+        }).catch(() => {
+
         });
       },
 
-      async getHotMovieList() {
+      getHotMovieList() {
         this.dataInline.pageSize=this.pageSize;
         this.dataInline.currentPage=this.currentPage;
         this.dataInline.position=this.releaseWelfare.position;
         this.dataInline.welfareStatus=this.releaseWelfare.welfareStatus;
         get_position_list(this.dataInline).then((res) => {
-          console.log(res)
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
-            let list=res.data.datas;
-            for(let a=0;a<list.length;a++){
-             let welfareStatus= list[a].welfareStatus;
-             if( welfareStatus===1){
-               list[a].welfareStatus='发布中';
-               list[a].authentiCationFailure='';
-             }else if( welfareStatus===2){
-               list[a].welfareStatus='未显示';
-               list[a].authentiCationFailure='';
-             }else if( welfareStatus===4){
-               let authentiCationStatus=list[a].authentiCationStatus;
-                if(authentiCationStatus===3){
-                 list[a].welfareStatus='审核失败';}
-                else{
-                  list[a].welfareStatus='审核中'
-                  list[a].authentiCationFailure='';;}
-             }else if( welfareStatus===5){
-               list[a].welfareStatus='已过期';
-               list[a].authentiCationFailure='';
-             }
-             let isPublishContact=list[a].isPublishContact;
-             if(isPublishContact===1){
-               list[a].isPublishContact='公开';
-             }else{list[a].isPublishContact='隐藏';}
-            }
-        //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
-            this.tableData = list;
+            this.tableData = res.data.datas;
           }else{
-            this.$message.error(res.msg);
-            let dataerror=res.msg;
-            if(dataerror==='用户登陆已过期'){
-              this.$router.push({ path: '/login/sign' });
-            } if(dataerror==='没有此权限'){
-              this.$router.push({ path: '/home/release' });
-            }
+            isRoleMessage(res.msg);
           }
         });
       },
@@ -365,13 +398,7 @@
           if(res.status===0) {
             this.tableData = res.data.datas;
           }else{
-            this.$message.error(res.msg);
-            let dataerror=res.msg;
-            if(dataerror==='用户登陆已过期'){
-              this.$router.push({ path: '/login/sign' });
-            } if(dataerror==='没有此权限'){
-              this.$router.push({ path: '/home/release' });
-            }
+            isRoleMessage(res.msg);
           }
         });
 
