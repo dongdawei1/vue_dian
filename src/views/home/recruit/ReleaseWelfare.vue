@@ -252,11 +252,10 @@
     },
 
     created () {
-     this.loadAll();
       this.jurisdiction();
     },
     methods: {
-      cntinue(){  //留在本页继续发布
+        cntinue(){  //留在本页继续发布
         this.centerDialogVisible=false;
      },
 
@@ -272,8 +271,10 @@
           }
           if (res.isAuthentication != 2) {
             this.$router.push({path: '/home/myAccount'});
-          }
+          }else {
           this.getRealName();
+          this.loadAll();//获取完用户信息在调用
+          }
         });
       },
 
@@ -296,7 +297,7 @@
         });
       },
       getRealName(){
-              getRealName().then((res) => {
+              getRealName().then((res) => { //获取实名信息填充
                 if(res.status ===0 ) {
                   this.realName=res.data;
                   let  em=this.realName.email;

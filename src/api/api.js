@@ -80,12 +80,14 @@ export const get_user_info_jurisdiction = params => {
          if(role===1 ||role===4){
            res.isbutten=true;
          }else{
+           Message.error("没有访问权限");
            res.isbutten=false;
          }
        }else if(params ==='/home/releaseWelfare'){
          if(role===1 ||role===2 || role===5){
            res.isbutten=true;
          }else{
+           Message.error("没有访问权限");
            res.isbutten=false;
          }
        }

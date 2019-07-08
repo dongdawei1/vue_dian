@@ -2,18 +2,31 @@
   <div>
 
     <!-- 筛选区 -->
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-      <el-form-item label="审批人">
-        <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+    <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
+
+      <el-form-item label="职位城区"   >
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="releaseWelfare.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
       </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="formInline.region" placeholder="活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
+
+      <el-form-item label="职位类型"  >
+        <template>
+          <el-select v-model="releaseWelfare.position" clearable placeholder="请输入或点击选择职位类型">
+            <el-option
+              v-for="item in restaurants"
+              :key="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
       </el-form-item>
+
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="getHotMovieList(releaseWelfare)">查询</el-button>
       </el-form-item>
         <el-form-item  v-if="isbutten">
         <el-button type="primary"><router-link
@@ -22,21 +35,23 @@
         </el-form-item>
     </el-form>
 
-    <VmImageList :dataInline="formInline" class="vm-margin"></VmImageList>
+
   </div>
 </template>
 
 
 <script>
-  import VmImageList from '../../../components/vm-image-list';
+
   import { get_user_info_sign } from '../../../api/api';
   import { get_user_info_jurisdiction } from '../../../api/api';
+  import { getRealName } from '../../../api/api';
+  import { get_position } from '../../../api/api';
+  import { getPublishings } from '../../../api/api';
+  import { isRoleMessage} from '../../../api/api';
+
+  import { regionData } from 'element-china-area-data'
   export default {
 
-    name: 'ImageList',
-    components: {
-      VmImageList
-    },
 
 
     data() {
@@ -45,12 +60,27 @@
         role:'',
         isbutten:false,
 
-        formInline: { //分页查询条件
-          permissionid:5,
-          user: '',
-          region: ''
+
+        pathString:'/home/releaseWelfare',
+        thispath: '/home/recruitWorkers',
+        restaurants: '', // 职位类型下拉
+        options: regionData,//城市
+        realName:'',//实名信息
+        releaseWelfare: { //查询条件
+          selectedOptions: [], //三级联动城市
+          provincesId:'',//省id
+          cityId:'',
+          districtCountyId:'',
+          position:'', //职位类型
+          //分页开始
+          total: 0,
+          currentPage: 1,
+          infoList: [],
+          movieInfoList: [],
+          pageSize: 20,//每页显示的数量
+          //分页结束
+          permissionid:30,
         },
-        pathString:'/home/releaseWelfare'
       }
     },
 
@@ -58,8 +88,6 @@
       this.jurisdiction()
     },
     methods: {
-      onSubmit() {
-      },
       //判断是否实名和登陆状态
       isAuthenticationM(){
         if(this.resdata.isAuthentication !=2 ){
@@ -73,13 +101,93 @@
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction(){
-        get_user_info_jurisdiction(this.pathString).then((res) => {
-          if(res.isbutten===true){
-            this.isbutten=true;
+        get_user_info_jurisdiction(this.thispath).then((res) => {
+          if(res.isAuthentication !=2 ){
+            this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
+              dangerouslyUseHTMLString: true
+            });
+            this.$router.push({ path: '/home/myAccount' });
+          }else{
+            this.isbutten=res.isbutten; //是否展示发布键
+            this.resdata=res; //用户信息
+            this.getRealName();          //获取实名信息,初始化城市
+            this.loadAll();
+
           }
-          this.resdata=res;
         });
       },
+
+      //查询提交
+      onSubmit(releaseWelfare) {
+        this.getHotMovieList();
+      },
+
+      //获取用户实名信息判断展示哪个城市的信息
+      getRealName(){
+        getRealName().then((res) => { //获取实名信息填充
+          if(res.status ===0 ) {
+            this.realName=res.data;
+            this.releaseWelfare.provincesId=this.realName.provincesId;
+            this.releaseWelfare.cityId=this.realName.cityId;
+            this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
+            this. getHotMovieList(this.releaseWelfare); //分页查询
+          }
+        });
+      },
+      //获取全部职位类型
+      //下拉列表
+      loadAll() {
+        get_position().then((res) => {
+          let datalist=res.data;
+          var all=[];
+          for(var a=0;a<datalist.length;a++){
+            let  valuel={
+              value:''
+            };
+            valuel.value=datalist[a];
+            all[a]=valuel;
+          }
+          this.restaurants=all;
+        });
+      },
+      //城市组件
+      handleChange (value) {
+        this.releaseWelfare.provincesId=value[0];
+        this.releaseWelfare.cityId=value[1];
+        this.releaseWelfare.districtCountyId=value[2];
+      },
+      //查询数据
+      getHotMovieList(form) {
+        getPublishings(form).then((res) => {
+          if(res.status===0) {
+            // console.log(res)
+            console.log( res.data)
+            this.total = res.data.totalno; //总条数
+            // console.log(this.total)
+            this.movieInfoList = res.data.datas;
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
+
+      handleCurrentChange(currentPage) {
+        // currentPage为当前的页数
+        // 显示当前页数对应的数据
+        this.dataInline.currentPage=currentPage;
+        getPublishings(this.dataInline).then((res) => {
+          if(res.status===0) {
+            // console.log(res.data.datas)
+            this.movieInfoList = res.data.datas;
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+
+      },
+
+
+
     }
 
   }
