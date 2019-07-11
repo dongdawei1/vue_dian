@@ -236,7 +236,7 @@ export default new VueRouter ({
 
         {
           path: '',
-          redirect: '/home/Release'
+          redirect: '/home/release'
         },
 
 //  跳转的页面

@@ -81,14 +81,25 @@ export const get_user_info_jurisdiction = params => {
            res.isbutten=true;
          }else{
            Message.error("没有访问权限");
-           res.isbutten=false;
+           router.push('/home/release')
          }
-       }else if(params ==='/home/releaseWelfare'){
+       }else if(params ==='/home/releaseWelfare'){ //职位发布
          if(role===1 ||role===2 || role===5){
            res.isbutten=true;
          }else{
            Message.error("没有访问权限");
-           res.isbutten=false;
+           router.push('/home/release')
+         }
+       }else if(params ==='/home/recruitWorkers'){ //职位查看
+         if(role===1 ||role===2 || role===3|| role===4|| role===5|| role===6|| role===7|| role===8|| role===11|| role===12){
+           if(role===1 ||role===2 || role===5){
+             res.isbutten=true;
+           }else{
+             res.isbutten=false;
+           }
+         }else{
+           Message.error("没有访问权限");
+           router.push('/home/release')
          }
        }
       res.isAuthentication=resdata.isAuthentication;
@@ -144,8 +155,10 @@ export const examineReleaseWelfare = params => { return axios.post(`${base}/api/
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 
 //查询所有发布
-
 export const getPublishings = params => { return axios.post(`${base}/api/getPublishings/getGoods`, params).then(res => res.data);};
+
+//查询所有联系方式
+export const getContact= params => { return axios.post(`${base}/api/getPublishings/getContact`, params).then(res => res.data);};
 //获取职位类型
 export const get_position = params => {
   return axios({

@@ -35,7 +35,126 @@
         </el-form-item>
     </el-form>
 
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      max-height="250">
+      <el-table-column
+        fixed
+        prop="position"
+        label="职位类型"
+        width="150"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="detailed"
+        label="工作城区"
+        width="180"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="introductoryAward"
+        label="介绍人奖励"
+        width="210"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="salary"
+        label="薪水"
+        width="160"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="welfare"
+        label="福利"
+        width="200"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="number"
+        label="招聘人数"
+        width="100">
+      </el-table-column>
+      <el-table-column
+        prop="gender"
+        label="性别"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="age"
+        label="年龄"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="experience"
+        label="工作年限"
+        width="120">
+      </el-table-column>
 
+      <el-table-column
+        prop="addressDetailed"
+        label="实名地址"
+        width="200"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="workingAddress"
+        label="工作地址"
+        width="200"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="education"
+        label="学历"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="updateTime"
+        label="刷新时间"
+        width="180">
+      </el-table-column>
+
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="120">
+        <template slot-scope="scope">
+            <el-button @click="getContact(scope.row,1)" type="text" size="small" v-if="scope.row.isPublishContact">获取手机号码</el-button>
+            <el-button @click="getContact(scope.row,2)" type="text" size="small" v-if="scope.row.isEmail">获取邮箱</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 分页 -->
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :current-page="releaseWelfare.currentPage"
+      :page-size="releaseWelfare.pageSize"
+      @current-change="handleCurrentChange"
+      :total="total">
+    </el-pagination>
+    <!-- 电话-->
+    <el-dialog
+      title="禁止将商户联系方式提供给他人"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>
+        联系人:  {{contact.consigneeName}} <br/>
+        联系方式:  {{contact.contact}} <br/>
+        联系邮箱:  {{contact.email}} <br/>
+     </span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -48,6 +167,7 @@
   import { get_position } from '../../../api/api';
   import { getPublishings } from '../../../api/api';
   import { isRoleMessage} from '../../../api/api';
+  import { getContact} from '../../../api/api';
 
   import { regionData } from 'element-china-area-data'
   export default {
@@ -59,8 +179,10 @@
         resdata:'',
         role:'',
         isbutten:false,
-
-
+        tableData: [],
+        total: 0,
+        dialogVisible: false,//联系方式弹窗
+        contact :'', //联系方式
         pathString:'/home/releaseWelfare',
         thispath: '/home/recruitWorkers',
         restaurants: '', // 职位类型下拉
@@ -73,7 +195,7 @@
           districtCountyId:'',
           position:'', //职位类型
           //分页开始
-          total: 0,
+
           currentPage: 1,
           infoList: [],
           movieInfoList: [],
@@ -88,9 +210,35 @@
       this.jurisdiction()
     },
     methods: {
+      handleClose(done) {
+            done();
+      },
+
+      //获取联系方式
+      getContact(form,type){
+        console.log(form);
+        console.log(type);
+        let params={
+          queriesType: type,
+          id: form.id
+        }
+        console.log(params);
+        getContact(params).then((res) => {
+          if(res.status===0) {
+            this.contact=res.data;
+
+
+              console.log(this.contact);
+            this.dialogVisible=true;//联系方式弹窗
+
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        if(this.resdata.isAuthentication !=2 ){
+        if(this.resdata.isAuthentication!=2 ){
           this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
             dangerouslyUseHTMLString: true
           });
@@ -117,10 +265,6 @@
         });
       },
 
-      //查询提交
-      onSubmit(releaseWelfare) {
-        this.getHotMovieList();
-      },
 
       //获取用户实名信息判断展示哪个城市的信息
       getRealName(){
@@ -160,11 +304,19 @@
       getHotMovieList(form) {
         getPublishings(form).then((res) => {
           if(res.status===0) {
-            // console.log(res)
-            console.log( res.data)
             this.total = res.data.totalno; //总条数
-            // console.log(this.total)
-            this.movieInfoList = res.data.datas;
+            this.tableData = res.data.datas;
+            let length= this.tableData.length;
+            for(let a=0;a<length;a++){
+              if(this.tableData[a].isPublishContact===1){
+                this.tableData[a].isPublishContact=true;
+                this.tableData[a].isEmail=false;
+              }else{
+                this.tableData[a].isEmail=true;
+                this.tableData[a].isPublishContact=false;
+              }
+            }
+            console.log(this.tableData);
           }else {
             isRoleMessage(res.msg);
           }
@@ -177,8 +329,16 @@
         this.dataInline.currentPage=currentPage;
         getPublishings(this.dataInline).then((res) => {
           if(res.status===0) {
-            // console.log(res.data.datas)
-            this.movieInfoList = res.data.datas;
+            this.tableData = res.data.datas;
+           let length= this.tableData.length;
+            for(let a=0;a< length;a++){
+              if(this.tableData[a].isPublishContact===1){
+                this.tableData[a].isPublishContact=true;
+              }else{
+                this.tableData[a].isEmail=true;
+              }
+            }
+            console.log(this.tableData);
           }else {
             isRoleMessage(res.msg);
           }
