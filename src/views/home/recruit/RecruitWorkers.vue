@@ -28,7 +28,7 @@
       <el-form-item>
         <el-button type="primary" @click="getHotMovieList(releaseWelfare)">查询</el-button>
       </el-form-item>
-        <el-form-item  v-if="isbutten">
+        <el-form-item  v-if="isCreate">
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM"
           to="" class="a" >发布招聘</router-link></el-button>
@@ -162,13 +162,12 @@
 <script>
 
   import { get_user_info_sign } from '../../../api/api';
-  import { get_user_info_jurisdiction } from '../../../api/api';
   import { getRealName } from '../../../api/api';
   import { get_position } from '../../../api/api';
   import { getPublishings } from '../../../api/api';
-  import { isRoleMessage} from '../../../api/api';
   import { getContact} from '../../../api/api';
-
+  import {  checke_isButten } from '../../../api/api';
+  import {  isRoleMessage } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
   export default {
 
@@ -178,13 +177,12 @@
       return {
         resdata:'',
         role:'',
-        isbutten:false,
+        isCreate:false,
         tableData: [],
         total: 0,
         dialogVisible: false,//联系方式弹窗
         contact :'', //联系方式
         pathString:'/home/releaseWelfare',
-        thispath: '/home/recruitWorkers',
         restaurants: '', // 职位类型下拉
         options: regionData,//城市
         realName:'',//实名信息
@@ -202,6 +200,7 @@
           pageSize: 20,//每页显示的数量
           //分页结束
           permissionid:30,
+          StringPath: '/home/recruitWorkers',
         },
       }
     },
@@ -209,28 +208,21 @@
     created () {
       this.jurisdiction()
     },
-    methods: {
+    methods: { //关闭联系方式弹窗
       handleClose(done) {
             done();
       },
 
       //获取联系方式
       getContact(form,type){
-        console.log(form);
-        console.log(type);
         let params={
           queriesType: type,
           id: form.id
         }
-        console.log(params);
         getContact(params).then((res) => {
           if(res.status===0) {
             this.contact=res.data;
-
-
-              console.log(this.contact);
             this.dialogVisible=true;//联系方式弹窗
-
           }else {
             isRoleMessage(res.msg);
           }
@@ -238,7 +230,7 @@
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        if(this.resdata.isAuthentication!=2 ){
+        if(this.resdata.isAuthentication!==2 ){
           this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
             dangerouslyUseHTMLString: true
           });
@@ -249,15 +241,18 @@
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction(){
-        get_user_info_jurisdiction(this.thispath).then((res) => {
-          if(res.isAuthentication !=2 ){
+        checke_isButten(this.releaseWelfare.StringPath).then((res) => {
+         if(res.status!==0){
+           isRoleMessage(res.msg);
+         }
+          if(res.data.isAuthentication !==2 ){
             this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
               dangerouslyUseHTMLString: true
             });
             this.$router.push({ path: '/home/myAccount' });
           }else{
-            this.isbutten=res.isbutten; //是否展示发布键
-            this.resdata=res; //用户信息
+            this.isCreate=res.data.isCreate; //是否展示发布键
+            this.resdata=res.data.data; //用户信息
             this.getRealName();          //获取实名信息,初始化城市
             this.loadAll();
 
@@ -316,7 +311,6 @@
                 this.tableData[a].isPublishContact=false;
               }
             }
-            console.log(this.tableData);
           }else {
             isRoleMessage(res.msg);
           }
@@ -338,7 +332,6 @@
                 this.tableData[a].isEmail=true;
               }
             }
-            console.log(this.tableData);
           }else {
             isRoleMessage(res.msg);
           }

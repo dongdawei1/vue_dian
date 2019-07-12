@@ -15,7 +15,8 @@
 <script>
   import First from './First'
   import Recruit from './Recruit'
-  import { get_user_info } from '../../../api/api';
+  import {  checke_isButten } from '../../../api/api';
+  import {  isRoleMessage } from '../../../api/api';
 
   export default {
     components: {
@@ -26,6 +27,7 @@
     data() {
       return {
         activeName: 'first',//默认打开的导航
+          StringPath:'/home/toExamine',
       };
     },
 
@@ -34,23 +36,16 @@
     },
 
     methods: {
-      handleClick(tab, event) {
+      handleClick() {
         this.islogin();
       },
 
       //判断是否登录
       islogin(){
-        get_user_info().then((res) => {
-          let status=res.status;
-          if (status != 0) {
-            this.$router.push({ path: '/login/sign' });
-          }else{
-            let user=JSON.parse(res.data);
-            let role=user.role;
-            if(role!=1){
-              this.$router.push({ path: '/home/release' });
-            }
-          }
+        checke_isButten(this.StringPath).then((res) => {
+        if(res.status!==0){
+          isRoleMessage(res.msg);
+        }
         });
       },
     }

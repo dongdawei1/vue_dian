@@ -44,6 +44,7 @@ import Detailed from '../views/home/userCenter/Detailed'
 import RealName  from '../views/home/userCenter/RealName'
 import UpdateRealName  from '../views/home/userCenter/updateRealName'
 import AddRealName  from '../views/home/userCenter/addRealName'
+import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
 
 import Integral from '../views/home/Integral'
 import Characteristic from '../views/home/Characteristic'
@@ -209,6 +210,10 @@ export default new VueRouter ({
         {
           path: '/home/myAccount',  //我的账户
           component: MyAccount
+        },
+        {
+          path: '/home/myJobWanted', //创建简历
+          component: MyJobWanted
         },
         {
           path: '/home/detailed',  //收支明细

@@ -168,10 +168,10 @@
 <script>
 
   import { create_position } from '../../../api/api';
-  import { get_user_info_jurisdiction } from '../../../api/api';
+  import {  checke_isButten } from '../../../api/api';
+  import {  isRoleMessage } from '../../../api/api';
   import { get_position } from '../../../api/api';
   import { getRealName } from '../../../api/api';
-  import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
       return {
@@ -179,7 +179,7 @@
 
         resdata:'',//获取的用户信息
         realName:'',//用户实名信息
-        pathString:'/home/releaseWelfare',
+
         centerDialogVisible: false,//成功弹窗
         ruleForm: {
           userId:'',
@@ -203,6 +203,7 @@
           addressDetailed:'',//实名地址不可编辑 回显置灰 不可修改
           contact:'',  //实名联系联系方式 回显置灰 不可修改
           consigneeName:'', //联系人姓名 回显置灰 不可修改
+          StringPath:'/home/releaseWelfare',
         },
         permission:'',
         role:'',
@@ -261,19 +262,22 @@
 
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction() {
-        get_user_info_jurisdiction(this.pathString).then((res) => {
-          if (res.isbutten === true) {
-            this.resdata =JSON.parse(res.data);
+        checke_isButten(this.ruleForm.StringPath).then((res) => {
+          if(res.status===0){
+          if (res.data.isCreate === true) {
+            this.resdata =res.data.data;
             this.ruleForm.userId=this.resdata.id;
             this.ruleForm.userName=this.resdata.username;
           } else {
             this.$router.push({path: '/home/release'});
           }
-          if (res.isAuthentication != 2) {
+          if (res.data.isAuthentication !== 2) {
             this.$router.push({path: '/home/myAccount'});
           }else {
           this.getRealName();
           this.loadAll();//获取完用户信息在调用
+          }}else{
+            isRoleMessage(res.msg);
           }
         });
       },
@@ -301,7 +305,7 @@
                 if(res.status ===0 ) {
                   this.realName=res.data;
                   let  em=this.realName.email;
-                      if(em!='' && em!=null){
+                      if(em!=='' && em!==null){
                         this.ruleForm.email=em;
                       }
                    this.ruleForm.workingAddress= this.realName.addressDetailed;

@@ -172,7 +172,7 @@
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction(){
         get_user_info_jurisdiction(this.pathString).then((res) => {
-          if(res.isbutten===true){
+          if(res.isCreate===true){
             this.resdata=res;
           }else{
             this.$router.push({ path: '/home/release' });

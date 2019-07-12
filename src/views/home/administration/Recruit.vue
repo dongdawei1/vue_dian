@@ -256,7 +256,6 @@
         this.dataInline.userName=this.realName.userName;
         this.dataInline.contact=this.realName.contact;
         getReleaseWelfareAll(this.dataInline).then((res) => {
-          console.log(res)
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

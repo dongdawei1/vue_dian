@@ -1,7 +1,257 @@
 <template>
-  <p class="page-container">求职</p>
+  <div>
+
+    <!-- 筛选区 -->
+    <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
+
+      <el-form-item label="求职城市"   >
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="releaseWelfare.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
+      </el-form-item>
+
+      <el-form-item label="求职类型"  >
+        <template>
+          <el-select v-model="releaseWelfare.position" clearable placeholder="请输入或点击选择职位类型">
+            <el-option
+              v-for="item in restaurants"
+              :key="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="getHotMovieList(releaseWelfare)">查询</el-button>
+      </el-form-item>
+      <el-form-item  v-if="isbutten">
+        <el-button type="primary"><router-link
+          v-on:click.native="isAuthenticationM"
+          to="" class="a" >创建简历</router-link></el-button>
+      </el-form-item>
+    </el-form>
+
+
+
+    <!-- 分页 -->
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :current-page="releaseWelfare.currentPage"
+      :page-size="releaseWelfare.pageSize"
+      @current-change="handleCurrentChange"
+      :total="total">
+    </el-pagination>
+    <!-- 电话-->
+    <el-dialog
+      title="禁止将商户联系方式提供给他人"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>
+        联系人:  {{contact.consigneeName}} <br/>
+        联系方式:  {{contact.contact}} <br/>
+        联系邮箱:  {{contact.email}} <br/>
+     </span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
+  </div>
 </template>
 
-<style >
 
+<script>
+
+  import { get_user_info_sign } from '../../../api/api';
+  import { get_user_info_jurisdiction } from '../../../api/api';
+  import { getRealName } from '../../../api/api';
+  import { get_position } from '../../../api/api';
+  import { getPublishings } from '../../../api/api';
+  import { isRoleMessage} from '../../../api/api';
+  import { getContact} from '../../../api/api';
+
+  import { regionData } from 'element-china-area-data'
+  export default {
+
+
+
+    data() {
+      return {
+        resdata:'',
+        role:'',
+        isCreate:false,
+        tableData: [],
+        total: 0,
+        dialogVisible: false,//联系方式弹窗
+        contact :'', //联系方式
+        pathString:'/home/myJobWanted',
+        thispath: '/home/jobWanted',
+        restaurants: '', // 职位类型下拉
+        options: regionData,//城市
+        realName:'',//实名信息
+        releaseWelfare: { //查询条件
+          selectedOptions: [], //三级联动城市
+          provincesId:'',//省id
+          cityId:'',
+          districtCountyId:'',
+          position:'', //职位类型
+          //分页开始
+
+          currentPage: 1,
+          infoList: [],
+          movieInfoList: [],
+          pageSize: 20,//每页显示的数量
+          //分页结束
+          permissionid:31,
+        },
+      }
+    },
+
+    created () {
+      this.jurisdiction()
+    },
+    methods: { //关闭联系方式弹窗
+      handleClose(done) {
+        done();
+      },
+
+      //获取联系方式
+      getContact(form,type){
+        let params={
+          queriesType: type,
+          id: form.id
+        }
+        getContact(params).then((res) => {
+          if(res.status===0) {
+            this.contact=res.data;
+            this.dialogVisible=true;//联系方式弹窗
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
+      //判断是否实名和登陆状态
+      isAuthenticationM(){
+        if(this.resdata.isAuthentication!=2 ){
+          this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
+            dangerouslyUseHTMLString: true
+          });
+          this.$router.push({ path: '/home/myAccount' });
+        }else{
+          get_user_info_sign(this.pathString);
+        }
+      },
+      //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
+      jurisdiction(){
+        get_user_info_jurisdiction(this.thispath).then((res) => {
+          if(res.isAuthentication !=2 ){
+            this.$alert('<strong>您需要在用户中心下的我的账户完善用户信息才能查看或发布信息！</strong>', '用户信息不完善', {
+              dangerouslyUseHTMLString: true
+            });
+            this.$router.push({ path: '/home/myAccount' });
+          }else{
+            this.isbutten=res.isCreate; //是否展示发布键
+            this.resdata=res; //用户信息
+            this.getRealName();          //获取实名信息,初始化城市
+            this.loadAll();
+
+          }
+        });
+      },
+
+
+      //获取用户实名信息判断展示哪个城市的信息
+      getRealName(){
+        getRealName().then((res) => { //获取实名信息填充
+          if(res.status ===0 ) {
+            this.realName=res.data;
+            this.releaseWelfare.provincesId=this.realName.provincesId;
+            this.releaseWelfare.cityId=this.realName.cityId;
+            this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
+            this. getHotMovieList(this.releaseWelfare); //分页查询
+          }
+        });
+      },
+      //获取全部职位类型
+      //下拉列表
+      loadAll() {
+        get_position().then((res) => {
+          let datalist=res.data;
+          var all=[];
+          for(var a=0;a<datalist.length;a++){
+            let  valuel={
+              value:''
+            };
+            valuel.value=datalist[a];
+            all[a]=valuel;
+          }
+          this.restaurants=all;
+        });
+      },
+      //城市组件
+      handleChange (value) {
+        this.releaseWelfare.provincesId=value[0];
+        this.releaseWelfare.cityId=value[1];
+        this.releaseWelfare.districtCountyId=value[2];
+      },
+      //查询数据
+      getHotMovieList(form) {
+        getPublishings(form).then((res) => {
+          if(res.status===0) {
+            this.total = res.data.totalno; //总条数
+            this.tableData = res.data.datas;
+            let length= this.tableData.length;
+            for(let a=0;a<length;a++){
+              if(this.tableData[a].isPublishContact===1){
+                this.tableData[a].isPublishContact=true;
+                this.tableData[a].isEmail=false;
+              }else{
+                this.tableData[a].isEmail=true;
+                this.tableData[a].isPublishContact=false;
+              }
+            }
+            console.log(this.tableData);
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
+
+      handleCurrentChange(currentPage) {
+        // currentPage为当前的页数
+        // 显示当前页数对应的数据
+        this.dataInline.currentPage=currentPage;
+        getPublishings(this.dataInline).then((res) => {
+          if(res.status===0) {
+            this.tableData = res.data.datas;
+            let length= this.tableData.length;
+            for(let a=0;a< length;a++){
+              if(this.tableData[a].isPublishContact===1){
+                this.tableData[a].isPublishContact=true;
+              }else{
+                this.tableData[a].isEmail=true;
+              }
+            }
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+
+      },
+
+
+
+    }
+
+  }
+</script>
+
+
+<style >
 </style>

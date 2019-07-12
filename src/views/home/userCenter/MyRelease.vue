@@ -33,7 +33,8 @@
     <el-tab-pane label="灭虫服务" name="isPestControl"  v-if="isPestControl">
     </el-tab-pane>
 
-    <el-tab-pane label="我的简历" name="isJobWanted"  v-if="isJobWanted">
+    <el-tab-pane label="我的简历" name="myJobWanted"  v-if="isJobWanted">
+      <MyJobWanted></MyJobWanted>
     </el-tab-pane>
     <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
     </el-tab-pane>
@@ -48,11 +49,13 @@
 <script>
 
   import CreatePosition from './myreleases/CreatePosition'
+  import MyJobWanted from './myreleases/MyJobWanted'
   import { get_user_info } from '../../../api/api';
 
   export default {
     components: {
-      CreatePosition
+      CreatePosition,
+      MyJobWanted
     },
 
     data() {
@@ -82,7 +85,7 @@
         //工服百货
         isDepartmentStore:false,//百货12
 
-        activeName: 'isPurchase',//默认打开的导航
+        activeName: '',//默认打开的导航 ,根据每个不同的商户判断然后确认打开那个默认
         user:'' //用户
 
       };
@@ -110,6 +113,7 @@
               this.isCreatePosition=true;
                 this.isWindowRental=true;//窗口出租 2,3,6
                 this.isPurchase=true;//采购信息 2
+              this.activeName='createPosition';
             }else if(role===3){
               this.isWindowRental=true;
               this.isKitchenUtensils=true;//发布厨具 3
@@ -131,6 +135,7 @@
                 this.isRenovation=true;//装修7
                 this.isPestControl=true;//灭虫7
             }else if(role===11){
+              this.activeName='myJobWanted';
               this.isJobWanted=true;
             }else if(role===12){
               this.isDepartmentStore=true;

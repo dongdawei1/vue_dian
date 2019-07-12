@@ -43,7 +43,7 @@
       return {
         resdata:'',
         role:'',
-        isbutten:false,
+        isCreate:false,
 
         formInline: { //分页查询条件
           permissionid:5,
@@ -75,7 +75,7 @@
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction(){
         get_user_info_jurisdiction(this.pathString).then((res) => {
-          if(res.isbutten===true){
+          if(res.isCreate===true){
             this.isbutten=true;
           }
           this.resdata=res;
