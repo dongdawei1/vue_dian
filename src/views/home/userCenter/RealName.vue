@@ -61,10 +61,6 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="现居住地"    prop="address_detailed"  >
-        <el-input v-model="ruleFormnotbusiness.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
-      </el-form-item>
-
       <el-form-item label="手机"    prop="contact"  >
         <el-input v-model="ruleFormnotbusiness.contact"  placeholder="请输入手机"></el-input>
       </el-form-item>
@@ -72,15 +68,6 @@
         <el-input v-model="ruleFormnotbusiness.consignee_name"  placeholder="请输入姓名"></el-input>
       </el-form-item>
 
-      <el-form-item label="年龄"    prop="eag"    placeholder="请输入年龄" >
-        <el-input v-model="ruleFormnotbusiness.eag"  placeholder="请输入年龄"></el-input>
-      </el-form-item>
-
-
-        <el-form-item label="性别"        placeholder="请选择性别" >
-        <el-radio v-model="ruleFormnotbusiness.gender" label="男">男</el-radio>
-        <el-radio v-model="ruleFormnotbusiness.gender" label="女">女</el-radio>
-        </el-form-item>
 
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleFormnotbusiness.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
@@ -238,7 +225,7 @@
           let status=res.status;
           if (status === 0) {
             let user=JSON.parse(res.data);
-            if( user.isAuthentication!=4){
+            if( user.isAuthentication!==4){
               this.$router.push({ path: '/home/myAccount' });
             }
             let role=user.role;

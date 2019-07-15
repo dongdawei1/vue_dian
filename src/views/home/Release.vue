@@ -1,17 +1,25 @@
 <template>
+  <div>
   <p class="page-container">发布需求页</p>
+  <el-form>
+  <el-form-item  v-if="isCreate">
+    <el-button type="primary"><router-link
+      v-on:click.native="isAuthenticationM"
+      to="" class="a" >发布招聘</router-link></el-button>
+  </el-form-item>
+  </el-form>
+  </div>
 </template>
 
 <script>
-
-  import { get_user_info } from '../../api/api';
+  import {  checke_isButten } from '../../api/api';
+  import {  isRoleMessage } from '../../api/api';
   export default {
     data() {
       return {
-        permission:'',
-        role:'',
-        isCreate:false
-
+        user:'',
+        isCreate:false,
+        StringPath:'/home/release'
       }
     },
 
@@ -22,24 +30,15 @@
 
       //判断是否登录 获取用户权限
       islogin(){
-        get_user_info().then((res) => {
-          let status=res.status;
-          if (status === 0) {
-            this.permission=JSON.parse(res.data);  //字符串转换为 对象
-            this.role=this.permission.role;
-            if(this.role===1 ||this.role===4){
-              this.isbutten=true;   //根据权限判断是否展示按钮
+          checke_isButten(this.StringPath).then((res) => {
+            if(res.status!==0){
+              isRoleMessage(res.msg);
             }
-          }else{
-            if(res.msg==='用户未登录,无法获取当前用户的信息'){
-              this.$router.push({ path: '/login/sign' });
-            }
-          }
+            this.user=res.data.data;  //字符串转换为 对象
+            this.isCreate=res.data.isCreate; //是否展示发布键
+
         });
       },
-
-
-
     }
 
   }

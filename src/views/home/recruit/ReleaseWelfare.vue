@@ -313,6 +313,8 @@
                    this.ruleForm.addressDetailed= this.realName.addressDetailed;
                    this.ruleForm.contact= this.realName.contact;
                    this.ruleForm.consigneeName= this.realName.consigneeName;
+                }else {
+                  isRoleMessage(res.msg);
                 }
         });
       },

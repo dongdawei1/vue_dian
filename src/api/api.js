@@ -183,6 +183,21 @@ export const get_position_list = params => { return axios.post(`${base}/api/rele
 //用户操作自己发布的职位
 export const position_operation = params => { return axios.post(`${base}/api/releaseWelfare/position_operation`, params).then(res =>res.data) };
 
+
+//创建简历
+export const create_resume = params => { return axios.post(`${base}/api/resume/create_resume`, params).then(res => res.data); };
+//简历操作
+export const operation_resume = params => { return axios.post(`${base}/api/resume/operation_resume`, params).then(res => res.data); };
+
+//获取自己发布的简历
+export const select_resume_by_id = params => {
+  return axios({
+    url: `${base}/api/resume/select_resume_by_id`,
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
 function isButtonAndList(res){
 
   if(res.status===0) {
@@ -240,10 +255,10 @@ function isButtonAndList(res){
 //根据错误跳转页面和报错
 export const  isRoleMessage = params =>{
   Message.error(params);
-  if(params==='用户登陆已过期'){
-    this.$router.push({ path: '/login/sign' });
+  if(params==='用户登陆已过期' || params==='用户未登录,无法获取当前用户的信息'){
+    router.push({ path: '/login/sign' });
   } else if(params==='没有权限'){
-    this.$router.push({ path: '/home/release' });
+    router.push({ path: '/home/release' });
   }else{
 
   }

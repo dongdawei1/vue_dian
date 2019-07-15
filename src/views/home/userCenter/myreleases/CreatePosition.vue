@@ -224,7 +224,7 @@
   import {  getReleaseWelfareAll } from '../../../../api/api';
   import {  position_operation } from '../../../../api/api';
   import { get_position } from '../../../../api/api';
-  import { get_user_info_jurisdiction } from '../../../../api/api';
+  import { get_user_info } from '../../../../api/api';
 
   import { get_position_list } from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
@@ -353,7 +353,6 @@
               if (data && data.status === 0) {
                 this.$message.success(msg);
               }  else {
-
                 isRoleMessage(msg);
               }
             });
@@ -381,6 +380,7 @@
         this.dataInline.position=this.releaseWelfare.position;
         this.dataInline.welfareStatus=this.releaseWelfare.welfareStatus;
         get_position_list(this.dataInline).then((res) => {
+          console.log(res)
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -421,14 +421,18 @@
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        get_user_info_jurisdiction(this.pathString).then((res) => {
-          if(res.isAuthentication===2){
+        get_user_info().then((res) => {
+          console.log(res)
+          if(res.status===0){
+          if(JSON.parse(res.data).isAuthentication===2){
             this.$router.push({ path: this.pathString });
           }else{
             this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
               dangerouslyUseHTMLString: true
             });
             this.$router.push({ path: '/home/myAccount' });
+          }}else {
+            isRoleMessage(res.msg);
           }
         });
       },

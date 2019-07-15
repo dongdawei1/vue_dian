@@ -96,20 +96,27 @@
     },
 
     methods: {
+
       handleClick(tab, event) {
-        this.islogin();
       },
 
       //判断是否登录
       islogin(){
         get_user_info().then((res) => {
           let status=res.status;
-          if (status != 0) {
+          if (status !== 0) {
             this.$router.push({ path: '/login/sign' });
           }else{
             this.user=JSON.parse(res.data);
             let role=this.user.role;
-            if(role===1 ||role===2 ){
+           if(role===1){
+             this.isWindowRental=true;//窗口出租 2,3,6
+             this.isPurchase=true;//采购信息 2
+             this.isJobWanted=true;
+             this.isCreatePosition=true;
+            this.activeName='createPosition';
+           }
+           else if(role===2 ){
               this.isCreatePosition=true;
                 this.isWindowRental=true;//窗口出租 2,3,6
                 this.isPurchase=true;//采购信息 2

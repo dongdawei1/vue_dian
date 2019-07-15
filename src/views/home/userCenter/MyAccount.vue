@@ -222,7 +222,7 @@
             let role=this.user.role;
             this.form.username=this.user.username;
             this.form.mobilePhone=this.user.mobilePhone;
-            if(this.user.isAuthentication!=4){
+            if(this.user.isAuthentication!==4){
               //拉取实名信息
               getRealName().then((res) => {
                 if(res.status ===0 ){
@@ -255,7 +255,7 @@
                 this.$message.error("获取用户信息失败");
               }
             }else {
-              if(role!=8){
+              if(role!==8){
                 this.isButtenRealName=true;
               }else{
                 this.isnotbusiness=true;
