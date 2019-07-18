@@ -3,13 +3,13 @@
     <!--c查询框开始-->
     <el-form :inline="true" :model="realName" class="demo-form-inline">
       <el-form-item label="用户名">
-        <el-input v-model="realName.userName" placeholder="用户名"></el-input>
+        <el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>
       </el-form-item>
       <el-form-item label="手机号">
-        <el-input v-model="realName.contact" placeholder="手机号"></el-input>
+        <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="getReleaseWelfareAll">查询</el-button>
       </el-form-item>
     </el-form>
     <!--c查询框结束-->
@@ -99,29 +99,29 @@
       width="60%"
       :before-close="handleClose">
 
-      <span>用户类型 : {{realNameNo.userType }}</span><br>
-      <span>用户名 : {{realNameNo.userName }}</span><br>
-      <span>实名姓名 : {{realNameNo.consigneeName }}</span><br>
-      <span>联系方式 : {{realNameNo.contact }}</span><br>
-      <span>城区 : {{realNameNo.detailed }}</span><br>
-      <span>地址详情 : {{realNameNo.addressDetailed }}</span><br>
-      <span>职位类型 : {{realNameNo.position }}</span><br>
-      <span>招聘人数 : {{realNameNo.number }}</span><br>
-      <span>薪水 : {{realNameNo.salary }}</span><br>
-      <span>福利 : {{realNameNo.welfare }}</span><br>
-      <span>学历 : {{realNameNo.education }}</span><br>
-      <span>经验 : {{realNameNo.experience }}</span><br>
-      <span>性别 : {{realNameNo.gender }}</span><br>
-      <span>年龄 : {{realNameNo.age }}</span><br>
-      <span>详情 : {{realNameNo.describeOne }}</span><br>
-      <span>奖励 : {{realNameNo.introductoryAward }}</span><br>
-      <span>邮箱 : {{realNameNo.email }}</span><br>
-      <span>公开手机 : {{realNameNo.isPublishContact }}</span><br>
-      <span>地址一致 : {{realNameNo.addressConsistency }}</span><br>
-      <span>申请时间 : {{realNameNo.createTime }}</span><br>
-      <span>审批状态 : {{realNameNo.authentiCationStatus }}</span><br>
-      <span>失败原因 : {{realNameNo.authentiCationFailure }}</span><br>
-      <span>审核人员 : {{realNameNo.examineName }}</span><br>
+      <span>用户类型 : {{tableDataNo.userType }}</span><br>
+      <span>用户名 : {{tableDataNo.userName }}</span><br>
+      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+      <span>联系方式 : {{tableDataNo.contact }}</span><br>
+      <span>城区 : {{tableDataNo.detailed }}</span><br>
+      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
+      <span>职位类型 : {{tableDataNo.position }}</span><br>
+      <span>招聘人数 : {{tableDataNo.number }}</span><br>
+      <span>薪水 : {{tableDataNo.salary }}</span><br>
+      <span>福利 : {{tableDataNo.welfare }}</span><br>
+      <span>学历 : {{tableDataNo.education }}</span><br>
+      <span>经验 : {{tableDataNo.experience }}</span><br>
+      <span>性别 : {{tableDataNo.gender }}</span><br>
+      <span>年龄 : {{tableDataNo.age }}</span><br>
+      <span>详情 : {{tableDataNo.describeOne }}</span><br>
+      <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
+      <span>邮箱 : {{tableDataNo.email }}</span><br>
+      <span>公开手机 : {{tableDataNo.isPublishContact }}</span><br>
+      <span>地址一致 : {{tableDataNo.addressConsistency }}</span><br>
+      <span>申请时间 : {{tableDataNo.createTime }}</span><br>
+      <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
+      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
+      <span>审核人员 : {{tableDataNo.examineName }}</span><br>
 
 
       <span slot="footer" class="dialog-footer">
@@ -154,8 +154,8 @@
     <el-pagination
       background
       layout="prev, pager, next"
-      :current-page="currentPage"
-      :page-size="pageSize"
+      :current-page="realName.currentPage"
+      :page-size="realName.pageSize"
       @current-change="handleCurrentChange"
       :total="total">
     </el-pagination>
@@ -173,20 +173,20 @@
         fullscreenLoading:false,
         //分页开始
         total: 0,
-        currentPage: 1,
-        infoList: [],
-        movieInfoList: [],
-        pageSize: 20,//每页显示的数量
+
         //分页结束
         realName: { //查询条件
           userName:'',
           contact: '',
+
+          currentPage: 1,
+          infoList: [],
+          movieInfoList: [],
+          pageSize: 20,//每页显示的数量
         },
-        dataInline: {
-          type: Object
-        },
+
         tableData:[], //全部数据
-        realNameNo:'', //某一个审批
+        tableDataNo:'', //某一个审批
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //审批弹窗
         form: {   //审核表单
@@ -205,38 +205,34 @@
       }
     },
     created () {
-      this.getHotMovieList();
+      this.getReleaseWelfareAll();
     },
 
     methods: {
       handleClick(row) {  //点击查看详细
-        this.realNameNo=row;
+        this.tableDataNo=row;
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
       },
       examineClick(row){ //点击审批打开弹窗
-        this.realNameNo=row;
-        console.log(this.realNameNo);
+        this.tableDataNo=row;
         this.dialogFormVisible=true;
       },
-      //查询提交
-      onSubmit() {
-        this.getHotMovieList();
-      },
+
       //审批提交
       submitForm(form) {
-        this.$refs[form].validate((valid) => {
+        this.$refs['form'].validate((valid) => {
           if (valid) {
             this.fullscreenLoading=true;
-            this.form.userId=this.realNameNo.userId;
-            this.form.id=this.realNameNo.id;
+            this.form.userId=this.tableDataNo.userId;
+            this.form.id=this.tableDataNo.id;
             examineReleaseWelfare(this.form).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
-                this.getHotMovieList(); //刷新列表
+                this.getReleaseWelfareAll(); //刷新列表
                 this.dialogFormVisible=false;
               }  else {
                 isRoleMessage(data.msg);
@@ -250,12 +246,15 @@
         });
       },
 
-      async getHotMovieList() {
-        this.dataInline.pageSize=this.pageSize;
-        this.dataInline.currentPage=this.currentPage;
-        this.dataInline.userName=this.realName.userName;
-        this.dataInline.contact=this.realName.contact;
-        getReleaseWelfareAll(this.dataInline).then((res) => {
+      handleCurrentChange(currentPage) {
+        // currentPage为当前的页数
+        // 显示当前页数对应的数据
+        this.realName.currentPage=currentPage;
+        this.getReleaseWelfareAll();
+
+      },
+      getReleaseWelfareAll(){
+        getReleaseWelfareAll(this.realName).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -263,22 +262,8 @@
             isRoleMessage(res.msg);
           }
         });
-      },
-
-      handleCurrentChange(currentPage) {
-        // currentPage为当前的页数
-        // 显示当前页数对应的数据
-        this.dataInline.currentPage=currentPage;
-        getReleaseWelfareAll(this.dataInline).then((res) => {
-          if(res.status===0) {
-            this.tableData = res.data.datas;
-          }else{
-            isRoleMessage(res.msg);
-          }
-        });
-
-      },
-    },
+      }
+    }
 
   }
 </script>

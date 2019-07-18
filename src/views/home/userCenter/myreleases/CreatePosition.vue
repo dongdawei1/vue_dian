@@ -1,6 +1,6 @@
 <template>
   <div class="vm-image-list">
-    <!--发不过的职位  c查询框开始-->
+    <!--我的发布 已发布过的职位  c查询框开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
       <el-form-item label="职位类型"  >
@@ -30,10 +30,10 @@
 
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="get_position_list">查询</el-button>
 
         <el-button type="primary"><router-link
-          v-on:click.native="isAuthenticationM"
+          v-on:click.native="isAuthenticationM()"
           to="" class="a" >发布职位</router-link></el-button>
       </el-form-item>
 
@@ -135,30 +135,30 @@
       width="60%"
       :before-close="handleClose">
 
-      <span>联系人 : {{realNameNo.consigneeName }}</span><br>
-      <span>职位类型 : {{realNameNo.position }}</span><br>
-      <span>联系方式 : {{realNameNo.contact }}</span><br>
-      <span>城区 : {{realNameNo.detailed }}</span><br>
-      <span>地址详情 : {{realNameNo.workingAddress }}</span><br>
+      <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
+      <span>职位类型 : {{tableDataNo.position }}</span><br>
+      <span>联系方式 : {{tableDataNo.contact }}</span><br>
+      <span>城区 : {{tableDataNo.detailed }}</span><br>
+      <span>地址详情 : {{tableDataNo.workingAddress }}</span><br>
 
-      <span>招聘人数 : {{realNameNo.number }}</span><br>
-      <span>薪水 : {{realNameNo.salary }}</span><br>
-      <span>福利 : {{realNameNo.welfare }}</span><br>
-      <span>学历 : {{realNameNo.education }}</span><br>
-      <span>经验 : {{realNameNo.experience }}</span><br>
-      <span>性别 : {{realNameNo.gender }}</span><br>
-      <span>年龄 : {{realNameNo.age }}</span><br>
-      <span>详情 : {{realNameNo.describeOne }}</span><br>
-      <span>奖励 : {{realNameNo.introductoryAward }}</span><br>
-      <span>邮箱 : {{realNameNo.email }}</span><br>
-      <span>是否公开手机 : {{realNameNo.isPublishContact }}</span><br>
+      <span>招聘人数 : {{tableDataNo.number }}</span><br>
+      <span>薪水 : {{tableDataNo.salary }}</span><br>
+      <span>福利 : {{tableDataNo.welfare }}</span><br>
+      <span>学历 : {{tableDataNo.education }}</span><br>
+      <span>经验 : {{tableDataNo.experience }}</span><br>
+      <span>性别 : {{tableDataNo.gender }}</span><br>
+      <span>年龄 : {{tableDataNo.age }}</span><br>
+      <span>详情 : {{tableDataNo.describeOne }}</span><br>
+      <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
+      <span>邮箱 : {{tableDataNo.email }}</span><br>
+      <span>是否公开手机 : {{tableDataNo.isPublishContact }}</span><br>
 
 
-      <span>职位状态 : {{realNameNo.welfareStatus }}</span><br>
-      <span>失败原因 : {{realNameNo.authentiCationFailure }}</span><br>
-      <span>创建时间 : {{realNameNo.createTime }}</span><br>
-      <span>刷新时间 : {{realNameNo.updateTime }}</span><br>
-      <span>失效时间 : {{realNameNo.termOfValidity }}</span><br>
+      <span>职位状态 : {{tableDataNo.welfareStatus }}</span><br>
+      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
+      <span>创建时间 : {{tableDataNo.createTime }}</span><br>
+      <span>刷新时间 : {{tableDataNo.updateTime }}</span><br>
+      <span>失效时间 : {{tableDataNo.termOfValidity }}</span><br>
 
 
       <span slot="footer" class="dialog-footer">
@@ -170,14 +170,14 @@
 
    <!--邮箱，公开电话，职位描述，工作地址，四个框-->
     <el-dialog title="修改招聘信息" :visible.sync="dialogFormVisible">
-      <el-form :model="realNameNo" :rules="rules" ref="form"  >
+      <el-form :model="tableDataNo" :rules="rules" ref="form"  >
 
         <!-- placeholder="如：具体工作范围，或者具体年龄等不超过100字"-->
         <el-form-item label="职位描述" prop="describeOne" :label-width="formLabelWidth">
           <el-input
             type="textarea"
-            v-model="realNameNo.describeOne"
-            :placeholder="realNameNo.describeOne"
+            v-model="tableDataNo.describeOne"
+            :placeholder="tableDataNo.describeOne"
             maxlength="100"
             show-word-limit
           >
@@ -185,11 +185,11 @@
         </el-form-item>
 
         <el-form-item label="工作地址" prop="workingAddress" :label-width="formLabelWidth">
-          <el-input v-model="realNameNo.workingAddress" :placeholder="realNameNo.workingAddress"></el-input>
+          <el-input v-model="tableDataNo.workingAddress" :placeholder="tableDataNo.workingAddress"></el-input>
         </el-form-item>
 
         <el-form-item label="公开电话" prop="isPublishContact"  :label-width="formLabelWidth" >
-          <el-radio-group v-model="realNameNo.isPublishContact"  :placeholder="realNameNo.isPublishContact"  >
+          <el-radio-group v-model="tableDataNo.isPublishContact"  :placeholder="tableDataNo.isPublishContact"  >
             <el-radio :label="1">公开</el-radio>
             <el-radio :label="2">不公开</el-radio>
           </el-radio-group>
@@ -197,7 +197,7 @@
 
 
         <el-form-item label="邮箱" :label-width="formLabelWidth"  prop="email"  >
-          <el-input v-model="realNameNo.email" autocomplete="off" :placeholder="realNameNo.email"></el-input>
+          <el-input v-model="tableDataNo.email" autocomplete="off" :placeholder="tableDataNo.email"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -211,8 +211,8 @@
     <el-pagination
       background
       layout="prev, pager, next"
-      :current-page="currentPage"
-      :page-size="pageSize"
+      :current-page="releaseWelfare.currentPage"
+      :page-size="releaseWelfare.pageSize"
       @current-change="handleCurrentChange"
       :total="total">
     </el-pagination>
@@ -221,7 +221,6 @@
   </div>
 </template>
 <script>
-  import {  getReleaseWelfareAll } from '../../../../api/api';
   import {  position_operation } from '../../../../api/api';
   import { get_position } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
@@ -236,10 +235,7 @@
         pathString:'/home/releaseWelfare',
         //分页开始
         total: 0,
-        currentPage: 1,
-        infoList: [],
-        movieInfoList: [],
-        pageSize: 20,//每页显示的数量
+
         //分页结束
         restaurants: '', // 查询下来列表
         welfareStatuss:[
@@ -252,12 +248,18 @@
         releaseWelfare: { //查询条件
           position:'', //职位类型
           welfareStatus:'',//职位状态
+
+          currentPage: 1,
+          infoList: [],
+          movieInfoList: [],
+          pageSize: 20,//每页显示的数量
+          StringPath:'/home/recruitWorkers'
         },
         dataInline: {
           type: Object
         },
         tableData:[], //全部数据
-        realNameNo:'', //某一个数据
+        tableDataNo:'', //某一个数据
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //编辑弹窗
         formLabelWidth: '120px',
@@ -283,30 +285,27 @@
     },
     created () {
       this.loadAll();
-      this.getHotMovieList();
+      this.get_position_list();
     },
 
     methods: {
 
       handleClick(row) {  //点击查看详细
-        this.realNameNo=row;
+        this.tableDataNo=row;
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
       },
 
-      //查询提交
-      onSubmit() {
-        this.getHotMovieList();
-      },
+
       //编辑Edit
       examineClick(row){
-        this.realNameNo=row;
-        if(this.realNameNo.isPublishContact=== '公开'){
-          this.realNameNo.isPublishContact=1;
+        this.tableDataNo=row;
+        if(this.tableDataNo.isPublishContact=== '公开'){
+          this.tableDataNo.isPublishContact=1;
         }else{
-          this.realNameNo.isPublishContact=2;
+          this.tableDataNo.isPublishContact=2;
         }
         this.dialogFormVisible = true;
       },
@@ -315,20 +314,20 @@
           if (valid) {
             let data={};
             data.type=6;
-            data.userId= this.realNameNo.userId;
-            data.id=this.realNameNo.id;
-            data.workingAddress=this.realNameNo.workingAddress;
-            data.describeOne=this.realNameNo.describeOne;
-            data.isPublishContact=this.realNameNo.isPublishContact;
-            data.email=this.realNameNo.email;
-            position_operation(data).then(data => {
+            data.userId= this.tableDataNo.userId;
+            data.id=this.tableDataNo.id;
+            data.workingAddress=this.tableDataNo.workingAddress;
+            data.describeOne=this.tableDataNo.describeOne;
+            data.isPublishContact=this.tableDataNo.isPublishContact;
+            data.email=this.tableDataNo.email;
+            position_operation(data).then(res => {
               this.fullscreenLoading=false;
-              let msg=data.msg;
+              let msg=res.msg;
               this.fullscreenLoading=false;
-              if (data && data.status === 0) {
+              if (res && res.status === 0) {
                 this.$message.success(msg);
                 this.dialogFormVisible = false;
-                this.getHotMovieList(); //刷新列表
+                this.get_position_list(); //刷新列表
               }  else {
                 isRoleMessage(msg);
               }
@@ -359,7 +358,7 @@
         }else{
           this.$message.error("操作类型错误");
         }
-        this.getHotMovieList(); //刷新列表
+        this.get_position_list(); //刷新列表
       },
    //删除
       open(form,type) {
@@ -374,35 +373,25 @@
         });
       },
 
-      getHotMovieList() {
-        this.dataInline.pageSize=this.pageSize;
-        this.dataInline.currentPage=this.currentPage;
-        this.dataInline.position=this.releaseWelfare.position;
-        this.dataInline.welfareStatus=this.releaseWelfare.welfareStatus;
-        get_position_list(this.dataInline).then((res) => {
-          console.log(res)
-          if(res.status===0) {
-            this.total = res.data.totalno; //总条数
-            this.tableData = res.data.datas;
-          }else{
-            isRoleMessage(res.msg);
-          }
-        });
-      },
-
       handleCurrentChange(currentPage) {
         // currentPage为当前的页数
         // 显示当前页数对应的数据
-        this.dataInline.currentPage=currentPage;
-        getReleaseWelfareAll(this.dataInline).then((res) => {
-          if(res.status===0) {
-            this.tableData = res.data.datas;
-          }else{
-            isRoleMessage(res.msg);
-          }
-        });
+        this.releaseWelfare.currentPage=currentPage;
+        this.get_position_list();
 
       },
+  get_position_list(){
+    get_position_list(this.releaseWelfare).then((res) => {
+
+      if(res.status===0) {
+        this.total = res.data.totalno; //总条数
+        this.tableData = res.data.datas;
+      }else{
+        isRoleMessage(res.msg);
+      }
+    });
+  },
+
       //下拉列表
 
       loadAll() {

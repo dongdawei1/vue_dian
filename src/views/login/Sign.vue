@@ -88,8 +88,7 @@ export default {
          var loginParams = {
            'username': this.dataForm.userName,
            'password': this.dataForm.password,
-           // 'uuid': this.dataForm.uuid,
-           'uuid':1,
+           'uuid': this.dataForm.uuid,
            'captcha': this.dataForm.captcha
          };
          this.fullscreenLoading = true;
@@ -121,17 +120,10 @@ export default {
        }
      });
    },
-
-
    // 获取验证码
    getCaptcha () {
-     // this.dataForm.uuid = getUUID()
-     // var uuid={"uuid":this.dataForm.uuid};
-     //var uuid=Math.random()*10000000;
-     var uuid=1;
-     console.log(uuid)
-     this.captchaPath = getCaptcha1(uuid).then((res) => {
-
+     this.dataForm.uuid=Date.parse(new Date());
+     this.captchaPath = getCaptcha1( this.dataForm.uuid).then((res) => {
        this.captchaPath=res.data.msg
 
      });

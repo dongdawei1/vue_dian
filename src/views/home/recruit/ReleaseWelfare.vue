@@ -283,7 +283,7 @@
       },
 
       submitForm(ruleForm) {
-        this.$refs[ruleForm].validate((valid) => {
+        this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             const data = this.ruleForm;
             create_position(data).then(data => {

@@ -30,7 +30,8 @@
 <script>
   import VmImageList from '../../../components/vm-image-list';
   import { get_user_info_sign } from '../../../api/api';
-  import { get_user_info_jurisdiction } from '../../../api/api';
+  import {  checke_isButten } from '../../../api/api';
+  import {  isRoleMessage } from '../../../api/api';
   export default {
 
     name: 'ImageList',
@@ -62,7 +63,7 @@
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        if(this.resdata.isAuthentication !=2 ){
+        if(this.resdata.isAuthentication !==2 ){
           this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
             dangerouslyUseHTMLString: true
           });
@@ -74,11 +75,13 @@
 
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction(){
-        get_user_info_jurisdiction(this.pathString).then((res) => {
-          if(res.isCreate===true){
-            this.isbutten=true;
+        checke_isButten (this.pathString).then((res) => {
+          if(res.status===0){
+            this.isCreate=res.data.isCreate; //是否展示发布键
+            this.resdata=res.data.data; //用户信息
+          }else{
+            isRoleMessage(res.msg);
           }
-          this.resdata=res;
         });
 
       },

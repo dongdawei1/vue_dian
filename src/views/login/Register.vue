@@ -106,7 +106,7 @@
           mobilePhone:'',  //手机号码
           role: '' ,  //角色
           captcha:'', //验证码
-          uuid: ''    //生成验证码对应的 id
+          uuid: '',    //生成验证码对应的 id
         },
         rules: {
           name: [
@@ -145,15 +145,13 @@
         this.$refs['ruleForm'].validate((valid) => {
 
           if (valid) {
-
             var loginParams = {
              'name': this.ruleForm.name,
               'pass': this.ruleForm.pass,
               'checkPass': this.ruleForm.checkPass,
               'mobilePhone': this.ruleForm.mobilePhone,
               'role': this.ruleForm.role,
-             // 'uuid': this.dataForm.uuid,
-              'uuid': 2,
+              'uuid': this.ruleForm.uuid,
               'captcha': this.ruleForm.captcha
             };
             this.fullscreenLoading = true;
@@ -184,13 +182,8 @@
       },
       // 获取验证码
       getCaptcha () {
-        // this.dataForm.uuid = getUUID()
-        // var uuid={"uuid":this.dataForm.uuid};
-        //var uuid=Math.random()*10000000;
-        var uuid=2;
-        console.log(uuid)
-        this.captchaPath = getCaptcha1(uuid).then((res) => {
-
+        this.ruleForm.uuid=Date.parse(new Date());
+        this.captchaPath = getCaptcha1(this.ruleForm.uuid).then((res) => {
           this.captchaPath=res.data.msg
 
         });

@@ -4,7 +4,7 @@
     <!-- 筛选区 -->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
-      <el-form-item label="职位城区"   >
+      <el-form-item label="职位城区"   clearable  placeholder="请选职位城区">
         <el-cascader
           size="large"
           :options="options"
@@ -26,7 +26,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="getHotMovieList(releaseWelfare)">查询</el-button>
+        <el-button type="primary" @click="getPositionAll">查询</el-button>
       </el-form-item>
         <el-form-item  v-if="isCreate">
         <el-button type="primary"><router-link
@@ -43,7 +43,7 @@
         fixed
         prop="position"
         label="职位类型"
-        width="150"
+        width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
@@ -61,7 +61,7 @@
       <el-table-column
         prop="salary"
         label="薪水"
-        width="160"
+        width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
@@ -73,22 +73,22 @@
       <el-table-column
         prop="number"
         label="招聘人数"
-        width="100">
+        width="80">
       </el-table-column>
       <el-table-column
         prop="gender"
         label="性别"
-        width="120">
+        width="60">
       </el-table-column>
       <el-table-column
         prop="age"
         label="年龄"
-        width="120">
+        width="80">
       </el-table-column>
       <el-table-column
         prop="experience"
         label="工作年限"
-        width="120">
+        width="80">
       </el-table-column>
 
       <el-table-column
@@ -164,7 +164,7 @@
   import { get_user_info_sign } from '../../../api/api';
   import { getRealName } from '../../../api/api';
   import { get_position } from '../../../api/api';
-  import { getPublishings } from '../../../api/api';
+  import { getPositionAll } from '../../../api/api';
   import { getContact} from '../../../api/api';
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
@@ -199,7 +199,6 @@
           movieInfoList: [],
           pageSize: 20,//每页显示的数量
           //分页结束
-          permissionid:30,
           StringPath: '/home/recruitWorkers',
         },
       }
@@ -216,8 +215,10 @@
       //获取联系方式
       getContact(form,type){
         let params={
+          StringPath:this.releaseWelfare.StringPath,
           queriesType: type,
-          id: form.id
+          id: form.id,
+          selectType:1
         }
         getContact(params).then((res) => {
           if(res.status===0) {
@@ -230,21 +231,12 @@
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        if(this.resdata.isAuthentication!==2 ){
-          this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
-            dangerouslyUseHTMLString: true
-          });
-          this.$router.push({ path: '/home/myAccount' });
-        }else{
           get_user_info_sign(this.pathString);
-        }
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction(){
         checke_isButten(this.releaseWelfare.StringPath).then((res) => {
-         if(res.status!==0){
-           isRoleMessage(res.msg);
-         }
+         if(res.status===0){
           if(res.data.isAuthentication !==2 ){
             this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
               dangerouslyUseHTMLString: true
@@ -256,7 +248,9 @@
             this.getRealName();          //获取实名信息,初始化城市
             this.loadAll();
 
-          }
+          }}else{isRoleMessage(res.msg);}
+
+
         });
       },
 
@@ -269,7 +263,7 @@
             this.releaseWelfare.provincesId=this.realName.provincesId;
             this.releaseWelfare.cityId=this.realName.cityId;
             this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
-            this. getHotMovieList(this.releaseWelfare); //分页查询
+            this.getPositionAll; //分页查询
           }
         });
       },
@@ -295,9 +289,16 @@
         this.releaseWelfare.cityId=value[1];
         this.releaseWelfare.districtCountyId=value[2];
       },
-      //查询数据
-      getHotMovieList(form) {
-        getPublishings(form).then((res) => {
+
+
+      handleCurrentChange(currentPage) {
+
+        this.releaseWelfare.currentPage=currentPage;
+        this.getPositionAll()
+
+      },
+      getPositionAll(){
+        getPositionAll(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -315,30 +316,7 @@
             isRoleMessage(res.msg);
           }
         });
-      },
-
-      handleCurrentChange(currentPage) {
-        // currentPage为当前的页数
-        // 显示当前页数对应的数据
-        this.dataInline.currentPage=currentPage;
-        getPublishings(this.dataInline).then((res) => {
-          if(res.status===0) {
-            this.tableData = res.data.datas;
-           let length= this.tableData.length;
-            for(let a=0;a< length;a++){
-              if(this.tableData[a].isPublishContact===1){
-                this.tableData[a].isPublishContact=true;
-              }else{
-                this.tableData[a].isEmail=true;
-              }
-            }
-          }else {
-            isRoleMessage(res.msg);
-          }
-        });
-
-      },
-
+      }
 
 
     }

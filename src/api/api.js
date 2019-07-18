@@ -73,48 +73,6 @@ export const checke_isButten=  params => {
 
 }).then(res => res.data); };
 
-
-
-//判断有没有此权限
-export const get_user_info_jurisdiction = params => {
-   return  get_user_info().then((res) => {
-
-    if (res.msg==='用户未登录,无法获取当前用户的信息') {
-      router.push('/login/sign')
-      return null;
-    }
-    let status=res.status;
-    if (status === 0) {
-      //获取用户权限
-
-      let resdata=JSON.parse(res.data);  //字符串转换为 对象
-      //JSON.stringify(jsonobj)  对象转换为字符串
-      let role=resdata.role;
-       //米面按钮权限
-       if(params ==='/home/GrainAndOilPage'){
-         if(role===1 ||role===4){
-           res.isCreate=true;
-         }else{
-           Message.error("没有访问权限");
-           router.push('/home/release')
-         }
-       }else if(params ==='/home/jobWanted'){ //求职列表
-         if(role===1 ||role===2 ||  role===4|| role===5|| role===11){
-           if(role===1 ||role===4 || role===11){
-             res.isCreate=true;
-           }else{
-             res.isCreate=false;
-           }
-         }else{
-           Message.error("没有访问权限");
-           router.push('/home/release')
-         }
-       }
-      res.isAuthentication=resdata.isAuthentication;
-      return res;
-    }
-  }).then(res => res); };
-
 //获取菜单
 export const getPermission = params => {
 
@@ -153,12 +111,20 @@ export const getRealName = params => {
 export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => res.data); };
 //分页查询待审批招聘
 export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => res.data); };
-
+//分页查询简历
+export const getPositionAll = params => { return axios.post(`${base}/api/releaseWelfare/get_position_all`, params).then(res => res.data);};
+//分页查询简历
+export const getResumeAll = params => { return axios.post(`${base}/api/resume/get_resume_all`, params).then(res => res.data);};
 //实名审核
 export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
 //审核发布招聘
 export const examineReleaseWelfare = params => { return axios.post(`${base}/api/toExamine/examineReleaseWelfare`, params).then(res => res.data); };
 
+
+//审核发布简历
+export const examineResume = params => { return axios.post(`${base}/api/toExamine/examineResume`, params).then(res => res.data); };
+//s审核简历列表
+export const getTrialResumeAll = params => { return axios.post(`${base}/api/toExamine/getTrialResumeAll`, params).then(res => res.data); };
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 

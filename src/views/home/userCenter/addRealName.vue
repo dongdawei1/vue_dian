@@ -61,7 +61,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
     <!--商户重新实名结束-->
@@ -108,10 +107,10 @@
         role:'',
         rules: {
           selectedOptions: [
-            { required: true, message: '请选择城市和地区', trigger: 'blur' }
+            { required: true, message: '请选择城市和地区'}
           ],
           address_detailed:[
-            { required: true, message: '请选择送货范围', trigger: 'blur' }
+            { required: true, message: '请选择送货范围' }
           ],
           contact:[
             { required: true, message: '送货人手机号码', trigger: 'blur' },
@@ -133,7 +132,7 @@
           ],
           eag:[
             { required: true, message: '请输入年龄', trigger: 'blur' },
-            { min:2,max: 3, message: '长度在2至3位之间', trigger: 'blur' }
+            { min:2,max: 3, message: '长度在2至3位之间' }
           ],
 
         }
@@ -164,7 +163,7 @@
       //审批提交
       submitForm(ruleForm) {
 
-        this.$refs[ruleForm].validate((valid) => {
+        this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             this.fullscreenLoading=true;
             this.ruleForm.isArtificial=2;
