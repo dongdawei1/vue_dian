@@ -253,7 +253,7 @@
           infoList: [],
           movieInfoList: [],
           pageSize: 20,//每页显示的数量
-          StringPath:'/home/recruitWorkers'
+          StringPath:'/home/pestControl'
         },
         dataInline: {
           type: Object

@@ -77,7 +77,6 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -90,13 +89,13 @@
 
   import { uploadDown_update } from '../../../api/api';
   import { grainAndOil } from '../../../api/api';
-  import { get_user_info_jurisdiction } from '../../../api/api';
+  import {  checke_isButten } from '../../../api/api';
   import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
       return {
         resdata:'',//获取的用户信息
-        pathString:'/home/GrainAndOilPage',
+
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
@@ -115,6 +114,7 @@
           commoditytype: '', //类型
           pictureUrl: [],
           permissionid : 5,
+          pathString:'/home/GrainAndOilPage',
         },
 
         permission:'',
@@ -134,9 +134,8 @@
           ],
 
           pictureUrl:[
-            { required: true, message: '请上传图片', trigger: 'blur' },
-
-          ],
+            { required: true, message: '请上传图片' },
+           ],
           specifications: [
             { required: true, message: '请输入规格', trigger: 'blur' },
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
@@ -145,8 +144,6 @@
             { required: true, message: '请输入价格', trigger: 'blur' },
             { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
           ],
-
-
           priceEffectiveStart: [
             { type: 'date', required: true, message: '开始日期', trigger: 'change' }
           ],
@@ -171,20 +168,23 @@
 
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction(){
-        get_user_info_jurisdiction(this.pathString).then((res) => {
-          if(res.isCreate===true){
-            this.resdata=res;
-          }else{
-            this.$router.push({ path: '/home/release' });
-          }
-          if(res.isAuthentication!=2){
-            this.$router.push({ path: '/home/myAccount' });
+        checke_isButten(this.ruleForm.pathString).then((res) => {
+          if(res.status===0){
+            if (res.data.isCreate === true) {
+              this.resdata =res.data.data;
+            } else {
+              this.$router.push({path: '/home/release'});
+            }
+            if (res.data.isAuthentication !== 2) {
+              this.$router.push({path: '/home/myAccount'});
+            }}else{
+            isRoleMessage(res.msg);
           }
         });
       },
 
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+      submitForm(ruleForm) {
+        this.$refs[ruleForm].validate((valid) => {
           if (valid) {
             const data = this.ruleForm;
             grainAndOil(data).then(data => {
@@ -208,9 +208,10 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-        if (res.message!=null && res.message!='') {
+        if (res.message!==null && res.message!=='') {
           var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
+          console.log(this.ruleForm.pictureUrl)
         }
       },
 

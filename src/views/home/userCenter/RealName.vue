@@ -10,14 +10,14 @@
           @change="handleChange">
         </el-cascader>
       </el-form-item>
-      <el-form-item label="收/送货地址"    prop="address_detailed"  >
+      <el-form-item label="实名地址"    prop="address_detailed"  >
         <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
-      <el-form-item label="收/送人手机"    prop="contact"  >
+      <el-form-item label="实名手机"    prop="contact"  >
         <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人手机"></el-input>
       </el-form-item>
-      <el-form-item label="收/送人姓名"    prop="consignee_name"  >
+      <el-form-item label="联系人"    prop="consignee_name"  >
         <el-input v-model="ruleForm.consignee_name"  placeholder="请输入收/送货人姓名"></el-input>
       </el-form-item>
       <el-form-item label="邮箱"    prop="email"  >
@@ -45,7 +45,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -76,7 +75,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="resetFormWanted('ruleFormnotbusiness')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetFormWanted('ruleFormnotbusiness')">重置</el-button>
       </el-form-item>
     </el-form>
     <!--如果是求职就展示下边的结束-->
@@ -125,7 +123,7 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
+
       </el-form-item>
     </el-form>
   </div>
@@ -186,7 +184,7 @@
         role:'',
         rules: {
           selectedOptions: [
-            { required: true, message: '请选择城市和地区', trigger: 'blur' }
+            { required: true, message: '请选择城市和地区' }
           ],
           address_detailed:[
             { required: true, message: '请输入详细地址', trigger: 'blur' },
@@ -204,7 +202,7 @@
             { min:8,max: 30, message: '长度在8至30位之间', trigger: 'blur' }
           ],
           licenseUrl:[
-            { required: true, message: '请上传图片', trigger: 'blur' },
+            { type: 'array',required: true, message: '请上传图片' },
           ],
           eag:[
             { required: true, message: '请输入年龄', trigger: 'blur' },
@@ -284,7 +282,7 @@
 
       //求职提交
       resetFormWanted(ruleFormnotbusiness) {
-        this.$refs[ruleFormnotbusiness].validate((valid) => {
+        this.$refs['ruleFormnotbusiness'].validate((valid) => {
       var data ={
         'ruleForm': this.ruleFormnotbusiness,
         'isbusiness': 11
@@ -309,8 +307,7 @@
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
 
-
-        if (res.message!=null && res.message!='') {
+        if (res.message!==null && res.message!=='') {
           var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
           this.ruleForm.licenseUrl= this.ruleForm.licenseUrl.concat(picture);
           console.log(this.ruleForm.licenseUrl);
