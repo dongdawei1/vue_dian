@@ -202,7 +202,7 @@
             { min:8,max: 30, message: '长度在8至30位之间', trigger: 'blur' }
           ],
           licenseUrl:[
-            { type: 'array',required: true, message: '请上传图片' },
+            { type: 'array',required: true, message: '如果已上传请继续提交' },
           ],
           eag:[
             { required: true, message: '请输入年龄', trigger: 'blur' },
@@ -264,6 +264,18 @@
                       }
           if (valid) {
             this.fullscreenLoading = true;
+
+            let length=0;
+            for(let i=0;i< this.ruleForm.pictureUrl.length;i++){
+              if(this.ruleForm.pictureUrl[i].use_status===1){
+                length++;
+              }
+            }
+            if(length===0){
+              this.$message.error('图片不能为空');
+              return ;
+            }
+
             newRealName(data).then(data => {
               this.fullscreenLoading = false;
               if (data && data.status === 0) {

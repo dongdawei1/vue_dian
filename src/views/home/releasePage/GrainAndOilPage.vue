@@ -46,7 +46,7 @@
       </el-form-item>
 
 
-
+      <!--prop="pictureUrl" prop="pictureUrl"-->
       <el-form-item label="图片" prop="pictureUrl">
         <el-upload
           ref="upload"
@@ -54,7 +54,6 @@
           name="picture"
           list-type="picture-card"
           :limit="5"
-
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -93,69 +92,72 @@
   import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
+
       return {
-        resdata:'',//获取的用户信息
+        resdata: '',//获取的用户信息
 
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
         //图片列表（用于在上传组件中回显图片）
-      // fileList: {name: '', url: ''},
+        // fileList: {name: '', url: ''},
 
         ruleForm: {
           commodityName: '', //名
           placeOfOrigin: '',//产地
-          brand:'',//品牌
-          specifications:'',//规格
-          price:'',//价格
+          brand: '',//品牌
+          specifications: '',//规格
+          price: '',//价格
           remarks: '', //备注
           priceEffectiveStart: '', //开始
           priceEffectiveEnd: '', //结束
           commoditytype: '', //类型
           pictureUrl: [],
-          permissionid : 5,
-          pathString:'/home/GrainAndOilPage',
+          permissionid: 5,
+          pathString: '/home/GrainAndOilPage',
         },
 
-        permission:'',
-        role:'',
+        permission: '',
+        role: '',
         rules: {
           commodityName: [
-            { required: true, message: '请输入商品名称', trigger: 'blur' },
-            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+            {required: true, message: '请输入商品名称', trigger: 'blur'},
+            {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
           ],
           placeOfOrigin: [
-            { required: true, message: '请输入产地', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            {required: true, message: '请输入产地', trigger: 'blur'},
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
           brand: [
-            { required: true, message: '请输入品牌', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            {required: true, message: '请输入品牌', trigger: 'blur'},
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
 
-          pictureUrl:[
-            { required: true, message: '请上传图片' },
-           ],
+          pictureUrl: [
+            {type: 'array',required: true, message: '如果已上传请继续提交'},
+          ],
+
+
           specifications: [
-            { required: true, message: '请输入规格', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            {required: true, message: '请输入规格', trigger: 'blur'},
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
           price: [
-            { required: true, message: '请输入价格', trigger: 'blur' },
-            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+            {required: true, message: '请输入价格', trigger: 'blur'},
+            {min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur'}
           ],
           priceEffectiveStart: [
-            { type: 'date', required: true, message: '开始日期', trigger: 'change' }
+            {type: 'date', required: true, message: '开始日期', trigger: 'change'}
           ],
           priceEffectiveEnd: [
-            { type: 'date', required: true, message: '结束日期', trigger: 'change' }
+            {type: 'date', required: true, message: '结束日期', trigger: 'change'}
           ],
           commoditytype: [
-            { required: true, message: '请至少选择一个商品类别', trigger: 'change' }
+            {required: true, message: '请至少选择一个商品类别', trigger: 'change'}
           ],
 
           remarks: [
-            { min: 1, max: 10, message: '备注不能超过10个字', trigger: 'blur' }
+            {min: 1, max: 10, message: '备注不能超过10个字', trigger: 'blur'}
           ]
         }
       }
@@ -164,7 +166,9 @@
     created () {
       this.jurisdiction()
     },
+
     methods: {
+
 
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction(){
@@ -184,8 +188,22 @@
       },
 
       submitForm(ruleForm) {
+
         this.$refs[ruleForm].validate((valid) => {
           if (valid) {
+
+
+            let length=0;
+            for(let i=0;i< this.ruleForm.pictureUrl.length;i++){
+              if(this.ruleForm.pictureUrl[i].use_status===1){
+                length++;
+              }
+            }
+            if(length===0){
+              this.$message.error('图片不能为空');
+              return ;
+            }
+
             const data = this.ruleForm;
             grainAndOil(data).then(data => {
               //let { msg, code, user } = data;
@@ -211,8 +229,8 @@
         if (res.message!==null && res.message!=='') {
           var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
-          console.log(this.ruleForm.pictureUrl)
-        }
+      }
+
       },
 
       //删除文件之前的钩子函数
