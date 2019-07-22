@@ -263,7 +263,7 @@
             this.releaseWelfare.provincesId=this.realName.provincesId;
             this.releaseWelfare.cityId=this.realName.cityId;
             this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
-            this.getPositionAll; //分页查询
+            this.getPositionAll(); //分页查询
           }
         });
       },

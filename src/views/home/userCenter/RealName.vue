@@ -23,6 +23,11 @@
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
       </el-form-item>
+      <el-form-item label="企业名称"    prop="companyName"  >
+        <el-input v-model="ruleForm.companyName"  placeholder="请输入企业/公司名称"></el-input>
+      </el-form-item>
+
+
       <el-form-item label="营业执照" prop="licenseUrl">
         <el-upload
           ref="upload"
@@ -165,6 +170,7 @@
           contact:'',//收送货人联系方式
           consignee_name:'', //收/送货人姓名
           email:'',//邮箱
+          companyName:'',//企业名称
           licenseUrl: [],//营业执照图片
         },
 
@@ -208,7 +214,9 @@
             { required: true, message: '请输入年龄', trigger: 'blur' },
             { min:2,max: 3, message: '长度在2至3位之间', trigger: 'blur' }
           ],
-
+          companyName:[
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
+          ],
         }
       }
     },
@@ -272,6 +280,7 @@
               }
             }
             if(length===0){
+              this.fullscreenLoading=false;
               this.$message.error('图片不能为空');
               return ;
             }

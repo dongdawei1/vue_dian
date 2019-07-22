@@ -163,79 +163,136 @@ export const select_resume_by_id = params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
+//灭虫广告装修
+export const create_menuAndRenovationAndPestControl= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/create_menuAndRenovationAndPestControl`, params).then(res => res.data); };
+//用户查询自己发布的装修等
+export const get_usermrp_list= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data) ); };
 
-function isButtonAndList(res){
+function isButtonAndListusermrp(res) {
 
-  if(res.status===0) {
-    let list=res.data.datas;
-
-    for(let a=0;a<list.length;a++){
-      let welfareStatus= list[a].welfareStatus;
-      if( welfareStatus===1){
-        list[a].welfareStatus='发布中';
-        list[a].authentiCationFailure='';
-        list[a].isDisplayRefresh=true;
-        list[a].isDisplayHide=true;
-      }else if( welfareStatus===2){
-        list[a].welfareStatus='隐藏中';
-        list[a].authentiCationFailure='';
-        list[a].isDisplayRelease=true;
-      }else if( welfareStatus===4){
-        let authentiCationStatus=list[a].authentiCationStatus;
-        list[a].isDisplayHide=true;
-        if(authentiCationStatus===3){
-          list[a].welfareStatus='审核失败';
-          list[a].isDisplayEdit=true;}
-        else{
-          list[a].welfareStatus='审核中'
-          list[a].authentiCationFailure='';}
-      }else if( welfareStatus===5){
-        list[a].welfareStatus='已过期';
-        list[a].authentiCationFailure='';
-        list[a].isDisplayDelay=true;
+  if (res.status === 0) {
+    let list = res.data.datas;
+    for (let a = 0; a < list.length; a++) {
+      let welfareStatus = list[a].welfareStatus;
+      if (welfareStatus === 1) {
+        list[a].welfareStatus = '发布中';
+        list[a].authentiCationFailure = '';
+        list[a].isDisplayRefresh = true;
+        list[a].isDisplayHide = true;
+        list[a].isDisplayEdit = true;
+      } else if (welfareStatus === 2) {
+        list[a].welfareStatus = '隐藏中';
+        list[a].authentiCationFailure = '';  //审核失败原因
+        list[a].isDisplayRelease = true;
+      } else if (welfareStatus === 4) {
+        let authentiCationStatus = list[a].authentiCationStatus;
+        list[a].isDisplayHide = true;
+        if (authentiCationStatus === 3) {
+          list[a].welfareStatus = '审核失败';
+          list[a].isDisplayEdit = true;
+        } else {
+          list[a].welfareStatus = '审核中'
+          list[a].authentiCationFailure = '';
+        }
+      } else if (welfareStatus === 5) {
+        list[a].welfareStatus = '已过期';
+        list[a].authentiCationFailure = '';
+        list[a].isDisplayDelay = true;
       }
 
-      list[a].isDisplaySee=true;
-      list[a].isDisplayDelete=true;
-      let isPublishContact=list[a].isPublishContact;
-      if(isPublishContact===1){
-        list[a].isPublishContact='公开';
-      }else{list[a].isPublishContact='隐藏';}
-
-
+      list[a].isDisplaySee = true;
+      list[a].isDisplayDelete = true;
+      let releaseType=list[a].releaseType;
+      console.log(releaseType)
+      if(releaseType===13){
+        list[a].releaseType='菜谱/户外广告';
+      }else if(releaseType===17){
+        list[a].releaseType='装修';
+      }else if(releaseType===19){
+        list[a].releaseType='灭虫';
+      }else{
+        list[a].releaseType='';
+      }
     }
-    res.data.datas= list;
+    res.data.datas = list;
     return res;
     //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
-  }else{
+  } else {
     return res;
   }
-
-
-
-
-
-
 }
+
+  function isButtonAndList(res) {
+
+    if (res.status === 0) {
+      let list = res.data.datas;
+
+      for (let a = 0; a < list.length; a++) {
+        let welfareStatus = list[a].welfareStatus;
+        if (welfareStatus === 1) {
+          list[a].welfareStatus = '发布中';
+          list[a].authentiCationFailure = '';
+          list[a].isDisplayRefresh = true;
+          list[a].isDisplayHide = true;
+        } else if (welfareStatus === 2) {
+          list[a].welfareStatus = '隐藏中';
+          list[a].authentiCationFailure = '';  //审核失败原因
+          list[a].isDisplayRelease = true;
+        } else if (welfareStatus === 4) {
+          let authentiCationStatus = list[a].authentiCationStatus;
+          list[a].isDisplayHide = true;
+          if (authentiCationStatus === 3) {
+            list[a].welfareStatus = '审核失败';
+            list[a].isDisplayEdit = true;
+          } else {
+            list[a].welfareStatus = '审核中'
+            list[a].authentiCationFailure = '';
+          }
+        } else if (welfareStatus === 5) {
+          list[a].welfareStatus = '已过期';
+          list[a].authentiCationFailure = '';
+          list[a].isDisplayDelay = true;
+        }
+
+        list[a].isDisplaySee = true;
+        list[a].isDisplayDelete = true;
+        let isPublishContact = list[a].isPublishContact;
+        if (isPublishContact === 1) {
+          list[a].isPublishContact = '公开';
+        } else {
+          list[a].isPublishContact = '隐藏';
+        }
+
+
+      }
+      res.data.datas = list;
+      return res;
+      //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
+    } else {
+      return res;
+    }
+  }
 
 //根据错误跳转页面和报错
-export const  isRoleMessage = params =>{
-  Message.error(params);
-  if(params==='用户登陆已过期' || params==='用户未登录,无法获取当前用户的信息'){
-    router.push({ path: '/login/sign' });
-  } else if(params==='没有权限'){
-    router.push({ path: '/home/release' });
-  }else{
+  export const isRoleMessage = params => {
+    Message.error(params);
+    if (params === '用户登陆已过期' || params === '用户未登录,无法获取当前用户的信息') {
+      router.push({path: '/login/sign'});
+    } else if (params === '没有权限') {
+      router.push({path: '/home/release'});
+    } else {
 
+    }
   }
-}
 //参数n为休眠时间，单位为毫秒:
-export const  sleep = params =>{
-        var start = new Date().getTime();
-             //  console.log('休眠前：' + start);
-               while (true) {
-                   if (new Date().getTime() - start > params) {
-                   break;
-                  }}
-              // console.log('休眠后：' + new Date().getTime());
-               }
+  export const sleep = params => {
+    var start = new Date().getTime();
+    //  console.log('休眠前：' + start);
+    while (true) {
+      if (new Date().getTime() - start > params) {
+        break;
+      }
+    }
+    // console.log('休眠后：' + new Date().getTime());
+  }
+

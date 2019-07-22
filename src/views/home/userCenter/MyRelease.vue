@@ -23,22 +23,17 @@
 
     <el-tab-pane label="酒水" name="isWine"  v-if="isWine">
     </el-tab-pane>
-
-    <el-tab-pane label="菜谱" name="isMenu"  v-if="isMenu">
+    <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
     </el-tab-pane>
 
-    <el-tab-pane label="装修服务" name="isRenovation"  v-if="isRenovation">
-    </el-tab-pane>
 
-    <el-tab-pane label="灭虫服务" name="isPestControl"  v-if="isPestControl">
+    <el-tab-pane label="菜谱/装修/杀虫/广告牌" name="mrp"  v-if="isMenuAndRenovationAndPestControl">
+    <MyMAndRAndP></MyMAndRAndP>
     </el-tab-pane>
 
     <el-tab-pane label="我的简历" name="myJobWanted"  v-if="isJobWanted">
       <MyJobWanted></MyJobWanted>
     </el-tab-pane>
-    <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
-    </el-tab-pane>
-
     <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition">
       <CreatePosition></CreatePosition>
     </el-tab-pane>
@@ -50,12 +45,15 @@
 
   import CreatePosition from './myreleases/CreatePosition'
   import MyJobWanted from './myreleases/MyJobWanted'
+  import MyMAndRAndP from './myreleases/MyMAndRAndP'
+
   import { get_user_info } from '../../../api/api';
 
   export default {
     components: {
       CreatePosition,
-      MyJobWanted
+      MyJobWanted,
+      MyMAndRAndP
     },
 
     data() {
@@ -77,9 +75,8 @@
 
         //商铺/摊位出租6
         //装修/菜谱/广告牌/杀虫灭蟑
-        isMenu:false,//菜谱 7
-        isRenovation:false,//装修7
-        isPestControl:false,//灭虫7
+        isMenuAndRenovationAndPestControl:false,//菜谱 7 装修7 灭虫7
+
         //求职11
         isJobWanted:false,//求职11
         //工服百货
@@ -114,10 +111,11 @@
              this.isPurchase=true;//采购信息 2
              this.isJobWanted=true;
              this.isCreatePosition=true;
+             this.isMenuAndRenovationAndPestControl=true;
             this.activeName='createPosition';
            }
            else if(role===2 ){
-              this.isCreatePosition=true;
+              this.isCreatePosition=true;  //招聘
                 this.isWindowRental=true;//窗口出租 2,3,6
                 this.isPurchase=true;//采购信息 2
               this.activeName='createPosition';
@@ -138,9 +136,8 @@
               this.isWindowRental=true;//
               this.isBooth=true;//
             }else if(role===7){
-              this.isMenu=true;//菜谱 7
-                this.isRenovation=true;//装修7
-                this.isPestControl=true;//灭虫7
+              this.isMenuAndRenovationAndPestControl=true;//菜谱 7//装修7//灭虫7
+             this.activeName='mrp';
             }else if(role===11){
               this.activeName='myJobWanted';
               this.isJobWanted=true;

@@ -117,13 +117,13 @@
       </el-input>
       </el-form-item>
       <p>实名信息</p>
-      <el-form-item label="实名城市" prop="detailed">
+      <el-form-item label="实名城市" >
         <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
-      <el-form-item label="实名地址" prop="addressDetailed">
+      <el-form-item label="实名地址" >
         <el-input v-model="ruleForm.addressDetailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
       </el-form-item>
-      <el-form-item label="联系人" prop="addressDetailed">
+      <el-form-item label="联系人" >
         <el-input v-model="ruleForm.consigneeName" :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
 

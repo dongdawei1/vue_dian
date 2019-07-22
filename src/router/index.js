@@ -45,6 +45,7 @@ import RealName  from '../views/home/userCenter/RealName'
 import UpdateRealName  from '../views/home/userCenter/updateRealName'
 import AddRealName  from '../views/home/userCenter/addRealName'
 import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
+import CreateMAndRAndP  from '../views/home/userCenter/myreleases/CreateMAndRAndP'
 
 import Integral from '../views/home/Integral'
 import Characteristic from '../views/home/Characteristic'
@@ -275,7 +276,13 @@ export default new VueRouter ({
           hidden: true , //用户包中
           path: '/home/releaseWelfare',
           component:   ReleaseWelfare  //发布招聘
-        }
+        },
+        {
+          hidden: true , //用户包中
+          path: '/home/createMAndRAndP',
+          component:   CreateMAndRAndP  //发布灭虫等
+        },
+
 
       ]
     },
