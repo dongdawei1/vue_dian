@@ -134,34 +134,37 @@
       :visible.sync="dialogVisible"
       width="60%"
       :before-close="handleClose">
+      <div  class="zhiweixiangqi">
 
-      <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-      <span>职位类型 : {{tableDataNo.position }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>城区 : {{tableDataNo.detailed }}</span><br>
+        <div class="left">
+          <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
+          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+          <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
+          <span>邮箱 : {{tableDataNo.email }}</span><br>
+          <span>是否公开手机 : {{tableDataNo.isPublishContact }}</span><br>
+          <span>职位状态 : {{tableDataNo.welfareStatus }}</span><br>
+
+          <span  v-if="tableDataNo.welfareStatus==='审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}<br></span>
+          <span>创建时间 : {{tableDataNo.createTime }}</span><br>
+          <span>刷新时间 : {{tableDataNo.updateTime }}</span><br>
+          <span v-if="tableDataNo.welfareStatus==='发布中'">失效时间 : {{tableDataNo.termOfValidity }}<br></span>
+          <span>城区 : {{tableDataNo.detailed }}</span><br>
+        </div>
+        <div class="right">
+          <span>职位类型 : {{tableDataNo.position }}</span><br>
+          <span>招聘人数 : {{tableDataNo.number }}</span><br>
+          <span>薪水 : {{tableDataNo.salary }}</span><br>
+          <span>福利 : {{tableDataNo.welfare }}</span><br>
+          <span>学历 : {{tableDataNo.education }}</span><br>
+          <span>经验 : {{tableDataNo.experience }}</span><br>
+          <span>性别 : {{tableDataNo.gender }}</span><br>
+          <span>年龄 : {{tableDataNo.age }}</span><br>
+        </div>
       <span>地址详情 : {{tableDataNo.workingAddress }}</span><br>
-
-      <span>招聘人数 : {{tableDataNo.number }}</span><br>
-      <span>薪水 : {{tableDataNo.salary }}</span><br>
-      <span>福利 : {{tableDataNo.welfare }}</span><br>
-      <span>学历 : {{tableDataNo.education }}</span><br>
-      <span>经验 : {{tableDataNo.experience }}</span><br>
-      <span>性别 : {{tableDataNo.gender }}</span><br>
-      <span>年龄 : {{tableDataNo.age }}</span><br>
       <span>详情 : {{tableDataNo.describeOne }}</span><br>
-      <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
-      <span>邮箱 : {{tableDataNo.email }}</span><br>
-      <span>是否公开手机 : {{tableDataNo.isPublishContact }}</span><br>
-
-
-      <span>职位状态 : {{tableDataNo.welfareStatus }}</span><br>
-      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
-      <span>创建时间 : {{tableDataNo.createTime }}</span><br>
-      <span>刷新时间 : {{tableDataNo.updateTime }}</span><br>
-      <span>失效时间 : {{tableDataNo.termOfValidity }}</span><br>
-
-
+      </div>
       <span slot="footer" class="dialog-footer">
+
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
   </span>
     </el-dialog>
@@ -430,5 +433,22 @@
   }
 </script>
 <style>
-
+  .zhiweixiangqi {
+    width: 100%;
+    padding:0px 10px 25px 16px;
+    /*框间距上填充为25px
+右填充为50px
+下填充为75px
+左填充为100px*/
+    line-height:30px;  /*行间距*/
+    font-size:16px;
+  }
+  .left{
+    width: 40%;
+    display: table-cell;
+  }
+  .right{
+    width: 30%;
+    display: table-cell;
+  }
 </style>

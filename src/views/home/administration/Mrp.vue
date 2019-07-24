@@ -1,23 +1,40 @@
 <template>
   <div class="vm-image-list">
-    <!--c查询框开始-->
-    <el-form :inline="true" :model="realName" class="demo-form-inline">
-      <el-form-item label="用户名">
-        <el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>
+    <!--我的发布 已发布过的职位  c查询框开始-->
+    <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
+
+      <el-form-item label="服务类型"  >
+        <template>
+          <el-select v-model="releaseWelfare.releaseType" clearable placeholder="请输入或点击选择发布类型">
+            <el-option
+              v-for="item in releaseTypes"
+              :key="item.label"
+              :label="item.value"
+              :value="item.label">
+            </el-option>
+          </el-select>
+        </template>
       </el-form-item>
+
       <el-form-item label="手机号">
-        <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
+        <el-input v-model="releaseWelfare.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
+
       <el-form-item>
-        <el-button type="primary" @click="getTrialResumeAll">查询</el-button>
+        <el-button type="primary" @click="get_position_list">查询</el-button>
+
+        <el-button type="primary"><router-link
+          v-on:click.native="isAuthenticationM()"
+          to="" class="a" >发布服务信息</router-link></el-button>
       </el-form-item>
+
     </el-form>
     <!--c查询框结束-->
     <!--表格开始-->
     <el-table
       :data="tableData"
       border
-      style="width: 100%">
+      style="width: 100%"  >
       <el-table-column
         fixed
         prop="userType"
@@ -25,80 +42,64 @@
         width="100">
       </el-table-column>
       <el-table-column
-        prop="userName"
-        label="用户名"
-        width="120">
+        fixed
+        prop="releaseType"
+        label="服务类型"
+        width="120"
+        :show-overflow-tooltip="true">
       </el-table-column>
-
       <el-table-column
         prop="authentiCationStatus"
-        label="审核状态"
-        width="100">
+        label="状态"
+        width="90">
       </el-table-column>
       <el-table-column
         prop="authentiCationFailure"
         label="失败原因"
+        width="90"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column
+        prop="releaseTitle"
+        label="标题"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="startPrice"
+        label="起步价格"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="serviceDetailed"
+        label="服务区域"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+
+      <el-table-column
+        prop="servicFrequenc"
+        label="服务次数"
         width="100"
         :show-overflow-tooltip="true">
       </el-table-column>
-
-      <el-table-column
-        prop="describeOne"
-        label="描述"
-        width="300"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-
-
-      <el-table-column
-        prop="age"
-        label="年龄"
-        width="80">
-      </el-table-column>
-      <el-table-column
-        prop="gender"
-        label="性别"
-        width="80">
-      </el-table-column>
-      <el-table-column
-        prop="detailed"
-        label="求职地域"
-        width="100"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="addressDetailed"
-        label="所在地域"
-        width="100"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-
       <el-table-column
         prop="contact"
         label="联系方式"
-        width="130">
+        width="110">
       </el-table-column>
       <el-table-column
-        prop="position"
-        label="职位类型"
-        width="100"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-
-      <el-table-column
-        prop="experience"
-        label="工作经验"
-        width="100"
+        prop="consigneeName"
+        label="联系人"
+        width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
-        prop="isPublishContact"
-        label="1公开手机"
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="email"
-        label="邮箱"
+        prop="createTime"
+        label="创建时间"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -114,40 +115,8 @@
       </el-table-column>
     </el-table>
     <!--表格结束-->
-    <!--查看详情弹窗开始-->
-    <el-dialog
-      title="审核详情"
-      :visible.sync="dialogVisible"
-      width="60%"
-      :before-close="handleClose">
-
-      <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>用户名 : {{tableDataNo.userName }}</span><br>
-      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>求职地域 : {{tableDataNo.detailed }}</span><br>
-      <span>现居住地 : {{tableDataNo.addressDetailed }}</span><br>
-      <span>职位类型 : {{tableDataNo.position }}</span><br>
-      <span>薪水 : {{tableDataNo.salary }}</span><br>
-      <span>学历 : {{tableDataNo.education }}</span><br>
-      <span>经验 : {{tableDataNo.experience }}</span><br>
-      <span>性别 : {{tableDataNo.gender }}</span><br>
-      <span>年龄 : {{tableDataNo.age }}</span><br>
-      <span>详情 : {{tableDataNo.describeOne }}</span><br>
-      <span>邮箱 : {{tableDataNo.email }}</span><br>
-      <span>公开手机 : {{tableDataNo.isPublishContact }}</span><br>
-      <span>申请时间 : {{tableDataNo.createTime }}</span><br>
-      <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
-      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
-      <span>审核人员 : {{tableDataNo.examineName }}</span><br>
-      <span>审核时间 : {{tableDataNo. examineTime }}</span><br>
 
 
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-  </span>
-    </el-dialog>
-    <!--查看详情弹窗结束-->
 
     <!--审核弹窗开始-->
     <el-dialog title="审核" :visible.sync="dialogFormVisible">
@@ -169,12 +138,49 @@
       </div>
     </el-dialog>
     <!--审核弹窗结束-->
+
+
+
+    <!--查看详情弹窗开始-->
+    <el-dialog
+      title="审核详情"
+      :visible.sync="dialogVisible"
+      width="60%"
+      :before-close="handleClose">
+
+      <span>用户类型 : {{tableDataNo.userType }}</span><br>
+      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+      <span>联系方式 : {{tableDataNo.contact }}</span><br>
+      <span>公司名称 : {{tableDataNo.companyName }}</span><br>
+      <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
+      <span>实名城区 : {{tableDataNo.detailed }}</span><br>
+      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
+
+      <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
+      <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
+      <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
+      <span>备注 : {{tableDataNo.remarks }}</span><br>
+      <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
+      <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
+      <span>图片 : {{tableDataNo.pictureUrl}}</span><br>
+      <span>申请时间 : {{tableDataNo.createTime }}</span><br>
+      <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
+      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
+      <span>审核人员 : {{tableDataNo.examineName }}</span><br>
+
+
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+  </span>
+    </el-dialog>
+    <!--查看详情弹窗结束-->
+
     <!-- 分页 -->
     <el-pagination
       background
       layout="prev, pager, next"
-      :current-page="realName.currentPage"
-      :page-size="realName.pageSize"
+      :current-page="releaseWelfare.currentPage"
+      :page-size="releaseWelfare.pageSize"
       @current-change="handleCurrentChange"
       :total="total">
     </el-pagination>
@@ -183,25 +189,34 @@
   </div>
 </template>
 <script>
-  import {  getTrialResumeAll } from '../../../api/api';
-  import { isRoleMessage } from '../../../api/api';
-  import { examineAll } from '../../../api/api';
 
+  import { getmrpAll} from '../../../api/api';
+  import { examineAll} from '../../../api/api';
+
+  import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
       return {
         fullscreenLoading:false,
-        total: 0, //总条数
-        realName: { //查询条件
-          userName:'',
-          contact: '',
+        pathString:'/home/releaseWelfare',
+        //分页开始
+        total: 0,
+
+        //分页结束
+        releaseTypes: [
+          { "value": "菜谱广告牌", "label": "13" },
+          { "value": "装修", "label": "17" },
+          { "value": "灭虫", "label": "19" },
+        ],
+        releaseWelfare: { //查询条件
+          releaseType:'', //服务类型
+          contact:'',//手机号
 
           currentPage: 1,
           infoList: [],
           movieInfoList: [],
           pageSize: 20,//每页显示的数量
         },
-
         tableData:[], //全部数据
         tableDataNo:'', //某一个审批
         dialogVisible: false,  //查看详情弹窗
@@ -209,7 +224,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:31,
+          tabuleType:13,
         },
         formLabelWidth: '120px',
         rules: {
@@ -220,10 +235,12 @@
             { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
           ]
         }
+
+
       }
     },
     created () {
-      this.getTrialResumeAll();
+      this.get_position_list();
     },
 
     methods: {
@@ -234,6 +251,7 @@
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
       },
+
       examineClick(row){ //点击审批打开弹窗
         this.tableDataNo=row;
         this.dialogFormVisible=true;
@@ -250,13 +268,12 @@
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
-                this.getTrialResumeAll(); //刷新列表
+                this.get_position_list(); //刷新列表
                 this.dialogFormVisible=false;
               }  else {
                 isRoleMessage(data.msg);
               }
             });
-
           } else {
             console.log('error submit!!');
             return false;
@@ -265,15 +282,18 @@
       },
 
 
+
+
       handleCurrentChange(currentPage) {
         // currentPage为当前的页数
         // 显示当前页数对应的数据
-        this.realName.currentPage=currentPage;
-        this.getTrialResumeAll();
-      },
+        this.releaseWelfare.currentPage=currentPage;
+        this.get_position_list();
 
-      getTrialResumeAll(){
-        getTrialResumeAll(this.realName).then((res) => {
+      },
+      get_position_list(){
+        getmrpAll(this.releaseWelfare).then((res) => {
+
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -281,9 +301,8 @@
             isRoleMessage(res.msg);
           }
         });
-      }
-
-    }
+      },
+    },
   }
 </script>
 <style>

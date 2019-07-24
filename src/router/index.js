@@ -53,6 +53,8 @@ import Characteristic from '../views/home/Characteristic'
 import ToExamine from '../views/home/administration/ToExamine'
 import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 
+
+
 import GrainAndOilPage from '../views/home/releasePage/GrainAndOilPage'
 
 
@@ -233,7 +235,8 @@ export default new VueRouter ({
 
         {
           path: '/home/toExamine',
-          component: ToExamine
+          component: ToExamine,
+
         },
         {
           path: '/home/businessEnquiry',

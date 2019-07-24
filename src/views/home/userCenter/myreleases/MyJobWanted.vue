@@ -139,28 +139,34 @@
     </el-dialog>
     <!-- 成功弹窗结束  -->
     <!--发布过简历展示详情-->
-    <div   v-if="isDetails"   >
-      <span>简历详情</span>
+    <div  class="jianlixiangqi" v-if="isDetails"   >
+      <h4> <span>简历详情</span></h4>
       <div  class="gerentablecss_content">
-        <span>求职类型 : {{ruleForm.position }}</span><br>
-        <span>工资要求 : {{ruleForm.salary }}</span><br>
-        <span>学历 : {{ruleForm.education }}</span><br>
-        <span>工作经验 : {{ruleForm.experience }}</span><br>
-        <span>年龄 : {{ruleForm.age }}</span><br>
-        <span>性别 : {{ruleForm.gender }}</span><br>
-        <span>求职城区 : {{ruleForm.detailed }}</span><br>
-        <span>所在城区 : {{ruleForm.addressDetailed }}</span><br>
+        <div class="left">
+          <span>求职类型 : {{ruleForm.position }}</span><br>
+          <span>学历 : {{ruleForm.education }}</span><br>
+          <span>年龄 : {{ruleForm.age }}</span><br>
+          <span>性别 : {{ruleForm.gender }}</span><br>
+          <span>邮箱 : {{ruleForm.email}}</span><br>
+          <span>联系人 : {{ruleForm.consigneeName }}</span><br>
+          <span>联系方式 : {{ruleForm.contact }}</span><br>
+          <span>是否公开电话 : {{isPublishContact }}</span><br>
+          <span>创建时间 : {{ruleForm.createTime }}</span><br>
+          <span>刷新时间 : {{ruleForm.updateTime }}</span><br>
+        </div>
+        <div class="right">
+          <span>工资要求 : {{ruleForm.salary }}</span><br>
+          <span>工作经验 : {{ruleForm.experience }}</span><br>
+          <span>求职城区 : {{ruleForm.detailed }}</span><br>
+          <span>所在城区 : {{ruleForm.addressDetailed }}</span><br>
+          <span>审批状态 : {{ruleForm.authentiCationStatus }}</span><br>
+          <span v-if="authentication_status">审核失败原因 : {{ ruleForm.authentiCationFailure}}<br></span>
+          <span v-if="isTermOfValidity">失效时间 : {{ruleForm.termOfValidity }}</span>
+        </div>
+
         <span>自我描述 : {{ruleForm.describeOne }}</span><br>
-        <span>邮箱 : {{ruleForm.email}}</span><br>
-        <span>联系人 : {{ruleForm.consigneeName }}</span><br>
-        <span>联系方式 : {{ruleForm.contact }}</span><br>
-        <span>是否公开电话 : {{isPublishContact }}</span><br>
-        <span>审批状态 : {{ruleForm.authentiCationStatus }}</span><br>
-        <span v-if="authentication_status">审核失败原因 : {{ ruleForm.authentiCationFailure}}<br></span>
-        <span>创建时间 : {{ruleForm.createTime }}</span><br>
-        <span>刷新时间 : {{ruleForm.updateTime }}</span><br>
-        <span v-if="isTermOfValidity">失效时间 : {{ruleForm.termOfValidity }}</span>
       </div>
+      <br>
       <el-button type="primary" @click="endAndAgain()" v-if="isEnd">编辑</el-button>
       <el-button type="primary" @click="operation(ruleForm,1)" v-if="isRefresh" v-loading.fullscreen.lock="fullscreenLoading">刷新</el-button>
       <el-button type="primary" @click="operation(ruleForm,2)" v-if="isHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
@@ -374,7 +380,7 @@
             }else{this.isPublishContact='不公开'}
 
              if(this.ruleForm.authentiCationStatus===2){
-               this.ruleForm.authentiCationStatus='审批通过'
+               this.ruleForm.authentiCationStatus='发布中'
                if(this.ruleForm.welfareStatus===1){
                  this.isEnd=true;
                  this.isRefresh=true;
@@ -411,11 +417,12 @@
                  this.isDel=true;
                  this.isTermOfValidity=false;
                }
-               this.authentication_status=true;
-             }else if(this.ruleForm.authentiCationStatus===3){
                this.authentication_status=false;
-               this.ruleForm.authentiCationStatus='审批失败'
 
+             }else if(this.ruleForm.authentiCationStatus===3){
+
+               this.ruleForm.authentiCationStatus='审批失败'
+               this.authentication_status=true;
                this.isAgain=true;
                this.isDel=true;
                this.isRefresh=false;
@@ -491,5 +498,22 @@
   }
 </script>
 <style>
+  .jianlixiangqi {
+    padding:0px 10px 25px 40px;
+    /*框间距上填充为25px
+右填充为50px
+下填充为75px
+左填充为100px*/
+    line-height:30px;  /*行间距*/
+    font-size:16px;
+  }
+  .left{
+    width: 50%;
+    display: table-cell;
+  }
+  .right{
+    width: 50%;
+    display: table-cell;
+  }
 
 </style>

@@ -55,9 +55,11 @@
       </el-table-column>
       <el-table-column
         prop="welfareStatus"
-        label="状态"
+        label="发布状态"
         width="90">
       </el-table-column>
+
+
       <el-table-column
         prop="authentiCationFailure"
         label="失败原因"
@@ -135,37 +137,47 @@
     <!--表格结束-->
     <!--查看详情弹窗开始-->
     <el-dialog
-      title="职位详情"
+      title="服务详情"
       :visible.sync="dialogVisible"
       width="60%"
       :before-close="handleClose">
+      <div class="parent">
+        <div class="left">
+          <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+          <span>联系方式 : {{tableDataNo.contact }}</span><br>
 
-      <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-      <span>职位类型 : {{tableDataNo.position }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>城区 : {{tableDataNo.detailed }}</span><br>
-      <span>地址详情 : {{tableDataNo.workingAddress }}</span><br>
-
-      <span>招聘人数 : {{tableDataNo.number }}</span><br>
-      <span>薪水 : {{tableDataNo.salary }}</span><br>
-      <span>福利 : {{tableDataNo.welfare }}</span><br>
-      <span>学历 : {{tableDataNo.education }}</span><br>
-      <span>经验 : {{tableDataNo.experience }}</span><br>
-      <span>性别 : {{tableDataNo.gender }}</span><br>
-      <span>年龄 : {{tableDataNo.age }}</span><br>
-      <span>详情 : {{tableDataNo.describeOne }}</span><br>
-      <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
-      <span>邮箱 : {{tableDataNo.email }}</span><br>
-      <span>是否公开手机 : {{tableDataNo.isPublishContact }}</span><br>
-
-
-      <span>职位状态 : {{tableDataNo.welfareStatus }}</span><br>
-      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
-      <span>创建时间 : {{tableDataNo.createTime }}</span><br>
-      <span>刷新时间 : {{tableDataNo.updateTime }}</span><br>
-      <span>失效时间 : {{tableDataNo.termOfValidity }}</span><br>
+          <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
+          <span>实名城区 : {{tableDataNo.detailed }}</span><br>
+          <span>申请时间 : {{tableDataNo.createTime }}</span><br>
+          <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
+          <span>公司名称 : {{tableDataNo.companyName }}</span><br>
+        </div>
+        <div class="right">
+          <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
+          <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
+          <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
+          <span>备注 : {{tableDataNo.remarks }}</span><br>
+          <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
+          <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
+        </div>
 
 
+
+      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
+
+
+      <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
+      <span>服务图片 : {{tableDataNo.pictureUrl}}</span><br>
+        <img :src="ce" width="100%">
+        <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
+          {{index}}--{{p.picture_url}}
+          --
+          <img :src="p.picture_url" width="100%">
+
+        </li>
+
+
+      </div>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
   </span>
@@ -227,7 +239,6 @@
 </template>
 <script>
   import {  position_operation } from '../../../../api/api';
-  import { get_position } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
 
   import { get_usermrp_list} from '../../../../api/api';
@@ -236,8 +247,9 @@
   export default {
     data() {
       return {
+        ce:'file:///E:/upload/20190724163724下载.jpg',
         fullscreenLoading:false,
-        pathString:'/home/releaseWelfare',
+        pathString:'/home/createMAndRAndP',
         //分页开始
         total: 0,
 
@@ -263,11 +275,11 @@
           pageSize: 20,//每页显示的数量
           StringPath:'menuAndRenovationAndPestControl'
         },
-        dataInline: {
-          type: Object
-        },
+
         tableData:[], //全部数据
-        tableDataNo:'', //某一个数据
+        tableDataNo:{
+         // pictureUrl:'',
+        }, //某一个数据
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //编辑弹窗
         formLabelWidth: '120px',
@@ -292,15 +304,20 @@
       }
     },
     created () {
-      this.loadAll();
       this.get_position_list();
     },
 
     methods: {
 
+
+
+
+
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
         this.dialogVisible=true;
+        this.tableDataNo.pictureUrl=JSON.parse(this.tableDataNo.pictureUrl);
+
       },
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
@@ -388,32 +405,16 @@
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
+            console.log(this.tableData )
           }else{
             isRoleMessage(res.msg);
           }
         });
       },
 
-      //下拉列表
-
-      loadAll() {
-        get_position().then((res) => {
-          let datalist=res.data;
-          var all=[];
-          for(var a=0;a<datalist.length;a++){
-            let  valuel={
-              value:''
-            };
-            valuel.value=datalist[a];
-            all[a]=valuel;
-          }
-          this.restaurants=all;
-        });
-      },
       //判断是否实名和登陆状态
       isAuthenticationM(){
         get_user_info().then((res) => {
-          console.log(res)
           if(res.status===0){
             if(JSON.parse(res.data).isAuthentication===2){
               this.$router.push({ path: this.pathString });
@@ -432,5 +433,21 @@
   }
 </script>
 <style>
-
+  .parent {
+    padding:0px 15px 25px 40px;
+    /*框间距上填充为25px
+右填充为50px
+下填充为75px
+左填充为100px*/
+    line-height:30px;  /*行间距*/
+    font-size:16px;
+  }
+  .left{
+    width: 40%;
+    display: table-cell;
+  }
+  .right{
+    width: 50%;
+    display: table-cell;
+  }
 </style>

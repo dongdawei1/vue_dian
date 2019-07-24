@@ -31,9 +31,16 @@
       </el-table-column>
       <el-table-column
         prop="authentiCationStatus"
-        label="1审中3不过"
+        label="审核状态"
         width="100">
       </el-table-column>
+      <el-table-column
+        prop="authentiCationFailure"
+        label="失败原因"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
       <el-table-column
         prop="detailed"
         label="省市区"
@@ -165,7 +172,7 @@
 </template>
 <script>
   import {  getReleaseWelfareAll } from '../../../api/api';
-  import {  examineReleaseWelfare } from '../../../api/api';
+  import {  examineAll } from '../../../api/api';
   import { isRoleMessage } from '../../../api/api';
   export default {
     data() {
@@ -192,6 +199,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
+          tabuleType:30,
         },
         formLabelWidth: '120px',
         rules: {
@@ -228,7 +236,7 @@
             this.fullscreenLoading=true;
             this.form.userId=this.tableDataNo.userId;
             this.form.id=this.tableDataNo.id;
-            examineReleaseWelfare(this.form).then(data => {
+            examineAll(this.form).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
@@ -238,7 +246,6 @@
                 isRoleMessage(data.msg);
               }
             });
-
           } else {
             console.log('error submit!!');
             return false;

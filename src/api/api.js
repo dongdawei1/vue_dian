@@ -12,17 +12,6 @@ axios.defaults.timeout = 15000;
 
 export const requestLogin = params => { return axios.post(`${base}/api/user/login`, params).then(res => res.data); };
 
-export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
-
-export const getUserListPage = params => { return axios.get(`${base}/user/listpage`, { params: params }); };
-
-export const removeUser = params => { return axios.get(`${base}/user/remove`, { params: params }); };
-
-export const batchRemoveUser = params => { return axios.get(`${base}/user/batchremove`, { params: params }); };
-
-export const editUser = params => { return axios.get(`${base}/user/edit`, { params: params }); };
-
-export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
 
 //获取验证码
 export const getCaptcha1 = params => { return axios({
@@ -38,7 +27,6 @@ export const getCaptcha1 = params => { return axios({
 //上传图片时删除
 export const uploadDown_update = params   => { return axios.post( `${base}/api/uploadDown/update`, params).then(res => res.data); };
 
-//get_user_info
 
 export const get_user_info = params => {
   return axios({
@@ -59,7 +47,6 @@ export const get_user_info_sign = params => {
       router.push(params)
     }
   }) };
-
 
 
 //检查权限
@@ -107,24 +94,32 @@ export const getRealName = params => {
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
 
   }).then(res => res.data); };
-//审核分页查询实名
-export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => res.data); };
-//分页查询待审批招聘
-export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => res.data); };
+
+
+
+
+//待审核实名
+export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+//待审批招聘
+export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+//待审核简历
+export const getTrialResumeAll = params => { return axios.post(`${base}/api/toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+//待审核装修灭虫列表
+export const getmrpAll= params => { return axios.post(`${base}/api/toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
+
+//除实名外所有审核
+export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
+//实名审核
+export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
+
 //分页查询简历
 export const getPositionAll = params => { return axios.post(`${base}/api/releaseWelfare/get_position_all`, params).then(res => res.data);};
 //分页查询简历
 export const getResumeAll = params => { return axios.post(`${base}/api/resume/get_resume_all`, params).then(res => res.data);};
-//实名审核
-export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
-//审核发布招聘
-export const examineReleaseWelfare = params => { return axios.post(`${base}/api/toExamine/examineReleaseWelfare`, params).then(res => res.data); };
 
 
-//审核发布简历
-export const examineResume = params => { return axios.post(`${base}/api/toExamine/examineResume`, params).then(res => res.data); };
-//s审核简历列表
-export const getTrialResumeAll = params => { return axios.post(`${base}/api/toExamine/getTrialResumeAll`, params).then(res => res.data); };
+
+
 //发布
 export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
 
@@ -145,7 +140,7 @@ export const get_position = params => {
 //发布职位
 export const create_position = params => { return axios.post(`${base}/api/releaseWelfare/create_position`, params).then(res => res.data); };
 //用户分页查询自己发布的职位
-export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res =>isButtonAndList(res.data) ); };
+export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res =>isButtonAndListusermrp(res.data,4) ); };
 //用户操作自己发布的职位
 export const position_operation = params => { return axios.post(`${base}/api/releaseWelfare/position_operation`, params).then(res =>res.data) };
 
@@ -166,12 +161,15 @@ export const select_resume_by_id = params => {
 //灭虫广告装修
 export const create_menuAndRenovationAndPestControl= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/create_menuAndRenovationAndPestControl`, params).then(res => res.data); };
 //用户查询自己发布的装修等
-export const get_usermrp_list= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data) ); };
+export const get_usermrp_list= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data,1) ); };
 
-function isButtonAndListusermrp(res) {
+
+
+function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
     let list = res.data.datas;
+    if(type===1){
     for (let a = 0; a < list.length; a++) {
       let welfareStatus = list[a].welfareStatus;
       if (welfareStatus === 1) {
@@ -203,7 +201,6 @@ function isButtonAndListusermrp(res) {
       list[a].isDisplaySee = true;
       list[a].isDisplayDelete = true;
       let releaseType=list[a].releaseType;
-      console.log(releaseType)
       if(releaseType===13){
         list[a].releaseType='菜谱/户外广告';
       }else if(releaseType===17){
@@ -214,19 +211,39 @@ function isButtonAndListusermrp(res) {
         list[a].releaseType='';
       }
     }
-    res.data.datas = list;
-    return res;
-    //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
-  } else {
-    return res;
-  }
-}
-
-  function isButtonAndList(res) {
-
-    if (res.status === 0) {
-      let list = res.data.datas;
-
+    }
+    else if(type===2){
+      for (let a = 0; a < list.length; a++) {
+        let authentiCationStatus = list[a].authentiCationStatus;
+        if(authentiCationStatus===1){
+          list[a].authentiCationStatus='审核中'
+          list[a].authentiCationFailure = '';  //审核失败原因
+        }else if(authentiCationStatus===3){
+          list[a].authentiCationStatus='审核失败'
+        }
+        let releaseType=list[a].releaseType;
+        if(releaseType===13){
+          list[a].releaseType='菜谱/户外广告';
+        }else if(releaseType===17){
+          list[a].releaseType='装修';
+        }else if(releaseType===19){
+          list[a].releaseType='灭虫';
+        }else{
+          list[a].releaseType='';
+        }
+      }
+    }
+    else if(type===3){
+      for (let a = 0; a < list.length; a++) {
+        let authentiCationStatus = list[a].authentiCationStatus;
+        if(authentiCationStatus===1){
+          list[a].authentiCationStatus='审核中'
+          list[a].authentiCationFailure = '';  //审核失败原因
+        }else if(authentiCationStatus===3){
+          list[a].authentiCationStatus='审核失败'
+        }
+      }
+    }else if(type===4){
       for (let a = 0; a < list.length; a++) {
         let welfareStatus = list[a].welfareStatus;
         if (welfareStatus === 1) {
@@ -262,16 +279,17 @@ function isButtonAndListusermrp(res) {
         } else {
           list[a].isPublishContact = '隐藏';
         }
-
-
       }
-      res.data.datas = list;
-      return res;
-      //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
-    } else {
-      return res;
     }
+    res.data.datas = list;
+    return res;
+    //    1发布中，2隐藏中，3删除,4审核中,5不在有效期
+  } else {
+    return res;
   }
+}
+
+
 
 //根据错误跳转页面和报错
   export const isRoleMessage = params => {

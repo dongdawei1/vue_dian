@@ -34,9 +34,17 @@
       </el-table-column>
       <el-table-column
         prop="authentiCationStatus"
-        label="1审中3不过"
+        label="审核状态"
         width="100">
       </el-table-column>
+
+      <el-table-column
+        prop="authentiCationFailure"
+        label="失败原因"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
       <el-table-column
         prop="detailed"
         label="省市区"
@@ -182,6 +190,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
+
         },
         formLabelWidth: '120px',
         rules: {
