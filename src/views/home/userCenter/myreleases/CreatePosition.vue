@@ -118,10 +118,10 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
           <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
-          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" >延期</el-button>
-          <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide">隐藏</el-button>
-          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" >发布</el-button>
-          <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   >删除</el-button>
+          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
+          <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading" >隐藏</el-button>
+          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading" >发布</el-button>
+          <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
           <!-- 只有失败的才显示 编辑键 -->
           <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
         </template>
@@ -205,7 +205,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click=" submitFormEdit('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
+        <el-button type="primary" @click=" submitFormEdit('tableDataNo')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
       </div>
     </el-dialog>
     <!--编辑弹窗结束-->
@@ -266,9 +266,7 @@
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //编辑弹窗
         formLabelWidth: '120px',
-        form:{
 
-        },
         rules: {
           workingAddress: [
             {  required: true, message: '工作地址不能为空', trigger: 'change' },

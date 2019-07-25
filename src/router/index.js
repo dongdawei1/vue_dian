@@ -46,6 +46,8 @@ import UpdateRealName  from '../views/home/userCenter/updateRealName'
 import AddRealName  from '../views/home/userCenter/addRealName'
 import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
 import CreateMAndRAndP  from '../views/home/userCenter/myreleases/CreateMAndRAndP'
+import EditMAndRAndP  from '../views/home/userCenter/myreleases/EditMAndRAndP'
+
 
 import Integral from '../views/home/Integral'
 import Characteristic from '../views/home/Characteristic'
@@ -285,7 +287,12 @@ export default new VueRouter ({
           path: '/home/createMAndRAndP',
           component:   CreateMAndRAndP  //发布灭虫等
         },
-
+        {
+          hidden: true , //用户包中
+          path: '/home/editMAndRAndP/:id',
+          name: 'editMAndRAndP',
+          component:   EditMAndRAndP  //发布灭虫等
+        },
 
       ]
     },

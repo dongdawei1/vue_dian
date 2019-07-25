@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-if="isCreate">
-      <p>职位信息,有效期90天，在我的发布刷新即可增加有效期</p>
-      <el-form-item label="职位类型"  prop="position" >
+      <p>创建/编辑简历</p>
+      <el-form-item label="求职类型"  prop="position" >
         <template>
           <el-select v-model="ruleForm.position" filterable placeholder="请输入或点击选择职位类型">
             <el-option
@@ -121,7 +121,6 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
-        <el-button @click="resetForm('ruleForm')" >重置</el-button>
       </el-form-item>
     </el-form>
     <!-- 成功弹窗  -->
@@ -159,21 +158,20 @@
           <span>工作经验 : {{ruleForm.experience }}</span><br>
           <span>求职城区 : {{ruleForm.detailed }}</span><br>
           <span>所在城区 : {{ruleForm.addressDetailed }}</span><br>
-          <span>审批状态 : {{ruleForm.authentiCationStatus }}</span><br>
-          <span v-if="authentication_status">审核失败原因 : {{ ruleForm.authentiCationFailure}}<br></span>
-          <span v-if="isTermOfValidity">失效时间 : {{ruleForm.termOfValidity }}</span>
-        </div>
+          <span>简历状态 : {{ruleForm.authentiCationStatus }}</span><br>
+          <span v-if="ruleForm.authentication_status">审核失败原因 : {{ ruleForm.authentiCationFailure}}<br></span>
 
+        </div>
         <span>自我描述 : {{ruleForm.describeOne }}</span><br>
       </div>
       <br>
-      <el-button type="primary" @click="endAndAgain()" v-if="isEnd">编辑</el-button>
-      <el-button type="primary" @click="operation(ruleForm,1)" v-if="isRefresh" v-loading.fullscreen.lock="fullscreenLoading">刷新</el-button>
-      <el-button type="primary" @click="operation(ruleForm,2)" v-if="isHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
-      <el-button type="primary" @click="operation(ruleForm,3)" v-if="isDel" v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
-      <el-button type="primary" @click="operation(ruleForm,4)" v-if="isRelease" v-loading.fullscreen.lock="fullscreenLoading">显示简历</el-button>
+      <el-button type="primary" @click="endAndAgain()" v-if="ruleForm.isEnd">编辑</el-button>
+      <el-button type="primary" @click="operation(ruleForm,1)" v-if="ruleForm.isRefresh" v-loading.fullscreen.lock="fullscreenLoading">刷新</el-button>
+      <el-button type="primary" @click="operation(ruleForm,2)" v-if="ruleForm.isHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
+      <el-button type="primary" @click="operation(ruleForm,3)" v-if="ruleForm.isDel" >删除</el-button>
+      <el-button type="primary" @click="operation(ruleForm,4)" v-if="ruleForm.isRelease" v-loading.fullscreen.lock="fullscreenLoading">显示简历</el-button>
 
-      <el-button type="primary" @click="endAndAgain()" v-if="isAgain">重新发布</el-button>
+      <el-button type="primary" @click="endAndAgain()" v-if="ruleForm.isAgain">重新发布</el-button>
     </div>
 
   </div>
@@ -191,14 +189,6 @@
   export default {
     data() {
       return {
-        isEnd:false, //编辑
-        isRefresh:false,//刷新
-        isHide:false,//隐藏
-        isAgain:false,//重新发起
-        isDel:false,//删除
-        isRelease:false,//显示
-        isTermOfValidity:false,//显示失效时间
-        authentication_status:false,//是否显示失败原因
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
@@ -300,13 +290,13 @@
       },
       //操作
       operation(ruleForm,type){
-        this.fullscreenLoading=true;
         let data={};
         data.type=type;
         data.userId= ruleForm.userId;
         data.id=ruleForm.id;
         data.StringPath =this.StringPath;
         if(type===1 || type===2 || type===4){
+          this.fullscreenLoading=true;
           operation_resume(data).then(res => {
             this.fullscreenLoading=false;
             if (res.status === 0) {
@@ -321,12 +311,13 @@
             operation_resume(data).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
+                this.ruleForm.type=1;
                 this.jurisdiction();
               }  else {
                 isRoleMessage(res.msg);
               }
             });
-          }).catch(() => {});
+          }).catch(() => {this.fullscreenLoading=false;});
         } else{this.$message.error("操作类型错误");}
       },
       //提交
@@ -379,67 +370,33 @@
               this.isPublishContact='公开'
             }else{this.isPublishContact='不公开'}
 
-             if(this.ruleForm.authentiCationStatus===2){
-               this.ruleForm.authentiCationStatus='发布中'
-               if(this.ruleForm.welfareStatus===1){
-                 this.isEnd=true;
-                 this.isRefresh=true;
-                 this.isHide=true;
-                 this.isDel=true;
-                 this.isAgain=false;
-                 this.isRelease=false;
-                 this.isTermOfValidity=true;
-               }else if(this.ruleForm.welfareStatus===2){
-                 this.isDel=true;
-                 this.isRelease=true;
-
-
-                 this.isEnd=false;
-                 this.isHide=false;
-                 this.isRefresh=false;
-                 this.isAgain=false;
-                 this.isTermOfValidity=false;
-               }else if(this.ruleForm.welfareStatus===5){
-                 this.isEnd=true;
-                 this.isRefresh=true;
-                 this.isDel=true;
-
-                 this.isAgain=false;
-                 this.isHide=false;
-                 this.isRelease=false;
-                 this.isTermOfValidity=true;
-               }else{
-                 this.isRefresh=false;
-                 this.isHide=false;
-                 this.isEnd=false;
-                 this.isRelease=false;
-                 this.isAgain=false;
-                 this.isDel=true;
-                 this.isTermOfValidity=false;
-               }
-               this.authentication_status=false;
-
-             }else if(this.ruleForm.authentiCationStatus===3){
-
-               this.ruleForm.authentiCationStatus='审批失败'
-               this.authentication_status=true;
-               this.isAgain=true;
-               this.isDel=true;
-               this.isRefresh=false;
-               this.isHide=false;
-               this.isEnd=false;
-               this.isRelease=false;
-             }else {
-               this.authentication_status=false;
-               this.isAgain=false;
-               this.isDel=false;
-               this.isRefresh=false;
-               this.isHide=false;
-               this.isEnd=false;
-               this.isRelease=false;
-               this.ruleForm.authentiCationStatus='审批中'}
-           this.isDetails=true;
+            let welfareStatus=this.ruleForm.welfareStatus;
+            if(welfareStatus===1){
+              this.ruleForm.authentiCationStatus='发布中'
+              this.ruleForm.isEnd=true;
+              this.ruleForm.isRefresh=true;
+              this.ruleForm.isHide=true;
+              this.ruleForm.isDel=true;
+            }else if(welfareStatus===2){
+              this.ruleForm.authentiCationStatus='隐藏中'
+              this.ruleForm.isRelease=true;
+              this.ruleForm.isDel=true;
+              this.ruleForm.isEnd=true;
+            }else if(welfareStatus===4){
+              let authentiCationStatus=this.ruleForm.authentiCationStatus;
+              if(authentiCationStatus===1){
+                this.ruleForm.authentiCationStatus='审核中'
+                this.ruleForm.isDel=true;
+              }else if(authentiCationStatus===3){
+                this.ruleForm.authentiCationStatus='审核失败'
+                this.ruleForm.isAgain=true;//重新发起
+                this.ruleForm.isDel=true;
+                this.ruleForm.authentication_status=true;
+              }
+            }
+           this.isDetails=true;  //详情
            }else{//没有创建过
+             this.isDetails=false;
             this.checke_isButten();}
           }else{isRoleMessage(res.msg);}});
       },

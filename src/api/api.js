@@ -112,7 +112,7 @@ export const examineAll= params => { return axios.post(`${base}/api/toExamine/ex
 //实名审核
 export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
 
-//分页查询简历
+//分页查询招聘
 export const getPositionAll = params => { return axios.post(`${base}/api/releaseWelfare/get_position_all`, params).then(res => res.data);};
 //分页查询简历
 export const getResumeAll = params => { return axios.post(`${base}/api/resume/get_resume_all`, params).then(res => res.data);};
@@ -139,6 +139,8 @@ export const get_position = params => {
   }).then(res => res.data); };
 //发布职位
 export const create_position = params => { return axios.post(`${base}/api/releaseWelfare/create_position`, params).then(res => res.data); };
+
+
 //用户分页查询自己发布的职位
 export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res =>isButtonAndListusermrp(res.data,4) ); };
 //用户操作自己发布的职位
@@ -149,6 +151,10 @@ export const position_operation = params => { return axios.post(`${base}/api/rel
 export const create_resume = params => { return axios.post(`${base}/api/resume/create_resume`, params).then(res => res.data); };
 //简历操作
 export const operation_resume = params => { return axios.post(`${base}/api/resume/operation_resume`, params).then(res => res.data); };
+//操作灭虫
+export const operation_usermrp = params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/operation_usermrp`, params).then(res => res.data); };
+
+
 
 //获取自己发布的简历
 export const select_resume_by_id = params => {
@@ -162,15 +168,23 @@ export const select_resume_by_id = params => {
 export const create_menuAndRenovationAndPestControl= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/create_menuAndRenovationAndPestControl`, params).then(res => res.data); };
 //用户查询自己发布的装修等
 export const get_usermrp_list= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data,1) ); };
-
-
+//根据id获取发布的装修
+export const get_usermrp_id= params => {
+  return axios({
+    url: `${base}/api/menuAndRenovationAndPestControl/get_usermrp_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
     let list = res.data.datas;
+    //用户获取自己发布  广告装修
     if(type===1){
     for (let a = 0; a < list.length; a++) {
+      list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
       let welfareStatus = list[a].welfareStatus;
       if (welfareStatus === 1) {
         list[a].welfareStatus = '发布中';
@@ -184,7 +198,6 @@ function isButtonAndListusermrp(res,type) {
         list[a].isDisplayRelease = true;
       } else if (welfareStatus === 4) {
         let authentiCationStatus = list[a].authentiCationStatus;
-        list[a].isDisplayHide = true;
         if (authentiCationStatus === 3) {
           list[a].welfareStatus = '审核失败';
           list[a].isDisplayEdit = true;
@@ -212,8 +225,11 @@ function isButtonAndListusermrp(res,type) {
       }
     }
     }
+    //管理员获取广告装修
     else if(type===2){
       for (let a = 0; a < list.length; a++) {
+
+        list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
         let authentiCationStatus = list[a].authentiCationStatus;
         if(authentiCationStatus===1){
           list[a].authentiCationStatus='审核中'
@@ -233,6 +249,7 @@ function isButtonAndListusermrp(res,type) {
         }
       }
     }
+    //管理员获取  实名 招聘  简历
     else if(type===3){
       for (let a = 0; a < list.length; a++) {
         let authentiCationStatus = list[a].authentiCationStatus;
@@ -243,7 +260,9 @@ function isButtonAndListusermrp(res,type) {
           list[a].authentiCationStatus='审核失败'
         }
       }
-    }else if(type===4){
+    }
+    //用户获取自己发布的招聘
+    else if(type===4){
       for (let a = 0; a < list.length; a++) {
         let welfareStatus = list[a].welfareStatus;
         if (welfareStatus === 1) {
@@ -251,13 +270,13 @@ function isButtonAndListusermrp(res,type) {
           list[a].authentiCationFailure = '';
           list[a].isDisplayRefresh = true;
           list[a].isDisplayHide = true;
+
         } else if (welfareStatus === 2) {
           list[a].welfareStatus = '隐藏中';
           list[a].authentiCationFailure = '';  //审核失败原因
           list[a].isDisplayRelease = true;
         } else if (welfareStatus === 4) {
           let authentiCationStatus = list[a].authentiCationStatus;
-          list[a].isDisplayHide = true;
           if (authentiCationStatus === 3) {
             list[a].welfareStatus = '审核失败';
             list[a].isDisplayEdit = true;
@@ -281,6 +300,18 @@ function isButtonAndListusermrp(res,type) {
         }
       }
     }
+    //用户获取自己发布的简历
+    else if(type===5){
+
+    }
+ //查看和删除全部有 除了审批scope.row.isDisplaySee">查看，scope.row.isDisplayDelete"   >删除，
+//       </el-button>
+//       scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
+//       scope.row.isDisplayDelay" >延期</el-button>
+//       "scope.row.isDisplayHide">隐藏</el-button>
+//       scope.row.isDisplayRelease" >发布</el-button>
+//       </el-button>
+//       scope.row.isDisplayEdit" >编辑</el-button>
     res.data.datas = list;
     return res;
     //    1发布中，2隐藏中，3删除,4审核中,5不在有效期

@@ -109,11 +109,14 @@
   import { getRealName } from '../../../../api/api';
   import { create_menuAndRenovationAndPestControl } from '../../../../api/api';
   import { uploadDown_update } from '../../../../api/api';
+  import { get_usermrp_id } from '../../../../api/api';
 
 
   export default {
+    name:'editMAndRAndP',
     data() {
       return {
+        id:this.$route.params.id,
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
@@ -177,7 +180,6 @@
       this.checke_isButten();
     },
     methods: {
-
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
@@ -214,40 +216,6 @@
 
       cntinue(){  //留在本页继续发布
         this.centerDialogVisible=false;
-      },
-      getRealName(){
-        getRealName().then((res) => { //获取实名信息填充
-          if(res.status ===0 ) {
-            this.realName=res.data;
-            this.ruleForm.contact= this.realName.contact;
-            this.ruleForm.consigneeName= this.realName.consigneeName;
-            this.ruleForm.companyName= this.realName.companyName;
-            this.ruleForm.addressDetailed= this.realName.addressDetailed;
-            this.ruleForm.detailed= this.realName.detailed;
-          }else {
-            isRoleMessage(res.msg);
-          }
-        });
-      },
-      //
-      checke_isButten(){
-        checke_isButten(this.ruleForm.StringPath).then((res) => {
-          if(res.status===0){
-            if (res.data.isCreate === true) {
-              this.resdata =res.data.data;
-              this.ruleForm.userId=this.resdata.id;
-
-            } else {
-              this.$router.push({path: '/home/release'});
-            }
-            if (res.data.isAuthentication !== 2) {
-              this.$router.push({path: '/home/myAccount'});
-            }else {
-              this.getRealName();
-            }}else{
-            isRoleMessage(res.msg);
-          }
-        });
       },
 
       //图片上传相关
@@ -299,6 +267,33 @@
           this.$message.error('上传图片大小不能超过 3MB!');
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt3M;
+      },
+
+      //检查登陆和权限
+      checke_isButten(){
+        checke_isButten(this.ruleForm.StringPath).then((res) => {
+          if(res.status===0){
+            if (res.data.isCreate !== true) {
+              this.$router.push({path: '/home/release'});
+            }
+            if (res.data.isAuthentication !== 2) {
+              this.$router.push({path: '/home/myAccount'});
+            }else {
+
+              get_usermrp_id(this.id).then(res => {
+                if (res.status === 0) {
+                 // console.log(res)
+           this.ruleForm=res.data;
+                  console.log(this.ruleForm)
+                } else {
+                  isRoleMessage(res.msg);
+                }
+              });
+
+            }}else{
+            isRoleMessage(res.msg);
+          }
+        });
       },
 
     }
