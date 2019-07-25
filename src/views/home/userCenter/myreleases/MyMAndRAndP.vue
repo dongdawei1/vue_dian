@@ -167,13 +167,9 @@
 
 
       <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
-      <span>服务图片 : {{tableDataNo.pictureUrl}}</span><br>
-        <img :src="ce" width="100%">
+      <span>服务图片 : </span><br>
         <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
-          {{index}}--{{p.picture_url}}
-          --
           <img :src="p.picture_url" width="100%">
-
         </li>
 
 
@@ -247,7 +243,6 @@
   export default {
     data() {
       return {
-        ce:'file:///E:/upload/20190724163724下载.jpg',
         fullscreenLoading:false,
         pathString:'/home/createMAndRAndP',
         //分页开始
@@ -405,7 +400,6 @@
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
-            console.log(this.tableData )
           }else{
             isRoleMessage(res.msg);
           }

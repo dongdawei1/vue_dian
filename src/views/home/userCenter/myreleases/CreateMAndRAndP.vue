@@ -224,7 +224,6 @@
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
-     console.log( this.realName)
             this.ruleForm.contact= this.realName.contact;
             this.ruleForm.consigneeName= this.realName.consigneeName;
             this.ruleForm.companyName= this.realName.companyName;
@@ -263,7 +262,6 @@
         if (res.message!==null && res.message!=='') {
           var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
-          console.log(this.ruleForm.pictureUrl);
         }
       },
 
