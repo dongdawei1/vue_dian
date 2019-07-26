@@ -5,9 +5,9 @@
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="13">菜谱/广告</el-radio>
-            <el-radio :label="17">装修</el-radio>
-            <el-radio :label="19">灭虫</el-radio>
+            <el-radio  disabled :label="13">菜谱/广告</el-radio>
+            <el-radio  disabled :label="17">装修</el-radio>
+            <el-radio  disabled :label="19">灭虫</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -53,6 +53,7 @@
           :on-preview="handlePreview"
           :on-success="handleSuccess"
           :on-remove="handleRemove"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -106,8 +107,9 @@
 
   import {  checke_isButten } from '../../../../api/api';
   import {  isRoleMessage } from '../../../../api/api';
-  import { getRealName } from '../../../../api/api';
-  import { create_menuAndRenovationAndPestControl } from '../../../../api/api';
+  import {  operation_usermrp } from '../../../../api/api';
+  import { echo_display } from '../../../../api/api';
+
   import { uploadDown_update } from '../../../../api/api';
   import { get_usermrp_id } from '../../../../api/api';
 
@@ -116,6 +118,7 @@
     name:'editMAndRAndP',
     data() {
       return {
+        fileList:[],
         id:this.$route.params.id,
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
@@ -139,9 +142,10 @@
           consigneeName:'', //联系人姓名 回显置灰 不可修改
           detailed:'',//实名城区
           addressDetailed:'',//实名地址
+          id:'',
 
-          StringPath:'menuAndRenovationAndPestControl',
         },
+        StringPath:'menuAndRenovationAndPestControl',
 
 
         rules: {
@@ -152,7 +156,6 @@
           companyName: [
             { required: true, message: '公司名称不能为空', trigger: 'blur' },
           ],
-
           serviceDetailed: [
             { required: true, message: '请选服务城区', trigger: 'change' }
           ],
@@ -183,23 +186,12 @@
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
-        this.$refs['ruleForm'].validate((valid) => {
+       this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-
-            let length=0;
-            for(let i=0;i< this.ruleForm.pictureUrl.length;i++){
-              if(this.ruleForm.pictureUrl[i].use_status===1){
-                length++;
-              }
-            }
-            if(length===0){
+            this.ruleForm.StringPath=this.StringPath;
+            this.ruleForm.type=6;
+            operation_usermrp(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
-              this.$message.error('图片不能为空');
-              return ;
-            }
-            create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
-              this.fullscreenLoading=false;
-
               if (res.status === 0) {
                 //成功弹窗
                 this.centerDialogVisible=true;
@@ -221,20 +213,23 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-
-        if (res.message!==null && res.message!=='') {
-          var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
+        if(res.status===0){
+          let resdata=res.data;
+          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
         }
       },
-
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        //console.log(file);
+
+        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(file.name===this.ruleForm.pictureUrl[i].picture_name  && file.response.message===this.ruleForm.pictureUrl[i].picture_url){
+          if(resdata.id===this.ruleForm.pictureUrl[i].id){
             uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-              this.ruleForm.pictureUrl[i].use_status=2;
+              if(res.status!==0 ){
+                this.$message.error(res.msg);
+              }
+              this.ruleForm.pictureUrl.splice(i,1)
             });
             break;
           }
@@ -268,10 +263,9 @@
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt3M;
       },
-
       //检查登陆和权限
       checke_isButten(){
-        checke_isButten(this.ruleForm.StringPath).then((res) => {
+        checke_isButten(this.StringPath).then((res) => {
           if(res.status===0){
             if (res.data.isCreate !== true) {
               this.$router.push({path: '/home/release'});
@@ -279,12 +273,15 @@
             if (res.data.isAuthentication !== 2) {
               this.$router.push({path: '/home/myAccount'});
             }else {
-
               get_usermrp_id(this.id).then(res => {
                 if (res.status === 0) {
-                 // console.log(res)
-           this.ruleForm=res.data;
-                  console.log(this.ruleForm)
+                 this.ruleForm=res.data;
+                 let fileListAndPictureUrl=  echo_display(this.ruleForm);
+                 console.log(fileListAndPictureUrl)
+                 //图片回显和表格参数
+                  this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
+                  this.fileList=fileListAndPictureUrl.fileList;
+                  console.log( this.ruleForm.pictureUrl)
                 } else {
                   isRoleMessage(res.msg);
                 }

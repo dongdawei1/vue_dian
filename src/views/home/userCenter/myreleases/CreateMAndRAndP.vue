@@ -181,23 +181,11 @@
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
+        console.log(this.ruleForm)
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-
-            let length=0;
-            for(let i=0;i< this.ruleForm.pictureUrl.length;i++){
-              if(this.ruleForm.pictureUrl[i].use_status===1){
-                length++;
-              }
-            }
-            if(length===0){
-              this.fullscreenLoading=false;
-              this.$message.error('图片不能为空');
-              return ;
-            }
             create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
-
               if (res.status === 0) {
                 //成功弹窗
                 this.centerDialogVisible=true;
@@ -253,20 +241,23 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-
-        if (res.message!==null && res.message!=='') {
-          var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
+        if(res.status===0){
+          let resdata=res.data;
+          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
         }
       },
-
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        //console.log(file);
+
+        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(file.name===this.ruleForm.pictureUrl[i].picture_name  && file.response.message===this.ruleForm.pictureUrl[i].picture_url){
+          if(resdata.id===this.ruleForm.pictureUrl[i].id){
             uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-              this.ruleForm.pictureUrl[i].use_status=2;
+              if(res.status!==0 ){
+                this.$message.error(res.msg);
+              }
+              this.ruleForm.pictureUrl.splice(i,1)
             });
             break;
           }

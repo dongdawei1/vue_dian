@@ -177,6 +177,30 @@ export const get_usermrp_id= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
+
+//回显图片
+export const echo_display= params => {
+  let pictureUrlList = JSON.parse(params.pictureUrl)
+  let length=pictureUrlList.length;
+  if (length > 0) {
+   let pictureUrl=[];
+   let fileList=[];
+    for (let i=0;i<length; i++ ){
+      if(pictureUrlList[i].useStatus===1){
+        //var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
+        //存入参数
+        let picture={"pictureName":pictureUrlList[i].pictureName ,"pictureUrl": pictureUrlList[i].pictureUrl, "useStatus":1,"id":pictureUrlList[i].id,"userName":pictureUrlList[i].userName,"userId":pictureUrlList[i].userId};
+        pictureUrl= pictureUrl.concat(picture);
+        //图片回显
+        let filepicture={"name":pictureUrlList[i].userName ,"url":pictureUrlList[i].pictureUrl};
+         fileList= fileList.concat(filepicture);
+      }}
+    return {"fileList":fileList,"pictureUrl":pictureUrl};
+  }
+
+ };
+
+
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
