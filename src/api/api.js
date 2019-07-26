@@ -186,13 +186,13 @@ export const echo_display= params => {
    let pictureUrl=[];
    let fileList=[];
     for (let i=0;i<length; i++ ){
-      if(pictureUrlList[i].useStatus===1){
+      if(pictureUrlList[i].useStatus===3){
         //var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
         //存入参数
-        let picture={"pictureName":pictureUrlList[i].pictureName ,"pictureUrl": pictureUrlList[i].pictureUrl, "useStatus":1,"id":pictureUrlList[i].id,"userName":pictureUrlList[i].userName,"userId":pictureUrlList[i].userId};
+        let picture={"pictureName":pictureUrlList[i].pictureName ,"pictureUrl": pictureUrlList[i].pictureUrl, "useStatus":3,"id":pictureUrlList[i].id,"userName":pictureUrlList[i].userName,"userId":pictureUrlList[i].userId};
         pictureUrl= pictureUrl.concat(picture);
         //图片回显
-        let filepicture={"name":pictureUrlList[i].userName ,"url":pictureUrlList[i].pictureUrl};
+        let filepicture={"name":pictureUrlList[i].userName ,"url":pictureUrlList[i].pictureUrl,"id":pictureUrlList[i].id};
          fileList= fileList.concat(filepicture);
       }}
     return {"fileList":fileList,"pictureUrl":pictureUrl};

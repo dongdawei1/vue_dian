@@ -109,8 +109,6 @@
   import {  isRoleMessage } from '../../../../api/api';
   import {  operation_usermrp } from '../../../../api/api';
   import { echo_display } from '../../../../api/api';
-
-  import { uploadDown_update } from '../../../../api/api';
   import { get_usermrp_id } from '../../../../api/api';
 
 
@@ -188,6 +186,17 @@
         this.fullscreenLoading=true;
        this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
+            let length=0;
+            for(let i=0;i<this.ruleForm.pictureUrl.length;i++){
+              if(this.ruleForm.pictureUrl[i].useStatus===1 ||this.ruleForm.pictureUrl[i].useStatus===3){
+                length++;
+              }
+            }
+            if(length<=0){
+              this.$message.error("图片不能为空");
+              this.fullscreenLoading=false;
+              return false;
+            }
             this.ruleForm.StringPath=this.StringPath;
             this.ruleForm.type=6;
             operation_usermrp(this.ruleForm).then(res => {
@@ -205,7 +214,6 @@
           }
         });
       },
-
       cntinue(){  //留在本页继续发布
         this.centerDialogVisible=false;
       },
@@ -221,16 +229,18 @@
       },
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-
-        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(resdata.id===this.ruleForm.pictureUrl[i].id){
-            uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-              if(res.status!==0 ){
-                this.$message.error(res.msg);
-              }
-              this.ruleForm.pictureUrl.splice(i,1)
-            });
+          if(file.id===this.ruleForm.pictureUrl[i].id){
+
+            this.ruleForm.pictureUrl[i].useStatus=2;
+            //this.ruleForm.pictureUrl.splice(i,1)
+            // uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
+            //   console.log(this.ruleForm.pictureUrl[i])
+            //   if(res.status!==0 ){
+            //     this.$message.error(res.msg);
+            //   }
+            //   this.ruleForm.pictureUrl.splice(i,1)删除 某一个
+            // });
             break;
           }
         }
@@ -277,11 +287,9 @@
                 if (res.status === 0) {
                  this.ruleForm=res.data;
                  let fileListAndPictureUrl=  echo_display(this.ruleForm);
-                 console.log(fileListAndPictureUrl)
                  //图片回显和表格参数
                   this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
                   this.fileList=fileListAndPictureUrl.fileList;
-                  console.log( this.ruleForm.pictureUrl)
                 } else {
                   isRoleMessage(res.msg);
                 }

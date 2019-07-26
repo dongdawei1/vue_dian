@@ -142,8 +142,8 @@
       <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
       <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
       <span>服务图片 : </span><br>
-        <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
-          <img :src="p.picture_url" width="100%">
+        <li v-for="(p, index) in this.fileList" :key="index">
+          <img :src="p.url" width="100%">
         </li>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -200,9 +200,8 @@
           StringPath:'menuAndRenovationAndPestControl'
         },
         tableData:[], //全部数据
-        tableDataNo:{
-          pictureUrl:'',
-        }, //某一个数据
+        tableDataNo:'', //某一个数据
+        fileList:[],
         dialogVisible: false,  //查看详情弹窗
         formLabelWidth: '120px',
         rules: {
@@ -231,6 +230,15 @@
 
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
+        console.log(this.tableDataNo.pictureUrl)
+        for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
+          let picture=this.tableDataNo.pictureUrl[a];
+          //图片回显
+          let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
+          this.fileList= this.fileList.concat(filepicture);
+        }
+        console.log(this.fileList)
+      //  this.tableDataNo.pictureUrl=JSON.parse(this.tableDataNo.pictureUrl);
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情

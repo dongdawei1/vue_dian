@@ -53,6 +53,7 @@
           :on-preview="handlePreview"
           :on-success="handleSuccess"
           :on-remove="handleRemove"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -98,7 +99,6 @@
      </span>
     </el-dialog>
     <!-- 成功弹窗结束  -->
-
   </div>
 </template>
 <script>
@@ -114,6 +114,7 @@
   export default {
     data() {
       return {
+        fileList:[],
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
@@ -136,20 +137,16 @@
           consigneeName:'', //联系人姓名 回显置灰 不可修改
           detailed:'',//实名城区
           addressDetailed:'',//实名地址
-
           StringPath:'menuAndRenovationAndPestControl',
         },
 
-
         rules: {
-
           releaseType: [
             { required: true, message: '发布类型不能为空', trigger: 'change' },
           ],
           companyName: [
             { required: true, message: '公司名称不能为空', trigger: 'blur' },
           ],
-
           serviceDetailed: [
             { required: true, message: '请选服务城区', trigger: 'change' }
           ],
@@ -181,13 +178,14 @@
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
-        console.log(this.ruleForm)
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗
+                this.fileList=[];
+                this.ruleForm.pictureUrl=[];
                 this.centerDialogVisible=true;
               } else {
                 isRoleMessage(res.msg);
@@ -224,7 +222,6 @@
             if (res.data.isCreate === true) {
               this.resdata =res.data.data;
               this.ruleForm.userId=this.resdata.id;
-
             } else {
               this.$router.push({path: '/home/release'});
             }
