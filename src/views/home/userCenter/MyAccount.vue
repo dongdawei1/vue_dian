@@ -241,9 +241,9 @@
                 }else{
                   this.$message.error(res.msg);
                 }
-              })
+              });
 
-              if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
+              if(role===1 ||role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
                 this.isbusiness=true;  //显示商家信息
               }else if(role===11){
                 this.iswanted=true;

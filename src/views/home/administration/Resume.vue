@@ -22,7 +22,7 @@
         fixed
         prop="userType"
         label="用户类型"
-        width="100">
+        width="120">
       </el-table-column>
       <el-table-column
         prop="userName"

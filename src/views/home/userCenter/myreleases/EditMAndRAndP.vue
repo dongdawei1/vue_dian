@@ -227,24 +227,24 @@
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
         }
       },
+
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(file.id===this.ruleForm.pictureUrl[i].id){
-
+          if(file.id===undefined){
+            if(file.response.data.id===this.ruleForm.pictureUrl[i].id){
+              this.ruleForm.pictureUrl[i].useStatus=2;
+              break;
+            }
+          }else if(file.id===this.ruleForm.pictureUrl[i].id){
             this.ruleForm.pictureUrl[i].useStatus=2;
-            //this.ruleForm.pictureUrl.splice(i,1)
-            // uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-            //   console.log(this.ruleForm.pictureUrl[i])
-            //   if(res.status!==0 ){
-            //     this.$message.error(res.msg);
-            //   }
-            //   this.ruleForm.pictureUrl.splice(i,1)删除 某一个
-            // });
             break;
           }
         }
       },
+
+
+
       //点击列表中已上传的文件事的钩子函数
       handlePreview(file) {
       },
@@ -290,6 +290,8 @@
                  //图片回显和表格参数
                   this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
                   this.fileList=fileListAndPictureUrl.fileList;
+                  console.log( this.fileList)
+                  console.log( this.ruleForm.pictureUrl)
                 } else {
                   isRoleMessage(res.msg);
                 }

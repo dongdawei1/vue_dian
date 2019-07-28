@@ -200,8 +200,10 @@
           StringPath:'menuAndRenovationAndPestControl'
         },
         tableData:[], //全部数据
-        tableDataNo:'', //某一个数据
-        fileList:[],
+        tableDataNo:{
+          pictureUrl:''
+        }, //某一个数据
+        fileList:'',
         dialogVisible: false,  //查看详情弹窗
         formLabelWidth: '120px',
         rules: {
@@ -230,17 +232,19 @@
 
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        console.log(this.tableDataNo.pictureUrl)
-        for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
-          let picture=this.tableDataNo.pictureUrl[a];
-          //图片回显
-          let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
-          this.fileList= this.fileList.concat(filepicture);
+        if(  !(this.fileList  instanceof Array)){ //第二次点击查看是 不操作
+          let list=[];
+          for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
+            let picture=this.tableDataNo.pictureUrl[a];
+            //图片回显
+            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
+            list= list.concat(filepicture);
+          }
+          this.fileList=list;  //缺省值为 ‘’非[]
         }
-        console.log(this.fileList)
-      //  this.tableDataNo.pictureUrl=JSON.parse(this.tableDataNo.pictureUrl);
         this.dialogVisible=true;
       },
+
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
       },

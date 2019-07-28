@@ -1,8 +1,11 @@
 <template>
   <div>
-    重新实名页
-    <!--商户重新实名开始-->
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isbusiness" class="demo-ruleForm">
+    <br>审核失败原因 ：<span v-if="isbusiness">{{ruleForm.authentiCationFailure}}<br></span>
+                   <span v-if="iswanted">{{ruleFormnotbusiness.authentiCationFailure}}<br></span>
+                   <span v-if="islease">{{ruleForm.authentiCationFailure}}<br></span>
+
+         <!--商户重新实名开始-->
+    <br><el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isbusiness" class="demo-ruleForm">
       <el-form-item label="城区"   prop="selectedOptions">
         <el-cascader
           size="large"
@@ -12,15 +15,16 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="收/送货地址"    prop="address_detailed"  >
-        <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
+      <el-form-item label="收/送货地址"    prop="addressDetailed"  >
+        <el-input v-model="ruleForm.addressDetailed"  :placeholder="ruleForm.addressDetailed"></el-input>
       </el-form-item>
+
 
       <el-form-item label="收/送人手机"    prop="contact"  >
         <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人手机号"></el-input>
       </el-form-item>
-      <el-form-item label="收/送人姓名"    prop="consignee_name"  >
-        <el-input v-model="ruleForm.consignee_name"  placeholder="请输入收/送货人姓名"></el-input>
+      <el-form-item label="收/送人姓名"    prop="consigneeName"  >
+        <el-input v-model="ruleForm.consigneeName"  placeholder="请输入收/送货人姓名"></el-input>
       </el-form-item>
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
@@ -40,6 +44,7 @@
           :on-preview="handlePreview"
           :on-success="handleSuccess"
           :on-remove="handleRemove"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -50,7 +55,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
     <!--商户重新实名结束-->
@@ -65,15 +69,15 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="现居住地"    prop="address_detailed"  >
-        <el-input v-model="ruleFormnotbusiness.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
+      <el-form-item label="现居住地"    prop="addressDetailed"  >
+        <el-input v-model="ruleFormnotbusiness.addressDetailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
       <el-form-item label="手机"    prop="contact"  >
         <el-input v-model="ruleFormnotbusiness.contact"  placeholder="请输入手机"></el-input>
       </el-form-item>
-      <el-form-item label="姓名"    prop="consignee_name"  >
-        <el-input v-model="ruleFormnotbusiness.consignee_name"  placeholder="请输入姓名"></el-input>
+      <el-form-item label="姓名"    prop="consigneeName"  >
+        <el-input v-model="ruleFormnotbusiness.consigneeName"  placeholder="请输入姓名"></el-input>
       </el-form-item>
 
       <el-form-item label="年龄"    prop="eag"    placeholder="请输入年龄" >
@@ -92,7 +96,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="resetFormWanted('ruleFormnotbusiness')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetFormWanted('ruleFormnotbusiness')">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -107,15 +110,15 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="详细地址"    prop="address_detailed"  >
-        <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
+      <el-form-item label="详细地址"    prop="addressDetailed"  >
+        <el-input v-model="ruleForm.addressDetailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
       <el-form-item label="手机号码"    prop="contact"  >
         <el-input v-model="ruleForm.contact"  placeholder="请输入手机号"></el-input>
       </el-form-item>
-      <el-form-item label="联系人姓名"    prop="consignee_name"  >
-        <el-input v-model="ruleForm.consignee_name"  placeholder="请输入联系人人姓名"></el-input>
+      <el-form-item label="联系人姓名"    prop="consigneeName"  >
+        <el-input v-model="ruleForm.consigneeName"  placeholder="请输入联系人人姓名"></el-input>
       </el-form-item>
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
@@ -132,6 +135,7 @@
           :on-preview="handlePreview"
           :on-success="handleSuccess"
           :on-remove="handleRemove"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -140,9 +144,14 @@
         </el-dialog>
       </el-form-item>
 
+
+
+
+
+
+
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
     <!--商户重新实名结束-->
@@ -152,22 +161,22 @@
 
 <script>
 
-  import { uploadDown_update } from '../../../api/api';
   import { get_user_info } from '../../../api/api';
   import {  updateRealName } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
   import {  isRoleMessage} from '../../../api/api';
 
-
+  import { getRealName } from '../../../api/api';
+  import { echo_display } from '../../../api/api';
   export default {
+
     data() {
       return {
         fullscreenLoading:false,
         isbusiness:false,//商家
         iswanted:false,//求职
         islease:false,//出租
-        isnotbusiness:false,//非商家
-        isNewRealName:false,//判断是第一次还是重新发起
+        fileList:[],
         pathString:'/home/GrainAndOilPage',
         //文件上传的参数
         dialogImageUrl: '',
@@ -177,36 +186,38 @@
 
         //城市组件相关结束
         ruleForm: {　//商家
-          selectedOptions: [], //三级联动城市
-          provinces_id:'',
-          city_id:'',
-          district_county_id:'',
-          address_detailed: '',//详细地址收/送货地址
+          selectedOptions:[], //三级联动城市
+          provincesId:'',
+          cityId:'',
+          districtCountyId:'',
+          addressDetailed: '',//详细地址收/送货地址
           contact:'',//收送货人联系方式
-          consignee_name:'', //收/送货人姓名
+          consigneeName:'', //收/送货人姓名
           email:'',//邮箱
           companyName:'',//企业名称
-          licenseUrl: [],//营业执照图片
+          licenseUrl:[],//营业执照图片
+          authentiCationFailure:''
         },
         ruleFormnotbusiness: {   //求职
           selectedOptions: [], //三级联动城市
-          provinces_id:'',
-          city_id:'',
-          district_county_id:'',
-          address_detailed: '',//详细地址收/送货地址
+          provincesId:'',
+          cityId:'',
+          districtCountyId:'',
+          addressDetailed: '',//详细地址收/送货地址
           contact:'',//收送货人联系方式
-          consignee_name:'', //收/送货人姓名
+          consigneeName:'', //收/送货人姓名
           eag:'', // 年龄
           gender:'男',//性别
           email:'',//邮箱
+          authentiCationFailure:''
         },
         permission:'',
         role:'',
         rules: {
           selectedOptions: [
-            { required: true, message: '请选择城市和地区', trigger: 'blur' }
+            { required: true, message: '请选择城市和地区', trigger: 'change'  }
           ],
-          address_detailed:[
+          addressDetailed:[
             { required: true, message: '请输入详细地址', trigger: 'blur' },
             { max: 100, message: '不能超过100个字', trigger: 'blur' }
           ],
@@ -214,7 +225,7 @@
             { required: true, message: '请输入收/送货人手机号码', trigger: 'blur' },
             { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
           ],
-          consignee_name:[
+          consigneeName:[
             { required: true, message: '请输入收/送货人姓名', trigger: 'blur' },
             { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],
@@ -222,7 +233,7 @@
             { min:8,max: 30, message: '长度在8至30位之间', trigger: 'blur' }
           ],
           licenseUrl:[
-            { required: true, message: '请上传图片', trigger: 'blur' },
+            { required: true, message: '请上传图片' },
           ],
           eag:[
             { required: true, message: '请输入年龄', trigger: 'blur' },
@@ -245,22 +256,45 @@
         get_user_info().then((res) => {
           let status=res.status;
           if (status === 0) {
-
             let user=JSON.parse(res.data);
-            if( user.isAuthentication!=3){
+            if( user.isAuthentication===3) {
+              //拉取实名信息
+              getRealName().then((res) => {
+                if (res.status === 0) {
+                  let role = user.role;
+                  if (role === 1 ||role === 2 || role === 3 || role === 4 || role === 5 || role === 7 || role === 12) {
+                    this.ruleForm = res.data;
+                    this.ruleForm.pictureUrl= this.ruleForm.licenseUrl
+                    let fileListAndPictureUrl=  echo_display(this.ruleForm);
+                    //图片回显和表格参数
+                    this.ruleForm.licenseUrl=fileListAndPictureUrl.pictureUrl;
+                    this.fileList=fileListAndPictureUrl.fileList;
+
+                    this.isbusiness = true;
+                  } else if (role === 11) {
+                    this.ruleFormnotbusiness= res.data;
+                    this.iswanted = true;
+                  } else if (role === 6) {
+                    this.ruleForm = res.data;
+                    this.ruleForm.pictureUrl= this.ruleForm.licenseUrl
+                    let fileListAndPictureUrl=  echo_display(this.ruleForm);
+                    //图片回显和表格参数
+                    this.ruleForm.licenseUrl=fileListAndPictureUrl.pictureUrl;
+                    this.fileList=fileListAndPictureUrl.fileList;
+                    this.islease = true;//出租
+                  } else {
+                    this.$router.push({path: '/home/myAccount'});
+                  }
+
+
+                } else {//获取实名信息失败
+                  this.$message.error(res.msg);
+                }
+              });
+            }else{ //获取实名信息！=3
               this.$router.push({ path: '/home/myAccount' });
             }
-            let role=user.role;
-            if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
-              this.isbusiness=true;
-            }else if(role===11){
-              this.iswanted=true;
-            }else if(role===6){
-              this.islease=true;//出租
-            }else{
-              this.$router.push({ path: '/home/myAccount' });
-            }
-          }else{
+          }else{ //获取登陆信息失败
             this.$router.push({ path: '/login/sign' });
           }
         });
@@ -268,13 +302,13 @@
 
       //城市组件
       handleChange (value) {
-        this.ruleForm.provinces_id=this.ruleForm.selectedOptions[0];
-        this.ruleForm.city_id=this.ruleForm.selectedOptions[1];
-        this.ruleForm.district_county_id=this.ruleForm.selectedOptions[2];
+        this.ruleForm.provincesId=this.ruleForm.selectedOptions[0];
+        this.ruleForm.cityId=this.ruleForm.selectedOptions[1];
+        this.ruleForm.districtCountyId=this.ruleForm.selectedOptions[2];
 
-        this.ruleFormnotbusiness.provinces_id=this.ruleFormnotbusiness.selectedOptions[0];
-        this.ruleFormnotbusiness.city_id=this.ruleFormnotbusiness.selectedOptions[1];
-        this.ruleFormnotbusiness.district_county_id=this.ruleFormnotbusiness.selectedOptions[2];
+        this.ruleFormnotbusiness.provincesId=this.ruleFormnotbusiness.selectedOptions[0];
+        this.ruleFormnotbusiness.cityId=this.ruleFormnotbusiness.selectedOptions[1];
+        this.ruleFormnotbusiness.districtCountyId=this.ruleFormnotbusiness.selectedOptions[2];
       },
 
 
@@ -289,8 +323,8 @@
             this.fullscreenLoading=true;
 
             let length=0;
-            for(let i=0;i< this.ruleForm.pictureUrl.length;i++){
-              if(this.ruleForm.pictureUrl[i].use_status===1){
+            for(let i=0;i< this.ruleForm.licenseUrl.length;i++){
+              if(this.ruleForm.licenseUrl[i].useStatus===1 || this.ruleForm.licenseUrl[i].useStatus===3){
                 length++;
               }
             }
@@ -299,6 +333,7 @@
               this.$message.error('图片不能为空');
               return ;
             }
+            console.log(this.ruleForm.licenseUrl)
             updateRealName(data).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
@@ -341,29 +376,26 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-        if (res.message!=null && res.message!='') {
-          var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
+        if(res.status===0){
+          let resdata=res.data;
+          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
           this.ruleForm.licenseUrl= this.ruleForm.licenseUrl.concat(picture);
         }
       },
 
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        //console.log(file);
-        for(var i=0;i< this.ruleForm.licenseUrl.length;i++){
-          if(file.name===this.ruleForm.licenseUrl[i].picture_name  && file.response.message===this.ruleForm.licenseUrl[i].picture_url){
-            // console.log(this.ruleForm.licenseUrl[i] );
-            // console.log(this.ruleForm.licenseUrl[i].picture_name );
-            uploadDown_update(this.ruleForm.licenseUrl[i]).then((res) => {
-              this.ruleForm.licenseUrl[i].use_status=2;
-              //this.ruleForm.pictureUrl.splice(i,1);
-              // console.log(this.ruleForm.licenseUrl[i].use_status);
-              // console.log(this.ruleForm.licenseUrl);
-              //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
-            });
-            break;
+          for(var i=0;i< this.ruleForm.licenseUrl.length;i++){
+            if(file.id===undefined){
+              if(file.response.data.id===this.ruleForm.licenseUrl[i].id){
+                this.ruleForm.licenseUrl[i].useStatus=2;
+                break;
+              }
+            }else if(file.id===this.ruleForm.licenseUrl[i].id){
+              this.ruleForm.licenseUrl[i].useStatus=2;
+              break;
+            }
           }
-        }
       },
       //点击列表中已上传的文件事的钩子函数
       handlePreview(file) {

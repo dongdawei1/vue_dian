@@ -16,11 +16,11 @@
         <el-radio v-model="ruleForm.address_detailed" label="全市">全市</el-radio>
         <el-radio v-model="ruleForm.address_detailed" label="本区">本区</el-radio>
       </el-form-item>
-      <el-form-item label="注册手机"    prop="mobilePhone"  >
+      <el-form-item label="注册时手机"    prop="mobilePhone"  >
         <el-input v-model="ruleForm.mobilePhone"  placeholder="注册时手机号"></el-input>
       </el-form-item>
 
-      <el-form-item label="注册姓名"    prop="userName"  >
+      <el-form-item label="注册用户名"    prop="userName"  >
         <el-input v-model="ruleForm.userName"  placeholder="送货人姓名"></el-input>
       </el-form-item>
 
@@ -51,6 +51,7 @@
           :on-preview="handlePreview"
           :on-success="handleSuccess"
           :on-remove="handleRemove"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -79,6 +80,7 @@
   export default {
     data() {
       return {
+        fileList:[],
        fullscreenLoading:false,
         //文件上传的参数
         dialogImageUrl: '',
@@ -171,7 +173,8 @@
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
                 this.$message.success(data.msg);
-
+                this.ruleForm.licenseUrl=[];
+                this.fileList=[];
               }  else {
                 isRoleMessage(data.msg);
               }
@@ -187,25 +190,23 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-        if (res.message!=null && res.message!='') {
-          var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
+        if(res.status===0){
+          let resdata=res.data;
+          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
           this.ruleForm.licenseUrl= this.ruleForm.licenseUrl.concat(picture);
         }
       },
-
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        //console.log(file);
+
+        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.licenseUrl.length;i++){
-          if(file.name===this.ruleForm.licenseUrl[i].picture_name  && file.response.message===this.ruleForm.licenseUrl[i].picture_url){
-            // console.log(this.ruleForm.licenseUrl[i] );
-            // console.log(this.ruleForm.licenseUrl[i].picture_name );
+          if(resdata.id===this.ruleForm.licenseUrl[i].id){
             uploadDown_update(this.ruleForm.licenseUrl[i]).then((res) => {
-              this.ruleForm.licenseUrl[i].use_status=2;
-              //this.ruleForm.pictureUrl.splice(i,1);
-              // console.log(this.ruleForm.licenseUrl[i].use_status);
-              // console.log(this.ruleForm.licenseUrl);
-              //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
+              if(res.status!==0 ){
+                this.$message.error(res.msg);
+              }
+              this.ruleForm.licenseUrl.splice(i,1)
             });
             break;
           }

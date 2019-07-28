@@ -25,7 +25,7 @@
         fixed
         prop="userType"
         label="用户类型"
-        width="100">
+        width="120">
       </el-table-column>
       <el-table-column
         prop="userName"
@@ -119,7 +119,9 @@
       <span>申请时间 : {{tableDataNo.createTime }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
       <span>图片 : {{tableDataNo.licenseUrl }}</span><br>
-
+      <li v-for="(p, index) in this.fileList" :key="index">
+        <img :src="p.url" width="100%">
+      </li>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
   </span>
@@ -169,12 +171,11 @@
         fullscreenLoading:false,
         //分页开始
         total: 0,
-
+        fileList:[],
         //分页结束
         realName: { //查询条件
           userName:'',
           contact: '',
-
           currentPage: 1,
           infoList: [],
           movieInfoList: [],
@@ -184,7 +185,9 @@
           type: Object
         },
         tableData:[], //全部数据
-        tableDataNo:'', //某一个审批
+        tableDataNo:{
+          licenseUrl:''
+        }, //某一个审批
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //审批弹窗
         form: {   //审核表单
@@ -210,6 +213,15 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
+        if(  !(this.tableDataNo.licenseUrl  instanceof Array)){ //不是第一次
+        this.tableDataNo.licenseUrl=JSON.parse(this.tableDataNo.licenseUrl);
+          for(let a=0;a<this.tableDataNo.licenseUrl.length;a++){
+            let picture=this.tableDataNo.licenseUrl[a];
+            //图片回显
+            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
+            this.fileList= this.fileList.concat(filepicture);
+          }
+        }
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情
@@ -226,7 +238,7 @@
           if (valid) {
             this.fullscreenLoading=true;
            this.form.userId=this.tableDataNo.userId;
-            this.form.isArtificial=1;
+            this.form.isArtificial=1;  //审批
             examineRealName(this.form).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
@@ -253,9 +265,7 @@
 
       getRealNameAll(){
         getRealNameAll(this.realName).then((res) => {
-          console.log(this.realName)
           if(res.status===0) {
-            console.log(res)
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{

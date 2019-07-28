@@ -83,7 +83,7 @@
       </el-form-item>
     </el-form>
     <!--如果是求职就展示下边的结束-->
-    <!--如果是租房就展示下边的结束-->
+
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="islease" class="demo-ruleForm">
       <el-form-item label="城区"   prop="selectedOptions">
         <el-cascader
@@ -105,6 +105,9 @@
       </el-form-item>
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
+      </el-form-item>
+      <el-form-item label="企业名称"    prop="companyName"  >
+        <el-input v-model="ruleForm.companyName"  placeholder="请输入企业/公司名称"></el-input>
       </el-form-item>
       <el-form-item label="商铺图片" prop="licenseUrl">
         <el-upload
@@ -274,15 +277,15 @@
             this.fullscreenLoading = true;
 
             let length=0;
-            for(let i=0;i< this.ruleForm.pictureUrl.length;i++){
-              if(this.ruleForm.pictureUrl[i].use_status===1){
+            for(let i=0;i< this.ruleForm.licenseUrl.length;i++){
+              if(this.ruleForm.licenseUrl[i].useStatus===1){
                 length++;
               }
             }
             if(length===0){
               this.fullscreenLoading=false;
               this.$message.error('图片不能为空');
-              return ;
+              return  false;
             }
 
             newRealName(data).then(data => {
@@ -327,27 +330,23 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-
-        if (res.message!==null && res.message!=='') {
-          var picture={"picture_name":file.name ,"picture_url": res.message, "use_status":1};
+        if(res.status===0){
+          let resdata=res.data;
+          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
           this.ruleForm.licenseUrl= this.ruleForm.licenseUrl.concat(picture);
-          console.log(this.ruleForm.licenseUrl);
         }
       },
-
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-        //console.log(file);
+
+        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.licenseUrl.length;i++){
-          if(file.name===this.ruleForm.licenseUrl[i].picture_name  && file.response.message===this.ruleForm.licenseUrl[i].picture_url){
-            // console.log(this.ruleForm.licenseUrl[i] );
-            // console.log(this.ruleForm.licenseUrl[i].picture_name );
+          if(resdata.id===this.ruleForm.licenseUrl[i].id){
             uploadDown_update(this.ruleForm.licenseUrl[i]).then((res) => {
-              this.ruleForm.licenseUrl[i].use_status=2;
-              //this.ruleForm.pictureUrl.splice(i,1);
-              // console.log(this.ruleForm.licenseUrl[i].use_status);
-              // console.log(this.ruleForm.licenseUrl);
-              //  this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat({name: file.name ,url: res.message});
+              if(res.status!==0 ){
+                this.$message.error(res.msg);
+              }
+              this.ruleForm.licenseUrl.splice(i,1)
             });
             break;
           }

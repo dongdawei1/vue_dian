@@ -39,7 +39,7 @@
         fixed
         prop="userType"
         label="用户类型"
-        width="100">
+        width="120">
       </el-table-column>
       <el-table-column
         fixed
@@ -162,12 +162,14 @@
       <span>备注 : {{tableDataNo.remarks }}</span><br>
       <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
       <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
-      <span>图片 : {{tableDataNo.pictureUrl}}</span><br>
       <span>申请时间 : {{tableDataNo.createTime }}</span><br>
       <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
-
+      <span>服务图片 : </span><br>
+      <li v-for="(p, index) in this.fileList" :key="index">
+        <img :src="p.url" width="100%">
+      </li>
 
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
@@ -227,6 +229,7 @@
           tabuleType:13,
         },
         formLabelWidth: '120px',
+        fileList:'',
         rules: {
           authentiCationStatus: [
             { required: true, message: '请选择是否通过', trigger: 'change' }
@@ -246,6 +249,16 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
+        if(  !(this.fileList  instanceof Array)){ //第二次点击查看是 不操作
+          let list=[];
+          for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
+            let picture=this.tableDataNo.pictureUrl[a];
+            //图片回显
+            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
+            list= list.concat(filepicture);
+          }
+          this.fileList=list;  //缺省值为 ‘’非[]
+        }
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情
