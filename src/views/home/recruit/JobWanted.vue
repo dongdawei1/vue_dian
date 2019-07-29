@@ -14,16 +14,14 @@
       </el-form-item>
 
       <el-form-item label="职位类型"  >
-        <template>
-          <el-select v-model="releaseWelfare.position" clearable placeholder="请输入或点击选择职位类型">
-            <el-option
-              v-for="item in restaurants"
-              :key="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </template>
+        <el-autocomplete
+          v-model="releaseWelfare.position"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入或点击选择职位"
+          clearable></el-autocomplete>
+        <!--@select="handleSelect"-->
       </el-form-item>
+
 
       <el-form-item>
         <el-button type="primary" @click="getResumeAll">查询</el-button>
@@ -64,8 +62,6 @@
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
-
-
       <el-table-column
         prop="gender"
         label="性别"
@@ -81,8 +77,6 @@
         label="工作年限"
         width="120">
       </el-table-column>
-
-
       <el-table-column
         prop="education"
         label="学历"
@@ -98,7 +92,6 @@
         label="刷新时间"
         width="180">
       </el-table-column>
-
       <el-table-column
         fixed="right"
         label="操作"
@@ -155,6 +148,8 @@
 
     data() {
       return {
+        restaurants: [],// 职位类型下拉
+
         resdata:'',
         role:'',
         isCreate:false,
@@ -163,7 +158,6 @@
         dialogVisible: false,//联系方式弹窗
         contact :'', //联系方式
         pathString:'/home/myRelease',
-        restaurants: '', // 职位类型下拉
         options: regionData,//城市
         realName:'',//实名信息
         releaseWelfare: { //查询条件
@@ -228,10 +222,7 @@
               this.resdata=res.data.data; //用户信息
               this.getRealName();          //获取实名信息,初始化城市
               this.loadAll();
-
             }}else{isRoleMessage(res.msg);}
-
-
         });
       },
 
@@ -248,22 +239,37 @@
           }
         });
       },
+
       //获取全部职位类型
-      //下拉列表
       loadAll() {
         get_position().then((res) => {
-          let datalist=res.data;
-          var all=[];
-          for(var a=0;a<datalist.length;a++){
-            let  valuel={
-              value:''
-            };
-            valuel.value=datalist[a];
-            all[a]=valuel;
+          if(res.status===0) {
+            let list=res.data;
+            let releaseTitleList=[];
+            for(let i=0;i<list.length;i++){
+              let  releaseTitle={ "value":list[i] , "address": list[i]};
+              releaseTitleList=releaseTitleList.concat(releaseTitle);
+            }
+            this.restaurants=releaseTitleList;
+          }else {
+            isRoleMessage(res.msg);
           }
-          this.restaurants=all;
         });
       },
+      //下拉
+      querySearchAsync(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+        cb(results);
+      },
+      //模糊查询
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+
+
       //城市组件
       handleChange (value) {
         this.releaseWelfare.provincesId=value[0];
@@ -282,7 +288,6 @@
       getResumeAll(){
         getResumeAll(this.releaseWelfare).then((res) => {
           if(res.status===0) {
-            console.log(res)
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
             let length= this.tableData.length;

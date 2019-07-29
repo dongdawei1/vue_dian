@@ -4,15 +4,12 @@
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
       <el-form-item label="职位类型"  >
-        <template>
-          <el-select v-model="releaseWelfare.position" clearable placeholder="请输入或点击选择职位类型">
-            <el-option
-              v-for="item in restaurants"
-              :key="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </template>
+        <el-autocomplete
+          v-model="releaseWelfare.position"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入或点击选择职位"
+          clearable></el-autocomplete>
+        <!--@select="handleSelect"-->
       </el-form-item>
 
       <el-form-item label="职位状态"  >
@@ -240,7 +237,7 @@
         total: 0,
 
         //分页结束
-        restaurants: '', // 查询下来列表
+        restaurants: [], // 职位类型下拉
         welfareStatuss:[
           { "value": "发布中", "label": "1" },
           { "value": "隐藏中", "label": "2" },
@@ -392,22 +389,33 @@
       }
     });
   },
-
-      //下拉列表
-
+      //获取全部职位类型
       loadAll() {
         get_position().then((res) => {
-          let datalist=res.data;
-          var all=[];
-          for(var a=0;a<datalist.length;a++){
-            let  valuel={
-              value:''
-            };
-            valuel.value=datalist[a];
-            all[a]=valuel;
+          if(res.status===0) {
+            let list=res.data;
+            let releaseTitleList=[];
+            for(let i=0;i<list.length;i++){
+              let  releaseTitle={ "value":list[i] , "address": list[i]};
+              releaseTitleList=releaseTitleList.concat(releaseTitle);
+            }
+            this.restaurants=releaseTitleList;
+          }else {
+            isRoleMessage(res.msg);
           }
-          this.restaurants=all;
         });
+      },
+      //下拉
+      querySearchAsync(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+        cb(results);
+      },
+      //模糊查询
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){

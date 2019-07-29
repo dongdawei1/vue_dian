@@ -176,6 +176,11 @@ export const get_usermrp_id= params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+//获取装修等标题（灭虫等列表页）
+export const getReleaseTitleList= params =>  { return axios.post(`${base}/api/menuAndRenovationAndPestControl/getReleaseTitleList`, params).then(res => res.data); };
+
+//获取装修等标题（灭虫等列表页）
+export const getmrpList= params =>  { return axios.post(`${base}/api/menuAndRenovationAndPestControl/getmrpList`, params).then(res => res.data); };
 
 
 //回显图片

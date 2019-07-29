@@ -13,7 +13,7 @@
       </el-form-item>
 
       <el-form-item label="标题" prop="releaseTitle">
-        <el-input v-model="ruleForm.releaseTitle" placeholder="标题6-14字之内"></el-input>
+        <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
       <el-form-item label="起步价格" prop="startPrice">
         <el-input v-model="ruleForm.startPrice" placeholder="起步价格(元)"></el-input>
