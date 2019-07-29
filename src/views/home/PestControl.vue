@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mrpbody">
     <!-- 筛选区 -->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
@@ -30,7 +30,7 @@
       </el-form-item>
     </el-form>
 
-
+    <VmRpList :tableData="tableData" class="vm-margin"></VmRpList>
     <!-- 分页 -->
     <el-pagination
       background
@@ -53,11 +53,11 @@
   import { get_user_info_sign } from '../../api/api';
   import { regionData } from 'element-china-area-data'
   import { getmrpList } from '../../api/api';
-
+  import VmRpList from '../../components/vm-mrp-list';
   export default {
-
-
-
+    components: {
+      VmRpList
+    },
     data() {
       return {
         restaurants: [],//标题下拉
@@ -78,7 +78,7 @@
           releaseTitle:'', //标题
           //分页开始
           currentPage: 1,
-          pageSize: 20,//每页显示的数量
+          pageSize: 12,//每页显示的数量
           //分页结束
           StringPath: '/home/pestControl',
           releaseType:19
@@ -120,36 +120,28 @@
             this.releaseWelfare.provincesId=this.realName.provincesId;
             this.releaseWelfare.cityId=this.realName.cityId;
             this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
-                                        //获取列表
+            this.getmrpList();     //获取列表
           }
         });
       },
 
       handleCurrentChange(currentPage) {
-
         this.releaseWelfare.currentPage=currentPage;
         this.getmrpList()
-
       },
       getmrpList(){
         console.log(this.releaseWelfare)
         getmrpList(this.releaseWelfare).then((res) => {
-
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
-            console.log(this.tableData)
-
           }else {
             isRoleMessage(res.msg);
           }
         });
       },
-
-
       getReleaseTitleList(){
         getReleaseTitleList(this.releaseWelfare).then((res) => {
-          console.log(this.releaseWelfare)
           if(res.status===0) {
             let list=res.data;
             let releaseTitleList=[];
@@ -188,15 +180,17 @@
           this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
         }
       },
-
-
     }
-
-
-
   }
 </script>
 
 
 <style >
+  .mrpbody{
+    padding:3px 10px 3px 10px;
+    /*框间距上填充为25px
+右填充为50px
+下填充为75px
+左填充为100px*/
+  }
 </style>

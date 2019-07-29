@@ -34,7 +34,7 @@
   import {  isRoleMessage } from '../../../api/api';
   export default {
 
-    name: 'ImageList',
+  //  name: 'ImageList',
     components: {
       VmImageList
     },
