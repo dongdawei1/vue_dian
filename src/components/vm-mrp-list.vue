@@ -11,23 +11,30 @@
       </el-row>
     </el-row>
 
-    <el-row  :gutter="20"  >
+    <el-row  :gutter="10"  >  <!-- :gutter="10"列间距  :span="6"占100%的1/6   https://element.eleme.cn/#/zh-CN/component/layout-->
       <el-col  :span="6"   v-for="item in tableData" :key="item.id">
         <div  class="grid-content bg-purple">
           <div class="card-img">
-            <img :src="item.img" alt="">
+            <img :src="item.pictureUrl" alt="">
           </div>
-          <div class="card-desc panel-body">
-            <h2>{{ item.id }}</h2>
-            <p>{{ item.brand }}</p>
-            <p>{{ item.commodityName }}</p>
-            <a :href="item.detailUrl">
-              more >
-            </a>
+          <div class="card-desc">
+            <div class="releaseTitle"> {{ item.releaseTitle}}</div>
+            <div class="jieshao">
+            服务区域： {{item.serviceDetailed}}<br>
+            起步价格： {{item.startPrice}} (元)<br>
+            </div>
+            <div class="xiangqing">
+              <el-button type="text"><router-link
+                v-on:click.native=""
+                :to="'/details/mrpDetails/'+ item.id" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
+            </div>
+            <!--<p>{{ item.brand }}</p>-->
+            <!--<p>{{ item.commodityName }}</p>-->
+            <!--<a :src="a">-->
+              <!--more >-->
+            <!--</a>-->
+            <!--</a>-->
           </div>
-
-          显示商品名称   同行规格，换行 品牌，产地，换行价格，是否在价格有效期，
-
         </div>
       </el-col>
     </el-row>
@@ -41,52 +48,56 @@
     props: ["tableData"],
     data: function () {
       return {
-
       }
     },
     methods: {
-
+      toDetails(row){
+        this.$router.push('/home/mrpDetails/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
+        // id:this.$route.params.id,
+      },
     },
 
     mounted() {
-      console.log(2223232)
-      console.log(this.tableData)
     }
   }
 </script>
 <style>
-
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #e5e9f2;
-  }
   .bg-purple {
     background: #e5e9f2;
   }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
+
   .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
+    margin-bottom: 6px; /*下边距 外*/
+    /* border-radius: 10px;  div下圆角
+      min-height: 3px; 段落最小高度 */
   }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
+  .card-desc{
+    margin-bottom: 1px;
+    padding:1px 0px 3px 3px;
+    /*框间距上填充为25px
+右填充为50px
+下填充为75px
+左填充为100px  内*/
   }
-
-
-
-
-
-
-
+  .releaseTitle{
+    font-size: 16px;
+    font-weight:bold;  /*字体加粗*/
+  }
+.jieshao{
+  font-size: 14px;
+}
+.xiangqing{
+  font-size: 15px;
+  text-decoration: none;
+  /*text-align:center    居中不好看*/
+}
   img{
     display: block;
-    width: 100%
+    width: 100%;
+    height:160px;   /*设置图片的高度*/
   }
+
+
   p{
     font-size: 14px;
     margin: 10px 0;

@@ -7,6 +7,7 @@ import router from './router'  //引入路由器
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import './assets/css/common.css'
 import iView from 'iview'
 
 import axios from 'axios';

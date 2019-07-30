@@ -130,7 +130,6 @@
         this.getmrpList()
       },
       getmrpList(){
-        console.log(this.releaseWelfare)
         getmrpList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数

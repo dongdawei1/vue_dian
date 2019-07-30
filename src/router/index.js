@@ -59,7 +59,8 @@ import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 
 import GrainAndOilPage from '../views/home/releasePage/GrainAndOilPage'
 
-
+import Details from '../views/Details.vue'
+import MrpDetails  from '../views/detailes/MrpDetails'
 
 
 //   全局挂载
@@ -108,6 +109,19 @@ export default new VueRouter ({
           redirect: '/login/sign'    //默认显示登陆
         }
       ]
+    },
+    {
+      path:'/details',
+      component: Details,
+      children:[
+        {
+          hidden: true , //用户包中
+          path: '/details/mrpDetails/:id',
+          name: 'mrpDetails',
+          component:   MrpDetails  //发布灭虫等
+        },
+
+      ],
     },
     {
       path: '/home',
@@ -293,9 +307,9 @@ export default new VueRouter ({
           name: 'editMAndRAndP',
           component:   EditMAndRAndP  //发布灭虫等
         },
-
       ]
     },
+
     {
       path: '/',
       redirect: '/login'   //默认显示
