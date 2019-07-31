@@ -1,20 +1,19 @@
 <template>
   <el-container >
-      <el-header> <DetailsTitle></DetailsTitle></el-header>
 
+      <el-header >   <DetailsTitle></DetailsTitle> </el-header>
 
-
-
-      <el-main>
-      <div  id="body">
+    <el-container >
+      <!--<el-aside width="200px">Aside</el-aside>-->
+      <el-header >
         <!--显示当前组件  自己的内容  router中设置默认显示的子组件-->
         <keep-alive>
           <router-view ></router-view>
         </keep-alive>
-      </div>
-      </el-main>
+      </el-header>
+      </el-container >
+      </el-container >
 
-  </el-container>
 </template>
 
 <script>
@@ -38,6 +37,17 @@
 </script>
 
 
-
 <style >
+  .detailsHeader{
+  }
+  .detailsMain{
+    margin:25px 50px 10px 50px;
+
+    /*margin:25px 50px 75px 100px;
+    上边距为25px
+    右边距为50px
+    下边距为75px
+    左边距为100px*/
+  }
+
 </style>

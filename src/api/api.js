@@ -181,7 +181,15 @@ export const getReleaseTitleList= params =>  { return axios.post(`${base}/api/me
 
 //获取装修等标题（灭虫等列表页）
 export const getmrpList= params =>  { return axios.post(`${base}/api/menuAndRenovationAndPestControl/getmrpList`, params).then(res => res.data); };
+//获取装修详情公开
 
+export const getMrpDetails = params => {
+  return axios({
+    url: `${base}/api/menuAndRenovationAndPestControl/getMrpDetails`,
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    params: { id: params },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 
 //回显图片
 export const echo_display= params => {

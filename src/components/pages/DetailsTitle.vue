@@ -4,7 +4,6 @@
     <div class="flex-item">电话沟通要录音</div>
     <div class="flex-item">线下服务要票据</div>
     <div class="flex-item">保障期要问清楚</div>
-
   </div>
 </template>
 
