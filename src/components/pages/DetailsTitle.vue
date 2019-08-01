@@ -25,7 +25,7 @@
   font-weight:bold;
   font-size: 24px;
   padding:4px 0px 3px 2px;
-  color:#FFB2C8
+  color:#C49FA0
 }
   .grid-content {
     margin-bottom: 6px; /*下边距 外*/

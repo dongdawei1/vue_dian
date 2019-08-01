@@ -1,5 +1,6 @@
 <template>
   <div  class="mrpDetails">
+    <div class="titleAll">{{mrp.releaseTitle}}</div>
     <div  class="mrpDetailsJichu">
       服务类别:{{mrp.releaseType}}<br>
       服务区域:{{mrp.serviceDetailed}}<br>
@@ -13,13 +14,17 @@
       备    注:{{mrp.remarks}}<br>
       服务次数:{{mrp.servicFrequenc}}<br>
       起步价格:{{mrp.startPrice}}<br>
-      服务介绍:{{mrp.serviceIntroduction}}<br>
-      服务图片:  <br>
+
+      <div class="fuwujieshao"> 服务介绍:{{mrp.serviceIntroduction}}<br></div>
+      <Evaluate :tableData="tableData" ></Evaluate>
+      <div class="fuwutupian">服务图片</div>
     </div>
     <!--引入评价-->
     <div  class="mrpDetailsUrlall">
       <li v-for="(p, index) in this.fileList" :key="index">
+        <div class="mrpDetailsUrlno">
         <img :src="p.url"  >
+        </div>
       </li>
     </div>
   </div>
@@ -29,16 +34,19 @@
 
   import {  checke_isButten } from '../../api/api';
   import {  isRoleMessage } from '../../api/api';
-  import {  operation_usermrp } from '../../api/api';
-  import { echo_display } from '../../api/api';
+  import Evaluate from '../../components/pages/Evaluate';
   import { getMrpDetails } from '../../api/api';
 
 
   export default {
     name:'mrpDetails',
+    components: {Evaluate},
     data() {
       return {
         id:this.$route.params.id,
+        tableData:{
+          permissionid:13
+        },
         StringPath:'menuAndRenovationAndPestControl',
         mrp:{
           releaseType:'',
@@ -55,13 +63,13 @@
       getMrpDetails(){
         getMrpDetails(this.id).then(res =>{
           if(res.status===0){
-          this.mrp=res.data;
+          this.mrp=res.data.mrp;
           if(this.mrp.releaseType===13){
             this.mrp.releaseType='菜谱制作/户外广告/灯箱/印刷';
           }else if(this.mrp.releaseType===17){
             this.mrp.releaseType='装修服务';
           }else if(this.mrp.releaseType===19){
-            this.mrp.releaseType='灭虫';
+            this.mrp.releaseType='灭虫服务';
           }
           let pictureUrl=JSON.parse(this.mrp.pictureUrl);
           let list=[];
@@ -71,6 +79,7 @@
              list= list.concat(filepicture);
            }
             this.fileList=list;
+            this.tableData=res.data.evaluate;
             }else {
             isRoleMessage(res.msg);
           }
@@ -82,7 +91,8 @@
 </script>
 <style>
   .mrpDetails{
-    background-color: #D3DCE6;
+
+    background-color: #F0F6D6;
     margin:20px 0px 10px 0px;
 
     /*margin:25px 50px 75px 100px;
@@ -90,6 +100,14 @@
 右边距为50px
 下边距为75px
 左边距为100px*/
+  }
+  .mrpDetailsJichu{
+    margin:10px 10px 10px 30px;
+    color:#21292E;
+  }
+  .mrpDetailsfuwu{
+    margin:10px 10px 10px 30px;
+    color:#21292E;
   }
   img{
 
@@ -100,8 +118,12 @@
   }
 
   .mrpDetailsUrlall{
-    margin:8px 10px 10px 30px;
+    /*margin:8px 10px 10px 30px;*/
   }
-
-
+.mrpDetailsUrlno{
+  margin:20px 10px 20px 30px;
+}
+.fuwutupian{
+  font-size: 16px;
+}
 </style>

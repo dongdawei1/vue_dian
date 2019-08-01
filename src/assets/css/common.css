@@ -5,3 +5,14 @@
   text-decoration: none;
   /**设置所有的链接class=a没有下划线 */
 }
+.fuwujieshao{
+  width: 60%;
+}
+.titleAll{
+  font-size: 20px;
+  padding: 15px 10px 1px 10px;
+  color:#21292E;
+}
+li{
+  list-style-type:none;
+}
