@@ -20,8 +20,8 @@
       <div class="evaluateType">
         服务价格 </div>
         <div class="evaluateNo">
-          便宜 ({{tableData.jiagedi}})<br>
-          适中 ({{tableData.jiagezhong}})<br>
+          合理 ({{tableData.jiagedi}})<br>
+          偏高 ({{tableData.jiagezhong}})<br>
           较高 ({{tableData.jiagegao}})<br>
         </div>
 

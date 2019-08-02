@@ -38,16 +38,6 @@
 
 
 <style >
-  .detailsHeader{
-  }
-  .detailsMain{
-    margin:25px 50px 10px 50px;
 
-    /*margin:25px 50px 75px 100px;
-    上边距为25px
-    右边距为50px
-    下边距为75px
-    左边距为100px*/
-  }
 
 </style>

@@ -1,24 +1,28 @@
 <template>
   <div  class="mrpDetails">
+    <div class="mrpDetailsBody">
     <div class="titleAll">{{mrp.releaseTitle}}</div>
     <div  class="mrpDetailsJichu">
-      服务类别:{{mrp.releaseType}}<br>
-      服务区域:{{mrp.serviceDetailed}}<br>
-      联 系 人:{{mrp.consigneeName}}<br>
-      联系方式:{{mrp.contact}}<br>
-      公司名称:{{mrp.companyName}}<br>
-      公司地址:{{mrp.addressDetailed}}<br>
+      <div  class="mrpDetailsfuwu">
+      服务类别 : {{mrp.releaseType}}<br>
+      服务区域 : {{mrp.serviceDetailed}}<br>
+      联 系 人 : {{mrp.consigneeName}}<br>
+      联系方式 : {{mrp.contact}}<br>
+      公司名称 : {{mrp.companyName}}<br>
+      公司地址 : {{mrp.addressDetailed}}<br>
+      创建时间 : {{mrp.createTime}}<br>
+      备    注 : {{mrp.remarks}}<br>
+      服务次数 : {{mrp.servicFrequenc}}<br>
+      起步价格 : {{mrp.startPrice}}<br>
+      </div>
+        <ReservationService></ReservationService>
     </div>
-    <div  class="mrpDetailsfuwu">
-      创建时间:{{mrp.createTime}}<br>
-      备    注:{{mrp.remarks}}<br>
-      服务次数:{{mrp.servicFrequenc}}<br>
-      起步价格:{{mrp.startPrice}}<br>
 
-      <div class="fuwujieshao"> 服务介绍:{{mrp.serviceIntroduction}}<br></div>
+      <div class="juzhong">服务介绍 </div>
+      <div class="fuwujieshao">  &emsp; &emsp; {{mrp.serviceIntroduction}}<br></div>
       <Evaluate :tableData="tableData" ></Evaluate>
-      <div class="fuwutupian">服务图片</div>
-    </div>
+      <div class="juzhong">服务图片</div>
+
     <!--引入评价-->
     <div  class="mrpDetailsUrlall">
       <li v-for="(p, index) in this.fileList" :key="index">
@@ -28,19 +32,18 @@
       </li>
     </div>
   </div>
+  </div>
 </template>
 <script>
 
-
-  import {  checke_isButten } from '../../api/api';
   import {  isRoleMessage } from '../../api/api';
   import Evaluate from '../../components/pages/Evaluate';
   import { getMrpDetails } from '../../api/api';
-
+  import ReservationService from "../../components/pages/ReservationService";
 
   export default {
     name:'mrpDetails',
-    components: {Evaluate},
+    components: {ReservationService, Evaluate},
     data() {
       return {
         id:this.$route.params.id,
@@ -93,7 +96,8 @@
   .mrpDetails{
 
     background-color: #F0F6D6;
-    margin:20px 0px 10px 0px;
+    margin:20px 0px 0px 0px;
+    padding:5px 5px 3px 8%;
 
     /*margin:25px 50px 75px 100px;
 上边距为25px
@@ -102,28 +106,33 @@
 左边距为100px*/
   }
   .mrpDetailsJichu{
-    margin:10px 10px 10px 30px;
+    margin:10px 0px 10px 30px;
+    color:#21292E;
+    display: flex;
+  }
+
+  .mrpDetailsfuwu{
+    margin:10px 40% 10px 30px;
     color:#21292E;
   }
-  .mrpDetailsfuwu{
-    margin:10px 10px 10px 30px;
-    color:#21292E;
+  .juzhong{
+    font-size: 18px;
+    padding:5px 5px 3px 35%;
+
   }
   img{
 
     display: block;
-    width: 60%;
+    width: 75%;  /*图片款*/
     text-align:center;
     height:600px;   /*设置图片的高度*/
   }
-
-  .mrpDetailsUrlall{
-    /*margin:8px 10px 10px 30px;*/
+  .fuwujieshao{
+    width: 80%;
+    margin:8px 10% 10px 30px;
   }
+
 .mrpDetailsUrlno{
-  margin:20px 10px 20px 30px;
-}
-.fuwutupian{
-  font-size: 16px;
+  padding:5px 5px 3px 8%; /*调整图片*/
 }
 </style>
