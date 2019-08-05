@@ -15,15 +15,17 @@
       服务次数 : {{mrp.servicFrequenc}}<br>
       起步价格 : {{mrp.startPrice}}<br>
       </div>
+
         <ReservationService></ReservationService>
     </div>
 
       <div class="juzhong">服务介绍 </div>
       <div class="fuwujieshao">  &emsp; &emsp; {{mrp.serviceIntroduction}}<br></div>
+      <!--引入评价-->
       <Evaluate :tableData="tableData" ></Evaluate>
       <div class="juzhong">服务图片</div>
 
-    <!--引入评价-->
+
     <div  class="mrpDetailsUrlall">
       <li v-for="(p, index) in this.fileList" :key="index">
         <div class="mrpDetailsUrlno">
@@ -32,6 +34,9 @@
       </li>
     </div>
   </div>
+
+    <!--引入评价-->
+    <DibuBunner :tableData="tableBunner" ></DibuBunner>
   </div>
 </template>
 <script>
@@ -40,15 +45,19 @@
   import Evaluate from '../../components/pages/Evaluate';
   import { getMrpDetails } from '../../api/api';
   import ReservationService from "../../components/pages/ReservationService";
-
+  import DibuBunner from "../../components/pages/DibuBunner";
   export default {
     name:'mrpDetails',
-    components: {ReservationService, Evaluate},
+    components: {ReservationService, Evaluate,DibuBunner},
     data() {
       return {
         id:this.$route.params.id,
         tableData:{
           permissionid:13
+        },
+        tableBunner:{
+          permissionid:13,
+          bunnerType:1
         },
         StringPath:'menuAndRenovationAndPestControl',
         mrp:{
@@ -95,15 +104,18 @@
 <style>
   .mrpDetails{
 
-    background-color: #F0F6D6;
-    margin:20px 0px 0px 0px;
-    padding:5px 5px 3px 8%;
+
 
     /*margin:25px 50px 75px 100px;
 上边距为25px
 右边距为50px
 下边距为75px
 左边距为100px*/
+  }
+  .mrpDetailsBody{
+    background-color: #F0F6D6;
+    margin:20px 0px 0px 0px;
+    padding:5px 5px 3px 8%;
   }
   .mrpDetailsJichu{
     margin:10px 0px 10px 30px;

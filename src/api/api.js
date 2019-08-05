@@ -191,6 +191,17 @@ export const getMrpDetails = params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
+
+
+//获取bunner
+export const getBunner = params => {
+  return axios({
+    url: `${base}/api/bunner/getBunner`,
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    params: { permissionid: params.permissionid,
+              bunnerType: params.bunnerType},
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 //回显图片
 export const echo_display= params => {
   let pictureUrlList = JSON.parse(params.pictureUrl)

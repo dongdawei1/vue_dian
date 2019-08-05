@@ -225,7 +225,7 @@
           consigneeName:'', //联系人姓名 回显置灰 不可修改
           type:1  //1为创建2为重新发起或者编辑
         },
-        StringPath:'myJobWanted',
+        StringPath:'/home/jobWanted',
         permission:'',
         role:'',
         rules: {

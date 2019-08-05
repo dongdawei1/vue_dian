@@ -1,7 +1,18 @@
 <template>
-  <p class="page-container">菜谱制作</p>
+  <div >
+    <MapAll :tableData="13" class="vm-margin"></MapAll>
+  </div>
 </template>
 
-<style >
+<script>
+  import MapAll from '../../components/pages/MapAll';
+  export default {
+    components: {
+      MapAll
+    }
+  }
+</script>
 
+
+<style >
 </style>

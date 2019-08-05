@@ -36,7 +36,7 @@
     <el-table
       :data="tableData"
       style="width: 100%"
-      max-height="250">
+      max-height="500">
       <el-table-column
         fixed
         prop="position"
@@ -158,6 +158,7 @@
         dialogVisible: false,//联系方式弹窗
         contact :'', //联系方式
         pathString:'/home/myRelease',
+        StringPath: '/home/jobWanted',
         options: regionData,//城市
         realName:'',//实名信息
         releaseWelfare: { //查询条件
@@ -174,7 +175,6 @@
           pageSize: 20,//每页显示的数量
           //分页结束
           permissionid:30,
-          StringPath: '/home/jobWanted',
         },
       }
     },
@@ -210,7 +210,7 @@
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction(){
-        checke_isButten(this.releaseWelfare.StringPath).then((res) => {
+        checke_isButten(this.StringPath).then((res) => {
           if(res.status===0){
             if(res.data.isAuthentication !==2 ){
               this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {

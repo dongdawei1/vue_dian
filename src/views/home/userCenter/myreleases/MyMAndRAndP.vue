@@ -39,7 +39,8 @@
     <el-table
       :data="tableData"
       border
-      style="width: 100%"  >
+      style="width: 100%"
+      max-height="500">
       <el-table-column
         fixed
         prop="releaseType"
