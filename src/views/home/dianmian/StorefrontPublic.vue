@@ -5,9 +5,8 @@
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="13">菜谱/广告</el-radio>
-            <el-radio :label="17">装修</el-radio>
-            <el-radio :label="19">灭虫</el-radio>
+            <el-radio :label="14" v-if="isLease">店面/窗口出租</el-radio>
+            <el-radio :label="15" v-if="isRentalBooth">摊位出租转让</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -15,14 +14,11 @@
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
-      <el-form-item label="起步价格" prop="startPrice">
-        <el-input v-model="ruleForm.startPrice" placeholder="起步价格(元)"></el-input>
-      </el-form-item>
 
-      <el-form-item label="服务描述" prop="serviceIntroduction">
+      <el-form-item label="具体描述" prop="serviceIntroduction">
         <el-input
           type="textarea"
-          placeholder="如：服务范围，或者服务时间"
+          placeholder="如：可以经营的范围，或者租金支付方式"
           v-model="ruleForm.serviceIntroduction"
           maxlength="500"
           show-word-limit
@@ -34,14 +30,11 @@
         <el-input v-model="ruleForm.remarks" placeholder="备注30字以内"></el-input>
       </el-form-item>
 
-      <el-form-item label="服务地域"  prop="serviceDetailed">
-        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务区域">
-          <el-option label="全市" value="全市"></el-option>
-          <el-option label="来电确认" value="来电确认"></el-option>
-        </el-select>
+      <el-form-item label="详细地址"  prop="serviceDetailed">
+        <el-input v-model="ruleForm.serviceDetailed" placeholder="100字以内"></el-input>
       </el-form-item>
 
-      <el-form-item label="服务图片" prop="pictureUrl">
+      <el-form-item label="图片" prop="pictureUrl">
         <el-upload
           ref="upload"
           action="/api/uploadDown/upload"
@@ -103,15 +96,16 @@
 </template>
 <script>
 
-  
+
   import {  isRoleMessage } from '../../../api/api';
   import { getRealName } from '../../../api/api';
-  import { create_menuAndRenovationAndPestControl } from '../../../api/api';
+  import { create_rent} from '../../../api/api';
   import { uploadDown_update } from '../../../api/api';
+  import {  checke_isButten } from '../../../api/api';
 
 
   export default {
-    props: ["tableData"],
+    props: ["tableDataEnter"],
     data() {
       return {
         fileList:[],
@@ -119,6 +113,8 @@
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
         realName:'',//用户实名信息
+        isLease:false,
+        isRentalBooth:false,
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
@@ -126,44 +122,39 @@
           userId:'',
           releaseType:'',//发布类型
           releaseTitle:'',//标题
-          serviceIntroduction:'',//服务描述
+          serviceIntroduction:'',//描述
           remarks:'',//备注
-          startPrice:'',//起步价格
-          serviceDetailed:'',//服务城区
-          pictureUrl:[],//服务图片
+          serviceDetailed:'',//详细地址
+          pictureUrl:[],//图片
           //实名中获取
           companyName:'',//公司名称
           contact:'',  //实名联系联系方式 回显置灰 不可修改
           consigneeName:'', //联系人姓名 回显置灰 不可修改
           detailed:'',//实名城区
           addressDetailed:'',//实名地址
-          StringPath:'',
         },
 
         rules: {
           releaseType: [
             { required: true, message: '发布类型不能为空', trigger: 'change' },
           ],
-          companyName: [
-            { required: true, message: '公司名称不能为空', trigger: 'blur' },
-          ],
+
           serviceDetailed: [
-            { required: true, message: '请选服务城区', trigger: 'change' }
+            { required: true, message: '详细地址不能为空', trigger: 'blur' },
+            {  max: 100, message: '详细地址不大于100字' }
           ],
           releaseTitle:[
             {  required: true, message: '标题不能为空', trigger: 'blur'},
             { min: 6, max: 14, message: '标题在6-14字之内' }
           ],
           serviceIntroduction:[
-            {  required: true, message: '服务描述不能为空', trigger: 'blur' },
-            { min: 1, max: 500, message: '服务描述不能超过500个字' }
+            {  required: true, message: '具体描述不能为空', trigger: 'blur' },
+            { min: 1, max: 500, message: '具体描述不能超过500个字' }
           ],
           remarks:[
             {  max: 30, message: '备注小于30字' }
           ],
-          startPrice:[
-            {  required: true, message: '起步价格不能为空', trigger: 'blur' }
-          ],
+
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
           ],}
@@ -180,7 +171,7 @@
         this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
+            create_rent(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗
@@ -210,32 +201,40 @@
             this.ruleForm.companyName= this.realName.companyName;
             this.ruleForm.addressDetailed= this.realName.addressDetailed;
             this.ruleForm.detailed= this.realName.detailed;
+            this.ruleForm.serviceDetailed=this.realName.addressDetailed;
           }else {
             isRoleMessage(res.msg);
           }
         });
       },
-      //
+
       checke_isButten(){
-              this.resdata =this.tableData;
-              console.log(this.tableData)
-              let roleType=this.resdata.roleType;
-              let role=this.resdata.role;
-            if(role===1 || role===6){
-              //如果两项都有权限
-            }else{
-            if(roleType===1){
-          //显示摊位
-              this.ruleForm.StringPath='/home/rentalBooth';
-            }else if(roleType===2){
-          //显示窗口
-              this.ruleForm.StringPath='/home/lease';
-            }else{
-          this.$router.push({path: '/home/release'});
-            }}
-         this.ruleForm.userId=this.resdata.id;
-         this.getRealName();
+        checke_isButten(this.tableDataEnter).then((res) => {
+          if(res.status===0){
+            if (res.data.isCreate === true) {
+              if (res.data.isAuthentication !== 2) {
+                this.$router.push({path: '/home/myAccount'});
+              }else {
+                this.resdata =res.data.data;
+                this.ruleForm.userId=this.resdata.id;
+                let role=res.data.data.role;
+               if(role===2||role===3){
+                 this.isLease=true;
+               }else if(role===4||role===5){
+                 this.isRentalBooth=true;
+               }else if(role===1||role===6){
+                 this.isLease=true;
+                 this.isRentalBooth=true;
+               }
+               this.getRealName();
+              }} else {
+              this.$router.push({path: '/home/release'});
+            }}else{
+            isRoleMessage(res.msg);
+          }
+        });
       },
+
 
       //图片上传相关
       //文件上传成功的钩子函数
@@ -281,14 +280,14 @@
         const isGIF = file.type === 'image/gif';
         const isPNG = file.type === 'image/png';
         const isBMP = file.type === 'image/bmp';
-        const isLt3M = file.size / 1024 / 1024 < 3;
+        const isLt8M = file.size / 1024 / 1024 < 8;
         if (!isJPG && !isGIF && !isPNG && !isBMP) {
           this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
         }
-        if (!isLt3M) {
-          this.$message.error('上传图片大小不能超过 3MB!');
+        if (!isLt8M) {
+          this.$message.error('上传图片大小不能超过 8MB!');
         }
-        return (isJPG || isBMP || isGIF || isPNG) && isLt3M;
+        return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
       },
 
     }

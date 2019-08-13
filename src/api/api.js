@@ -191,8 +191,8 @@ export const getMrpDetails = params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
-
-
+//创建租房
+export const create_rent= params => { return axios.post(`${base}/api/rent/create_rent`, params).then(res => res.data); };
 //获取bunner
 export const getBunner = params => {
   return axios({

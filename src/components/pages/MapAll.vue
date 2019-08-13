@@ -55,7 +55,7 @@
   import { getmrpList } from '../../api/api';
   import VmRpList from '../../components/vm-mrp-list';
   export default {
-    props: ["tableData"],
+    props: ["tableDataEnter"],
     components: {
       VmRpList
     },
@@ -122,7 +122,7 @@
             this.releaseWelfare.provincesId=this.realName.provincesId;
             this.releaseWelfare.cityId=this.realName.cityId;
             this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
-            this.releaseWelfare.releaseType=this.tableData;
+            this.releaseWelfare.releaseType=this.tableDataEnter;
             this.getmrpList();     //获取列表
           }
         });

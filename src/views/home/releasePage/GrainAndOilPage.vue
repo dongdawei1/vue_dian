@@ -268,20 +268,18 @@
       //文件上传前的前的钩子函数
       //参数是上传的文件，若返回false，或返回Primary且被reject，则停止上传
       beforeUpload(file) {
-
         const isJPG = file.type === 'image/jpeg';
         const isGIF = file.type === 'image/gif';
         const isPNG = file.type === 'image/png';
         const isBMP = file.type === 'image/bmp';
-        const isLt3M = file.size / 1024 / 1024 < 3;
-
+        const isLt8M = file.size / 1024 / 1024 < 8;
         if (!isJPG && !isGIF && !isPNG && !isBMP) {
           this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
         }
-        if (!isLt3M) {
-          this.$message.error('上传图片大小不能超过 3MB!');
+        if (!isLt8M) {
+          this.$message.error('上传图片大小不能超过 8MB!');
         }
-        return (isJPG || isBMP || isGIF || isPNG) && isLt3M;
+        return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
       },
 
     }

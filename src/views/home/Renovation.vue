@@ -1,6 +1,6 @@
 <template>
   <div >
-    <MapAll :tableData="17" class="vm-margin"></MapAll>
+    <MapAll :tableDataEnter="17" class="vm-margin"></MapAll>
   </div>
 </template>
 
