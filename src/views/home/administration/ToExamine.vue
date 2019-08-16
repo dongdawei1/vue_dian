@@ -14,7 +14,10 @@
     <el-tab-pane label="装修灭虫" name="third">
       <Mrp></Mrp>
     </el-tab-pane>
-    <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+
+    <el-tab-pane label="租房审批" name="fourth">
+      <AdminMent></AdminMent>
+    </el-tab-pane>
   </el-tabs>
 </template>
 
@@ -23,6 +26,7 @@
   import Recruit from './Recruit'
   import Resume from './Resume'
   import Mrp from './Mrp'
+  import AdminMent from './AdminMent'
 
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
@@ -32,7 +36,8 @@
       First,
       Recruit,
       Resume,
-      Mrp
+      Mrp,
+      AdminMent
     },
 
     data() {

@@ -4,9 +4,9 @@
       <p>请认真填写信息</p>
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
-          <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="14" v-if="isLease">店面/窗口出租</el-radio>
-            <el-radio :label="15" v-if="isRentalBooth">摊位出租转让</el-radio>
+          <el-radio-group v-model="ruleForm.releaseType"  disabled>
+            <el-radio :label="14" >店面/窗口出租</el-radio>
+            <el-radio :label="15" >摊位出租转让</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -14,12 +14,9 @@
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
-
-
       <el-form-item label="面积" prop="fouseSize">
         <el-input  v-model.number="ruleForm.fouseSize" placeholder="只能是1-10000之间的整数"></el-input>
       </el-form-item>
-
       <el-form-item label="具体描述" prop="serviceIntroduction">
         <el-input
           type="textarea"
@@ -36,7 +33,7 @@
       </el-form-item>
 
       <el-form-item label="详细地址"  prop="serviceDetailed">
-        <el-input v-model="ruleForm.serviceDetailed" placeholder="地址详情100字以内"></el-input>
+        <el-input v-model="ruleForm.serviceDetailed" placeholder="100字以内"></el-input>
       </el-form-item>
 
       <el-form-item label="图片" prop="pictureUrl">
@@ -80,37 +77,20 @@
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
       </el-form-item>
     </el-form>
-    <!-- 成功弹窗  -->
-    <el-dialog
-      title="发布成功"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-      :before-close="cntinue"
-    >
-      <span>请关注审核状态，约24小时内完成审核</span>
-      <span slot="footer" class="dialog-footer">
-   <el-button type="primary" @click="" >
-     <router-link
-       v-on:click.native=""
-       to="/home/myRelease" class="a" >查看我的发布</router-link></el-button>
-     </span>
-    </el-dialog>
-    <!-- 成功弹窗结束  -->
+
   </div>
 </template>
 <script>
 
 
   import {  isRoleMessage } from '../../../api/api';
-  import { getRealName } from '../../../api/api';
-  import { create_rent} from '../../../api/api';
-  import { uploadDown_update } from '../../../api/api';
-  import {  checke_isButten } from '../../../api/api';
+  import {  operation_userment } from '../../../api/api';
 
 
+  import {  get_userrent_id } from '../../../api/api';
+  import { echo_display } from '../../../api/api';
   export default {
-    props: ["tableDataEnter"],
+
     data() {
       var checkAge = (rule, value, callback) => {
         if (!value) {
@@ -129,13 +109,11 @@
         }, 100);
       };
       return {
+        id:this.$route.params.id,
         fileList:[],
-        centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
-        realName:'',//用户实名信息
-        isLease:false,
-        isRentalBooth:false,
+
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
@@ -173,14 +151,13 @@
             {  required: true, message: '具体描述不能为空', trigger: 'blur' },
             { min: 1, max: 500, message: '具体描述不能超过500个字' }
           ],
+          remarks:[
+            {  max: 30, message: '备注小于30字' }
+          ],
           fouseSize:[
             { required: true,validator: checkAge, trigger: 'blur'},
             // { type: 'number', message: '年龄必须为数字值'}
           ],
-          remarks:[
-            {  max: 30, message: '备注小于30字' }
-          ],
-
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
           ],}
@@ -197,14 +174,24 @@
         this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            console.log(this.ruleForm)
-            create_rent(this.ruleForm).then(res => {
+            let length=0;
+            for(let i=0;i<this.ruleForm.pictureUrl.length;i++){
+              if(this.ruleForm.pictureUrl[i].useStatus===1 ||this.ruleForm.pictureUrl[i].useStatus===3){
+                length++;
+              }
+            }
+            if(length<=0){
+              this.$message.error("图片不能为空");
+              this.fullscreenLoading=false;
+              return false;
+            }
+            this.ruleForm.type=6;
+
+            operation_userment(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
-                //成功弹窗
-                this.fileList=[];
-                this.ruleForm.pictureUrl=[];
-                this.centerDialogVisible=true;
+                this.$message.success('编辑成功，审核约24小时内完成');
+                this.$router.push('/home/myRelease');
               } else {
                 isRoleMessage(res.msg);
               }
@@ -216,47 +203,18 @@
         });
       },
 
-      cntinue(){  //留在本页继续发布
-        this.centerDialogVisible=false;
-      },
-      getRealName(){
-        getRealName().then((res) => { //获取实名信息填充
-          if(res.status ===0 ) {
-            this.realName=res.data;
-            this.ruleForm.contact= this.realName.contact;
-            this.ruleForm.consigneeName= this.realName.consigneeName;
-            this.ruleForm.companyName= this.realName.companyName;
-            this.ruleForm.addressDetailed= this.realName.addressDetailed;
-            this.ruleForm.detailed= this.realName.detailed;
-            this.ruleForm.serviceDetailed=this.realName.addressDetailed;
-          }else {
-            isRoleMessage(res.msg);
-          }
-        });
-      },
+
+
 
       checke_isButten(){
-        checke_isButten(this.tableDataEnter).then((res) => {
+        get_userrent_id(this.id).then((res) => {
           if(res.status===0){
-            if (res.data.isCreate === true) {
-              if (res.data.isAuthentication !== 2) {
-                this.$router.push({path: '/home/myAccount'});
-              }else {
-                this.resdata =res.data.data;
-                this.ruleForm.userId=this.resdata.id;
-                let role=res.data.data.role;
-               if(role===2||role===3){
-                 this.isLease=true;
-               }else if(role===4||role===5){
-                 this.isRentalBooth=true;
-               }else if(role===1||role===6){
-                 this.isLease=true;
-                 this.isRentalBooth=true;
-               }
-               this.getRealName();
-              }} else {
-              this.$router.push({path: '/home/release'});
-            }}else{
+            this.ruleForm=res.data;
+            let fileListAndPictureUrl=  echo_display(this.ruleForm);
+            //图片回显和表格参数
+            this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
+            this.fileList=fileListAndPictureUrl.fileList;
+            }else{
             isRoleMessage(res.msg);
           }
         });
@@ -272,18 +230,17 @@
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
         }
       },
+
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-
-        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(resdata.id===this.ruleForm.pictureUrl[i].id){
-            uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-              if(res.status!==0 ){
-                this.$message.error(res.msg);
-              }
-              this.ruleForm.pictureUrl.splice(i,1)
-            });
+          if(file.id===undefined){
+            if(file.response.data.id===this.ruleForm.pictureUrl[i].id){
+              this.ruleForm.pictureUrl[i].useStatus=2;
+              break;
+            }
+          }else if(file.id===this.ruleForm.pictureUrl[i].id){
+            this.ruleForm.pictureUrl[i].useStatus=2;
             break;
           }
         }

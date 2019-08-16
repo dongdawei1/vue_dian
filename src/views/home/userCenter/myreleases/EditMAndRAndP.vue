@@ -82,23 +82,7 @@
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
       </el-form-item>
     </el-form>
-    <!-- 成功弹窗  -->
-    <el-dialog
-      title="发布成功"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-      :before-close="cntinue"
-    >
-      <span>请关注审核状态，约24小时内完成审核</span>
-      <span slot="footer" class="dialog-footer">
-   <el-button type="primary" @click="" >
-     <router-link
-       v-on:click.native=""
-       to="/home/myRelease" class="a" >查看我的发布</router-link></el-button>
-     </span>
-    </el-dialog>
-    <!-- 成功弹窗结束  -->
+
 
   </div>
 </template>
@@ -118,7 +102,6 @@
       return {
         fileList:[],
         id:this.$route.params.id,
-        centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
         realName:'',//用户实名信息
@@ -202,8 +185,8 @@
             operation_usermrp(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
-                //成功弹窗
-                this.centerDialogVisible=true;
+                this.$message.success('编辑成功，审核约24小时内完成');
+                this.$router.push('/home/myRelease');
               } else {
                 isRoleMessage(res.msg);
               }
@@ -213,9 +196,6 @@
             return false;
           }
         });
-      },
-      cntinue(){  //留在本页继续发布
-        this.centerDialogVisible=false;
       },
 
       //图片上传相关
@@ -290,8 +270,6 @@
                  //图片回显和表格参数
                   this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
                   this.fileList=fileListAndPictureUrl.fileList;
-                  console.log( this.fileList)
-                  console.log( this.ruleForm.pictureUrl)
                 } else {
                   isRoleMessage(res.msg);
                 }

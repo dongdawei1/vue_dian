@@ -3,19 +3,6 @@
     <!--我的发布 已发布过的职位  c查询框开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
-      <el-form-item label="服务类型"  >
-        <template>
-          <el-select v-model="releaseWelfare.releaseType" clearable placeholder="请输入或点击选择发布类型">
-            <el-option
-              v-for="item in releaseTypes"
-              :key="item.label"
-              :label="item.value"
-              :value="item.label">
-            </el-option>
-          </el-select>
-        </template>
-      </el-form-item>
-
       <el-form-item label="手机号">
         <el-input v-model="releaseWelfare.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
@@ -40,7 +27,7 @@
       <el-table-column
         fixed
         prop="releaseType"
-        label="服务类型"
+        label="发布类型"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -63,25 +50,19 @@
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
-        prop="startPrice"
-        label="起步价格"
+        prop="fouseSize"
+        label="使用面积(平米)"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="serviceDetailed"
-        label="服务区域"
+        label="地址详情"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
 
 
-      <el-table-column
-        prop="servicFrequenc"
-        label="服务次数"
-        width="100"
-        :show-overflow-tooltip="true">
-      </el-table-column>
       <el-table-column
         prop="contact"
         label="联系方式"
@@ -148,21 +129,20 @@
       <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
       <span>联系方式 : {{tableDataNo.contact }}</span><br>
       <span>公司名称 : {{tableDataNo.companyName }}</span><br>
-      <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
+      <span>地址详情 : {{tableDataNo.serviceDetailed }}</span><br>
       <span>实名城区 : {{tableDataNo.detailed }}</span><br>
-      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
+      <span>实名地址 : {{tableDataNo.addressDetailed }}</span><br>
 
-      <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
-      <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
+      <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
       <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
+      <span>使用面积: {{tableDataNo.fouseSize }} (平米)</span><br>
       <span>备注 : {{tableDataNo.remarks }}</span><br>
-      <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
-      <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
+      <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
       <span>申请时间 : {{tableDataNo.createTime }}</span><br>
       <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
-      <span>服务图片 : </span><br>
+      <span>图片 : </span><br>
       <li v-for="(p, index) in this.fileList" :key="index">
         <img :src="p.url" width="100%">
       </li>
@@ -188,7 +168,7 @@
 </template>
 <script>
 
-  import { getmrpAll} from '../../../api/api';
+  import { adminMent} from '../../../api/api';
   import { examineAll} from '../../../api/api';
 
   import { isRoleMessage } from '../../../api/api';
@@ -201,18 +181,10 @@
         total: 0,
 
         //分页结束
-        releaseTypes: [
-          { "value": "菜谱广告牌", "label": "13" },
-          { "value": "装修", "label": "17" },
-          { "value": "灭虫", "label": "19" },
-        ],
-        releaseWelfare: { //查询条件
-          releaseType:'', //服务类型
-          contact:'',//手机号
 
+        releaseWelfare: { //查询条件
+          contact:'',//手机号
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
         },
         tableData:[], //全部数据
@@ -222,7 +194,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:13,
+          tabuleType:14, //14,15房屋出租
         },
         formLabelWidth: '120px',
         fileList:'',
@@ -301,8 +273,7 @@
 
       },
       get_position_list(){
-        getmrpAll(this.releaseWelfare).then((res) => {
-
+        adminMent(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

@@ -27,8 +27,10 @@ import AquaticProduct from '../views/home/market/AquaticProduct'
 import Menu from '../views/home/Menu'
 import Lease from '../views/home/Lease'
 import RentalBooth from '../views/home/RentalBooth'
+
 import CreateLease from '../views/home/dianmian/CreateLease'
 import CreateRentalBooth from '../views/home/dianmian/CreateRentalBooth'
+import UpdateRent from '../views/home/dianmian/UpdateRent'
 
 import RecruitWorkers from '../views/home/recruit/RecruitWorkers'
 import JobWanted from '../views/home/recruit/JobWanted'
@@ -192,11 +194,11 @@ export default new VueRouter ({
           component: Menu
         },
         {
-          path: '/home/lease',  //出租店面窗口
+          path: '/home/lease',  //出租店面窗口列表
           component: Lease
         },
         {
-          path: '/home/rentalBooth',  //出租摊位
+          path: '/home/rentalBooth',  //出租摊位列表
           component: RentalBooth
         },
         {
@@ -207,7 +209,10 @@ export default new VueRouter ({
           path: '/home/createRentalBooth',  //创建摊位
           component: CreateRentalBooth
         },
-
+        {
+          path: '/home/updateRent/:id',  //编辑摊位
+          component: UpdateRent
+        },
         /*招聘开始*/
              {
                    path: '/home/recruitWorkers',

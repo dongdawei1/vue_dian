@@ -1,7 +1,23 @@
 <template>
-  <p class="page-container">出租店面窗口</p>
+  <div >
+    <!--出租店面-->
+    <RentList :tableDataEnter="tableDataEnter" class="vm-margin"></RentList>
+  </div>
 </template>
 
-<style >
-
-</style>
+<script>
+  import RentList from '../home/dianmian/RentList';
+  export default {
+    components: {
+      RentList
+    },
+    data() {
+      return {
+        tableDataEnter:{
+          StringPath:'/home/lease',
+          releaseType:14
+        },
+      }
+    }
+  }
+</script>

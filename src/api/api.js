@@ -106,7 +106,8 @@ export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/t
 export const getTrialResumeAll = params => { return axios.post(`${base}/api/toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核装修灭虫列表
 export const getmrpAll= params => { return axios.post(`${base}/api/toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
-
+//待审核出租房
+export const adminMent= params => { return axios.post(`${base}/api/toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
 //实名审核
@@ -193,6 +194,25 @@ export const getMrpDetails = params => {
 
 //创建租房
 export const create_rent= params => { return axios.post(`${base}/api/rent/create_rent`, params).then(res => res.data); };
+//获取自己发布的租房信息
+export const get_myRent_list= params => { return axios.post(`${base}/api/rent/get_myRent_list`, params).then(res => isButtonAndListusermrp(res.data,5) ); };
+//操作自己发布的租房信息
+export const operation_userment= params => { return axios.post(`${base}/api/rent/operation_userment`, params).then(res => res.data);};
+//根据id查询自己发布租房
+export const get_userrent_id= params => {
+  return axios({
+    url: `${base}/api/rent/get_userrent_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+//公开概览租房
+export const getrentList= params => { return axios.post(`${base}/api/rent/getrentList`, params).then(res => res.data);};
+
+//获取租房title
+export const getRentTitleList= params => { return axios.post(`${base}/api/rent/getRentTitleList`, params).then(res => res.data);};
+
+
 //获取bunner
 export const getBunner = params => {
   return axios({
@@ -348,9 +368,69 @@ function isButtonAndListusermrp(res,type) {
         }
       }
     }
-    //用户获取自己发布的简历
+    //用户获取自己发布的租房
     else if(type===5){
+      for (let a = 0; a < list.length; a++) {
+        list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
+        let welfareStatus = list[a].welfareStatus;
+        if (welfareStatus === 1) {
+          list[a].welfareStatus = '发布中';
+          list[a].authentiCationFailure = '';
+          list[a].isDisplayRefresh = true;
+          list[a].isDisplayHide = true;
+          list[a].isDisplayEdit = true;
+        } else if (welfareStatus === 2) {
+          list[a].welfareStatus = '隐藏中';
+          list[a].authentiCationFailure = '';  //审核失败原因
+          list[a].isDisplayRelease = true;
+        } else if (welfareStatus === 4) {
+          let authentiCationStatus = list[a].authentiCationStatus;
+          if (authentiCationStatus === 3) {
+            list[a].welfareStatus = '审核失败';
+            list[a].isDisplayEdit = true;
+          } else {
+            list[a].welfareStatus = '审核中'
+            list[a].authentiCationFailure = '';
+          }
+        } else if (welfareStatus === 5) {
+          list[a].welfareStatus = '已过期';
+          list[a].authentiCationFailure = '';
+          list[a].isDisplayDelay = true;
+        }
 
+        list[a].isDisplaySee = true;
+        list[a].isDisplayDelete = true;
+        let releaseType=list[a].releaseType;
+        if(releaseType===14){
+          list[a].releaseType='店面/窗口出租';
+        }else if(releaseType===15){
+          list[a].releaseType='摊位出租/转让';
+        }else{
+          list[a].releaseType='';
+        }
+      }
+    }
+    //管理员租房
+    else if(type===6){
+      for (let a = 0; a < list.length; a++) {
+
+        list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
+        let authentiCationStatus = list[a].authentiCationStatus;
+        if(authentiCationStatus===1){
+          list[a].authentiCationStatus='审核中'
+          list[a].authentiCationFailure = '';  //审核失败原因
+        }else if(authentiCationStatus===3){
+          list[a].authentiCationStatus='审核失败'
+        }
+        let releaseType=list[a].releaseType;
+        if(releaseType===14){
+          list[a].releaseType='店面/窗口出租';
+        }else if(releaseType===15){
+          list[a].releaseType='摊位出租/转让';
+        }else{
+          list[a].releaseType='';
+        }
+      }
     }
  //查看和删除全部有 除了审批scope.row.isDisplaySee">查看，scope.row.isDisplayDelete"   >删除，
 //       </el-button>

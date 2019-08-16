@@ -3,8 +3,6 @@
     <el-tab-pane label="采购发布" name="isPurchase"  v-if="isPurchase">
     </el-tab-pane>
 
-    <el-tab-pane label="窗口出租" name="isWindowRental" v-if="isWindowRental">
-    </el-tab-pane>
 
     <el-tab-pane label="厨具" name="isPurchase"  v-if="isKitchenUtensils">
     </el-tab-pane>
@@ -15,8 +13,7 @@
     <el-tab-pane label="商品发布" name="isPurchase"  v-if="isCommodity">
     </el-tab-pane>
 
-    <el-tab-pane label="摊位信息" name="isPurchase"  v-if="isBooth">
-    </el-tab-pane>
+
 
     <el-tab-pane label="消毒餐具" name="isTableware"  v-if="isTableware">
     </el-tab-pane>
@@ -26,6 +23,9 @@
     <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
     </el-tab-pane>
 
+    <el-tab-pane label="摊位/店面信息" name="rent"  v-if="isRent">
+      <MyRent></MyRent>
+    </el-tab-pane>
 
     <el-tab-pane label="菜谱/装修/杀虫/广告牌" name="mrp"  v-if="isMenuAndRenovationAndPestControl">
     <MyMAndRAndP></MyMAndRAndP>
@@ -46,6 +46,7 @@
   import CreatePosition from './myreleases/CreatePosition'
   import MyJobWanted from './myreleases/MyJobWanted'
   import MyMAndRAndP from './myreleases/MyMAndRAndP'
+  import MyRent from './myreleases/MyRent'
 
   import { get_user_info } from '../../../api/api';
 
@@ -53,22 +54,23 @@
     components: {
       CreatePosition,
       MyJobWanted,
-      MyMAndRAndP
+      MyMAndRAndP,
+      MyRent
     },
 
     data() {
       return {
         //商家2
         isCreatePosition:false,//发布职位权限 2,5
-        isWindowRental:false,//窗口出租 2,3,6
+
         isPurchase:false,//采购信息 2
         // 厨具/电器/设备维修3
         isKitchenUtensils:false,//发布厨具 3
         isRepair:false,//发布维修信息 3
         //蔬菜/调料/水产禽蛋4
         isCommodity:false,//发布商品 4,5
-         isBooth:false,//摊位出租4，5,6
-
+         isRent:false,//摊位出租4，5,6
+        isWindowRental:false,//窗口出租 2,3,6
        //酒水/消毒餐具/清洁用品5
         isTableware:false,//消毒餐具5
         isWine:false,//酒水5
@@ -107,34 +109,35 @@
             this.user=JSON.parse(res.data);
             let role=this.user.role;
            if(role===1){
-             this.isWindowRental=true;//窗口出租 2,3,6
              this.isPurchase=true;//采购信息 2
              this.isJobWanted=true;
              this.isCreatePosition=true;
              this.isMenuAndRenovationAndPestControl=true;
+             this.isRent=true; //窗口123456
             this.activeName='createPosition';
            }
            else if(role===2 ){
               this.isCreatePosition=true;  //招聘
-                this.isWindowRental=true;//窗口出租 2,3,6
                 this.isPurchase=true;//采购信息 2
+             this.isRent=true; //窗口123456
               this.activeName='createPosition';
             }else if(role===3){
+             this.isRent=true; //窗口123456
               this.isWindowRental=true;
               this.isKitchenUtensils=true;//发布厨具 3
               this.isRepair=true;//发布维修信息 3
             }else if(role===4){
               this.isCommodity=true;
-              this.isBooth=true;//发布厨具 3
+             this.isRent=true; //窗口123456
             }else if(role===5){
               this.isCreatePosition=true;
               this.isCommodity=true;//发布厨具 3
-              this.isBooth=true;//发布维修信息 3
+             this.isRent=true; //窗口123456
               this.isTableware=true;//消毒餐具5
               this.isWine=true;//酒水5
             }else if(role===6){
-              this.isWindowRental=true;//
-              this.isBooth=true;//
+             this.isRent=true; //窗口123456
+             this.activeName='rent';
             }else if(role===7){
               this.isMenuAndRenovationAndPestControl=true;//菜谱 7//装修7//灭虫7
              this.activeName='mrp';

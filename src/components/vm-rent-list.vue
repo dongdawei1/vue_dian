@@ -4,8 +4,8 @@
     <el-row >
 
       <el-row type="flex" align="middle" justify="space-between" class="panel-body">
-       <div class="search-bar">
-         <!--   <el-input placeholder="Please enter ..." v-model="keyword" style="width: 300px"></el-input>-->
+        <div class="search-bar">
+          <!--   <el-input placeholder="Please enter ..." v-model="keyword" style="width: 300px"></el-input>-->
           <!-- <el-button type="ghost" @click="search"><i class="fa fa-search"></i></el-button>-->
         </div>
       </el-row>
@@ -20,8 +20,8 @@
           <div class="card-desc">
             <div class="releaseTitle"> {{ item.releaseTitle}}</div>
             <div class="jieshao">
-            服务区域： {{item.serviceDetailed}}<br>
-            起步价格： {{item.startPrice}} (元)<br>
+              区域： {{item.serviceDetailed}}<br>
+              起步价格： {{item.startPrice}} (元)<br>
             </div>
             <div class="xiangqing">
               <el-button type="text"><router-link
@@ -31,7 +31,7 @@
             <!--<p>{{ item.brand }}</p>-->
             <!--<p>{{ item.commodityName }}</p>-->
             <!--<a :src="a">-->
-              <!--more >-->
+            <!--more >-->
             <!--</a>-->
             <!--</a>-->
           </div>
@@ -83,14 +83,14 @@
     font-size: 16px;
     font-weight:bold;  /*字体加粗*/
   }
-.jieshao{
-  font-size: 14px;
-}
-.xiangqing{
-  font-size: 15px;
-  text-decoration: none;
-  /*text-align:center    居中不好看*/
-}
+  .jieshao{
+    font-size: 14px;
+  }
+  .xiangqing{
+    font-size: 15px;
+    text-decoration: none;
+    /*text-align:center    居中不好看*/
+  }
   img{
     display: block;
     width: 100%;
