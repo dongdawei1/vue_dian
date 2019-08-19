@@ -8,7 +8,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="get_position_list">查询</el-button>
+        <el-button type="primary" @click="get_position_listselect">查询</el-button>
       </el-form-item>
 
     </el-form>
@@ -126,12 +126,10 @@
       :before-close="handleClose">
 
       <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+      <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
       <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>公司名称 : {{tableDataNo.companyName }}</span><br>
       <span>地址详情 : {{tableDataNo.serviceDetailed }}</span><br>
-      <span>实名城区 : {{tableDataNo.detailed }}</span><br>
-      <span>实名地址 : {{tableDataNo.addressDetailed }}</span><br>
+      <span>所在城区 : {{tableDataNo.detailed }}</span><br>
 
       <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
       <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
@@ -271,6 +269,10 @@
         this.releaseWelfare.currentPage=currentPage;
         this.get_position_list();
 
+      },
+      get_position_listselect(){
+        this.releaseWelfare.currentPage=1;
+        this.get_position_list();
       },
       get_position_list(){
         adminMent(this.releaseWelfare).then((res) => {

@@ -9,8 +9,7 @@
       联 系 人 : {{mrp.consigneeName}}<br>
       联系方式 : {{mrp.contact}}<br>
       公司名称 : {{mrp.companyName}}<br>
-      公司地址 : {{mrp.addressDetailed}}<br>
-      创建时间 : {{mrp.createTime}}<br>
+      发布时间 : {{mrp.createTime}}<br>
       备    注 : {{mrp.remarks}}<br>
       服务次数 : {{mrp.servicFrequenc}}<br>
       起步价格 : {{mrp.startPrice}}<br>

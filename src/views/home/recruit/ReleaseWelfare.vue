@@ -116,21 +116,26 @@
       >
       </el-input>
       </el-form-item>
-      <p>实名信息</p>
-      <el-form-item label="实名城市" >
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
-      </el-form-item>
-      <el-form-item label="实名地址" >
-        <el-input v-model="ruleForm.addressDetailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
-      </el-form-item>
-      <el-form-item label="联系人" >
-        <el-input v-model="ruleForm.consigneeName" :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
+
+      <el-form-item label="联系人"  prop="consigneeName">
+        <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
 
 
       <el-form-item label="联系方式" prop="contact"  >
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
+      <el-form-item label="工作城市" >
+        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
+      </el-form-item>
+      <!--实名中的信息不提交-->
+      <el-form-item label="实名地址" >
+        <el-input v-model="realName.addressDetailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
+      </el-form-item>
+      <el-form-item label="企业名称" >
+        <el-input v-model="realName.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
+      </el-form-item>
+      <!--实名中的信息不提交结束-->
       <el-form-item label="公开电话" prop="isPublishContact"  >
 
           <el-radio-group v-model="ruleForm.isPublishContact">
@@ -140,8 +145,7 @@
 
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
       </el-form-item>
     </el-form>
      <!-- 成功弹窗  -->
@@ -175,15 +179,14 @@
   export default {
     data() {
       return {
+        fullscreenLoading:false,
         restaurants: '', // 类型数据
-
         resdata:'',//获取的用户信息
         realName:'',//用户实名信息
 
         centerDialogVisible: false,//成功弹窗
         ruleForm: {
           userId:'',
-          userName:'',
           position: '',  //职位类型
           number:1,//招聘人数  100
           salary:'', //  salaryMin,salaryMax ,unlimited拼的字符串提交
@@ -200,9 +203,9 @@
 
           //实名中获取
           detailed:'',//省市区  回显置灰
-          addressDetailed:'',//实名地址不可编辑 回显置灰 不可修改
-          contact:'',  //实名联系联系方式 回显置灰 不可修改
-          consigneeName:'', //联系人姓名 回显置灰 不可修改
+          contact:'',  //实名联系联系方式  可修改
+          consigneeName:'', //联系人姓名 可修改
+          realNameId:'',//实名id
           StringPath:'/home/releaseWelfare',
         },
         permission:'',
@@ -216,6 +219,10 @@
           ],
           salary: [
             { required: true, message: '请选择工资', trigger: 'change' }
+          ],
+          contact:[
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
           ],
 
           welfare:[
@@ -247,6 +254,10 @@
           ],
           introductoryAward: [
             { required: true, message: '请选择是否有介绍奖励', trigger: 'change' }
+          ],
+          consigneeName:[
+            { required: true, message: '请输入姓名' },
+            { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],
         }
       }
@@ -283,25 +294,29 @@
       },
 
       submitForm(ruleForm) {
+        this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            const data = this.ruleForm;
-            create_position(data).then(data => {
-
+            create_position(this.ruleForm).then(data => {
+              this.fullscreenLoading=false;
               if (data && data.status === 0) {
+                this.ruleForm.position='';
                //成功弹窗
                 this.centerDialogVisible=true;
+
               } else {
                 isRoleMessage(data.msg);
               }
             });
           } else {
+            this.fullscreenLoading=false;
             return false;
           }
         });
       },
       getRealName(){
               getRealName().then((res) => { //获取实名信息填充
+
                 if(res.status ===0 ) {
                   this.realName=res.data;
                   let  em=this.realName.email;
@@ -310,9 +325,10 @@
                       }
                    this.ruleForm.workingAddress= this.realName.addressDetailed;
                    this.ruleForm.detailed= this.realName.detailed;
-                   this.ruleForm.addressDetailed= this.realName.addressDetailed;
                    this.ruleForm.contact= this.realName.contact;
                    this.ruleForm.consigneeName= this.realName.consigneeName;
+                  this.ruleForm.realNameId=this.realName.id;
+
                 }else {
                   isRoleMessage(res.msg);
                 }

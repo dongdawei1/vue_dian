@@ -159,7 +159,6 @@
         this.ruleForm.provinces_id=this.ruleForm.selectedOptions[0];
         this.ruleForm.city_id=this.ruleForm.selectedOptions[1];
         this.ruleForm.district_county_id=this.ruleForm.selectedOptions[2];
-
       },
 
       //审批提交

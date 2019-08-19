@@ -3,13 +3,13 @@
     <!--c查询框开始-->
     <el-form :inline="true" :model="realName" class="demo-form-inline">
       <el-form-item label="用户名">
-        <el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>
+        <el-input v-model="realName.companyName" placeholder="用户名" clearable></el-input>
       </el-form-item>
       <el-form-item label="手机号">
         <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getReleaseWelfareAll">查询</el-button>
+        <el-button type="primary" @click="getReleaseWelfareAllSelect">查询</el-button>
       </el-form-item>
     </el-form>
     <!--c查询框结束-->
@@ -25,8 +25,8 @@
         width="120">
       </el-table-column>
       <el-table-column
-        prop="userName"
-        label="用户名"
+        prop="companyName"
+        label="企业名称"
         width="200">
       </el-table-column>
       <el-table-column
@@ -107,8 +107,8 @@
       :before-close="handleClose">
 
       <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>用户名 : {{tableDataNo.userName }}</span><br>
-      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+      <span>企业名称 : {{tableDataNo.companyName }}</span><br>
+      <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
       <span>联系方式 : {{tableDataNo.contact }}</span><br>
       <span>城区 : {{tableDataNo.detailed }}</span><br>
       <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
@@ -183,12 +183,9 @@
 
         //分页结束
         realName: { //查询条件
-          userName:'',
+          companyName:'',
           contact: '',
-
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
         },
 
@@ -260,7 +257,12 @@
         this.getReleaseWelfareAll();
 
       },
+      getReleaseWelfareAllSelect(){
+         this.realName.currentPage=1;
+         this.getReleaseWelfareAll();
+      },
       getReleaseWelfareAll(){
+
         getReleaseWelfareAll(this.realName).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数

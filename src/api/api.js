@@ -60,6 +60,8 @@ export const checke_isButten=  params => {
 
 }).then(res => res.data); };
 
+
+
 //获取菜单
 export const getPermission = params => {
 
@@ -96,7 +98,17 @@ export const getRealName = params => {
   }).then(res => res.data); };
 
 
+//根据id获取实名信息
+export const getRealNameById = params => {
 
+  return axios({
+    url: `${base}/api/realName/getRealNameById`,
+    params: { id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+
+  }).then(res => res.data); };
 
 //待审核实名
 export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
@@ -210,7 +222,7 @@ export const get_userrent_id= params => {
 export const getrentList= params => { return axios.post(`${base}/api/rent/getrentList`, params).then(res => res.data);};
 
 //获取租房title
-export const getRentTitleList= params => { return axios.post(`${base}/api/rent/getRentTitleList`, params).then(res => res.data);};
+export const getServiceDetailedList= params => { return axios.post(`${base}/api/rent/getServiceDetailedList`, params).then(res => res.data);};
 
 
 //获取bunner

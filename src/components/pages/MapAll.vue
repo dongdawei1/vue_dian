@@ -3,7 +3,7 @@
     <!-- 筛选区 -->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
-      <el-form-item label="服务城区"   >
+      <el-form-item label="商户实名城区"   >
         <el-cascader
           size="large"
           :options="options"

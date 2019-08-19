@@ -1,7 +1,7 @@
 <template>
   <div class="mrpbody">
     <!-- 筛选区 -->
-    <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
+    <el-form :inline="true"  :model="releaseWelfare" class="demo-form-inline"   >
 
       <el-form-item label="出租城区"   >
         <el-cascader
@@ -12,13 +12,19 @@
           clearable>
         </el-cascader>
       </el-form-item>
-      <el-form-item label="类型"  >
+      <el-form-item label="详细地址"  >
         <el-autocomplete
-          v-model="releaseWelfare.releaseTitle"
+          v-model="releaseWelfare.serviceDetailed"
           :fetch-suggestions="querySearchAsync"
           placeholder="请输入或点击选择类型"
           clearable></el-autocomplete>
         <!--@select="handleSelect"-->
+      </el-form-item><br>
+      <el-form-item label="面积大于"  >
+        <el-input  v-model.number="releaseWelfare.fouseSizeGreater" placeholder="只能是1-10000之间的整数"  clearable></el-input>
+      </el-form-item>
+      <el-form-item label="面积小于"  >
+        <el-input  v-model.number="releaseWelfare.fouseSizeLess" placeholder="只能是1-10000之间的整数"   clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getrent_List">查询</el-button>
@@ -30,7 +36,7 @@
       </el-form-item>
     </el-form>
 
-    <VmRentListt :tableData="tableData" class="vm-margin"></VmRentListt>
+    <VmRentList :tableData="tableData" class="vm-margin"></VmRentList>
     <!-- 分页 -->
     <el-pagination
       background
@@ -51,7 +57,7 @@
   import {  isRoleMessage } from '../../../api/api';
   import { get_user_info_sign } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
-  import { getRentTitleList } from '../../../api/api';
+  import { getServiceDetailedList } from '../../../api/api';
   import { getrentList } from '../../../api/api';
 
   import VmRentList from '../../../components/vm-rent-list';
@@ -61,6 +67,38 @@
       VmRentList
     },
     data() {
+      var fouseSizeGreater = (rule, value, callback) => {
+        console.log(value)
+        setTimeout(() => {
+          if(value!=='' ){
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if(this. releaseWelfare.fouseSizeLess!==''){
+              if(value>this. releaseWelfare.fouseSizeLess){
+                callback(new Error('不能大于后边的面积'));
+              }
+            }
+              callback();
+            }}callback();
+        }, 10);
+      };
+      var fouseSizeLess = (rule, value, callback) => {
+        setTimeout(() => {
+          if(value!==''){
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          }
+           else {
+            if(this. releaseWelfare.fouseSizeGreater!==''){
+              if(value<this. releaseWelfare.fouseSizeGreater){
+                callback(new Error('不能小于前边的面积'));
+              }
+            }
+            callback();
+            }} callback();
+        }, 10);
+      };
       return {
         restaurants: [],//标题下拉
         timeout:  null,
@@ -72,16 +110,17 @@
         realName:'',//实名信息
         releaseWelfare: { //查询条件
           selectedOptions: [], //三级联动城市
-          provincesId:'',//省id
-          cityId:'',
-          districtCountyId:'',
+          serviceDetailed:'',//地址详情
           releaseTitle:'', //标题
+          fouseSizeGreater:'',
+          fouseSizeLess:'',//面积小于
           //分页开始
           currentPage: 1,
           pageSize: 12,//每页显示的数量
           //分页结束
           releaseType:'',
         },
+
       }
     },
 
@@ -89,6 +128,46 @@
       this.jurisdiction()
     },
     methods: {
+      checkoutNum(){
+        let fouseSizeLess=this.releaseWelfare.fouseSizeLess;
+        let fouseSizeGreater=this.releaseWelfare.fouseSizeGreater;
+        if(fouseSizeLess !==''){
+          if (!Number.isInteger(fouseSizeLess)) {
+            this.$message.error({
+              showClose: true,
+              message: '面积小于: 必须是数字',
+              type: 'warning',
+              duration:1800
+            });
+            return false;
+          }
+        }
+        if(fouseSizeGreater !==''){
+          if (!Number.isInteger(fouseSizeGreater)) {
+            this.$message.error({
+              showClose: true,
+              message: '面积大于: 必须是数字',
+              type: 'warning',
+              duration:1800
+            });
+            return false;
+          }
+        }
+
+        if(fouseSizeGreater !=='' && fouseSizeLess !==''){
+          if (fouseSizeGreater>fouseSizeLess ) {
+            this.$message.error({
+              showClose: true,
+              message: '面积大于  不能大于  面积小于',
+              type: 'warning',
+              duration:1800
+            });
+            return false;
+          }
+        }
+        return true;
+      },
+
       //判断是否实名和登陆状态
       isAuthenticationM(){
         if(this.tableDataEnter.releaseType===14){
@@ -122,9 +201,9 @@
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
-            this.releaseWelfare.provincesId=this.realName.provincesId;
-            this.releaseWelfare.cityId=this.realName.cityId;
-            this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
+            this.releaseWelfare.selectedOptions[0]=this.realName.provincesId;
+            this.releaseWelfare.selectedOptions[1]=this.realName.cityId;
+            this.releaseWelfare.selectedOptions[2]=this.realName.districtCountyId;
             this.getrent_List();     //获取列表
           }
         });
@@ -135,6 +214,10 @@
         this.getrent_List()
       },
       getrent_List(){
+        let bl=  this.checkoutNum();
+        if(bl===false){
+          return false;
+        }
         getrentList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
@@ -145,7 +228,11 @@
         });
       },
       getReleaseTitleList(){
-        getRentTitleList(this.releaseWelfare).then((res) => {
+      let bl=  this.checkoutNum();
+      if(bl===false){
+        return false;
+      }
+        getServiceDetailedList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             let list=res.data;
             let releaseTitleList=[];
@@ -175,14 +262,17 @@
       },
       //城市组件
       handleChange (value) {
-        if(value.length>0){
-          this.releaseWelfare.provincesId=value[0];
-          this.releaseWelfare.cityId=value[1];
-          this.releaseWelfare.districtCountyId=value[2];}else{
-          this.releaseWelfare.provincesId=this.realName.provincesId;
-          this.releaseWelfare.cityId=this.realName.cityId;
-          this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
+        console.log(value)
+        if(value.length===0){
+          this.releaseWelfare.selectedOptions[0]=this.realName.provincesId;
+          this.releaseWelfare.selectedOptions[1]=this.realName.cityId;
+          this.releaseWelfare.selectedOptions[2]=this.realName.districtCountyId;
+        }else{
+          this.releaseWelfare.selectedOptions[0]=value[0];
+          this.releaseWelfare.selectedOptions[1]=value[1];
+          this.releaseWelfare.selectedOptions[2]=value[2];
         }
+
       },
     }
   }

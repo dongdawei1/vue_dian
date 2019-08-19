@@ -21,7 +21,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="get_position_list">查询</el-button>
+        <el-button type="primary" @click="get_position_listselect">查询</el-button>
       </el-form-item>
 
     </el-form>
@@ -150,7 +150,6 @@
       <span>公司名称 : {{tableDataNo.companyName }}</span><br>
       <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
       <span>实名城区 : {{tableDataNo.detailed }}</span><br>
-      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
 
       <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
       <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
@@ -211,8 +210,6 @@
           contact:'',//手机号
 
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
         },
         tableData:[], //全部数据
@@ -299,6 +296,10 @@
         this.releaseWelfare.currentPage=currentPage;
         this.get_position_list();
 
+      },
+      get_position_listselect(){
+        this.releaseWelfare.currentPage=1;
+        this.getmrpAll();
       },
       get_position_list(){
         getmrpAll(this.releaseWelfare).then((res) => {

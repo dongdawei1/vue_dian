@@ -16,7 +16,7 @@
         </template>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="get_position_list">查询</el-button>
+        <el-button type="primary" @click="get_position_listselect">查询</el-button>
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM()"
           to="" class="a" >发布出租/转让店面信息</router-link></el-button>
@@ -116,10 +116,9 @@
       <div class="parent">
         <div class="left">
           <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
-          <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+          <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
           <span>联系方式 : {{tableDataNo.contact }}</span><br>
-          <span>实名城区 : {{tableDataNo.detailed }}</span><br>
-          <span>公司名称 : {{tableDataNo.companyName }}</span><br>
+          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
           <span>地址详情 : {{tableDataNo.serviceDetailed }}</span><br>
         </div>
         <div class="right">
@@ -132,8 +131,10 @@
 
         </div>
         <span>备注 : {{tableDataNo.remarks }}</span><br>
-        <span>实名地址 : {{tableDataNo.addressDetailed }}</span><br>
         <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
+        <span>实名信息  ------- </span><br>
+        <span>公司名称: {{realName.companyName }}</span><br>
+        <span>实名地址: {{realName.addressDetailed }}</span><br>
         <span>现场图片 : </span><br>
         <li v-for="(p, index) in this.fileList" :key="index">
           <img :src="p.url" width="100%">
@@ -163,6 +164,8 @@
   import { get_user_info } from '../../../../api/api';
   import { get_myRent_list} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
+  import {   getRealName } from '../../../../api/api';
+
 
   export default {
 
@@ -194,10 +197,12 @@
         dialogVisible: false,  //查看详情弹窗
         formLabelWidth: '120px',
         resdata:'',//获取的用户信息
+        realName:'',//实名信息
       }
     },
     created () {
       this.get_user_info();
+      this.getRealName();
     },
     methods: {
       examineClick(row){
@@ -273,6 +278,10 @@
         this.get_position_list();
 
       },
+      get_position_listselect(){
+        this.releaseWelfare.currentPage=1;
+        this.get_myRent_list();
+      },
       get_position_list(){
         get_myRent_list(this.releaseWelfare).then((res) => {
           if(res.status===0) {
@@ -283,7 +292,16 @@
           }
         });
       },
-
+   //获取实名信息
+      getRealName(){
+        getRealName().then((res) => { //获取实名信息填充
+          if(res.status ===0 ) {
+            this.realName=res.data;
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
 
       //
       get_user_info(){
@@ -302,6 +320,8 @@
           }
         });
       },
+
+
       //判断是否实名和登陆状态
       isAuthenticationM(){
         let role=this.resdata.role;

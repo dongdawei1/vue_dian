@@ -47,7 +47,6 @@
   import MyJobWanted from './myreleases/MyJobWanted'
   import MyMAndRAndP from './myreleases/MyMAndRAndP'
   import MyRent from './myreleases/MyRent'
-
   import { get_user_info } from '../../../api/api';
 
   export default {
@@ -85,8 +84,7 @@
         isDepartmentStore:false,//百货12
 
         activeName: '',//默认打开的导航 ,根据每个不同的商户判断然后确认打开那个默认
-        user:'' //用户
-
+        user:'', //用户
       };
     },
 

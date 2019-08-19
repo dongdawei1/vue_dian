@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" >
-      <p>请认真填写信息</p>
+     请认真填写信息
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
@@ -10,6 +10,8 @@
           </el-radio-group>
         </template>
       </el-form-item>
+
+
 
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
@@ -34,7 +36,14 @@
       <el-form-item label="备注" prop="remarks" >
         <el-input v-model="ruleForm.remarks" placeholder="备注30字以内"></el-input>
       </el-form-item>
-
+      <el-form-item label="所在城区"   prop="selectedOptions">
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="ruleForm.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
+      </el-form-item>
       <el-form-item label="详细地址"  prop="serviceDetailed">
         <el-input v-model="ruleForm.serviceDetailed" placeholder="地址详情100字以内"></el-input>
       </el-form-item>
@@ -60,21 +69,22 @@
         </el-dialog>
       </el-form-item>
 
-      <p>实名信息</p>
-      <el-form-item label="联系人">
-        <el-input v-model="ruleForm.consigneeName" :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
+
+      <el-form-item label="联系人" prop="consigneeName">
+        <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式"  >
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+      <el-form-item label="联系方式"  prop="contact">
+        <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
+     实名信息
       <el-form-item label="公司名称"  >
-        <el-input v-model="ruleForm.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
+        <el-input v-model="realName.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
       </el-form-item>
       <el-form-item label="实名城市" >
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
+        <el-input v-model="realName.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
       <el-form-item label="实名地址" >
-        <el-input v-model="ruleForm.addressDetailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
+        <el-input v-model="realName.addressDetailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
@@ -107,7 +117,7 @@
   import { create_rent} from '../../../api/api';
   import { uploadDown_update } from '../../../api/api';
   import {  checke_isButten } from '../../../api/api';
-
+  import { regionData } from 'element-china-area-data'
 
   export default {
     props: ["tableDataEnter"],
@@ -119,12 +129,9 @@
         setTimeout(() => {
           if (!Number.isInteger(value)) {
             callback(new Error('请输入数字值'));
-          } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
-            } else {
+          }  else {
               callback();
-            }
+
           }
         }, 100);
       };
@@ -139,7 +146,11 @@
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
+        //城市组件相关开始
+        options: regionData,//城市   npm install element-china-area-data -S  城市联动组件 @4.1.2
         ruleForm: {
+          selectedOptions: [], //三级联动城市
+
           userId:'',
           releaseType:'',//发布类型
           releaseTitle:'',//标题
@@ -149,11 +160,10 @@
           serviceDetailed:'',//详细地址
           pictureUrl:[],//图片
           //实名中获取
-          companyName:'',//公司名称
-          contact:'',  //实名联系联系方式 回显置灰 不可修改
-          consigneeName:'', //联系人姓名 回显置灰 不可修改
-          detailed:'',//实名城区
-          addressDetailed:'',//实名地址
+
+          contact:'',  //实名联系联系方式 回显 可修改
+          consigneeName:'', //联系人姓名 回显可修改
+
         },
 
         rules: {
@@ -183,6 +193,17 @@
 
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
+          ],
+          selectedOptions: [
+            { required: true, message: '请选择城市和地区'}
+          ],
+          contact:[
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
+          ],
+          consigneeName:[
+            { required: true, message: '请输入姓名' },
+            { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],}
       }
     },
@@ -191,13 +212,14 @@
       this.checke_isButten();
     },
     methods: {
-
+      //城市组件
+      handleChange (value) {
+      },
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            console.log(this.ruleForm)
             create_rent(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
@@ -225,9 +247,6 @@
             this.realName=res.data;
             this.ruleForm.contact= this.realName.contact;
             this.ruleForm.consigneeName= this.realName.consigneeName;
-            this.ruleForm.companyName= this.realName.companyName;
-            this.ruleForm.addressDetailed= this.realName.addressDetailed;
-            this.ruleForm.detailed= this.realName.detailed;
             this.ruleForm.serviceDetailed=this.realName.addressDetailed;
           }else {
             isRoleMessage(res.msg);

@@ -21,7 +21,7 @@
         <!--@select="handleSelect"-->
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getPositionAll">查询</el-button>
+        <el-button type="primary" @click="getPositionAllselect">查询</el-button>
       </el-form-item>
         <el-form-item  v-if="isCreate">
         <el-button type="primary"><router-link
@@ -39,6 +39,13 @@
         prop="position"
         label="职位类型"
         width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column
+        prop="companyName"
+        label="企业名称"
+        width="200"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
@@ -86,12 +93,7 @@
         width="80">
       </el-table-column>
 
-      <el-table-column
-        prop="addressDetailed"
-        label="实名地址"
-        width="200"
-        :show-overflow-tooltip="true">
-      </el-table-column>
+
       <el-table-column
         prop="workingAddress"
         label="工作地址"
@@ -188,10 +190,7 @@
           districtCountyId:'',
           position:'', //职位类型
           //分页开始
-
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
           //分页结束
           StringPath: '/home/recruitWorkers',
@@ -303,6 +302,10 @@
         this.releaseWelfare.currentPage=currentPage;
         this.getPositionAll()
 
+      },
+      getPositionAllselect(){
+        this.releaseWelfare.currentPage=1;
+        this.getPositionAll();
       },
       getPositionAll(){
         getPositionAll(this.releaseWelfare).then((res) => {

@@ -61,23 +61,21 @@
           <img width="100%"   :src="dialogImageUrl" alt="">
         </el-dialog>
       </el-form-item>
+      <el-form-item label="联系人" prop="consigneeName">
+        <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
+      </el-form-item>
+      <el-form-item label="联系方式"  prop="contact">
+        <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+      </el-form-item>
 
       <p>实名信息</p>
-      <el-form-item label="联系人">
-        <el-input v-model="ruleForm.consigneeName" :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
-      </el-form-item>
-      <el-form-item label="联系方式"  >
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
-      </el-form-item>
       <el-form-item label="公司名称"  >
         <el-input v-model="ruleForm.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
       </el-form-item>
       <el-form-item label="实名城市" >
         <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
-      <el-form-item label="实名地址" >
-        <el-input v-model="ruleForm.addressDetailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
       </el-form-item>
@@ -136,8 +134,8 @@
           contact:'',  //实名联系联系方式 回显置灰 不可修改
           consigneeName:'', //联系人姓名 回显置灰 不可修改
           detailed:'',//实名城区
-          addressDetailed:'',//实名地址
           StringPath:'menuAndRenovationAndPestControl',
+
         },
 
         rules: {
@@ -166,6 +164,14 @@
           ],
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
+          ],
+          contact:[
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
+          ],
+          consigneeName:[
+            { required: true, message: '请输入姓名' },
+            { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],}
       }
     },
@@ -178,6 +184,7 @@
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
+        console.log(this.ruleForm)
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
@@ -208,7 +215,6 @@
             this.ruleForm.contact= this.realName.contact;
             this.ruleForm.consigneeName= this.realName.consigneeName;
             this.ruleForm.companyName= this.realName.companyName;
-            this.ruleForm.addressDetailed= this.realName.addressDetailed;
             this.ruleForm.detailed= this.realName.detailed;
           }else {
             isRoleMessage(res.msg);

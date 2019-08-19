@@ -158,8 +158,10 @@
           <span>性别 : {{tableDataNo.gender }}</span><br>
           <span>年龄 : {{tableDataNo.age }}</span><br>
         </div>
+      <span>公司名称 : {{tableDataNo.companyName }}</span><br>
       <span>地址详情 : {{tableDataNo.workingAddress }}</span><br>
-      <span>详情 : {{tableDataNo.describeOne }}</span><br>
+      <span>职位详情 : {{tableDataNo.describeOne }}</span><br>
+
       </div>
       <span slot="footer" class="dialog-footer">
 
@@ -228,7 +230,6 @@
 
   import { get_position_list } from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
-
   export default {
     data() {
       return {
@@ -249,10 +250,7 @@
         releaseWelfare: { //查询条件
           position:'', //职位类型
           welfareStatus:'',//职位状态
-
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
           StringPath:'/home/pestControl'
         },
@@ -285,11 +283,15 @@
     created () {
       this.loadAll();
       this.get_position_list();
+
     },
 
     methods: {
 
       handleClick(row) {  //点击查看详细
+        if(this.realName===''){
+          this.getRealName();
+        }
         this.tableDataNo=row;
         this.dialogVisible=true;
       },
@@ -333,9 +335,6 @@
             });
           } else { return false; }
         });
-
-
-
       },
       //操作
       submitForm(form,type) {
@@ -381,7 +380,6 @@
       },
   get_position_list(){
     get_position_list(this.releaseWelfare).then((res) => {
-
       if(res.status===0) {
         this.total = res.data.totalno; //总条数
         this.tableData = res.data.datas;

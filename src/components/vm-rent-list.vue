@@ -20,8 +20,8 @@
           <div class="card-desc">
             <div class="releaseTitle"> {{ item.releaseTitle}}</div>
             <div class="jieshao">
-              区域： {{item.serviceDetailed}}<br>
-              起步价格： {{item.startPrice}} (元)<br>
+              区域： {{item.detailed}}<br>
+              面积： {{item.fouseSize}} (平米)<br>
             </div>
             <div class="xiangqing">
               <el-button type="text"><router-link

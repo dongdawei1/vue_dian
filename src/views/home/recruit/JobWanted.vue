@@ -24,7 +24,7 @@
 
 
       <el-form-item>
-        <el-button type="primary" @click="getResumeAll">查询</el-button>
+        <el-button type="primary" @click="getResumeAllselect">查询</el-button>
       </el-form-item>
       <el-form-item  v-if="isCreate">
         <el-button type="primary"><router-link
@@ -170,8 +170,6 @@
           //分页开始
 
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
           //分页结束
           permissionid:30,
@@ -284,6 +282,10 @@
         this.releaseWelfare.currentPage=currentPage;
         this.getResumeAll();
 
+      },
+      getResumeAllselect(){
+        this.releaseWelfare.currentPage=1;
+        this.getResumeAll();
       },
       getResumeAll(){
         getResumeAll(this.releaseWelfare).then((res) => {

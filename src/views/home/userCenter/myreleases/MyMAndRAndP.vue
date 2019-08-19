@@ -27,7 +27,7 @@
         </template>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="get_position_list">查询</el-button>
+        <el-button type="primary" @click="get_position_listselect">查询</el-button>
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM()"
           to="" class="a" >发布服务信息</router-link></el-button>
@@ -140,7 +140,6 @@
           <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
           <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
         </div>
-      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
       <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
       <span>服务图片 : </span><br>
         <li v-for="(p, index) in this.fileList" :key="index">
@@ -292,6 +291,10 @@
         this.releaseWelfare.currentPage=currentPage;
         this.get_position_list();
 
+      },
+      get_position_listselect(){
+        this.releaseWelfare.currentPage=1;
+        this.get_position_list();
       },
       get_position_list(){
         get_usermrp_list(this.releaseWelfare).then((res) => {

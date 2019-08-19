@@ -2,14 +2,14 @@
   <div class="vm-image-list">
     <!--c查询框开始-->
     <el-form :inline="true" :model="realName" class="demo-form-inline">
-      <el-form-item label="用户名">
-        <el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>
+      <el-form-item label="登陆名">
+        <el-input v-model="realName.userName" placeholder="登陆名" clearable></el-input>
       </el-form-item>
       <el-form-item label="手机号">
         <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getTrialResumeAll">查询</el-button>
+        <el-button type="primary" @click="getTrialResumeAllselect">查询</el-button>
       </el-form-item>
     </el-form>
     <!--c查询框结束-->
@@ -26,7 +26,7 @@
       </el-table-column>
       <el-table-column
         prop="userName"
-        label="用户名"
+        label="登陆名"
         width="120">
       </el-table-column>
 
@@ -195,10 +195,7 @@
         realName: { //查询条件
           userName:'',
           contact: '',
-
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
         },
 
@@ -271,7 +268,10 @@
         this.realName.currentPage=currentPage;
         this.getTrialResumeAll();
       },
-
+      getTrialResumeAllselect(){
+        this.realName.currentPage=1;
+       this.getTrialResumeAll();
+      },
       getTrialResumeAll(){
         getTrialResumeAll(this.realName).then((res) => {
           if(res.status===0) {
