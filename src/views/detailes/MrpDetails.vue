@@ -51,11 +51,12 @@
     data() {
       return {
         id:this.$route.params.id,
+        releaseType:this.$route.params.releaseType,
         tableData:{
           permissionid:13
         },
         tableBunner:{
-          permissionid:13,
+          permissionid:'',
           bunnerType:1
         },
         StringPath:'menuAndRenovationAndPestControl',
@@ -67,6 +68,7 @@
     },
 
     created () {
+      this.tableBunner.permissionid=this.releaseType;
       this.getMrpDetails();
 
     },

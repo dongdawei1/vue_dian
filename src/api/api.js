@@ -220,6 +220,16 @@ export const get_userrent_id= params => {
   }).then(res => res.data); };
 //公开概览租房
 export const getrentList= params => { return axios.post(`${base}/api/rent/getrentList`, params).then(res => res.data);};
+//租房详情
+
+export const get_rent_id= params => {
+  return axios({
+    url: `${base}/api/rent/get_rent_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
 
 //获取租房title
 export const getServiceDetailedList= params => { return axios.post(`${base}/api/rent/getServiceDetailedList`, params).then(res => res.data);};

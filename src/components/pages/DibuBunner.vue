@@ -3,10 +3,12 @@
   <div class="dibuBunner">
     <div class="res1"  v-if="res1">
       <div class="dibuBunnerbiaoti">超值活动</div>
-      <div class="dibuBunnerreleaseTitle"> {{ resData1.releaseTitle}}</div>
+      <div class="dibuBunnerreleaseTitle"> {{ resData1.dibuBunnerbiaoti}}</div>
       <div class="dibuBunnerjieshao">
-        服务区域： {{resData1.serviceDetailed}}<br>
-        起步价格： {{resData1.startPrice}} (元)<br>
+         {{resData1.releaseType}}<br>
+        <span v-for="item in resData1.introduceList" >
+          {{item.name}} : {{item.value}}<br>
+        </span>
       </div>
       <div class="dibuBunnerxiangqing">
         <el-button type="text"><router-link
@@ -29,12 +31,14 @@
       </div>
     </div>
 
-    <div class="res1" v-if="res2">
+    <div class="res1"  v-if="res2">
       <div class="dibuBunnerbiaoti">超值活动</div>
-      <div class="dibuBunnerreleaseTitle"> {{ resData2.releaseTitle}}</div>
+      <div class="dibuBunnerreleaseTitle"> {{ resData2.dibuBunnerbiaoti}}</div>
       <div class="dibuBunnerjieshao">
-        服务区域： {{resData2.serviceDetailed}}<br>
-        起步价格： {{resData2.startPrice}} (元)<br>
+        {{resData2.releaseType}}<br>
+        <span v-for="item in resData2.introduceList" >
+          {{item.name}} : {{item.value}}<br>
+        </span>
       </div>
       <div class="dibuBunnerxiangqing">
         <el-button type="text"><router-link
@@ -55,10 +59,10 @@
         res1:false,
         res2:false,
         resData1:{
-          url:''
+          introduceList:[]
         },
         resData2:{
-          url:''
+          introduceList:[]
         },
 
 
@@ -81,18 +85,15 @@
              let list=res.data;
                 if(list.length===1){
                   this.res1=true;
-                  let res1= list[0];
-                  this.resData1=res1.object;
-                  this.resData1.url=res1.url;
+                  this.resData1=list[0];
+                  this.resData1.introduceList=JSON.parse(this.resData1.introduceList);
                 }else {
                   this.res1=true;
-                 let res1= list[0];
-                  this.resData1=res1.object;
-                  this.resData1.url=res1.url;
+                  this.resData1=list[0];
+                  this.resData1.introduceList=JSON.parse(this.resData1.introduceList);
                   this.res2=true;
-                  let res2= list[1];
-                  this.resData2=res2.object;
-                  this.resData2.url=res2.url;
+                  this.resData2=list[1];
+                  this.resData2.introduceList=JSON.parse(this.resData2.introduceList);
 
                 }
             }

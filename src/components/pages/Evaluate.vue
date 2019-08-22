@@ -88,7 +88,6 @@
     },
     methods: {
       zhanshi(){
-        console.log(this.tableData);
         let permissionid=this.tableData.permissionid;
         if(permissionid===13){
             this.shouhou=true;

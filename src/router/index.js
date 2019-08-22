@@ -65,6 +65,8 @@ import GrainAndOilPage from '../views/home/releasePage/GrainAndOilPage'
 import Details from '../views/Details.vue'
 import MrpDetails  from '../views/detailes/MrpDetails'
 
+import RentDetails  from '../views/detailes/RentDetails'
+
 
 //   全局挂载
 Vue.use(VueRouter)
@@ -119,11 +121,16 @@ export default new VueRouter ({
       children:[
         {
           hidden: true , //用户包中
-          path: '/details/mrpDetails/:id',
+          path: '/details/mrpDetails/:id/:releaseType',
           name: 'mrpDetails',
           component:   MrpDetails  //发布灭虫等
         },
-
+        {
+          hidden: true , //用户包中
+          path: '/details/rentDetails/:id/:releaseType',
+          name: 'rentDetails',
+          component:   RentDetails  //发布出租等
+        },
       ],
     },
     {

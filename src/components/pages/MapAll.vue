@@ -3,7 +3,7 @@
     <!-- 筛选区 -->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
-      <el-form-item label="商户实名城区"   >
+      <el-form-item label="所在城区"   >
         <el-cascader
           size="large"
           :options="options"
@@ -69,7 +69,10 @@
         StringPath:'menuAndRenovationAndPestControl',
         resdata:'',
         options: regionData,//城市
-        tableData: [],
+        tableData: {
+          tableDatas:[],
+          releaseType:'',
+        },
         total: 0,
         realName:'',//实名信息
         releaseWelfare: { //查询条件
@@ -88,6 +91,7 @@
     },
 
     created () {
+      this.tableData.releaseType =this.tableDataEnter;
       this.jurisdiction()
     },
     methods: {
@@ -136,7 +140,7 @@
         getmrpList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
-            this.tableData = res.data.datas;
+            this.tableData.tableDatas = res.data.datas;
           }else {
             isRoleMessage(res.msg);
           }

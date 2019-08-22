@@ -3,6 +3,7 @@
 /*}*/
 .a{
   text-decoration: none;
+  color: #4E2727;
   /**设置所有的链接class=a没有下划线 */
 }
 
@@ -13,4 +14,10 @@
 }
 li{
   list-style-type:none;
+}
+.xiangqing{
+  color: #4E2727;
+  font-size: 15px;
+  text-decoration: none;
+  /*text-align:center    居中不好看*/
 }

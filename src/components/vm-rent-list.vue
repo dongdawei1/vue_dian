@@ -12,7 +12,7 @@
     </el-row>
 
     <el-row  :gutter="10"  >  <!-- :gutter="10"列间距  :span="6"占100%的1/6   https://element.eleme.cn/#/zh-CN/component/layout-->
-      <el-col  :span="6"   v-for="item in tableData" :key="item.id">
+      <el-col  :span="6"   v-for="item in tableData.tableDatas" :key="item.id">
         <div  class="grid-content bg-purple">
           <div class="card-img">
             <img :src="item.pictureUrl" alt="">
@@ -20,13 +20,13 @@
           <div class="card-desc">
             <div class="releaseTitle"> {{ item.releaseTitle}}</div>
             <div class="jieshao">
-              区域： {{item.detailed}}<br>
-              面积： {{item.fouseSize}} (平米)<br>
+              所在城区： {{item.detailed}}<br>
+              使用面积： {{item.fouseSize}} (平米)<br>
             </div>
             <div class="xiangqing">
               <el-button type="text"><router-link
                 v-on:click.native=""
-                :to="'/details/mrpDetails/'+ item.id" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
+                :to="'/details/rentDetails/'+ item.id+'/'+releaseType" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
             </div>
             <!--<p>{{ item.brand }}</p>-->
             <!--<p>{{ item.commodityName }}</p>-->
@@ -48,15 +48,14 @@
     props: ["tableData"],
     data: function () {
       return {
+        releaseType:''
       }
     },
     methods: {
-      toDetails(row){
-        this.$router.push('/home/mrpDetails/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
-        // id:this.$route.params.id,
-      },
     },
-
+    created () {
+      this.releaseType=this.tableData.releaseType;
+    },
     mounted() {
     }
   }
@@ -86,11 +85,7 @@
   .jieshao{
     font-size: 14px;
   }
-  .xiangqing{
-    font-size: 15px;
-    text-decoration: none;
-    /*text-align:center    居中不好看*/
-  }
+
   img{
     display: block;
     width: 100%;

@@ -68,7 +68,6 @@
     },
     data() {
       var fouseSizeGreater = (rule, value, callback) => {
-        console.log(value)
         setTimeout(() => {
           if(value!=='' ){
           if (!Number.isInteger(value)) {
@@ -105,7 +104,10 @@
         isCreate:false,
         resdata:'',
         options: regionData,//城市
-        tableData: [],
+        tableData:{
+          tableDatas:[],
+          releaseType:'',
+        },
         total: 0,
         realName:'',//实名信息
         releaseWelfare: { //查询条件
@@ -125,6 +127,7 @@
     },
 
     created () {
+      this.tableData.releaseType=this.tableDataEnter.releaseType;
       this.jurisdiction()
     },
     methods: {
@@ -221,7 +224,7 @@
         getrentList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
-            this.tableData = res.data.datas;
+            this.tableData.tableDatas = res.data.datas;
           }else {
             isRoleMessage(res.msg);
           }
@@ -262,7 +265,6 @@
       },
       //城市组件
       handleChange (value) {
-        console.log(value)
         if(value.length===0){
           this.releaseWelfare.selectedOptions[0]=this.realName.provincesId;
           this.releaseWelfare.selectedOptions[1]=this.realName.cityId;
