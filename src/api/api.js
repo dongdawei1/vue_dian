@@ -265,8 +265,17 @@ export const echo_display= params => {
   }
 
  };
+//获取服务商品名称
+export const get_serviceType = params => {
+  return axios({
+    url: `${base}/api/serviceType/get_serviceType`,
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    params: { releaseType: params.releaseType,
+              serviceType:params.serviceType},
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 
-
+export const create_serviceType= params => { return axios.post(`${base}/api/serviceType/create_serviceType`, params).then(res => res.data);};
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {

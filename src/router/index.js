@@ -37,8 +37,14 @@ import JobWanted from '../views/home/recruit/JobWanted'
 import ReleaseWelfare from '../views/home/recruit/ReleaseWelfare'
 
 import Renovation from '../views/home/Renovation'
-import Repair from '../views/home/Repair'
 import PestControl from '../views/home/PestControl'
+
+import Repair from '../views/home/equipment/Repair'
+import NewEquipment from '../views/home/equipment/NewEquipment'
+import OldEquipment from '../views/home/equipment/OldEquipment'
+import CreateEquipment from '../views/home/equipment/crud/CreateEquipment'
+
+
 
 
 import MyRelease from '../views/home/userCenter/MyRelease'
@@ -176,7 +182,7 @@ export default new VueRouter ({
             },
             {
               path: '/home/kitchenUtensils',
-              component: KitchenUtensils  //厨具电器
+              component: KitchenUtensils  //普通餐具
             },
             {
               path: '/home/aquaticProduct',
@@ -234,10 +240,27 @@ export default new VueRouter ({
           path: '/home/renovation',  //装修
           component: Renovation
         },
+
         {
-          path: '/home/repair',  //设备维修
+          path: '/home/repair',  //设备电气维修
           component: Repair
         },
+        {
+          path: '/home/newEquipment',  //新设备电器
+          component: NewEquipment
+        },
+        {
+          path: '/home/oldEquipment',  //旧设备电气
+          component: OldEquipment
+        },
+        {
+          path: '/home/createEquipment',  //新建备电气维修
+          component: CreateEquipment
+        },
+
+
+
+
         {
           path: '/home/pestControl',  //灭虫
           component: PestControl
