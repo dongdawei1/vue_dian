@@ -281,6 +281,8 @@ export const get_serviceType = params => {
 export const create_serviceType= params => { return axios.post(`${base}/api/serviceType/create_serviceType`, params).then(res => res.data);};
 //创建电器/维修
 export const create_equipment= params => { return axios.post(`${base}/api/equipment/create_equipment`, params).then(res => res.data); };
+//用户获取自己创建电器/维修
+export const get_myEquipment_list= params => { return axios.post(`${base}/api/equipment/get_myEquipment_list`, params).then(res =>  isButtonAndListusermrp(res.data,5) ); };
 
 function isButtonAndListusermrp(res,type) {
 
@@ -442,6 +444,12 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='店面/窗口出租';
         }else if(releaseType===15){
           list[a].releaseType='摊位出租/转让';
+        }else if(releaseType===18){
+          list[a].releaseType='设备维修';
+        }else if(releaseType===33){
+          list[a].releaseType='电器设备出售';
+        }else if(releaseType===34){
+          list[a].releaseType='二手电器设备';
         }else{
           list[a].releaseType='';
         }

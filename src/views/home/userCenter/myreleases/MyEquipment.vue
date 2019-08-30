@@ -1,6 +1,6 @@
 <template>
   <div class="vm-image-list">
-    <!--我的发布 已发布过的装修等  c查询框开始-->
+    <!--我的发布 已发布的电器。查询开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
       <el-form-item label="服务类型"  >
         <template>
@@ -30,7 +30,7 @@
         <el-button type="primary" @click="get_position_listselect">查询</el-button>
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM()"
-          to="" class="a" >发布服务信息</router-link></el-button>
+          to="" class="a" >发布服务/商品</router-link></el-button>
       </el-form-item>
 
     </el-form>
@@ -45,6 +45,12 @@
         fixed
         prop="releaseType"
         label="服务类型"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="serviceType"
+        label="具体项目"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -65,12 +71,7 @@
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column
-        prop="startPrice"
-        label="起步价格"
-        width="120"
-        :show-overflow-tooltip="true">
-      </el-table-column>
+
       <el-table-column
         prop="serviceDetailed"
         label="服务区域"
@@ -107,6 +108,7 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
           <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
+          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
           <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
           <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
           <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
@@ -124,24 +126,25 @@
       :before-close="handleClose">
       <div class="parent">
         <div class="left">
-          <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+          <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
           <span>联系方式 : {{tableDataNo.contact }}</span><br>
           <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
-          <span>实名城区 : {{tableDataNo.detailed }}</span><br>
+          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
-          <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
-          <span>公司名称 : {{tableDataNo.companyName }}</span><br>
+          <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
+          <!--在这里加服务项目-->
+          <span>公司名称: {{realName.companyName }}</span><br>
+          <span>实名地址: {{realName.addressDetailed }}</span><br>
         </div>
         <div class="right">
-          <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
           <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
           <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
           <span>备注 : {{tableDataNo.remarks }}</span><br>
-          <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
+          <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
           <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
         </div>
-      <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
-      <span>服务图片 : </span><br>
+        <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
+        <span>服务图片 : </span><br>
         <li v-for="(p, index) in this.fileList" :key="index">
           <img :src="p.url" width="100%">
         </li>
@@ -168,27 +171,29 @@
 <script>
   import {  operation_usermrp } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
-  import { get_usermrp_list} from '../../../../api/api';
+  import { get_myEquipment_list} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
-
+  import {   getRealName } from '../../../../api/api';
   export default {
 
     data() {
       return {
         fullscreenLoading:false,
-        pathString:'/home/createMAndRAndP',
+        realName:'',//实名信息
+        pathString:'/home/createEquipment',
         //分页开始
         total: 0,
         //分页结束
         releaseTypes: [
-          { "value": "菜谱/户外广告", "label": "13" },
-          { "value": "装修", "label": "17" },
-          { "value": "灭虫", "label": "19" },
+          { "value": "电器/设备出售", "label": "33" },
+          { "value": "二手电器/设备出售", "label": "34" },
+          { "value": "维修电器/设备", "label": "18" },
         ],
         welfareStatuss:[
           { "value": "发布中", "label": "1" },
           { "value": "隐藏中", "label": "2" },
           { "value": "审核中", "label": "4" },
+          { "value": "非有效期", "label": "5" },
         ],//查询条件职位状态
         releaseWelfare: { //查询条件
           releaseType:'', //服务类型
@@ -219,11 +224,12 @@
     },
     created () {
       this.get_position_list();
+      this.getRealName();
     },
     methods: {
       examineClick(row){
         this.$router.push('/home/editMAndRAndP/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
-       // id:this.$route.params.id,
+        // id:this.$route.params.id,
       },
 
 
@@ -294,7 +300,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        get_usermrp_list(this.releaseWelfare).then((res) => {
+        get_myEquipment_list(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -316,6 +322,16 @@
               });
               this.$router.push({ path: '/home/myAccount' });
             }}else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
+      //获取实名信息
+      getRealName(){
+        getRealName().then((res) => { //获取实名信息填充
+          if(res.status ===0 ) {
+            this.realName=res.data;
+          }else {
             isRoleMessage(res.msg);
           }
         });

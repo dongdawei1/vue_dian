@@ -4,8 +4,7 @@
     </el-tab-pane>
 
 
-    <el-tab-pane label="厨具" name="isPurchase"  v-if="isKitchenUtensils">
-    </el-tab-pane>
+
 
     <el-tab-pane label="维修服务" name="isPurchase"  v-if="isRepair">
     </el-tab-pane>
@@ -23,6 +22,9 @@
     <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
     </el-tab-pane>
 
+    <el-tab-pane label="电器/维修/二手物品" name="myEquipment"  v-if="isMyEquipment">
+      <MyEquipment></MyEquipment>
+    </el-tab-pane>
     <el-tab-pane label="摊位/店面信息" name="rent"  v-if="isRent">
       <MyRent></MyRent>
     </el-tab-pane>
@@ -47,6 +49,9 @@
   import MyJobWanted from './myreleases/MyJobWanted'
   import MyMAndRAndP from './myreleases/MyMAndRAndP'
   import MyRent from './myreleases/MyRent'
+  import MyEquipment from './myreleases/MyEquipment'
+
+
   import { get_user_info } from '../../../api/api';
 
   export default {
@@ -54,7 +59,8 @@
       CreatePosition,
       MyJobWanted,
       MyMAndRAndP,
-      MyRent
+      MyRent,
+      MyEquipment
     },
 
     data() {
@@ -64,7 +70,9 @@
 
         isPurchase:false,//采购信息 2
         // 厨具/电器/设备维修3
-        isKitchenUtensils:false,//发布厨具 3
+        isMyEquipment:false,
+
+
         isRepair:false,//发布维修信息 3
         //蔬菜/调料/水产禽蛋4
         isCommodity:false,//发布商品 4,5
@@ -112,6 +120,7 @@
              this.isCreatePosition=true;
              this.isMenuAndRenovationAndPestControl=true;
              this.isRent=true; //窗口123456
+             this.isMyEquipment=true;//发布电器二手
             this.activeName='createPosition';
            }
            else if(role===2 ){
@@ -122,8 +131,7 @@
             }else if(role===3){
              this.isRent=true; //窗口123456
               this.isWindowRental=true;
-              this.isKitchenUtensils=true;//发布厨具 3
-              this.isRepair=true;//发布维修信息 3
+              this.isMyEquipment=true;//发布电器二手
             }else if(role===4){
               this.isCommodity=true;
              this.isRent=true; //窗口123456
