@@ -173,6 +173,8 @@
 
   import {   get_serviceType } from '../../../../api/api';
   import {   create_serviceType } from '../../../../api/api';
+  import {   create_equipment } from '../../../../api/api';
+
 
   export default {
     data() {
@@ -288,17 +290,35 @@
        // this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            // create_rent(this.ruleForm).then(res => {
-            //   this.fullscreenLoading=false;
-            //   if (res.status === 0) {
-            //     //成功弹窗
-            //     this.fileList=[];
-            //     this.ruleForm.pictureUrl=[];
-            //     this.centerDialogVisible=true;
-            //   } else {
-            //     isRoleMessage(res.msg);
-            //   }
-            // });
+            let serviceAndpriceNo={
+              project: this.ruleForm.project,
+              price: this.ruleForm.price,
+            };
+            this.ruleForm.serviceAndprice=this.ruleForm.serviceAndprice.concat(serviceAndpriceNo);
+            let length=this.ruleForm.serviceAndprice.length;
+            if(length>1){
+              for(let a=0;a<length;a++){
+                let serviceAndpriceNoa=this.ruleForm.serviceAndprice[a];
+                if(serviceAndpriceNoa.project==='' || serviceAndpriceNoa.price==='' ){
+                  this. deleteItem (serviceAndpriceNo, length-1)
+                  this.$message.error("新增加:项目/规格或者价格不能有空值")
+                  return false;
+                }
+              }
+            }
+
+            create_equipment(this.ruleForm).then(res => {
+              this.fullscreenLoading=false;
+              if (res.status === 0) {
+                //成功弹窗
+                this.fileList=[];
+                this.ruleForm.pictureUrl=[];
+                this.ruleForm.serviceAndprice=[];
+                this.centerDialogVisible=true;
+              } else {
+                isRoleMessage(res.msg);
+              }
+            });
           } else {
             this.fullscreenLoading=false;
             return false;

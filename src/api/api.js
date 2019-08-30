@@ -120,6 +120,9 @@ export const getTrialResumeAll = params => { return axios.post(`${base}/api/toEx
 export const getmrpAll= params => { return axios.post(`${base}/api/toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
 //待审核出租房
 export const adminMent= params => { return axios.post(`${base}/api/toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
+//待审核电器二手
+export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
+
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
 //实名审核
@@ -276,6 +279,9 @@ export const get_serviceType = params => {
   }).then(res => res.data); };
 
 export const create_serviceType= params => { return axios.post(`${base}/api/serviceType/create_serviceType`, params).then(res => res.data);};
+//创建电器/维修
+export const create_equipment= params => { return axios.post(`${base}/api/equipment/create_equipment`, params).then(res => res.data); };
+
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
@@ -458,6 +464,12 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='店面/窗口出租';
         }else if(releaseType===15){
           list[a].releaseType='摊位出租/转让';
+        }else if(releaseType===18){
+          list[a].releaseType='设备维修';
+        }else if(releaseType===33){
+          list[a].releaseType='电器设备出售';
+        }else if(releaseType===34){
+          list[a].releaseType='二手电器设备';
         }else{
           list[a].releaseType='';
         }

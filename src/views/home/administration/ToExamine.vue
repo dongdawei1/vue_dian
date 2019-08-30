@@ -18,6 +18,10 @@
     <el-tab-pane label="租房审批" name="fourth">
       <AdminMent></AdminMent>
     </el-tab-pane>
+    <el-tab-pane label="电器/维修" name="equipment">
+      <AdminEquipment></AdminEquipment>
+    </el-tab-pane>
+
   </el-tabs>
 </template>
 
@@ -27,6 +31,7 @@
   import Resume from './Resume'
   import Mrp from './Mrp'
   import AdminMent from './AdminMent'
+  import AdminEquipment from './AdminEquipment'
 
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
@@ -37,7 +42,8 @@
       Recruit,
       Resume,
       Mrp,
-      AdminMent
+      AdminMent,
+      AdminEquipment
     },
 
     data() {

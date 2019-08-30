@@ -6,7 +6,11 @@
   color: #4E2727;
   /**设置所有的链接class=a没有下划线 */
 }
-
+.shenpibeizhu{
+  /*审批中备注红色字体*/
+  font-size: 15px;
+  color: #FC3729;
+}
 .titleAll{
   font-size: 20px;
   padding: 15px 10px 1px 10px;
