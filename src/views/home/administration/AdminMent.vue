@@ -186,7 +186,9 @@
           pageSize: 20,//每页显示的数量
         },
         tableData:[], //全部数据
-        tableDataNo:'', //某一个审批
+        tableDataNo:{
+          num:'',
+        }, //某一个审批
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //审批弹窗
         form: {   //审核表单
@@ -215,7 +217,7 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.fileList  instanceof Array)){ //第二次点击查看是 不操作
+        if(  !(this.tableDataNo.num  instanceof Array)){ //第二次点击查看是 不操作
           let list=[];
           for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
             let picture=this.tableDataNo.pictureUrl[a];
@@ -224,6 +226,7 @@
             list= list.concat(filepicture);
           }
     this.fileList=list;  //缺省值为 ‘’非[]
+          this.tableDataNo.num=[];
   }
   this.dialogVisible=true;
   },

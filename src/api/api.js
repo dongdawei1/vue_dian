@@ -283,6 +283,17 @@ export const create_serviceType= params => { return axios.post(`${base}/api/serv
 export const create_equipment= params => { return axios.post(`${base}/api/equipment/create_equipment`, params).then(res => res.data); };
 //用户获取自己创建电器/维修
 export const get_myEquipment_list= params => { return axios.post(`${base}/api/equipment/get_myEquipment_list`, params).then(res =>  isButtonAndListusermrp(res.data,5) ); };
+//电器操作列
+export const operation_userequipment= params => { return axios.post(`${base}/api/equipment/operation_userequipment`, params).then(res => res.data); };
+//用户根据id获取
+export const get_userequipment_id= params => {
+  return axios({
+    url: `${base}/api/equipment/get_userequipment_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
 
 function isButtonAndListusermrp(res,type) {
 

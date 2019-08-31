@@ -133,6 +133,25 @@
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
           <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
           <!--在这里加服务项目-->
+          <div >
+            <el-table
+              :data="tableDataNo.serviceAndprice"
+              style="width: 80%">
+              <el-table-column label="具体服务/商品和价格" >
+                <el-table-column
+                  prop="project"
+                  label="具体维修项目/设备型号"
+                  width="224">
+                </el-table-column>
+                <el-table-column
+                  prop="price"
+                  label="具体价格(元)"
+                  width="120">
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+
+          </div>
           <span>公司名称: {{realName.companyName }}</span><br>
           <span>实名地址: {{realName.addressDetailed }}</span><br>
         </div>
@@ -169,7 +188,7 @@
   </div>
 </template>
 <script>
-  import {  operation_usermrp } from '../../../../api/api';
+  import {  operation_userequipment } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
   import { get_myEquipment_list} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
@@ -203,7 +222,8 @@
         },
         tableData:[], //全部数据
         tableDataNo:{
-          pictureUrl:''
+          pictureUrl:'',
+          serviceAndprice:'',
         }, //某一个数据
         fileList:'',
         dialogVisible: false,  //查看详情弹窗
@@ -228,14 +248,14 @@
     },
     methods: {
       examineClick(row){
-        this.$router.push('/home/editMAndRAndP/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
+        this.$router.push('/home/editEquipment/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },
 
 
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.fileList  instanceof Array)){ //第二次点击查看是 不操作
+        if(  !(this.tableDataNo.serviceAndprice instanceof Array)){ //第二次点击查看是 不操作
           let list=[];
           for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
             let picture=this.tableDataNo.pictureUrl[a];
@@ -244,6 +264,8 @@
             list= list.concat(filepicture);
           }
           this.fileList=list;  //缺省值为 ‘’非[]
+         this.tableDataNo.serviceAndprice=JSON.parse(this.tableDataNo.serviceAndprice);
+
         }
         this.dialogVisible=true;
       },
@@ -259,9 +281,8 @@
         data.type=type;
         data.userId= form.userId;
         data.id=form.id;
-        data.StringPath=this.releaseWelfare.StringPath;
-        if(type===1 ||  type===3|| type===4 || type===5){
-          operation_usermrp(data).then(data => {
+        if(type===1 || type===2 ||   type===3|| type===4 || type===5){
+          operation_userequipment(data).then(data => {
             this.fullscreenLoading=false;
             let msg=data.msg;
             if (data && data.status === 0) {
@@ -304,6 +325,7 @@
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
+            console.log(this.tableData)
           }else{
             isRoleMessage(res.msg);
           }
@@ -358,4 +380,5 @@
     width: 50%;
     display: table-cell;
   }
+
 </style>

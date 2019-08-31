@@ -191,7 +191,8 @@
         },
         tableData:[], //全部数据
         tableDataNo:{
-          pictureUrl:''
+          pictureUrl:'',
+          num:'',
         }, //某一个数据
         fileList:'',
         dialogVisible: false,  //查看详情弹窗
@@ -213,7 +214,7 @@
 
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.fileList  instanceof Array)){ //第二次点击查看是 不操作
+        if(  !(this.tableDataNo.num  instanceof Array)){ //第二次点击查看是 不操作
           let list=[];
           for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
             let picture=this.tableDataNo.pictureUrl[a];
@@ -222,6 +223,7 @@
             list= list.concat(filepicture);
           }
           this.fileList=list;  //缺省值为 ‘’非[]
+          this.tableDataNo.num=[];
         }
         this.dialogVisible=true;
       },

@@ -43,7 +43,7 @@ import Repair from '../views/home/equipment/Repair'
 import NewEquipment from '../views/home/equipment/NewEquipment'
 import OldEquipment from '../views/home/equipment/OldEquipment'
 import CreateEquipment from '../views/home/equipment/crud/CreateEquipment'
-
+import EditEquipment from '../views/home/equipment/crud/EditEquipment'
 
 
 
@@ -257,7 +257,11 @@ export default new VueRouter ({
           path: '/home/createEquipment',  //新建备电气维修
           component: CreateEquipment
         },
-
+        {
+          path: '/home/editEquipment/:id',  //编辑备电气维修
+          name:'editEquipment',
+          component: EditEquipment
+        },
 
 
 

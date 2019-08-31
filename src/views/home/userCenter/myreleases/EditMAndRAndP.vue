@@ -101,8 +101,7 @@
         fileList:[],
         id:this.$route.params.id,
         fullscreenLoading:false,
-        resdata:'',//获取的用户信息
-        realName:'',//用户实名信息
+
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,

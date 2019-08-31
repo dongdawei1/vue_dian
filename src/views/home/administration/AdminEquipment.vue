@@ -260,7 +260,7 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.fileList  instanceof Array)){ //第二次点击查看是 不操作
+        if(  !(this.tableDataNo.serviceAndprice  instanceof Array)){ //第二次点击查看是 不操作
           let list=[];
           for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
             let picture=this.tableDataNo.pictureUrl[a];
