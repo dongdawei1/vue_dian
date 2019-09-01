@@ -1,7 +1,18 @@
 <template>
-  <p class="page-container">设备二手</p>
+  <div >
+    <EquipmentAll :tableDataEnter="34" class="vm-margin"></EquipmentAll>
+  </div>
 </template>
 
-<style >
+<script>
+  import EquipmentAll from '../../../components/pages/EquipmentAll';
+  export default {
+    components: {
+      EquipmentAll
+    }
+  }
+</script>
 
+
+<style >
 </style>

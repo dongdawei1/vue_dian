@@ -136,8 +136,8 @@
         <span>公司名称: {{realName.companyName }}</span><br>
         <span>实名地址: {{realName.addressDetailed }}</span><br>
         <span>现场图片 : </span><br>
-        <li v-for="(p, index) in this.fileList" :key="index">
-          <img :src="p.url" width="100%">
+        <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
+          <img :src="p.pictureUrl" width="100%">
         </li>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -192,9 +192,7 @@
         tableData:[], //全部数据
         tableDataNo:{
           pictureUrl:'',
-          num:'',
         }, //某一个数据
-        fileList:'',
         dialogVisible: false,  //查看详情弹窗
         formLabelWidth: '120px',
         resdata:'',//获取的用户信息
@@ -214,17 +212,6 @@
 
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.tableDataNo.num  instanceof Array)){ //第二次点击查看是 不操作
-          let list=[];
-          for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
-            let picture=this.tableDataNo.pictureUrl[a];
-            //图片回显
-            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
-            list= list.concat(filepicture);
-          }
-          this.fileList=list;  //缺省值为 ‘’非[]
-          this.tableDataNo.num=[];
-        }
         this.dialogVisible=true;
       },
 

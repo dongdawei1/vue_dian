@@ -111,7 +111,7 @@ export const getRealNameById = params => {
   }).then(res => res.data); };
 
 //待审核实名
-export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
 //待审批招聘
 export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核简历
@@ -121,7 +121,7 @@ export const getmrpAll= params => { return axios.post(`${base}/api/toExamine/get
 //待审核出租房
 export const adminMent= params => { return axios.post(`${base}/api/toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
 //待审核电器二手
-export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
+export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
@@ -282,7 +282,7 @@ export const create_serviceType= params => { return axios.post(`${base}/api/serv
 //创建电器/维修
 export const create_equipment= params => { return axios.post(`${base}/api/equipment/create_equipment`, params).then(res => res.data); };
 //用户获取自己创建电器/维修
-export const get_myEquipment_list= params => { return axios.post(`${base}/api/equipment/get_myEquipment_list`, params).then(res =>  isButtonAndListusermrp(res.data,5) ); };
+export const get_myEquipment_list= params => { return axios.post(`${base}/api/equipment/get_myEquipment_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
 //电器操作列
 export const operation_userequipment= params => { return axios.post(`${base}/api/equipment/operation_userequipment`, params).then(res => res.data); };
 //用户根据id获取
@@ -293,7 +293,18 @@ export const get_userequipment_id= params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+//公开根据id获取
+export const getEquipmentDetails= params => {
+  return axios({
+    url: `${base}/api/equipment/getEquipmentDetails`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 
+
+export const getEquipmentReleaseTitleList= params => { return axios.post(`${base}/api/equipment/getEquipmentReleaseTitleList`, params).then(res => res.data); };
+export const getEquipmentPublicList= params => { return axios.post(`${base}/api/equipment/getEquipmentPublicList`, params).then(res => res.data); };
 
 function isButtonAndListusermrp(res,type) {
 
@@ -368,9 +379,13 @@ function isButtonAndListusermrp(res,type) {
       }
     }
     //管理员获取  实名 招聘  简历
-    else if(type===3){
+
+    else if(type===3 || type===9){
       for (let a = 0; a < list.length; a++) {
         let authentiCationStatus = list[a].authentiCationStatus;
+        if(type===9){
+        list[a].licenseUrl=JSON.parse(list[a].licenseUrl);
+        }
         if(authentiCationStatus===1){
           list[a].authentiCationStatus='审核中'
           list[a].authentiCationFailure = '';  //审核失败原因
@@ -419,9 +434,13 @@ function isButtonAndListusermrp(res,type) {
       }
     }
     //用户获取自己发布的租房
-    else if(type===5){
+    else if(type===5 || type===7){
       for (let a = 0; a < list.length; a++) {
         list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
+        if(type===7){
+         list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
+        }
+
         let welfareStatus = list[a].welfareStatus;
         if (welfareStatus === 1) {
           list[a].welfareStatus = '发布中';
@@ -467,9 +486,11 @@ function isButtonAndListusermrp(res,type) {
       }
     }
     //管理员租房
-    else if(type===6){
+    else if(type===6 || type===8  ){
       for (let a = 0; a < list.length; a++) {
-
+        if(type===8){
+          list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
+        }
         list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
         let authentiCationStatus = list[a].authentiCationStatus;
         if(authentiCationStatus===1){

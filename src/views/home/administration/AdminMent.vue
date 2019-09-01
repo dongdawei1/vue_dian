@@ -141,8 +141,8 @@
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
       <span>图片 : </span><br>
-      <li v-for="(p, index) in this.fileList" :key="index">
-        <img :src="p.url" width="100%">
+      <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
+        <img :src="p.pictureUrl" width="100%">
       </li>
 
       <span slot="footer" class="dialog-footer">
@@ -187,7 +187,7 @@
         },
         tableData:[], //全部数据
         tableDataNo:{
-          num:'',
+          pictureUrl:'',
         }, //某一个审批
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //审批弹窗
@@ -197,7 +197,6 @@
           tabuleType:14, //14,15房屋出租
         },
         formLabelWidth: '120px',
-        fileList:'',
         rules: {
           authentiCationStatus: [
             { required: true, message: '请选择是否通过', trigger: 'change' }
@@ -217,18 +216,7 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.tableDataNo.num  instanceof Array)){ //第二次点击查看是 不操作
-          let list=[];
-          for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
-            let picture=this.tableDataNo.pictureUrl[a];
-            //图片回显
-            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
-            list= list.concat(filepicture);
-          }
-    this.fileList=list;  //缺省值为 ‘’非[]
-          this.tableDataNo.num=[];
-  }
-  this.dialogVisible=true;
+        this.dialogVisible=true;
   },
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;

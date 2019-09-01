@@ -118,9 +118,9 @@
       <span>邮箱 : {{tableDataNo.email }}</span><br>
       <span>申请时间 : {{tableDataNo.createTime }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
-      <span>图片 : {{tableDataNo.licenseUrl }}</span><br>
-      <li v-for="(p, index) in this.fileList" :key="index">
-        <img :src="p.url" width="100%">
+      <span>图片 :</span><br>
+      <li v-for="(p, index) in this.tableDataNo.licenseUrl" :key="index">
+        <img :src="p.pictureUrl" width="100%">
       </li>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
@@ -177,8 +177,6 @@
           userName:'',
           contact: '',
           currentPage: 1,
-          infoList: [],
-          movieInfoList: [],
           pageSize: 20,//每页显示的数量
         },
         dataInline: {
@@ -213,15 +211,6 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.tableDataNo.licenseUrl  instanceof Array)){ //不是第一次
-        this.tableDataNo.licenseUrl=JSON.parse(this.tableDataNo.licenseUrl);
-          for(let a=0;a<this.tableDataNo.licenseUrl.length;a++){
-            let picture=this.tableDataNo.licenseUrl[a];
-            //图片回显
-            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
-            this.fileList= this.fileList.concat(filepicture);
-          }
-        }
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情

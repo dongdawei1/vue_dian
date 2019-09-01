@@ -178,8 +178,8 @@
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
       <span>图片 : </span><br>
-      <li v-for="(p, index) in this.fileList" :key="index">
-        <img :src="p.url" width="100%">
+      <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
+        <img :src="p.pictureUrl" width="100%">
       </li>
 
       <span slot="footer" class="dialog-footer">
@@ -260,17 +260,6 @@
     methods: {
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
-        if(  !(this.tableDataNo.serviceAndprice  instanceof Array)){ //第二次点击查看是 不操作
-          let list=[];
-          for(let a=0;a<this.tableDataNo.pictureUrl.length;a++){
-            let picture=this.tableDataNo.pictureUrl[a];
-            //图片回显
-            let filepicture={"name":picture.userName ,"url":picture.pictureUrl};
-            list= list.concat(filepicture);
-          }
-          this.fileList=list;  //缺省值为 ‘’非[]
-          this.tableDataNo.serviceAndprice=JSON.parse(this.tableDataNo.serviceAndprice);
-        }
         this.dialogVisible=true;
       },
       handleClose(done) { //关闭查看详情

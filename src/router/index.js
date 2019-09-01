@@ -72,7 +72,7 @@ import Details from '../views/Details.vue'
 import MrpDetails  from '../views/detailes/MrpDetails'
 
 import RentDetails  from '../views/detailes/RentDetails'
-
+import EquipmentDetails  from '../views/detailes/EquipmentDetails'
 
 //   全局挂载
 Vue.use(VueRouter)
@@ -137,6 +137,13 @@ export default new VueRouter ({
           name: 'rentDetails',
           component:   RentDetails  //发布出租等
         },
+        {
+          hidden: true , //用户包中
+          path: '/details/equipmentDetails/:id/:releaseType',
+          name: 'equipmentDetails',
+          component:   EquipmentDetails  //发布出租等
+        },
+
       ],
     },
     {
