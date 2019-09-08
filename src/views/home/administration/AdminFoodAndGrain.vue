@@ -8,6 +8,8 @@
           <el-option label="粮油" value="5"></el-option>
           <el-option label="副食/调料" value="6"></el-option>
           <el-option label="水产/禽蛋" value="29" ></el-option>
+          <el-option label="清洁用品" value="9"></el-option>
+          <el-option label="桌椅餐具" value="11" ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="手机号">

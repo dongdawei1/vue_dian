@@ -25,8 +25,8 @@
     <el-radio-group v-model="ruleForm.role">
       <el-radio :label="2">餐饮/酒店等企业</el-radio>
       <el-radio :label="3">厨具/电器/设备维修</el-radio>
-      <el-radio :label="4">蔬菜/调料/粮油/水产禽蛋</el-radio>
-      <el-radio :label="5">酒水/消毒餐具/清洁用品/桌椅餐具</el-radio>
+      <el-radio :label="4">蔬菜/调料/粮油/水产禽蛋/清洁用品/桌椅餐具</el-radio>
+      <el-radio :label="5">酒水/消毒餐具</el-radio>
       <el-radio :label="6">商铺/摊位出租</el-radio>
       <el-radio :label="7">装修/菜谱/广告牌/杀虫灭蟑</el-radio>
       <el-radio :label="8">无店面自由直供</el-radio>

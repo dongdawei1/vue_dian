@@ -510,6 +510,10 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='副食/调料';
         }else if(releaseType===29){
           list[a].releaseType='水产/禽蛋';
+        }else if(releaseType===9){
+          list[a].releaseType='清洁用品';
+        } else if(releaseType===11){
+          list[a].releaseType='桌椅餐具';
         }
         else{
           list[a].releaseType='';
@@ -549,7 +553,12 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='副食/调料';
         }else if(releaseType===29){
           list[a].releaseType='水产/禽蛋';
-        }else{
+        }else if(releaseType===9){
+          list[a].releaseType='清洁用品';
+        } else if(releaseType===11){
+          list[a].releaseType='桌椅餐具';
+        }
+        else{
           list[a].releaseType='';
         }
       }

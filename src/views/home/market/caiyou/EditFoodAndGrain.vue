@@ -10,6 +10,8 @@
             <el-radio :label="5" >粮油出售</el-radio>
             <el-radio :label="6" >调料/副食出售</el-radio>
             <el-radio :label="29" >水产/禽蛋出售</el-radio>
+            <el-radio :label="9" >清洁用品</el-radio>
+            <el-radio :label="11" >桌椅餐具</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>

@@ -1,7 +1,18 @@
 <template>
-  <p class="page-container">厨具电器</p>
+  <div >
+    <FoodAndGrainAll :tableDataEnter="11" class="vm-margin"></FoodAndGrainAll>
+  </div>
 </template>
 
-<style >
+<script>
+  import FoodAndGrainAll from '../../../components/pages/FoodAndGrainAll';
+  export default {
+    components: {
+      FoodAndGrainAll
+    }
+  }
+</script>
 
+
+<style >
 </style>

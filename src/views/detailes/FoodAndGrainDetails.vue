@@ -106,6 +106,11 @@
               this.result.releaseType='副食/调料';
             }else if(this.result.releaseType===29){
               this.result.releaseType='水产/禽蛋';
+            }else if(this.result.releaseType===9){
+              this.result.releaseType='清洁用品';
+            }
+            else if(this.result.releaseType===11){
+              this.result.releaseType='桌椅餐具';
             }
             let pictureUrl=JSON.parse(this.result.pictureUrl);
             this.result.serviceAndprice=JSON.parse(this.result.serviceAndprice);

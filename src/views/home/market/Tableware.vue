@@ -1,5 +1,5 @@
 <template>
-  <p class="page-container">餐具</p>
+  <p class="page-container">消毒餐具</p>
 </template>
 
 <style >
