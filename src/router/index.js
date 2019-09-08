@@ -24,6 +24,9 @@ import DepartmentStore from '../views/home/market/DepartmentStore'
 import KitchenUtensils from '../views/home/market/KitchenUtensils'
 import AquaticProduct from '../views/home/market/AquaticProduct'
 
+import CreateFoodAndGrain from '../views/home/market/caiyou/CreateFoodAndGrain'
+import EditFoodAndGrain from '../views/home/market/caiyou/EditFoodAndGrain'
+
 import Menu from '../views/home/Menu'
 import Lease from '../views/home/Lease'
 import RentalBooth from '../views/home/RentalBooth'
@@ -66,13 +69,12 @@ import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 
 
 
-import GrainAndOilPage from '../views/home/releasePage/GrainAndOilPage'
-
 import Details from '../views/Details.vue'
 import MrpDetails  from '../views/detailes/MrpDetails'
 
 import RentDetails  from '../views/detailes/RentDetails'
 import EquipmentDetails  from '../views/detailes/EquipmentDetails'
+import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
 
 //   全局挂载
 Vue.use(VueRouter)
@@ -143,6 +145,12 @@ export default new VueRouter ({
           name: 'equipmentDetails',
           component:   EquipmentDetails  //发布出租等
         },
+        {
+          hidden: true , //用户包中
+          path: '/details/foodAndGrainDetails/:id/:releaseType',
+          name: 'foodAndGrainDetails',
+          component:   FoodAndGrainDetails  //发菜等
+        },
 
       ],
     },
@@ -195,6 +203,17 @@ export default new VueRouter ({
               path: '/home/aquaticProduct',
               component: AquaticProduct  //水产禽蛋
            },
+        {
+          path: '/home/createFoodAndGrain',
+          component: CreateFoodAndGrain  //创建角色4下的菜单
+        },
+        {
+          path: '/home/editFoodAndGrain/:id',  //编辑备电气维修
+          name:'editFoodAndGrain',
+          component: EditFoodAndGrain
+        },
+
+
 
         /*市场区结束*/
 
@@ -320,11 +339,7 @@ export default new VueRouter ({
         },
 
 //  跳转的页面
-        {
-          hidden: true , //隐藏的 根据状态判断是否隐藏该入口
-          path: '/home/grainAndOilPage',
-          component:  GrainAndOilPage  //发布信息粮油
-        },
+
 
         //
 

@@ -4,19 +4,6 @@
     </el-tab-pane>
 
 
-
-
-    <el-tab-pane label="维修服务" name="isPurchase"  v-if="isRepair">
-    </el-tab-pane>
-
-    <el-tab-pane label="商品发布" name="isPurchase"  v-if="isCommodity">
-    </el-tab-pane>
-
-
-
-    <el-tab-pane label="消毒餐具" name="isTableware"  v-if="isTableware">
-    </el-tab-pane>
-
     <el-tab-pane label="酒水" name="isWine"  v-if="isWine">
     </el-tab-pane>
     <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
@@ -36,6 +23,11 @@
     <el-tab-pane label="我的简历" name="myJobWanted"  v-if="isJobWanted">
       <MyJobWanted></MyJobWanted>
     </el-tab-pane>
+
+    <el-tab-pane label="发布米面/蔬菜/水产蛋禽" name="createFoodAndGrain" v-if="isFoodAndGrain">
+      <MyFoodAndGrain></MyFoodAndGrain>
+    </el-tab-pane>
+
     <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition">
       <CreatePosition></CreatePosition>
     </el-tab-pane>
@@ -50,8 +42,7 @@
   import MyMAndRAndP from './myreleases/MyMAndRAndP'
   import MyRent from './myreleases/MyRent'
   import MyEquipment from './myreleases/MyEquipment'
-
-
+  import MyFoodAndGrain from './myreleases/MyFoodAndGrain'
   import { get_user_info } from '../../../api/api';
 
   export default {
@@ -60,36 +51,34 @@
       MyJobWanted,
       MyMAndRAndP,
       MyRent,
-      MyEquipment
+      MyEquipment,
+      MyFoodAndGrain
     },
 
     data() {
       return {
+        //服装百货  自己一个角色
+         isDepartmentStore:false, //12角色
+
         //商家2
         isCreatePosition:false,//发布职位权限 2,5
 
         isPurchase:false,//采购信息 2
         // 厨具/电器/设备维修3
         isMyEquipment:false,
-
-
-        isRepair:false,//发布维修信息 3
-        //蔬菜/调料/水产禽蛋4
-        isCommodity:false,//发布商品 4,5
-         isRent:false,//摊位出租4，5,6
+        isRent:false,//摊位出租4，5,6
         isWindowRental:false,//窗口出租 2,3,6
        //酒水/消毒餐具/清洁用品5
-        isTableware:false,//消毒餐具5
         isWine:false,//酒水5
-
+        //菜，米面，蛋禽
+        isFoodAndGrain:false,//发布商品 4,5
         //商铺/摊位出租6
         //装修/菜谱/广告牌/杀虫灭蟑
         isMenuAndRenovationAndPestControl:false,//菜谱 7 装修7 灭虫7
 
         //求职11
         isJobWanted:false,//求职11
-        //工服百货
-        isDepartmentStore:false,//百货12
+
 
         activeName: '',//默认打开的导航 ,根据每个不同的商户判断然后确认打开那个默认
         user:'', //用户
@@ -121,6 +110,7 @@
              this.isMenuAndRenovationAndPestControl=true;
              this.isRent=true; //窗口123456
              this.isMyEquipment=true;//发布电器二手
+             this.isFoodAndGrain=true;
             this.activeName='createPosition';
            }
            else if(role===2 ){
@@ -133,13 +123,11 @@
               this.isWindowRental=true;
               this.isMyEquipment=true;//发布电器二手
             }else if(role===4){
-              this.isCommodity=true;
+             this.isFoodAndGrain=true;  //蔬菜调料
              this.isRent=true; //窗口123456
             }else if(role===5){
               this.isCreatePosition=true;
-              this.isCommodity=true;//发布厨具 3
              this.isRent=true; //窗口123456
-              this.isTableware=true;//消毒餐具5
               this.isWine=true;//酒水5
             }else if(role===6){
              this.isRent=true; //窗口123456

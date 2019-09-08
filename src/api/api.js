@@ -122,6 +122,8 @@ export const getmrpAll= params => { return axios.post(`${base}/api/toExamine/get
 export const adminMent= params => { return axios.post(`${base}/api/toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
 //待审核电器二手
 export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+//待审核菜
+export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
@@ -136,11 +138,6 @@ export const getResumeAll = params => { return axios.post(`${base}/api/resume/ge
 
 
 
-//发布
-export const grainAndOil = params => { return axios.post(`${base}/api/commodity/release`, params).then(res => res.data); };
-
-//查询所有发布
-export const getPublishings = params => { return axios.post(`${base}/api/getPublishings/getGoods`, params).then(res => res.data);};
 
 //查询所有联系方式
 export const getContact= params => { return axios.post(`${base}/api/getPublishings/getContact`, params).then(res => res.data);};
@@ -302,9 +299,34 @@ export const getEquipmentDetails= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
-
 export const getEquipmentReleaseTitleList= params => { return axios.post(`${base}/api/equipment/getEquipmentReleaseTitleList`, params).then(res => res.data); };
 export const getEquipmentPublicList= params => { return axios.post(`${base}/api/equipment/getEquipmentPublicList`, params).then(res => res.data); };
+
+export const create_foodAndGrain= params => { return axios.post(`${base}/api/foodAndGrain/create_foodAndGrain`, params).then(res => res.data);};
+//用户获取自己创建菜
+export const get_myFoodAndGrain_list= params => { return axios.post(`${base}/api/foodAndGrain/get_myFoodAndGrain_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+//操作菜
+export const operation_userFoodAndGrain= params => { return axios.post(`${base}/api/foodAndGrain/operation_userFoodAndGrain`, params).then(res => res.data); };
+export const getFoodAndGrainTitleList= params => { return axios.post(`${base}/api/foodAndGrain/getFoodAndGrainTitleList`, params).then(res => res.data); };
+export const getFoodAndGrainPublicList= params => { return axios.post(`${base}/api/foodAndGrain/getFoodAndGrainPublicList`, params).then(res => res.data); };
+//公开根据id获取
+export const getFoodAndGrainDetails= params => {
+  return axios({
+    url: `${base}/api/foodAndGrain/getFoodAndGrainDetails`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+//用户根据id获取
+export const get_userFoodAndGrain_id= params => {
+  return axios({
+    url: `${base}/api/foodAndGrain/get_userFoodAndGrain_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
 
 function isButtonAndListusermrp(res,type) {
 
@@ -480,7 +502,16 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='电器设备出售';
         }else if(releaseType===34){
           list[a].releaseType='二手电器设备';
-        }else{
+        }else if(releaseType===4){
+          list[a].releaseType='蔬菜';
+        }else if(releaseType===5){
+          list[a].releaseType='粮油';
+        }else if(releaseType===6){
+          list[a].releaseType='副食/调料';
+        }else if(releaseType===29){
+          list[a].releaseType='水产/禽蛋';
+        }
+        else{
           list[a].releaseType='';
         }
       }
@@ -510,6 +541,14 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='电器设备出售';
         }else if(releaseType===34){
           list[a].releaseType='二手电器设备';
+        }else if(releaseType===4){
+          list[a].releaseType='蔬菜';
+        }else if(releaseType===5){
+          list[a].releaseType='粮油';
+        }else if(releaseType===6){
+          list[a].releaseType='副食/调料';
+        }else if(releaseType===29){
+          list[a].releaseType='水产/禽蛋';
         }else{
           list[a].releaseType='';
         }

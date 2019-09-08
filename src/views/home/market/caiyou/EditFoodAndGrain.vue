@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" >
@@ -5,52 +6,61 @@
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType" :disabled="true">
-            <el-radio :label="33" >电器/设备出售</el-radio>
-            <el-radio :label="34" >二手电器/设备出售</el-radio>
-            <el-radio :label="18" >维修电器/设备</el-radio>
+            <el-radio :label="4" >蔬菜出售</el-radio>
+            <el-radio :label="5" >粮油出售</el-radio>
+            <el-radio :label="6" >调料/副食出售</el-radio>
+            <el-radio :label="29" >水产/禽蛋出售</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
 
-      <el-form-item label="具体类型"  prop="serviceType" >
+      <el-form-item label="商品类型"  prop="serviceType" >
         <el-autocomplete
           v-model="ruleForm.serviceType"
           :fetch-suggestions="querySearchAsync"
-          placeholder="请输入或点击选择服务/销售类型"
+          placeholder="请输入或点击选择销售商品类型"
           clearable></el-autocomplete>
         <!--@select="handleSelect"-->
         <el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>
       </el-form-item>
 
+
+
+
+
+      <!--动态添加开始-->
       <div  v-for="(item, index) in ruleForm.serviceAndprice" :key="index"  >
-      <el-row >
-        <el-col :span="7" >
-          <el-form-item label="项目/规格" prop="project" class="el-form-itemUser">
-            <el-input v-model="item.project" placeholder="服务项目或商品型号"  ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="对应的价格" prop="price" class="el-form-itemUser">
-            <el-input v-model.number="item.price" placeholder="请输入整数" >
-            </el-input>
-          </el-form-item>
-        </el-col>
-
-        <div  v-if="index==0">
-          <el-col :span="6" class="el-form-itemUser">
-            <el-button type="primary" @click="addItem" plain>增加一行项目/规格</el-button>
+        <el-row >
+          <el-col :span="7" >
+            <el-form-item label="商品详情" prop="project" class="el-form-itemUser">
+              <el-input v-model="item.project" placeholder="商品名及规格"  ></el-input>
+            </el-form-item>
           </el-col>
-        </div>
-
-        <div  v-if="index>0">
-          <el-col :span="6" class="el-form-itemUser">
-            <el-button type="info" @click="deleteItem(item, index)" >删除</el-button>
+          <el-col :span="5">
+            <el-form-item label="对应的价格" prop="price" class="el-form-itemUser">
+              <el-input v-model.number="item.price" placeholder="请输入整数" >
+              </el-input>
+            </el-form-item>
           </el-col>
-        </div>
-      </el-row>
+
+
+
+
+           <div  v-if="index==0">
+             <el-col :span="6" class="el-form-itemUser">
+               <el-button type="primary" @click="addItem" plain>增加一行项目/规格</el-button>
+             </el-col>
+          </div>
+
+          <div  v-if="index>0">
+            <el-col :span="6" class="el-form-itemUser">
+              <el-button type="info" @click="deleteItem(item, index)" >删除</el-button>
+            </el-col>
+          </div>
+        </el-row>
+
       </div>
-
-
+      <!--动态添加结束-->
 
 
       <el-form-item label="标题" prop="releaseTitle">
@@ -119,9 +129,9 @@
 
 
     <!--添加商品/服务类型弹窗开始-->
-    <el-dialog title="添加商品/服务具体类型" :visible.sync="dialogFormVisible">
+    <el-dialog title="添加商品类型" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form" >
-        <el-form-item label="商品/设备名" :label-width="formLabelWidth" prop="serviceTypeName">
+        <el-form-item label="商品名称" :label-width="formLabelWidth" prop="serviceTypeName">
           <el-input v-model="form.serviceTypeName" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -143,8 +153,8 @@
 
   import {   get_serviceType } from '../../../../api/api';
   import {   create_serviceType } from '../../../../api/api';
-  import {  operation_userequipment } from '../../../../api/api';
-  import {   get_userequipment_id } from '../../../../api/api';
+  import {  operation_userFoodAndGrain } from '../../../../api/api';
+  import {   get_userFoodAndGrain_id } from '../../../../api/api';
   import { echo_display } from '../../../../api/api';
   export default {
     name:'editEquipment',
@@ -168,7 +178,7 @@
         timeout:  null,
         dialogFormVisible: false,//添加商品类型弹窗
         fileList:[],
-        StringPath:'/home/equipment',
+        StringPath:'/home/foodAndGrain',
         fullscreenLoading:false,
 
         //文件上传的参数
@@ -181,6 +191,7 @@
 
           serviceType:'',//商品/服务类型
           serviceAndprice:[],//项目及价格KEY，vaule
+
           project:'', //项目
           price:'' ,//价格
 
@@ -195,7 +206,7 @@
         },
         form: {
           serviceTypeName: '',
-          releaseType:18,
+          releaseType:'',
         },
         formLabelWidth: '100px',
         rules: {
@@ -207,7 +218,7 @@
             { required: true, message: '请选服务/销售城区', trigger: 'change' }
           ],
           serviceType: [
-            { required: true, message: '请选服务/销售类型', trigger: 'change' }
+            { required: true, message: '请选销售类型', trigger: 'change' }
           ],
           releaseTitle:[
             {  required: true, message: '标题不能为空', trigger: 'blur'},
@@ -234,7 +245,7 @@
             { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],
           serviceTypeName:[
-            { required: true, message: '请输入商品/服务类型' },
+            { required: true, message: '请输入商品类型' },
             { min:2,max: 15, message: '长度在2至15位之间', trigger: 'blur' }
           ],
           project:[
@@ -263,14 +274,13 @@
               for(let a=0;a<length;a++){
                 let serviceAndpriceNoa=this.ruleForm.serviceAndprice[a];
                 if(serviceAndpriceNoa.project==='' || serviceAndpriceNoa.price==='' ){
-                  this. deleteItem (serviceAndpriceNo, length-1)
                   this.$message.error("新增加:项目/规格或者价格不能有空值")
                   return false;
                 }
               }
             }
 
-             length=0;
+            length=0;
             for(let i=0;i<this.ruleForm.pictureUrl.length;i++){
               if(this.ruleForm.pictureUrl[i].useStatus===1 ||this.ruleForm.pictureUrl[i].useStatus===3){
                 length++;
@@ -283,7 +293,7 @@
             }
             this.ruleForm.type=6;
 
-            operation_userequipment(this.ruleForm).then(res => {
+            operation_userFoodAndGrain(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 this.$message.success('编辑成功，审核约24小时内完成');
@@ -310,7 +320,7 @@
             if (res.data.isAuthentication !== 2) {
               this.$router.push({path: '/home/myAccount'});
             }else {
-              get_userequipment_id(this.id).then(res => {
+              get_userFoodAndGrain_id(this.id).then(res => {
                 if (res.status === 0) {
                   this.ruleForm=res.data;
                   let fileListAndPictureUrl=  echo_display(this.ruleForm);
@@ -319,6 +329,7 @@
                   this.fileList=fileListAndPictureUrl.fileList;
 
                   let serviceAndpricelist=JSON.parse(this.ruleForm.serviceAndprice);
+
                   this.ruleForm.project=serviceAndpricelist[0].project; //没有这两个输入框失去焦点会报错
                   this.ruleForm.price=serviceAndpricelist[0].price;
 
@@ -405,7 +416,7 @@
       get_serviceType(){
         let param={
           serviceType:this.ruleForm.serviceType,
-          releaseType:18
+          releaseType:this.ruleForm.releaseType,
         };
         get_serviceType(param).then((res) => {
           if(res.status===0) {
@@ -429,6 +440,7 @@
       },
       create_serviceType(){
         this.fullscreenLoading=true;
+        this.form.releaseType=this.ruleForm.releaseType;
         this.$refs['form'].validate((valid) => {
           if (valid) {
             create_serviceType(this.form).then(res => {

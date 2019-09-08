@@ -2,8 +2,8 @@
   <div id="app">
     <transition name="fade"
                 mode="out-in">
-      <router-view :key="$route.fullPath" />  <!--  强制刷新-->
-    <!--  <router-view></router-view>-->
+      <!--   <router-view :key="$route.fullPath" />    强制刷新-->
+    <router-view></router-view>
     </transition>
 
   </div>

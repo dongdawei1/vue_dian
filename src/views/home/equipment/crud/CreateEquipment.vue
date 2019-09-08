@@ -287,7 +287,7 @@
 
       //提交
       submitForm(ruleForm) {
-       // this.fullscreenLoading=true;
+        this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             let serviceAndpriceNo={

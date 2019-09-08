@@ -2,18 +2,16 @@
   <div class="vm-image-list">
     <!--我的发布 已发布的电器。查询开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
-      <el-form-item label="服务类型"  >
-        <template>
-          <el-select v-model="releaseWelfare.releaseType" clearable placeholder="请输入或点击选择发布类型">
-            <el-option
-              v-for="item in releaseTypes"
-              :key="item.label"
-              :label="item.value"
-              :value="item.label">
-            </el-option>
-          </el-select>
-        </template>
+
+      <el-form-item label="发布类型"  >
+        <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
+          <el-option label="蔬菜" value="4"></el-option>
+          <el-option label="粮油" value="5"></el-option>
+          <el-option label="副食/调料" value="6"></el-option>
+          <el-option label="水产/禽蛋" value="29" ></el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item label="发布状态"  >
         <template>
           <el-select v-model="releaseWelfare.welfareStatus" clearable placeholder="请选择发布状态">
@@ -30,7 +28,7 @@
         <el-button type="primary" @click="get_position_listselect">查询</el-button>
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM()"
-          to="" class="a" >发布服务/商品</router-link></el-button>
+          to="" class="a" >发布商品</router-link></el-button>
       </el-form-item>
 
     </el-form>
@@ -44,7 +42,7 @@
       <el-table-column
         fixed
         prop="releaseType"
-        label="服务类型"
+        label="发布类型"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -74,7 +72,7 @@
 
       <el-table-column
         prop="serviceDetailed"
-        label="服务区域"
+        label="销售区域"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -120,7 +118,7 @@
     <!--表格结束-->
     <!--查看详情弹窗开始-->
     <el-dialog
-      title="服务详情"
+      title="发布详情"
       :visible.sync="dialogVisible"
       width="60%"
       :before-close="handleClose">
@@ -137,10 +135,10 @@
             <el-table
               :data="tableDataNo.serviceAndprice"
               style="width: 80%">
-              <el-table-column label="具体服务/商品和价格" >
+              <el-table-column label="商品名和价格" >
                 <el-table-column
                   prop="project"
-                  label="具体维修项目/设备型号"
+                  label="具体类型"
                   width="224">
                 </el-table-column>
                 <el-table-column
@@ -162,8 +160,8 @@
           <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
           <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
         </div>
-        <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
-        <span>服务图片 : </span><br>
+        <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
+        <span>商品图片 : </span><br>
         <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
           <img :src="p.pictureUrl" width="100%">
         </li>
@@ -188,9 +186,9 @@
   </div>
 </template>
 <script>
-  import {  operation_userequipment } from '../../../../api/api';
+  import {  operation_userFoodAndGrain } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
-  import { get_myEquipment_list} from '../../../../api/api';
+  import { get_myFoodAndGrain_list} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
   import {   getRealName } from '../../../../api/api';
   export default {
@@ -199,15 +197,10 @@
       return {
         fullscreenLoading:false,
         realName:'',//实名信息
-        pathString:'/home/createEquipment',
+        pathString:'/home/createFoodAndGrain',
         //分页开始
         total: 0,
         //分页结束
-        releaseTypes: [
-          { "value": "电器/设备出售", "label": "33" },
-          { "value": "二手电器/设备出售", "label": "34" },
-          { "value": "维修电器/设备", "label": "18" },
-        ],
         welfareStatuss:[
           { "value": "发布中", "label": "1" },
           { "value": "隐藏中", "label": "2" },
@@ -215,7 +208,7 @@
           { "value": "非有效期", "label": "5" },
         ],//查询条件职位状态
         releaseWelfare: { //查询条件
-          releaseType:'', //服务类型
+          releaseType:'4', //服务类型
           welfareStatus:'',//发布状态
           currentPage: 1,
           pageSize: 20,//每页显示的数量
@@ -247,7 +240,7 @@
     },
     methods: {
       examineClick(row){
-        this.$router.push('/home/editEquipment/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
+        this.$router.push('/home/editFoodAndGrain/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },
 
@@ -269,7 +262,7 @@
         data.userId= form.userId;
         data.id=form.id;
         if(type===1 || type===2 ||   type===3|| type===4 || type===5){
-          operation_userequipment(data).then(data => {
+          operation_userFoodAndGrain(data).then(data => {
             this.fullscreenLoading=false;
             let msg=data.msg;
             if (data && data.status === 0) {
@@ -308,7 +301,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        get_myEquipment_list(this.releaseWelfare).then((res) => {
+        get_myFoodAndGrain_list(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

@@ -22,6 +22,10 @@
       <AdminEquipment></AdminEquipment>
     </el-tab-pane>
 
+    <el-tab-pane label="菜米调料蛋" name="foodAndGrain">
+      <AdminFoodAndGrain></AdminFoodAndGrain>
+    </el-tab-pane>
+
   </el-tabs>
 </template>
 
@@ -32,6 +36,7 @@
   import Mrp from './Mrp'
   import AdminMent from './AdminMent'
   import AdminEquipment from './AdminEquipment'
+  import AdminFoodAndGrain from './AdminFoodAndGrain'
 
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
@@ -43,7 +48,8 @@
       Resume,
       Mrp,
       AdminMent,
-      AdminEquipment
+      AdminEquipment,
+      AdminFoodAndGrain
     },
 
     data() {
