@@ -90,10 +90,9 @@
     >
       <span>请关注审核状态，约24小时内完成审核</span>
       <span slot="footer" class="dialog-footer">
-   <el-button type="primary" @click="" >
-     <router-link
-       v-on:click.native=""
-       to="/home/myRelease" class="a" >查看我的发布</router-link></el-button>
+    <el-button type="primary"><router-link
+      v-on:click.native="goRelease"
+      to="" class="a" >查看我的发布</router-link></el-button>
      </span>
     </el-dialog>
     <!-- 成功弹窗结束  -->
@@ -180,11 +179,13 @@
       this.checke_isButten();
     },
     methods: {
-
+      goRelease(){
+        this.centerDialogVisible=false;
+        this.$router.push({path: '/home/myRelease'});
+      },
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
-        console.log(this.ruleForm)
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {

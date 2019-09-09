@@ -5,12 +5,8 @@
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="4" >蔬菜出售</el-radio>
-            <el-radio :label="5" >粮油出售</el-radio>
-            <el-radio :label="6" >调料/副食出售</el-radio>
-            <el-radio :label="29" >水产/禽蛋出售</el-radio>
-            <el-radio :label="9" >清洁用品</el-radio>
-            <el-radio :label="11" >桌椅餐具</el-radio>
+            <el-radio :label="7" >酒水/饮料</el-radio>
+            <el-radio :label="8" >消毒餐具</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -146,9 +142,9 @@
     >
       <span>请关注审核状态，约24小时内完成审核</span>
       <span slot="footer" class="dialog-footer">
-    <el-button type="primary"><router-link
-      v-on:click.native="goRelease"
-      to="" class="a" >查看我的发布</router-link></el-button>
+           <el-button type="primary"><router-link
+             v-on:click.native="goRelease"
+             to="" class="a" >查看我的发布</router-link></el-button>
      </span>
     </el-dialog>
     <!-- 成功弹窗结束  -->
@@ -179,7 +175,7 @@
 
   import {   get_serviceType } from '../../../../api/api';
   import {   create_serviceType } from '../../../../api/api';
-  import {   create_foodAndGrain } from '../../../../api/api';
+  import {   create_wineAndTableware } from '../../../../api/api';
 
 
   export default {
@@ -201,7 +197,7 @@
         restaurants: [],//标题下拉
         timeout:  null,
         dialogFormVisible: false,//添加商品类型弹窗
-        StringPath:'/home/foodAndGrain',
+        StringPath:'/home/wineAndTableware',
         fileList:[],
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
@@ -294,7 +290,6 @@
         this.centerDialogVisible=false;
         this.$router.push({path: '/home/myRelease'});
       },
-
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
@@ -317,7 +312,7 @@
               }
             }
 
-            create_foodAndGrain(this.ruleForm).then(res => {
+            create_wineAndTableware(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗

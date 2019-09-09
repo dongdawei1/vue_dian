@@ -5,12 +5,8 @@
 
       <el-form-item label="发布类型"  >
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
-          <el-option label="蔬菜" value="4"></el-option>
-          <el-option label="粮油" value="5"></el-option>
-          <el-option label="副食/调料" value="6"></el-option>
-          <el-option label="水产/禽蛋" value="29" ></el-option>
-          <el-option label="清洁用品" value="9"></el-option>
-          <el-option label="桌椅餐具" value="11" ></el-option>
+          <el-option label="酒水饮料" value="7"></el-option>
+          <el-option label="消毒餐具" value="8"></el-option>
         </el-select>
       </el-form-item>
 
@@ -108,7 +104,6 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
           <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
-          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
           <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
           <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
           <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
@@ -189,9 +184,9 @@
   </div>
 </template>
 <script>
-  import {  operation_userFoodAndGrain } from '../../../../api/api';
+  import {  operation_userWineAndTableware } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
-  import { get_myFoodAndGrain_list} from '../../../../api/api';
+  import { get_myWineAndTableware_list} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
   import {   getRealName } from '../../../../api/api';
   export default {
@@ -200,7 +195,7 @@
       return {
         fullscreenLoading:false,
         realName:'',//实名信息
-        pathString:'/home/createFoodAndGrain',
+        pathString:'/home/createWineAndTableware',
         //分页开始
         total: 0,
         //分页结束
@@ -208,10 +203,9 @@
           { "value": "发布中", "label": "1" },
           { "value": "隐藏中", "label": "2" },
           { "value": "审核中", "label": "4" },
-          { "value": "非有效期", "label": "5" },
         ],//查询条件职位状态
         releaseWelfare: { //查询条件
-          releaseType:'4', //服务类型
+          releaseType:'7', //服务类型
           welfareStatus:'',//发布状态
           currentPage: 1,
           pageSize: 20,//每页显示的数量
@@ -243,7 +237,7 @@
     },
     methods: {
       examineClick(row){
-        this.$router.push('/home/editFoodAndGrain/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
+        this.$router.push('/home/editWineAndTableware/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },
 
@@ -264,8 +258,8 @@
         data.type=type;
         data.userId= form.userId;
         data.id=form.id;
-        if(type===1 || type===2 ||   type===3|| type===4 || type===5){
-          operation_userFoodAndGrain(data).then(data => {
+        if(type===1 ||  type===3|| type===4 || type===5){
+          operation_userWineAndTableware(data).then(data => {
             this.fullscreenLoading=false;
             let msg=data.msg;
             if (data && data.status === 0) {
@@ -304,7 +298,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        get_myFoodAndGrain_list(this.releaseWelfare).then((res) => {
+        get_myWineAndTableware_list(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

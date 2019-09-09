@@ -132,6 +132,7 @@
           <span>所在城区 : {{tableDataNo.detailed }}</span><br>
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
           <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
+          <span>服务项目 : {{tableDataNo.serviceType}}</span><br>
           <!--在这里加服务项目-->
           <div >
             <el-table

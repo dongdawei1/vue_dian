@@ -17,8 +17,12 @@ import Release from '../views/home/Release'
   import Vegetables from '../views/home/market/Vegetables'
 import GrainAndOil from '../views/home/market/GrainAndOil'
 import Seasoning from '../views/home/market/Seasoning'
-import Wine from '../views/home/market/Wine'
-import Tableware from '../views/home/market/Tableware'
+import Wine from '../views/home/wineAndTableware/Wine'
+import Tableware from '../views/home/wineAndTableware/Tableware'
+
+import CreateWineAndTableware from '../views/home/wineAndTableware/crud/CreateWineAndTableware'
+import EditWineAndTableware from '../views/home/wineAndTableware/crud/EditWineAndTableware'
+
 import Clean from '../views/home/market/Clean'
 import DepartmentStore from '../views/home/market/DepartmentStore'
 import KitchenUtensils from '../views/home/market/KitchenUtensils'
@@ -75,6 +79,8 @@ import MrpDetails  from '../views/detailes/MrpDetails'
 import RentDetails  from '../views/detailes/RentDetails'
 import EquipmentDetails  from '../views/detailes/EquipmentDetails'
 import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
+
+
 
 //   全局挂载
 Vue.use(VueRouter)
@@ -212,7 +218,15 @@ export default new VueRouter ({
           name:'editFoodAndGrain',
           component: EditFoodAndGrain
         },
-
+        {
+          path: '/home/createWineAndTableware',
+          component: CreateWineAndTableware  //创建角色4下的菜单
+        },
+        {
+          path: '/home/editWineAndTableware/:id',  //编辑备电气维修
+          name:'editWineAndTableware',
+          component: EditWineAndTableware
+        },
 
 
         /*市场区结束*/

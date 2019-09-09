@@ -30,11 +30,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="5">
-          <el-form-item label="对应的价格" prop="price" class="el-form-itemUser">
+          <el-form-item label="参考价格" prop="price" class="el-form-itemUser">
             <el-input v-model.number="item.price" placeholder="请输入整数" >
             </el-input>
           </el-form-item>
         </el-col>
+
+        <div class="form-zhushi">
+          注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
+        </div>
 
         <div  v-if="index==0">
           <el-col :span="6" class="el-form-itemUser">

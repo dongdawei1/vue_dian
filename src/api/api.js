@@ -124,7 +124,8 @@ export const adminMent= params => { return axios.post(`${base}/api/toExamine/adm
 export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审核菜
 export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-
+//待审批酒
+export const adminWineAndTableware= params => { return axios.post(`${base}/api/toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
 //实名审核
@@ -325,9 +326,18 @@ export const get_userFoodAndGrain_id= params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
-
-
-
+//酒水
+export const create_wineAndTableware= params => { return axios.post(`${base}/api/wineAndTableware/create_wineAndTableware`, params).then(res => res.data);};
+export const get_myWineAndTableware_list= params => { return axios.post(`${base}/api/wineAndTableware/get_myWineAndTableware_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+export const operation_userWineAndTableware= params => { return axios.post(`${base}/api/wineAndTableware/operation_userWineAndTableware`, params).then(res => res.data); };
+//用户根据id获取
+export const get_userWineAndTableware_id= params => {
+  return axios({
+    url: `${base}/api/wineAndTableware/get_userWineAndTableware_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
@@ -514,6 +524,10 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='清洁用品';
         } else if(releaseType===11){
           list[a].releaseType='桌椅餐具';
+        }else if(releaseType===7){
+          list[a].releaseType='酒水/饮料';
+        }else if(releaseType===8){
+          list[a].releaseType='消毒餐具';
         }
         else{
           list[a].releaseType='';
@@ -557,6 +571,10 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='清洁用品';
         } else if(releaseType===11){
           list[a].releaseType='桌椅餐具';
+        }else if(releaseType===7){
+          list[a].releaseType='酒水/饮料';
+        }else if(releaseType===8){
+          list[a].releaseType='消毒餐具';
         }
         else{
           list[a].releaseType='';

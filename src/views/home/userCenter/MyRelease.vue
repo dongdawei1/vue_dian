@@ -4,9 +4,12 @@
     </el-tab-pane>
 
 
-    <el-tab-pane label="酒水" name="isWine"  v-if="isWine">
-    </el-tab-pane>
+
     <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
+    </el-tab-pane>
+
+    <el-tab-pane label="酒水/消毒餐具" name="myWineAndTableware"  v-if="isWineAndTableware">
+      <MyWineAndTableware></MyWineAndTableware>
     </el-tab-pane>
 
     <el-tab-pane label="电器/维修/二手物品" name="myEquipment"  v-if="isMyEquipment">
@@ -43,6 +46,7 @@
   import MyRent from './myreleases/MyRent'
   import MyEquipment from './myreleases/MyEquipment'
   import MyFoodAndGrain from './myreleases/MyFoodAndGrain'
+  import MyWineAndTableware from './myreleases/MyWineAndTableware'
   import { get_user_info } from '../../../api/api';
 
   export default {
@@ -52,7 +56,8 @@
       MyMAndRAndP,
       MyRent,
       MyEquipment,
-      MyFoodAndGrain
+      MyFoodAndGrain,
+      MyWineAndTableware
     },
 
     data() {
@@ -68,8 +73,8 @@
         isMyEquipment:false,
         isRent:false,//摊位出租4，5,6
         isWindowRental:false,//窗口出租 2,3,6
-       //酒水/消毒餐具/清洁用品5
-        isWine:false,//酒水5
+       //酒水/消毒餐具
+        isWineAndTableware:false,//酒水5
         //菜，米面，蛋禽
         isFoodAndGrain:false,//发布商品 4,5
         //商铺/摊位出租6
@@ -111,6 +116,7 @@
              this.isRent=true; //窗口123456
              this.isMyEquipment=true;//发布电器二手
              this.isFoodAndGrain=true;
+             this.isWineAndTableware=true;
             this.activeName='createPosition';
            }
            else if(role===2 ){
@@ -128,7 +134,7 @@
             }else if(role===5){
               this.isCreatePosition=true;
              this.isRent=true; //窗口123456
-              this.isWine=true;//酒水5
+             this.isWineAndTableware=true;
             }else if(role===6){
              this.isRent=true; //窗口123456
              this.activeName='rent';

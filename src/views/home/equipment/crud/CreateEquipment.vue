@@ -29,7 +29,7 @@
       </el-form-item>
         </el-col>
           <el-col :span="5">
-        <el-form-item label="对应的价格" prop="price" class="el-form-itemUser">
+        <el-form-item label="参考价格" prop="price" class="el-form-itemUser">
           <el-input v-model.number="ruleForm.price" placeholder="请输入整数" >
           </el-input>
         </el-form-item>
@@ -38,6 +38,10 @@
             <el-button type="primary" @click="addItem" plain>增加一行项目/规格</el-button>
         </el-col>
       </el-row>
+
+      <div class="form-zhushi">
+        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
+      </div>
 
       <!--动态添加开始-->
       <div  v-for="(item, index) in ruleForm.serviceAndprice" :key="index"  >
@@ -48,7 +52,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="对应的价格" prop="price" class="el-form-itemUser">
+            <el-form-item label="参考价格" prop="price" class="el-form-itemUser">
               <el-input v-model.number="item.price" placeholder="请输入整数" >
               </el-input>
             </el-form-item>
@@ -139,10 +143,9 @@
     >
       <span>请关注审核状态，约24小时内完成审核</span>
       <span slot="footer" class="dialog-footer">
-   <el-button type="primary" @click="" >
-     <router-link
-       v-on:click.native=""
-       to="/home/myRelease" class="a" >查看我的发布</router-link></el-button>
+   <el-button type="primary"><router-link
+     v-on:click.native="goRelease"
+     to="" class="a" >查看我的发布</router-link></el-button>
      </span>
     </el-dialog>
     <!-- 成功弹窗结束  -->
@@ -284,7 +287,10 @@
       this.checke_isButten();
     },
     methods: {
-
+        goRelease(){
+          this.centerDialogVisible=false;
+          this.$router.push({path: '/home/myRelease'});
+        },
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading=true;
