@@ -104,7 +104,7 @@
     <el-dialog title="审核" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="审批状态" prop="authentiCationStatus">
-          <el-radio-group v-model="form.authentiCationStatus" >
+          <el-radio-group v-model="form.authentiCationStatus"  :disabled="shenhezhihui">
             <el-radio label="2">通过</el-radio>
             <el-radio label="3">不通过</el-radio>
           </el-radio-group>
@@ -123,7 +123,7 @@
         服务类型 ：{{tableDataNo.serviceType}}<br>
         <el-form-item  label="服务类型" prop="isServiceType">
           <template>
-            <el-radio-group v-model="form.isServiceType">
+            <el-radio-group v-model="form.isServiceType"  :disabled="shenhezhihui">
               <el-radio label="1" >已有服务类型</el-radio>
               <el-radio label="2" >新服务类型通过</el-radio>
               <el-radio label="3" >新服务类型不通过</el-radio>
@@ -134,6 +134,7 @@
 
 
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitServiceType"  v-loading.fullscreen.lock="fullscreenLoading"  v-if="shenhezhihui">商品类型合规在此手动添加</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
       </div>
@@ -212,9 +213,14 @@
   import { examineAll} from '../../../api/api';
 
   import { isRoleMessage } from '../../../api/api';
+  import { admin_create_serviceType } from '../../../api/api';
+  import { newstr } from '../../../api/api';
+
   export default {
     data() {
       return {
+        shenhezhihui:false, //审核弹窗置灰
+
         fullscreenLoading:false,
         pathString:'/home/releaseWelfare',
         //分页开始
@@ -273,11 +279,45 @@
       },
 
       examineClick(row){ //点击审批打开弹窗
+        this.shenhezhihui=false;
+        this.form.authentiCationFailure='';
+        this.form.authentiCationStatus='';
+        this.form.isServiceType='';
         this.tableDataNo=row;
         this.form.serviceTypeId=this.tableDataNo.evaluateid;
         this.dialogFormVisible=true;
+        if(this.form.serviceTypeId===-1){
+          this.form.authentiCationStatus="3";
+          this.form.isServiceType="3";
+          this.form.authentiCationFailure="新发布类型审核失败";
+          this.shenhezhihui=true;
+        }
       },
 
+      submitServiceType(){
+        this.fullscreenLoading=true;
+        let serviceType=newstr({
+          type:1,
+          res:this.tableDataNo.serviceType
+        });
+      let  form={
+          serviceTypeName: newstr({
+            type:1,
+            res:this.tableDataNo.serviceType
+          }),
+          releaseType:this.releaseWelfare.releaseType
+        };
+        admin_create_serviceType(form).then(res => {
+          this.fullscreenLoading=false;
+          if (res.status === 0) {
+            this.$message.success("添加成功,请重新审批");
+            this.get_position_list(); //刷新列表
+            this.dialogFormVisible=false;
+          } else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
       //审批提交
       submitForm(form) {
         this.$refs['form'].validate((valid) => {

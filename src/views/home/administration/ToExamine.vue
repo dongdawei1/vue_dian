@@ -29,7 +29,9 @@
     <el-tab-pane label="酒水/消毒餐具" name="wineAndTableware">
       <AdminWineAndTableware></AdminWineAndTableware>
     </el-tab-pane>
-
+    <el-tab-pane label="添加服务类型" name="addAdminServiceType">
+      <AddAdminServiceType></AddAdminServiceType>
+    </el-tab-pane>
 
   </el-tabs>
 </template>
@@ -43,6 +45,7 @@
   import AdminEquipment from './AdminEquipment'
   import AdminFoodAndGrain from './AdminFoodAndGrain'
   import AdminWineAndTableware from './AdminWineAndTableware'
+  import AddAdminServiceType from './AddAdminServiceType'
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
 
@@ -55,7 +58,8 @@
       AdminMent,
       AdminEquipment,
       AdminFoodAndGrain,
-      AdminWineAndTableware
+      AdminWineAndTableware,
+      AddAdminServiceType
     },
 
     data() {

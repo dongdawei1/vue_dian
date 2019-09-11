@@ -266,6 +266,8 @@ export const echo_display= params => {
   }
 
  };
+
+
 //获取服务商品名称
 export const get_serviceType = params => {
   return axios({
@@ -277,6 +279,8 @@ export const get_serviceType = params => {
   }).then(res => res.data); };
 
 export const create_serviceType= params => { return axios.post(`${base}/api/serviceType/create_serviceType`, params).then(res => res.data);};
+export const admin_create_serviceType= params => { return axios.post(`${base}/api/toExamine/admin_create_serviceType`, params).then(res => res.data);};
+
 //创建电器/维修
 export const create_equipment= params => { return axios.post(`${base}/api/equipment/create_equipment`, params).then(res => res.data); };
 //用户获取自己创建电器/维修
@@ -597,7 +601,11 @@ function isButtonAndListusermrp(res,type) {
   }
 }
 
-
+export const newstr= params => {
+  if(params.type===1){
+    return   params.res.replace("(商品类型不存在，如果合规请手动添加: )","");
+  }
+};
 
 //根据错误跳转页面和报错
   export const isRoleMessage = params => {
