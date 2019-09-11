@@ -159,9 +159,9 @@
       <span>请关注审核状态，约24小时内完成审核</span>
       <span slot="footer" class="dialog-footer">
     <el-button @click="cntinue">继续发布</el-button>
-    <el-button type="primary" >    <router-link
-        v-on:click.native=""
-        to="/home/myRelease"  class="a">查看我的发布 </router-link></el-button>
+    <el-button type="primary"><router-link
+      v-on:click.native="goRelease"
+      to="" class="a" >查看我的发布</router-link></el-button>
      </span>
     </el-dialog>
     <!-- 成功弹窗结束  -->
@@ -270,7 +270,10 @@
         cntinue(){  //留在本页继续发布
         this.centerDialogVisible=false;
      },
-
+      goRelease(){
+        this.centerDialogVisible=false;
+        this.$router.push({path: '/home/myRelease'});
+      },
       //判断是否登录 获取用户权限，防止用户直接通过url访问
       jurisdiction() {
         checke_isButten(this.ruleForm.StringPath).then((res) => {

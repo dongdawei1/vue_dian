@@ -132,9 +132,7 @@
       :before-close="cntinue"
     >
       <span>请关注审核状态，约24小时内完成审核</span>
-      <span slot="footer" class="dialog-footer">
-   <el-button type="primary" @click="jurisdiction1()" >查看简历</el-button>
-     </span>
+
     </el-dialog>
     <!-- 成功弹窗结束  -->
     <!--发布过简历展示详情-->
@@ -281,8 +279,8 @@
 
       },
       jurisdiction1(){
+        this.centerDialogVisible=true;
         this.isCreate=false;
-        this.centerDialogVisible=false;
         this.isDetails=true;
         this.jurisdiction();
 
@@ -330,7 +328,7 @@
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗
-                this.centerDialogVisible=true;
+                this.jurisdiction1();
               } else {
                 isRoleMessage(res.msg);
               }

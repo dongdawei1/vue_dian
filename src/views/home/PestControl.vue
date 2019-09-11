@@ -1,4 +1,5 @@
 <template>
+  <!--灭虫专区-->
   <div >
     <MapAll :tableDataEnter="19" class="vm-margin"></MapAll>
   </div>

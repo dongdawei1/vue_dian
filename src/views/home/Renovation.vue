@@ -1,4 +1,5 @@
 <template>
+  <!--装修专区-->
   <div >
     <MapAll :tableDataEnter="17" class="vm-margin"></MapAll>
   </div>
