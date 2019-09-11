@@ -20,8 +20,8 @@ import Seasoning from '../views/home/market/Seasoning'
 import Wine from '../views/home/wineAndTableware/Wine'
 import Tableware from '../views/home/wineAndTableware/Tableware'
 
-import CreateWineAndTableware from '../views/home/wineAndTableware/crud/CreateWineAndTableware'
-import EditWineAndTableware from '../views/home/wineAndTableware/crud/EditWineAndTableware'
+import CreateWineAndTableware from '../views/home/wineAndTableware/jiushui/CreateWineAndTableware'
+import EditWineAndTableware from '../views/home/wineAndTableware/jiushui/EditWineAndTableware'
 
 import Clean from '../views/home/market/Clean'
 import DepartmentStore from '../views/home/market/DepartmentStore'
@@ -41,7 +41,7 @@ import UpdateRent from '../views/home/dianmian/UpdateRent'
 
 import RecruitWorkers from '../views/home/recruit/RecruitWorkers'
 import JobWanted from '../views/home/recruit/JobWanted'
-import ReleaseWelfare from '../views/home/recruit/ReleaseWelfare'
+import ReleaseWelfare from '../views/home/recruit/zhiwei/ReleaseWelfare'
 
 import Renovation from '../views/home/Renovation'
 import PestControl from '../views/home/PestControl'
@@ -49,20 +49,20 @@ import PestControl from '../views/home/PestControl'
 import Repair from '../views/home/equipment/Repair'
 import NewEquipment from '../views/home/equipment/NewEquipment'
 import OldEquipment from '../views/home/equipment/OldEquipment'
-import CreateEquipment from '../views/home/equipment/crud/CreateEquipment'
-import EditEquipment from '../views/home/equipment/crud/EditEquipment'
+import CreateEquipment from '../views/home/equipment/dianqiAndershouAndweixiu/CreateEquipment'
+import EditEquipment from '../views/home/equipment/dianqiAndershouAndweixiu/EditEquipment'
 
 
 
 import MyRelease from '../views/home/userCenter/MyRelease'
 import MyAccount from '../views/home/userCenter/MyAccount'
 import Detailed from '../views/home/userCenter/Detailed'
-import RealName  from '../views/home/userCenter/RealName'
-import UpdateRealName  from '../views/home/userCenter/updateRealName'
-import AddRealName  from '../views/home/userCenter/addRealName'
+import RealName  from '../views/home/shiming/RealName'
+import UpdateRealName  from '../views/home/shiming/UpdateRealName'
+import AddRealName  from '../views/home/shiming/AddAdminRealName'
 import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
-import CreateMAndRAndP  from '../views/home/userCenter/myreleases/CreateMAndRAndP'
-import EditMAndRAndP  from '../views/home/userCenter/myreleases/EditMAndRAndP'
+import CreateMAndRAndP  from '../views/home/meichong/CreateMAndRAndP'
+import EditMAndRAndP  from '../views/home/meichong/EditMAndRAndP'
 
 
 import Integral from '../views/home/Integral'

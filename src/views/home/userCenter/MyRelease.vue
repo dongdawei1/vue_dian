@@ -32,7 +32,7 @@
     </el-tab-pane>
 
     <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition">
-      <CreatePosition></CreatePosition>
+      <MyZhiWei></MyZhiWei>
     </el-tab-pane>
 
   </el-tabs>
@@ -40,7 +40,7 @@
 
 <script>
 
-  import CreatePosition from './myreleases/CreatePosition'
+  import MyZhiWei from './myreleases/MyZhiWei'
   import MyJobWanted from './myreleases/MyJobWanted'
   import MyMAndRAndP from './myreleases/MyMAndRAndP'
   import MyRent from './myreleases/MyRent'
@@ -51,7 +51,7 @@
 
   export default {
     components: {
-      CreatePosition,
+      MyZhiWei,
       MyJobWanted,
       MyMAndRAndP,
       MyRent,

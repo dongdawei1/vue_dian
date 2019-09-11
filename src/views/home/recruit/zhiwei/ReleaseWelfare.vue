@@ -171,11 +171,11 @@
 
 <script>
 
-  import { create_position } from '../../../api/api';
-  import {  checke_isButten } from '../../../api/api';
-  import {  isRoleMessage } from '../../../api/api';
-  import { get_position } from '../../../api/api';
-  import { getRealName } from '../../../api/api';
+  import { create_position } from '../../../../api/api';
+  import {  checke_isButten } from '../../../../api/api';
+  import {  isRoleMessage } from '../../../../api/api';
+  import { get_position } from '../../../../api/api';
+  import { getRealName } from '../../../../api/api';
   export default {
     data() {
       return {

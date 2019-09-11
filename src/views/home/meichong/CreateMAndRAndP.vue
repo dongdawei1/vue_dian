@@ -101,11 +101,11 @@
 <script>
 
 
-  import {  checke_isButten } from '../../../../api/api';
-  import {  isRoleMessage } from '../../../../api/api';
-  import { getRealName } from '../../../../api/api';
-  import { create_menuAndRenovationAndPestControl } from '../../../../api/api';
-  import { uploadDown_update } from '../../../../api/api';
+  import {  checke_isButten } from '../../../api/api';
+  import {  isRoleMessage } from '../../../api/api';
+  import { getRealName } from '../../../api/api';
+  import { create_menuAndRenovationAndPestControl } from '../../../api/api';
+  import { uploadDown_update } from '../../../api/api';
 
 
   export default {
