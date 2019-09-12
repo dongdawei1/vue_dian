@@ -79,7 +79,7 @@ import MrpDetails  from '../views/detailes/MrpDetails'
 import RentDetails  from '../views/detailes/RentDetails'
 import EquipmentDetails  from '../views/detailes/EquipmentDetails'
 import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
-
+import WineAndTablewareDetails  from '../views/detailes/WineAndTablewareDetails'
 
 
 //   全局挂载
@@ -156,6 +156,12 @@ export default new VueRouter ({
           path: '/details/foodAndGrainDetails/:id/:releaseType',
           name: 'foodAndGrainDetails',
           component:   FoodAndGrainDetails  //发菜等
+        },
+        {
+          hidden: true , //用户包中
+          path: '/details/wineAndTablewareDetails/:id/:releaseType',
+          name: 'wineAndTablewareDetails',
+          component:   WineAndTablewareDetails  //酒等
         },
 
       ],

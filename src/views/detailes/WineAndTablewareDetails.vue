@@ -62,13 +62,13 @@
 <script>
 
   import {  isRoleMessage } from '../../api/api';
-  import { getFoodAndGrainDetails } from '../../api/api';
+  import { getWineAndTablewareDetails } from '../../api/api';
   import { getRealNameById } from '../../api/api';
 
   import ReservationService from "../../components/pages/ReservationService";
   import DibuBunner from "../../components/pages/DibuBunner";
   export default {
-    name:'foodAndGrainDetails',
+    name:'wineAndTablewareDetails',
     components: {ReservationService, DibuBunner},
     data() {
       return {
@@ -95,25 +95,17 @@
     methods: {
       getMrpDetails(){
 
-        getFoodAndGrainDetails(this.id).then(res =>{
+        getWineAndTablewareDetails(this.id).then(res =>{
           if(res.status===0){
             this.result=res.data.result;
-            if(this.result.releaseType===4){
-              this.result.releaseType='蔬菜';
-            }else if(this.result.releaseType===5){
-              this.result.releaseType='粮油';
-            }else if(this.result.releaseType===6){
-              this.result.releaseType='副食/调料';
-            }else if(this.result.releaseType===29){
-              this.result.releaseType='水产/禽蛋';
-            }else if(this.result.releaseType===9){
-              this.result.releaseType='清洁用品';
-            }
-            else if(this.result.releaseType===11){
-              this.result.releaseType='桌椅餐具';
+            if(this.result.releaseType===7){
+              this.result.releaseType='酒水/饮料';
+            }else if(this.result.releaseType===8){
+              this.result.releaseType='消毒餐具';
             }
             let pictureUrl=JSON.parse(this.result.pictureUrl);
             this.result.serviceAndprice=JSON.parse(this.result.serviceAndprice);
+            console.log(this.result)
             let list=[];
             for(let i=0;i<pictureUrl.length;i++){
               let   picture=pictureUrl[i];

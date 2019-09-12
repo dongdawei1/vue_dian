@@ -334,6 +334,17 @@ export const get_userFoodAndGrain_id= params => {
 export const create_wineAndTableware= params => { return axios.post(`${base}/api/wineAndTableware/create_wineAndTableware`, params).then(res => res.data);};
 export const get_myWineAndTableware_list= params => { return axios.post(`${base}/api/wineAndTableware/get_myWineAndTableware_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
 export const operation_userWineAndTableware= params => { return axios.post(`${base}/api/wineAndTableware/operation_userWineAndTableware`, params).then(res => res.data); };
+export const getWineAndTablewareTitleList= params => { return axios.post(`${base}/api/wineAndTableware/getWineAndTablewareTitleList`, params).then(res => res.data); };
+export const getWineAndTablewarePublicList= params => { return axios.post(`${base}/api/wineAndTableware/getWineAndTablewarePublicList`, params).then(res => res.data); };
+export const getWineAndTablewareDetails= params => {
+  return axios({
+    url: `${base}/api/wineAndTableware/getWineAndTablewareDetails`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
 //用户根据id获取
 export const get_userWineAndTableware_id= params => {
   return axios({

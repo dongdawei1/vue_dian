@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="price"
-                  label="具体价格(元)"
+                  label="参考价格(元)"
                   width="120">
                 </el-table-column>
               </el-table-column>
