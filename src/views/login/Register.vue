@@ -31,7 +31,7 @@
       <el-radio :label="7">装修/菜谱/广告牌/杀虫灭蟑</el-radio>
       <el-radio :label="8">无店面自由直供</el-radio>
       <el-radio :label="11">求职</el-radio>
-      <el-radio :label="12">工服/百货</el-radio>
+      <el-radio :label="12">工服/百货/绿植/装饰用品</el-radio>
       <!--<el-radio :label="10">淘特色农产品</el-radio> -->
     </el-radio-group>
   </el-form-item>

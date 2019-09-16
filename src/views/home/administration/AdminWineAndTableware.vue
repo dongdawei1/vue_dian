@@ -296,10 +296,7 @@
 
       submitServiceType(){
         this.fullscreenLoading=true;
-        let serviceType=newstr({
-          type:1,
-          res:this.tableDataNo.serviceType
-        });
+
       let  form={
           serviceTypeName: newstr({
             type:1,

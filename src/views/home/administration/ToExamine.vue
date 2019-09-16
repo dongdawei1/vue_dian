@@ -1,13 +1,13 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="实名审批" name="first">
+    <el-tab-pane label="实名" name="first">
       <First ></First>
     </el-tab-pane>
 
-    <el-tab-pane label="招聘审批" name="rcruit">
+    <el-tab-pane label="招聘" name="rcruit">
       <Recruit></Recruit>
     </el-tab-pane>
-    <el-tab-pane label="简历审批" name="resume">
+    <el-tab-pane label="简历" name="resume">
       <Resume></Resume>
     </el-tab-pane>
 
@@ -15,7 +15,7 @@
       <Mrp></Mrp>
     </el-tab-pane>
 
-    <el-tab-pane label="租房审批" name="fourth">
+    <el-tab-pane label="租房" name="fourth">
       <AdminMent></AdminMent>
     </el-tab-pane>
     <el-tab-pane label="电器/维修" name="equipment">
@@ -29,6 +29,10 @@
     <el-tab-pane label="酒水/消毒餐具" name="wineAndTableware">
       <AdminWineAndTableware></AdminWineAndTableware>
     </el-tab-pane>
+    <el-tab-pane label="百货/工服" name="departmentStore">
+      <AdminDepartmentStore></AdminDepartmentStore>
+    </el-tab-pane>
+
     <el-tab-pane label="添加服务类型" name="addAdminServiceType">
       <AddAdminServiceType></AddAdminServiceType>
     </el-tab-pane>
@@ -46,6 +50,7 @@
   import AdminFoodAndGrain from './AdminFoodAndGrain'
   import AdminWineAndTableware from './AdminWineAndTableware'
   import AddAdminServiceType from './AddAdminServiceType'
+  import AdminDepartmentStore from './AdminDepartmentStore'
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
 
@@ -59,7 +64,8 @@
       AdminEquipment,
       AdminFoodAndGrain,
       AdminWineAndTableware,
-      AddAdminServiceType
+      AddAdminServiceType,
+      AdminDepartmentStore
     },
 
     data() {

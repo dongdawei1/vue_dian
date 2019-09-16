@@ -1,7 +1,19 @@
 <template>
-  <p class="page-container">百货</p>
+  <!--百货-->
+  <div >
+    <DepartmentStoreAll :tableDataEnter="12" class="vm-margin"></DepartmentStoreAll>
+  </div>
 </template>
 
-<style >
+<script>
+  import DepartmentStoreAll from '../../../components/pages/DepartmentStoreAll';
+  export default {
+    components: {
+      DepartmentStoreAll
+    }
+  }
+</script>
 
+
+<style >
 </style>

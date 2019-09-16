@@ -5,12 +5,10 @@
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="4" >蔬菜出售</el-radio>
-            <el-radio :label="5" >粮油出售</el-radio>
-            <el-radio :label="6" >调料/副食出售</el-radio>
-            <el-radio :label="29" >水产/禽蛋出售</el-radio>
-            <el-radio :label="9" >清洁用品</el-radio>
-            <el-radio :label="11" >桌椅餐具</el-radio>
+            <el-radio :label="101" >工服</el-radio>
+            <el-radio :label="102" >百货</el-radio>
+            <el-radio :label="103" >绿植</el-radio>
+            <el-radio :label="104" >装饰用品</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -179,7 +177,7 @@
 
   import {   get_serviceType } from '../../../../api/api';
   import {   create_serviceType } from '../../../../api/api';
-  import {   create_foodAndGrain } from '../../../../api/api';
+  import {   create_departmentStore } from '../../../../api/api';
 
 
   export default {
@@ -317,7 +315,7 @@
               }
             }
 
-            create_foodAndGrain(this.ruleForm).then(res => {
+            create_departmentStore(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗

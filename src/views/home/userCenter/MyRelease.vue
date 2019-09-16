@@ -4,10 +4,6 @@
     </el-tab-pane>
 
 
-
-    <el-tab-pane label="服装百货" name="isDepartmentStore"  v-if="isDepartmentStore">
-    </el-tab-pane>
-
     <el-tab-pane label="酒水/消毒餐具" name="myWineAndTableware"  v-if="isWineAndTableware">
       <MyWineAndTableware></MyWineAndTableware>
     </el-tab-pane>
@@ -15,7 +11,7 @@
     <el-tab-pane label="电器/维修/二手物品" name="myEquipment"  v-if="isMyEquipment">
       <MyEquipment></MyEquipment>
     </el-tab-pane>
-    <el-tab-pane label="摊位/店面信息" name="rent"  v-if="isRent">
+    <el-tab-pane label="摊位/店面出租" name="rent"  v-if="isRent">
       <MyRent></MyRent>
     </el-tab-pane>
 
@@ -34,6 +30,11 @@
     <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition">
       <MyZhiWei></MyZhiWei>
     </el-tab-pane>
+    <el-tab-pane label="工服/绿植/百货/装饰用品" name="myDepartmentStore" v-if="isDepartmentStore">
+      <MyDepartmentStore></MyDepartmentStore>
+    </el-tab-pane>
+
+
 
   </el-tabs>
 </template>
@@ -46,6 +47,7 @@
   import MyRent from './myreleases/MyRent'
   import MyEquipment from './myreleases/MyEquipment'
   import MyFoodAndGrain from './myreleases/MyFoodAndGrain'
+  import MyDepartmentStore from './myreleases/MyDepartmentStore'
   import MyWineAndTableware from './myreleases/MyWineAndTableware'
   import { get_user_info } from '../../../api/api';
 
@@ -57,7 +59,8 @@
       MyRent,
       MyEquipment,
       MyFoodAndGrain,
-      MyWineAndTableware
+      MyWineAndTableware,
+      MyDepartmentStore
     },
 
     data() {
@@ -117,6 +120,7 @@
              this.isMyEquipment=true;//发布电器二手
              this.isFoodAndGrain=true;
              this.isWineAndTableware=true;
+             this.isDepartmentStore=true;
             this.activeName='createPosition';
            }
            else if(role===2 ){
@@ -128,13 +132,16 @@
              this.isRent=true; //窗口123456
               this.isWindowRental=true;
               this.isMyEquipment=true;//发布电器二手
+             this.activeName='myEquipment';
             }else if(role===4){
              this.isFoodAndGrain=true;  //蔬菜调料
              this.isRent=true; //窗口123456
+             this.activeName='createFoodAndGrain';
             }else if(role===5){
               this.isCreatePosition=true;
              this.isRent=true; //窗口123456
              this.isWineAndTableware=true;
+             this.activeName='myWineAndTableware';
             }else if(role===6){
              this.isRent=true; //窗口123456
              this.activeName='rent';
@@ -146,6 +153,7 @@
               this.isJobWanted=true;
             }else if(role===12){
               this.isDepartmentStore=true;
+             this.activeName='myDepartmentStore';
             }
 
 

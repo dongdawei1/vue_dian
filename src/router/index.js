@@ -31,6 +31,10 @@ import AquaticProduct from '../views/home/market/AquaticProduct'
 import CreateFoodAndGrain from '../views/home/market/caiyou/CreateFoodAndGrain'
 import EditFoodAndGrain from '../views/home/market/caiyou/EditFoodAndGrain'
 
+
+import CreateDepartmentStore from '../views/home/market/baihuo/CreateDepartmentStore'
+import EditDepartmentStore from '../views/home/market/baihuo/EditDepartmentStore'
+
 import Menu from '../views/home/Menu'
 import Lease from '../views/home/Lease'
 import RentalBooth from '../views/home/RentalBooth'
@@ -81,7 +85,7 @@ import EquipmentDetails  from '../views/detailes/EquipmentDetails'
 import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
 import WineAndTablewareDetails  from '../views/detailes/WineAndTablewareDetails'
 
-
+import DepartmentStoreDetails  from '../views/detailes/DepartmentStoreDetails'
 //   全局挂载
 Vue.use(VueRouter)
 /*
@@ -163,6 +167,12 @@ export default new VueRouter ({
           name: 'wineAndTablewareDetails',
           component:   WineAndTablewareDetails  //酒等
         },
+        {
+          hidden: true , //用户包中
+          path: '/details/departmentStoreDetails/:id/:releaseType',
+          name: 'departmentStoreDetails',
+          component:   DepartmentStoreDetails  //酒等
+        },
 
       ],
     },
@@ -234,7 +244,15 @@ export default new VueRouter ({
           component: EditWineAndTableware
         },
 
-
+        {
+          path: '/home/createDepartmentStore',
+          component: CreateDepartmentStore  //创建角色4下的菜单
+        },
+        {
+          path: '/home/editDepartmentStore/:id',  //编辑备电气维修
+          name:'editDepartmentStore',
+          component: EditDepartmentStore
+        },
         /*市场区结束*/
 
 

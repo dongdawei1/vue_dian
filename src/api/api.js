@@ -126,6 +126,10 @@ export const adminEquipment= params => { return axios.post(`${base}/api/toExamin
 export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审批酒
 export const adminWineAndTableware= params => { return axios.post(`${base}/api/toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminDepartmentStore= params => { return axios.post(`${base}/api/toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+
+
+
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
 //实名审核
@@ -344,7 +348,27 @@ export const getWineAndTablewareDetails= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
-
+//b百货工服
+export const create_departmentStore= params => { return axios.post(`${base}/api/departmentStore/create_departmentStore`, params).then(res => res.data);};
+export const get_myDepartmentStore_list= params => { return axios.post(`${base}/api/departmentStore/get_myDepartmentStore_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+export const operation_userDepartmentStore= params => { return axios.post(`${base}/api/departmentStore/operation_userDepartmentStore`, params).then(res => res.data);};
+//用户根据id获取
+export const get_userDepartmentStore_id= params => {
+  return axios({
+    url: `${base}/api/departmentStore/get_userDepartmentStore_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+export const getDepartmentStoreTitleList= params => { return axios.post(`${base}/api/departmentStore/getDepartmentStoreTitleList`, params).then(res => res.data); };
+export const getDepartmentStorePublicList= params => { return axios.post(`${base}/api/departmentStore/getDepartmentStorePublicList`, params).then(res => res.data); };
+export const getDepartmentStoreDetails= params => {
+  return axios({
+    url: `${base}/api/departmentStore/getDepartmentStoreDetails`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 //用户根据id获取
 export const get_userWineAndTableware_id= params => {
   return axios({
@@ -543,6 +567,17 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='酒水/饮料';
         }else if(releaseType===8){
           list[a].releaseType='消毒餐具';
+        } else if(releaseType===101){
+          list[a].releaseType='工服';
+        }
+        else if(releaseType===102){
+          list[a].releaseType='百货';
+        }
+        else if(releaseType===103){
+          list[a].releaseType='绿植';
+        }
+        else if(releaseType===104){
+          list[a].releaseType='装饰用品';
         }
         else{
           list[a].releaseType='';
@@ -590,6 +625,18 @@ function isButtonAndListusermrp(res,type) {
           list[a].releaseType='酒水/饮料';
         }else if(releaseType===8){
           list[a].releaseType='消毒餐具';
+        }
+        else if(releaseType===101){
+          list[a].releaseType='工服';
+        }
+        else if(releaseType===102){
+          list[a].releaseType='百货';
+        }
+        else if(releaseType===103){
+          list[a].releaseType='绿植';
+        }
+        else if(releaseType===104){
+          list[a].releaseType='装饰用品';
         }
         else{
           list[a].releaseType='';
