@@ -142,6 +142,7 @@ export default new VueRouter ({
           path: '/details/mrpDetails/:id/:releaseType',
           name: 'mrpDetails',
           component:   MrpDetails  //发布灭虫等
+
         },
         {
           hidden: true , //用户包中
@@ -190,15 +191,15 @@ export default new VueRouter ({
        /*市场区开始*/
             {
               path: '/home/vegetables',
-              component: Vegetables  //蔬菜
+              component: Vegetables , //蔬菜
             },
             {
               path: '/home/grainAndOil',
-              component: GrainAndOil  //粮油
+              component: GrainAndOil,  //粮油
             },
             {
               path: '/home/seasoning',
-              component: Seasoning  //调料
+              component: Seasoning , //调料
             },
             {
               path: '/home/wine',

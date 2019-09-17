@@ -1,37 +1,37 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="采购发布" name="isPurchase"  v-if="isPurchase">
+    <el-tab-pane label="采购发布" name="myPurchase"  v-if="isPurchase" :key="'myPurchase'">
     </el-tab-pane>
 
 
-    <el-tab-pane label="酒水/消毒餐具" name="myWineAndTableware"  v-if="isWineAndTableware">
-      <MyWineAndTableware></MyWineAndTableware>
+    <el-tab-pane label="酒水/消毒餐具" name="myWineAndTableware"  v-if="isWineAndTableware" :key="'myWineAndTableware'">
+      <myWineAndTableware v-if="wineAndTableware"></myWineAndTableware>
     </el-tab-pane>
 
-    <el-tab-pane label="电器/维修/二手物品" name="myEquipment"  v-if="isMyEquipment">
-      <MyEquipment></MyEquipment>
+    <el-tab-pane label="电器/维修/二手物品" name="myEquipment"  v-if="isMyEquipment" :key="'myEquipment'">
+      <myEquipment v-if="equipment"></myEquipment>
     </el-tab-pane>
-    <el-tab-pane label="摊位/店面出租" name="rent"  v-if="isRent">
-      <MyRent></MyRent>
-    </el-tab-pane>
-
-    <el-tab-pane label="菜谱/装修/杀虫/广告牌" name="mrp"  v-if="isMenuAndRenovationAndPestControl">
-    <MyMAndRAndP></MyMAndRAndP>
+    <el-tab-pane label="摊位/店面出租" name="rent"  v-if="isRent" :key="'rent'">
+      <myRent v-if="rent"></myRent>
     </el-tab-pane>
 
-    <el-tab-pane label="我的简历" name="myJobWanted"  v-if="isJobWanted">
-      <MyJobWanted></MyJobWanted>
+    <el-tab-pane label="菜谱/装修/杀虫/广告牌" name="mrp"  v-if="isMenuAndRenovationAndPestControl" :key="'mrp'">
+    <myMAndRAndP v-if="mAndRAndP"></myMAndRAndP>
     </el-tab-pane>
 
-    <el-tab-pane label="发布米面/蔬菜/水产蛋禽" name="createFoodAndGrain" v-if="isFoodAndGrain">
-      <MyFoodAndGrain></MyFoodAndGrain>
+    <el-tab-pane label="我的简历" name="myJobWanted"  v-if="isJobWanted" :key="'myJobWanted'">
+      <myJobWanted v-if="jobWanted"></myJobWanted>
     </el-tab-pane>
 
-    <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition">
-      <MyZhiWei></MyZhiWei>
+    <el-tab-pane label="发布米面/蔬菜/水产蛋禽" name="createFoodAndGrain" v-if="isFoodAndGrain" :key="'createFoodAndGrain'">
+      <myFoodAndGrain v-if="createFoodAndGrain"></myFoodAndGrain>
     </el-tab-pane>
-    <el-tab-pane label="工服/绿植/百货/装饰用品" name="myDepartmentStore" v-if="isDepartmentStore">
-      <MyDepartmentStore></MyDepartmentStore>
+
+    <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition" :key="'createPosition'">
+      <myZhiWei v-if="zhiWei"></myZhiWei>
+    </el-tab-pane>
+    <el-tab-pane label="工服/绿植/百货/装饰用品" name="myDepartmentStore" v-if="isDepartmentStore" :key="'myDepartmentStore'">
+      <myDepartmentStore v-if="departmentStore"></myDepartmentStore>
     </el-tab-pane>
 
 
@@ -53,43 +53,48 @@
 
   export default {
     components: {
-      MyZhiWei,
-      MyJobWanted,
-      MyMAndRAndP,
-      MyRent,
-      MyEquipment,
-      MyFoodAndGrain,
-      MyWineAndTableware,
-      MyDepartmentStore
+      myZhiWei:MyZhiWei,
+      myJobWanted:MyJobWanted,
+      myMAndRAndP:MyMAndRAndP,
+      myRent:MyRent,
+      myEquipment:MyEquipment,
+      myFoodAndGrain:MyFoodAndGrain,
+      myWineAndTableware:MyWineAndTableware,
+      myDepartmentStore:MyDepartmentStore
     },
 
     data() {
       return {
         //服装百货  自己一个角色
          isDepartmentStore:false, //12角色
-
+         departmentStore:'',
         //商家2
         isCreatePosition:false,//发布职位权限 2,5
-
+        zhiWei:false,
         isPurchase:false,//采购信息 2
         // 厨具/电器/设备维修3
         isMyEquipment:false,
+        equipment:false,
         isRent:false,//摊位出租4，5,6
+        rent:false,
         isWindowRental:false,//窗口出租 2,3,6
        //酒水/消毒餐具
         isWineAndTableware:false,//酒水5
+        wineAndTableware:false,
         //菜，米面，蛋禽
         isFoodAndGrain:false,//发布商品 4,5
+        createFoodAndGrain:false,
         //商铺/摊位出租6
         //装修/菜谱/广告牌/杀虫灭蟑
         isMenuAndRenovationAndPestControl:false,//菜谱 7 装修7 灭虫7
-
+        mAndRAndP:false,
         //求职11
         isJobWanted:false,//求职11
-
+        jobWanted:false,
 
         activeName: '',//默认打开的导航 ,根据每个不同的商户判断然后确认打开那个默认
         user:'', //用户
+        role:''
       };
     },
 
@@ -100,6 +105,79 @@
     methods: {
 
       handleClick(tab, event) {
+          if(tab.name === "mrp") {
+          this.mAndRAndP=true;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+          } else if(tab.name === "myJobWanted") {
+            this.mAndRAndP=false;
+            this.jobWanted=true;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+          }else if(tab.name === "createPosition") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=true;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+          }else if(tab.name === "myWineAndTableware") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=true;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+          }else if(tab.name === "myEquipment") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=true;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+          }else if(tab.name === "rent") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=true;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+          }else if(tab.name === "createFoodAndGrain") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=true;
+            this.departmentStore=false;
+          }else if(tab.name === "myDepartmentStore") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=true;
+          }
       },
 
       //判断是否登录
@@ -111,6 +189,7 @@
           }else{
             this.user=JSON.parse(res.data);
             let role=this.user.role;
+            this.role=role;
            if(role===1){
              this.isPurchase=true;//采购信息 2
              this.isJobWanted=true;
@@ -121,12 +200,14 @@
              this.isFoodAndGrain=true;
              this.isWineAndTableware=true;
              this.isDepartmentStore=true;
-            this.activeName='createPosition';
+
+             this.mAndRAndP=true;
+            this.activeName='mrp';
            }
            else if(role===2 ){
               this.isCreatePosition=true;  //招聘
-                this.isPurchase=true;//采购信息 2
-             this.isRent=true; //窗口123456
+               this.isPurchase=true;//采购信息 2
+               this.isRent=true; //窗口123456
               this.activeName='createPosition';
             }else if(role===3){
              this.isRent=true; //窗口123456
