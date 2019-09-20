@@ -86,6 +86,9 @@ import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
 import WineAndTablewareDetails  from '../views/detailes/WineAndTablewareDetails'
 
 import DepartmentStoreDetails  from '../views/detailes/DepartmentStoreDetails'
+
+import PurchaseCreateOrder from '../views/home/releases/createOrder/PurchaseCreateOrder'
+
 //   全局挂载
 Vue.use(VueRouter)
 /*
@@ -186,7 +189,10 @@ export default new VueRouter ({
           path: '/home/release',  //发布
           component: Release
         },
-
+        {
+          path: '/home/PurchaseCreateOrder/:id',  //发布
+          component: PurchaseCreateOrder
+        },
 
        /*市场区开始*/
             {
