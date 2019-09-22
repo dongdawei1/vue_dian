@@ -166,7 +166,7 @@
   import { regionData } from 'element-china-area-data'
   import {  isRoleMessage} from '../../../api/api';
 
-  import { getRealName } from '../../../api/api';
+  import { getUserRealName } from '../../../api/api';
   import { echo_display } from '../../../api/api';
   export default {
 
@@ -259,11 +259,12 @@
             let user=JSON.parse(res.data);
             if( user.isAuthentication===3) {
               //拉取实名信息
-              getRealName().then((res) => {
+              getUserRealName().then((res) => {
                 if (res.status === 0) {
                   let role = user.role;
                   if (role === 1 ||role === 2 || role === 3 || role === 4 || role === 5 || role === 7 || role === 12) {
                     this.ruleForm = res.data;
+                    console.log(this.ruleForm )
                     this.ruleForm.pictureUrl= this.ruleForm.licenseUrl
                     let fileListAndPictureUrl=  echo_display(this.ruleForm);
                     //图片回显和表格参数
@@ -333,7 +334,6 @@
               this.$message.error('图片不能为空');
               return ;
             }
-            console.log(this.ruleForm.licenseUrl)
             updateRealName(data).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {

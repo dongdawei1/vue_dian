@@ -150,7 +150,7 @@
 
               this.changePurchaseHome=true;
               this.activeName='purchaseHome';
-            }else if(role===3 ||role===4 ||role===5 ||role===6 ||role===7 ||role===8 ||role===12 ){
+            }else if(role===4  ){
               this.isPurchaseConductOrder=false;
               this.isPurchaseHome=false;
               this.isSaleConductOrder=true;
@@ -159,7 +159,7 @@
 
               this.changeSaleHome=true;
               this.activeName='saleHome';
-            }else if(role===11 ){
+            }else if(role===11 ||role===3 ||role===5 ||role===6 ||role===7 ||role===8 ||role===12){
               this.isPurchaseConductOrder=false;
               this.isPurchaseHome=false;
               this.isSaleConductOrder=false;

@@ -2,7 +2,7 @@
   <div>
   实名页
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isbusiness" class="demo-ruleForm">
-      <el-form-item label="城区"   prop="selectedOptions">
+      <el-form-item label="所在城区"   prop="selectedOptions">
         <el-cascader
           size="large"
           :options="options"
@@ -85,7 +85,7 @@
     <!--如果是求职就展示下边的结束-->
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="islease" class="demo-ruleForm">
-      <el-form-item label="城区"   prop="selectedOptions">
+      <el-form-item label="所在城区"   prop="selectedOptions">
         <el-cascader
           size="large"
           :options="options"
@@ -238,7 +238,7 @@
               this.$router.push({ path: '/home/myAccount' });
             }
             let role=user.role;
-            if(role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
+            if(role===1||role===2 || role===3 || role===4  || role===5 || role===7 || role===12 ){
               this.isbusiness=true;
             }else if(role===11){
               this.iswanted=true;

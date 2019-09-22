@@ -11,7 +11,7 @@
     <el-tab-pane label="电器/维修/二手物品" name="myEquipment"  v-if="isMyEquipment" :key="'myEquipment'">
       <myEquipment v-if="equipment"></myEquipment>
     </el-tab-pane>
-    <el-tab-pane label="摊位/店面出租" name="rent"  v-if="isRent" :key="'rent'">
+    <el-tab-pane label="摊位/窗口/店面出租" name="rent"  v-if="isRent" :key="'rent'">
       <myRent v-if="rent"></myRent>
     </el-tab-pane>
 

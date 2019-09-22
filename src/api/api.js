@@ -40,7 +40,6 @@ export const get_user_info = params => {
 //登陆过期跳登陆页，为过期跳传入的地址
 export const get_user_info_sign = params => {
   get_user_info().then((res) => {
-
     if (res.msg==='用户未登录,无法获取当前用户的信息') {
       router.push('/login/sign')
     }else{
@@ -97,6 +96,18 @@ export const getRealName = params => {
 
   }).then(res => res.data); };
 
+
+//获取实名信息
+export const getUserRealName = params => {
+
+  return axios({
+    url: `${base}/api/realName/getUserRealName`,
+    // params: { uuid: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+
+  }).then(res => res.data); };
 
 //根据id获取实名信息
 export const getRealNameById = params => {
