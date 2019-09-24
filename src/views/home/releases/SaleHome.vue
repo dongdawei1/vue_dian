@@ -61,6 +61,10 @@
           v-on:click.native="dialogVisible = true"
           to="" class="a" >申请成为可接订单商户</router-link></el-button>
 
+        <el-button type="primary" v-if="isReceiptTrue" ><router-link
+          v-on:click.native="dialogVisible = true"
+          to="" class="a" >查看申请接单所需材料</router-link></el-button>
+
 
 
         <el-button type="primary"><router-link
@@ -71,8 +75,10 @@
     </div>
     <div>轮播广告</div>
 
+
+    <!--申请材料弹窗-->
     <el-dialog
-      title="申请所需步骤"
+      title="申请所需材料"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
@@ -85,13 +91,17 @@
       <span>3、营业执照复印件;</span><br>
       <span>4、本人身份证复印件;</span><br>
       <span>5、本人健康证复印件;</span><br>
+      <span>6、我们将分区集中线下办理，请您耐心等待和关注客服来电;</span><br>
       </div>
 
       <span slot="footer" class="dialog-footer">
-       <el-button @click="dialogVisible = false">取 消</el-button>
-       <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+       <el-button @click="dialogVisible = false" v-if="isReceipt">取消</el-button>
+       <el-button type="primary" @click="dialogVisibleSubmit" v-loading.fullscreen.lock="fullscreenLoading" v-if="isReceipt">有所需全部材料确定报名</el-button>
       </span>
     </el-dialog>
+
+
+
   </div>
 </template>
 
@@ -101,6 +111,8 @@
   import { get_user_info_sign } from '../../../api/api';
   import { getRealName } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
+  import {  addOrder } from '../../../api/api';
+
   export default {
 
 
@@ -134,7 +146,8 @@
         role:'',
 
         myReleasebutton:'我的全部发布',
-        dialogVisible: false
+        dialogVisible: false,
+        fullscreenLoading:false,
       };
     },
 
@@ -222,6 +235,24 @@
       handleClose(done) {
         done();
       },
+      dialogVisibleSubmit(){
+        this.fullscreenLoading=true;
+        let param={
+          userId:this.user.id,
+        }
+        addOrder(param).then((res) => { //获取实名信息填充
+          this.fullscreenLoading=false;
+          if(res.status ===0 ) {
+            console.log(res.data)
+            this.$message.success('提交成功');
+            this.isReceipt=false;
+            this.isReceiptTrue=true;
+            this.dialogVisible=false;
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      }
     }
   };
 </script>

@@ -83,6 +83,8 @@ export const userlogout = params => { return axios.post(`${base}/api/user/logout
 export const newRealName = params => { return axios.post(`${base}/api/realName/newRealName`, params).then(res => res.data); };
 //重新实名
 export const updateRealName = params => { return axios.post(`${base}/api/realName/updateRealName`, params).then(res => res.data); };
+export const addOrder = params => { return axios.post(`${base}/api/realName/addOrder`, params).then(res => res.data); };
+
 
 //获取实名信息
 export const getRealName = params => {
