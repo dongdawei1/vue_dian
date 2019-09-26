@@ -4,12 +4,8 @@
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
       <el-form-item label="发布类型"  >
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
-          <el-option label="蔬菜" value="4"></el-option>
-          <el-option label="粮油" value="5"></el-option>
-          <el-option label="副食/调料" value="6"></el-option>
-          <el-option label="水产/禽蛋" value="29" ></el-option>
-          <el-option label="清洁用品" value="9"></el-option>
-          <el-option label="桌椅餐具" value="11" ></el-option>
+          <el-option label="酒水饮料" value="7"></el-option>
+          <el-option label="消毒餐具" value="8"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="手机号">
@@ -127,7 +123,7 @@
         服务类型 ：{{tableDataNo.serviceType}}<br>
         <el-form-item  label="服务类型" prop="isServiceType">
           <template>
-            <el-radio-group v-model="form.isServiceType" :disabled="shenhezhihui">
+            <el-radio-group v-model="form.isServiceType"  :disabled="shenhezhihui">
               <el-radio label="1" >已有服务类型</el-radio>
               <el-radio label="2" >新服务类型通过</el-radio>
               <el-radio label="3" >新服务类型不通过</el-radio>
@@ -213,16 +209,18 @@
 </template>
 <script>
 
-  import { adminFoodAndGrain} from '../../../api/api';
-  import { examineAll} from '../../../api/api';
+  import { adminWineAndTableware} from '../../../../api/api';
+  import { examineAll} from '../../../../api/api';
 
-  import { isRoleMessage } from '../../../api/api';
-  import { admin_create_serviceType } from '../../../api/api';
-  import { newstr } from '../../../api/api';
+  import { isRoleMessage } from '../../../../api/api';
+  import { admin_create_serviceType } from '../../../../api/api';
+  import { newstr } from '../../../../api/api';
+
   export default {
     data() {
       return {
         shenhezhihui:false, //审核弹窗置灰
+
         fullscreenLoading:false,
         pathString:'/home/releaseWelfare',
         //分页开始
@@ -232,7 +230,7 @@
 
         releaseWelfare: { //查询条件
           contact:'',//手机号
-          releaseType:'4', //服务类型
+          releaseType:'7', //服务类型
           currentPage: 1,
           pageSize: 20,//每页显示的数量
         },
@@ -246,7 +244,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:18, //维修，电器，二手
+          tabuleType:7, //
           isServiceType:'',
           serviceTypeId:''
         },
@@ -295,9 +293,11 @@
           this.shenhezhihui=true;
         }
       },
+
       submitServiceType(){
         this.fullscreenLoading=true;
-        let  form={
+
+      let  form={
           serviceTypeName: newstr({
             type:1,
             res:this.tableDataNo.serviceType
@@ -362,7 +362,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        adminFoodAndGrain(this.releaseWelfare).then((res) => {
+        adminWineAndTableware(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

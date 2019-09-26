@@ -31,8 +31,8 @@
   </div>
 </template>
 <script>
-  import { isRoleMessage } from '../../../api/api';
-  import { admin_create_serviceType } from '../../../api/api';
+  import { isRoleMessage } from '../../../../api/api';
+  import { admin_create_serviceType } from '../../../../api/api';
   export default {
     data() {
       return {

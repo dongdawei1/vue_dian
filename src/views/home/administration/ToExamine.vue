@@ -41,16 +41,16 @@
 </template>
 
 <script>
-  import First from './First'
-  import Recruit from './Recruit'
-  import Resume from './Resume'
-  import Mrp from './Mrp'
-  import AdminMent from './AdminMent'
-  import AdminEquipment from './AdminEquipment'
-  import AdminFoodAndGrain from './AdminFoodAndGrain'
-  import AdminWineAndTableware from './AdminWineAndTableware'
-  import AddAdminServiceType from './AddAdminServiceType'
-  import AdminDepartmentStore from './AdminDepartmentStore'
+  import First from './shenpi/First'
+  import Recruit from './shenpi/Recruit'
+  import Resume from './shenpi/Resume'
+  import Mrp from './shenpi/Mrp'
+  import AdminMent from './shenpi/AdminMent'
+  import AdminEquipment from './shenpi/AdminEquipment'
+  import AdminFoodAndGrain from './shenpi/AdminFoodAndGrain'
+  import AdminWineAndTableware from './shenpi/AdminWineAndTableware'
+  import AddAdminServiceType from './shenpi/AddAdminServiceType'
+  import AdminDepartmentStore from './shenpi/AdminDepartmentStore'
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
 

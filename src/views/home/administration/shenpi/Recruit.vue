@@ -171,9 +171,9 @@
   </div>
 </template>
 <script>
-  import {  getReleaseWelfareAll } from '../../../api/api';
-  import {  examineAll } from '../../../api/api';
-  import { isRoleMessage } from '../../../api/api';
+  import {  getReleaseWelfareAll } from '../../../../api/api';
+  import {  examineAll } from '../../../../api/api';
+  import { isRoleMessage } from '../../../../api/api';
   export default {
     data() {
       return {

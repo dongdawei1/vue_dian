@@ -4,8 +4,10 @@
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
       <el-form-item label="发布类型"  >
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
-          <el-option label="酒水饮料" value="7"></el-option>
-          <el-option label="消毒餐具" value="8"></el-option>
+          <el-option label="工服" value="101"></el-option>
+          <el-option label="百货" value="102"></el-option>
+          <el-option label="绿植" value="103"></el-option>
+          <el-option label="装饰用品" value="104"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="手机号">
@@ -209,12 +211,12 @@
 </template>
 <script>
 
-  import { adminWineAndTableware} from '../../../api/api';
-  import { examineAll} from '../../../api/api';
+  import { adminDepartmentStore} from '../../../../api/api';
+  import { examineAll} from '../../../../api/api';
 
-  import { isRoleMessage } from '../../../api/api';
-  import { admin_create_serviceType } from '../../../api/api';
-  import { newstr } from '../../../api/api';
+  import { isRoleMessage } from '../../../../api/api';
+  import { admin_create_serviceType } from '../../../../api/api';
+  import { newstr } from '../../../../api/api';
 
   export default {
     data() {
@@ -230,7 +232,7 @@
 
         releaseWelfare: { //查询条件
           contact:'',//手机号
-          releaseType:'7', //服务类型
+          releaseType:'102', //服务类型
           currentPage: 1,
           pageSize: 20,//每页显示的数量
         },
@@ -244,7 +246,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:7, //
+          tabuleType:12, //
           isServiceType:'',
           serviceTypeId:''
         },
@@ -296,8 +298,7 @@
 
       submitServiceType(){
         this.fullscreenLoading=true;
-
-      let  form={
+        let  form={
           serviceTypeName: newstr({
             type:1,
             res:this.tableDataNo.serviceType
@@ -362,7 +363,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        adminWineAndTableware(this.releaseWelfare).then((res) => {
+        adminDepartmentStore(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

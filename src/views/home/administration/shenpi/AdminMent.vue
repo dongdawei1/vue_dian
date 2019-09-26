@@ -50,14 +50,14 @@
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
-        prop="serviceType"
-        label="服务类型带(需审批)"
-        width="170"
+        prop="fouseSize"
+        label="使用面积(平米)"
+        width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="serviceDetailed"
-        label="服务城区"
+        label="地址详情"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -98,8 +98,8 @@
     <!--审核弹窗开始-->
     <el-dialog title="审核" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="审批状态" prop="authentiCationStatus" >
-          <el-radio-group v-model="form.authentiCationStatus"  :disabled="shenhezhihui">
+        <el-form-item label="审批状态" prop="authentiCationStatus">
+          <el-radio-group v-model="form.authentiCationStatus" >
             <el-radio label="2">通过</el-radio>
             <el-radio label="3">不通过</el-radio>
           </el-radio-group>
@@ -108,28 +108,8 @@
         <el-form-item label="失败原因" prop="authentiCationFailure"  >
           <el-input v-model="form.authentiCationFailure"  placeholder="选择不通过时必须输入，小于15个字"></el-input>
         </el-form-item>
-        <div class="shenpibeizhu">
-         备注 ：已经审批过的类型不带(待审批或不通过..)选择1<br>
-          示例 ：<br>
-          1审批状态不通过，发布类型可以通过；<br>
-          2新服务类型不通过，审批状态必须不通过；<br>
-          3服务类型不带()备注的，只能选1；<br>
-        </div>
-        服务类型 ：{{tableDataNo.serviceType}}<br>
-        <el-form-item  label="服务类型" prop="isServiceType" >
-          <template>
-            <el-radio-group v-model="form.isServiceType" :disabled="shenhezhihui">
-              <el-radio label="1" >已有服务类型</el-radio>
-              <el-radio label="2" >新服务类型通过</el-radio>
-              <el-radio label="3" >新服务类型不通过</el-radio>
-            </el-radio-group>
-          </template>
-        </el-form-item>
       </el-form>
-
-
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitServiceType"  v-loading.fullscreen.lock="fullscreenLoading"  v-if="shenhezhihui">商品类型合规在此手动添加</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
       </div>
@@ -148,30 +128,12 @@
       <span>用户类型 : {{tableDataNo.userType }}</span><br>
       <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
       <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>城区范围 : {{tableDataNo.serviceDetailed }}</span><br>
-      <span>服务城区 : {{tableDataNo.detailed }}</span><br>
+      <span>地址详情 : {{tableDataNo.serviceDetailed }}</span><br>
+      <span>所在城区 : {{tableDataNo.detailed }}</span><br>
 
       <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
-      <span>具体类型 : {{tableDataNo.serviceType }}</span><br>
-      <!--表格开始-->
-      <el-table
-        :data="tableDataNo.serviceAndprice"
-        border
-        style="width: 60%"  >
-        <el-table-column
-          fixed
-          prop="project"
-          label="具体项目名称或规格"
-          width="220">
-        </el-table-column>
-        <el-table-column
-          fixed
-          prop="price"
-          label="具体价格"
-          width="140">
-        </el-table-column>
-      </el-table>
       <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
+      <span>使用面积: {{tableDataNo.fouseSize }} (平米)</span><br>
       <span>备注 : {{tableDataNo.remarks }}</span><br>
       <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
       <span>申请时间 : {{tableDataNo.createTime }}</span><br>
@@ -204,17 +166,13 @@
 </template>
 <script>
 
-  import { adminEquipment} from '../../../api/api';
-  import { examineAll} from '../../../api/api';
+  import { adminMent} from '../../../../api/api';
+  import { examineAll} from '../../../../api/api';
 
-  import { isRoleMessage } from '../../../api/api';
-
-  import { admin_create_serviceType } from '../../../api/api';
-  import { newstr } from '../../../api/api';
+  import { isRoleMessage } from '../../../../api/api';
   export default {
     data() {
       return {
-        shenhezhihui:false, //审核弹窗置灰
         fullscreenLoading:false,
         pathString:'/home/releaseWelfare',
         //分页开始
@@ -229,25 +187,18 @@
         },
         tableData:[], //全部数据
         tableDataNo:{
-          serviceAndprice:'',
-          evaluateid:'',
+          pictureUrl:'',
         }, //某一个审批
         dialogVisible: false,  //查看详情弹窗
         dialogFormVisible: false, //审批弹窗
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:18, //维修，电器，二手
-          isServiceType:'',
-          serviceTypeId:''
+          tabuleType:14, //14,15房屋出租
         },
         formLabelWidth: '120px',
-        fileList:'',
         rules: {
           authentiCationStatus: [
-            { required: true, message: '请选择是否通过', trigger: 'change' }
-          ],
-          isServiceType: [
             { required: true, message: '请选择是否通过', trigger: 'change' }
           ],
           authentiCationFailure: [
@@ -266,51 +217,16 @@
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
         this.dialogVisible=true;
-      },
+  },
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
       },
 
       examineClick(row){ //点击审批打开弹窗
-        this.shenhezhihui=false;
-        this.form.authentiCationFailure='';
-        this.form.authentiCationStatus='';
-        this.form.isServiceType='';
         this.tableDataNo=row;
-        this.form.serviceTypeId=this.tableDataNo.evaluateid;
         this.dialogFormVisible=true;
-        if(this.form.serviceTypeId===-1){
-          this.form.authentiCationStatus="3";
-          this.form.isServiceType="3";
-          this.form.authentiCationFailure="新发布类型审核失败";
-          this.shenhezhihui=true;
-        }
       },
-      submitServiceType(){
-        this.fullscreenLoading=true;
-        let serviceType=newstr({
-          type:1,
-          res:this.tableDataNo.serviceType
-        });
-        let  form={
-          serviceTypeName: newstr({
-            type:1,
-            res:this.tableDataNo.serviceType
-          }),
-          releaseType:this.form.tabuleType
-        };
-        admin_create_serviceType(form).then(res => {
-          this.fullscreenLoading=false;
-          if (res.status === 0) {
-            this.$message.success("添加成功,请重新审批");
-            this.get_position_list(); //刷新列表
-            this.dialogFormVisible=false;
-          } else {
-            isRoleMessage(res.msg);
-          }
-        });
 
-      },
       //审批提交
       submitForm(form) {
         this.$refs['form'].validate((valid) => {
@@ -318,14 +234,6 @@
             this.fullscreenLoading=true;
             this.form.userId=this.tableDataNo.userId;
             this.form.id=this.tableDataNo.id;
-            if(this.form.authentiCationStatus==='2'){
-              if(this.form.isServiceType==='3'){
-                this.fullscreenLoading=false;
-                this.$message.error("服务类型不通过，审核必须也选不通过");
-                return false;
-              }
-            }
-
             examineAll(this.form).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
@@ -358,7 +266,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        adminEquipment(this.releaseWelfare).then((res) => {
+        adminMent(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
