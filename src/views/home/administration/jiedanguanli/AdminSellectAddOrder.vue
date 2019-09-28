@@ -2,6 +2,8 @@
   <div class="vm-image-list">
     <!--c查询框开始-->
     <el-form :inline="true" :model="realName" class="demo-form-inline">
+
+
       <el-form-item label="用户名">
         <el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>
       </el-form-item>
@@ -35,7 +37,14 @@
       </el-date-picker>
       </el-form-item>
 
-
+      <el-form-item  label="通知状态" >
+        <template>
+          <el-radio-group v-model="realName.isReceipt" >
+            <el-radio label="3" >待通知</el-radio>
+            <el-radio label="4" >已通知</el-radio>
+          </el-radio-group>
+        </template>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getReleaseWelfareAllSelect">查询</el-button>
       </el-form-item>
@@ -68,6 +77,7 @@
         :show-overflow-tooltip="true">
       </el-table-column>
 
+
       <el-table-column
         prop="consigneeName"
         label="联系人"
@@ -80,6 +90,8 @@
         width="100"
         :show-overflow-tooltip="true">
       </el-table-column>
+
+
       <el-table-column
         prop="userName"
         label="用户名"
@@ -94,13 +106,25 @@
         width="160"
         :show-overflow-tooltip="true">
       </el-table-column>
-
+      <el-table-column
+        prop="qianyueTime"
+        label="预约签约时间"
+        width="160"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="qianyueDetailed"
+        label="预约签约地址"
+        width="160"
+        :show-overflow-tooltip="true">
+      </el-table-column>
       <el-table-column
         fixed="right"
         label="操作"
         width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">通知线下签约</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.istongzhi">查看电话通知</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.isbianji">更改签约时间</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -197,8 +221,7 @@
   </div>
 </template>
 <script>
-  import {  getReleaseWelfareAll } from '../../../../api/api';
-  import {  examineAll } from '../../../../api/api';
+  import {  admin_update_addOrder } from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
   import { admin_select_addOrder } from '../../../../api/api';
   import { getAddressDetailed } from '../../../../api/api';
@@ -265,6 +288,7 @@
           currentPage: 1,
           pageSize: 20,//每页显示的数量
           value2: [],
+          isReceipt:'3'
         },
 
         tableData:[], //全部数据
@@ -312,7 +336,7 @@
 
 
 
-      // //审批提交
+      // //提交签约地址
       submitAddPeixun(form) {
         this.$refs['addPeixun'].validate((valid) => {
           if (valid) {
@@ -336,23 +360,24 @@
       },
       //提交签约通知
       submitForm(form) {
+
         this.$refs['form'].validate((valid) => {
           if (valid) {
-           // this.fullscreenLoading=true;
+            this.fullscreenLoading=true;
             if(this.form.isReceipt==='4'){
               if(this.form.addressDetailed==='' ||this.form.value1===''){
                 this.fullscreenLoading=false;
                 this.$message.error("请选择签约时间和签约地点");
                 return false;
-              }
-            }
+            }}
             this.form.id=this.tableDataNo.id;
-            createAddressDetailed(this.form).then(data => {
+            admin_update_addOrder(this.form).then(data => {
               this.fullscreenLoading=false;
               if ( data.status === 0) {
                 this.$message.success(data.msg);
-                this.dialogFormVisible=false;
-                this.form.addressDetailed=this.addPeixun.addressDetailed;
+                this.dialogVisible=false;
+                this.form.id='';
+                this.getReleaseWelfareAll();
               }  else {
                 isRoleMessage(data.msg);
               }
