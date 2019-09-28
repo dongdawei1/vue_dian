@@ -32,7 +32,6 @@
         width="120">
       </el-table-column>
       <el-table-column
-        fixed
         prop="releaseType"
         label="发布类型"
         width="120"

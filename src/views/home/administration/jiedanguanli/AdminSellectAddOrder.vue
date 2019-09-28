@@ -7,7 +7,7 @@
       </el-form-item>
       <el-form-item label="手机号">
         <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
-      </el-form-item>
+      </el-form-item> <br>
 
       <el-form-item label="所在城区"   >
         <el-cascader
@@ -46,16 +46,53 @@
       :data="tableData"
       border
       style="width: 100%">
-      <el-table-column
-        fixed
-        prop="userType"
-        label="用户类型"
-        width="120">
-      </el-table-column>
+
       <el-table-column
         prop="companyName"
         label="企业名称"
-        width="200">
+        width="200"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column
+        prop="detailed"
+        label="所在城区"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column
+        prop="addReceiptTime"
+        label="申请时间"
+        width="160"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column
+        prop="consigneeName"
+        label="联系人"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="contact"
+        label="联系电话"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="userName"
+        label="用户名"
+        width="90"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+
+      <el-table-column
+        prop="addressDetailed"
+        label="地址详情"
+        width="160"
+        :show-overflow-tooltip="true">
       </el-table-column>
 
       <el-table-column
@@ -63,46 +100,85 @@
         label="操作"
         width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" size="small">通知线下签约</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!--表格结束-->
-    <!--查看详情弹窗开始-->
+
+
+
+    <!--通知弹窗-->
     <el-dialog
       title="审核详情"
       :visible.sync="dialogVisible"
       width="60%"
       :before-close="handleClose">
-
-      <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>企业名称 : {{tableDataNo.companyName }}</span><br>
       <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
       <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>城区 : {{tableDataNo.detailed }}</span><br>
-      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
-      <span>职位类型 : {{tableDataNo.position }}</span><br>
-      <span>招聘人数 : {{tableDataNo.number }}</span><br>
-      <span>薪水 : {{tableDataNo.salary }}</span><br>
-      <span>福利 : {{tableDataNo.welfare }}</span><br>
-      <span>学历 : {{tableDataNo.education }}</span><br>
-      <span>经验 : {{tableDataNo.experience }}</span><br>
-      <span>性别 : {{tableDataNo.gender }}</span><br>
-      <span>年龄 : {{tableDataNo.age }}</span><br>
-      <span>详情 : {{tableDataNo.describeOne }}</span><br>
-      <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
-      <span>邮箱 : {{tableDataNo.email }}</span><br>
-      <span>公开手机 : {{tableDataNo.isPublishContact }}</span><br>
-      <span>地址一致 : {{tableDataNo.addressConsistency }}</span><br>
-      <span>申请时间 : {{tableDataNo.createTime }}</span><br>
-      <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
-      <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
-      <span>审核人员 : {{tableDataNo.examineName }}</span><br>
+      <span>用户名 : {{tableDataNo.userName }}</span><br>
+      <span>城区 : {{tableDataNo.detailed }}</span>
 
+      <el-form :model="form" :rules="rules" ref="form">
+        <br>
+        <el-form-item label="通知状态" prop="isReceipt">
+          <el-radio-group v-model="form.isReceipt" >
+            <el-radio label="4">通知成功</el-radio>
+            <el-radio label="5">用户放弃</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        通知成功必须选择签约时间和签约地点<br>
+        <el-form-item label="签约时间"   >
+          <el-date-picker
+            v-model="form.value1"
+            type="date"
+            placeholder="选择签约时间"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </el-form-item>
 
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-  </span>
+        <el-form-item label="签约地点"   >
+          <el-autocomplete
+            v-model="form.addressDetailed"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="请输入或点击选择服务/销售类型"
+            clearable></el-autocomplete>
+          <!--@select="handleSelect"-->
+          <el-button type="primary" @click="dialogFormVisible = true" plain>添加签约地点</el-button>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
+      </div>
+
+      <!--添加 线下签约地址  开始-->
+      <div v-if="dialogFormVisible">
+        ————————————————————————————————————<br>
+        添加签约地址，和公司接待人员，提交前请和接待人员联系
+        <el-form :model="addPeixun" :rules="rules" ref="addPeixun">
+          <br>
+          <el-form-item label="签约城市"  >
+            <el-input v-model="addPeixun.detailed" :disabled="true" autocomplete="off" :placeholder="tableDataNo.detailed"></el-input>
+          </el-form-item>
+          <el-form-item label="签约地址" prop="addressDetailed" >
+            <el-input v-model="addPeixun.addressDetailed" placeholder="签约地址"></el-input>
+          </el-form-item>
+          <el-form-item label="接待人员"  prop="consigneeName">
+            <el-input v-model="addPeixun.consigneeName" placeholder="本公司接待人员姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="接待电话"   prop="contact">
+            <el-input v-model="addPeixun.contact" placeholder="接待人员电话"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitAddPeixun('addPeixun')"  v-loading.fullscreen.lock="fullscreenLoading">确认提交并已通知相关人员</el-button>
+        </div>
+      </div>
+      <!--添加 线下签约地址  结束-->
+
     </el-dialog>
     <!--查看详情弹窗结束-->
 
@@ -125,11 +201,16 @@
   import {  examineAll } from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
   import { admin_select_addOrder } from '../../../../api/api';
+  import { getAddressDetailed } from '../../../../api/api';
+  import { createAddressDetailed } from '../../../../api/api';
 
   import { regionData } from 'element-china-area-data'
   export default {
     data() {
       return {
+        restaurants: [],//标题下拉
+        timeout:  null,
+
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -158,8 +239,20 @@
           }]
         },
 
+        form:{
+          isReceipt:'',
+          addressDetailed:'',
+          value1:'',
+          id:''
+        },
 
-
+        addPeixun:{ //添加培训地址
+          addressDetailed:'',
+          detailed:'',
+          contact:'',
+          consigneeName:''
+        },
+        addPeixunButren:false,
         fullscreenLoading:false,
         //分页开始
         total: 0,
@@ -177,9 +270,31 @@
         tableData:[], //全部数据
         tableDataNo:'', //某一个审批
         dialogVisible: false,  //查看详情弹窗
-
         formLabelWidth: '120px',
+        rules: {
+          isReceipt: [
+            { required: true, message: '请选择通知状态', trigger: 'change' }
+          ],
+          authentiCationFailure: [
+            { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
+          ],
+          addressDetailed: [
+            { required: true, message: '请输入签约地址' },
+            { max: 200, message: '长度小于200字', trigger: 'blur' }
+          ],
+          contact:[
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
+          ],
+          consigneeName:[
+            { required: true, message: '请输入接待人员', trigger: 'blur' },
+          ],
+          value1:[
+            { required: true, message: '请选择签约时间', trigger: 'blur' },
+          ],
+        },
 
+        dialogFormVisible:false,//添加签约地址
       }
     },
     created () {
@@ -196,29 +311,59 @@
       },
 
 
+
       // //审批提交
-      // submitForm(form) {
-      //   this.$refs['form'].validate((valid) => {
-      //     if (valid) {
-      //       this.fullscreenLoading=true;
-      //       this.form.userId=this.tableDataNo.userId;
-      //       this.form.id=this.tableDataNo.id;
-      //       examineAll(this.form).then(data => {
-      //         this.fullscreenLoading=false;
-      //         if (data && data.status === 0) {
-      //           this.$message.success(data.msg);
-      //           this.getReleaseWelfareAll(); //刷新列表
-      //           this.dialogFormVisible=false;
-      //         }  else {
-      //           isRoleMessage(data.msg);
-      //         }
-      //       });
-      //     } else {
-      //       console.log('error submit!!');
-      //       return false;
-      //     }
-      //   });
-      // },
+      submitAddPeixun(form) {
+        this.$refs['addPeixun'].validate((valid) => {
+          if (valid) {
+            this.fullscreenLoading=true;
+            this.addPeixun.detailed=this.tableDataNo.detailed;
+            createAddressDetailed(this.addPeixun).then(data => {
+              this.fullscreenLoading=false;
+              if ( data.status === 0) {
+                this.$message.success(data.msg);
+                this.dialogFormVisible=false;
+                this.form.addressDetailed=this.addPeixun.addressDetailed;
+              }  else {
+                isRoleMessage(data.msg);
+              }
+            });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      //提交签约通知
+      submitForm(form) {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+           // this.fullscreenLoading=true;
+            if(this.form.isReceipt==='4'){
+              if(this.form.addressDetailed==='' ||this.form.value1===''){
+                this.fullscreenLoading=false;
+                this.$message.error("请选择签约时间和签约地点");
+                return false;
+              }
+            }
+            this.form.id=this.tableDataNo.id;
+            createAddressDetailed(this.form).then(data => {
+              this.fullscreenLoading=false;
+              if ( data.status === 0) {
+                this.$message.success(data.msg);
+                this.dialogFormVisible=false;
+                this.form.addressDetailed=this.addPeixun.addressDetailed;
+              }  else {
+                isRoleMessage(data.msg);
+              }
+            });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+
 
       handleCurrentChange(currentPage) {
         // currentPage为当前的页数
@@ -232,13 +377,10 @@
         this.getReleaseWelfareAll();
       },
       getReleaseWelfareAll(){
-          console.log(this.realName)
         if(this.realName.value2===null){
           this.realName.value2=[];
         }
-
         admin_select_addOrder(this.realName).then((res) => {
-          console.log(res)
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -249,9 +391,47 @@
       },
       //城市组件
       handleChange (value) {
-          // this.releaseWelfare.selectedOptions[0]=value[0];
-          // this.releaseWelfare.selectedOptions[1]=value[1];
-          // this.releaseWelfare.selectedOptions[2]=value[2];
+      },
+
+
+      //下拉
+      querySearchAsync(queryString, cb) {
+        // this.releaseWelfare.releaseTitle=queryString;
+        this.getAddressDetailed();
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(this.restaurants);
+        }, 3000 * Math.random());
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      getAddressDetailed(){
+        let param={
+          addressDetailed:this.form.addressDetailed,
+          detailed:this.tableDataNo.detailed,
+        };
+        getAddressDetailed(param).then((res) => {
+          if(res.status===0) {
+            let list=res.data;
+            let releaseTitleList=[];
+            for(let i=0;i<list.length;i++){
+              let  releaseTitle={ "value":list[i] , "address": list[i]};
+              releaseTitleList=releaseTitleList.concat(releaseTitle);
+            }
+            this.restaurants=releaseTitleList;
+            //没有找到用户输入的类型引导添加
+            if(this.restaurants.length===0){
+              this.$message.error("没有找到您输入的:具体类型,可手动添加");
+              this.form.serviceTypeName=this.ruleForm.serviceType;
+              this.ruleForm.serviceType='';
+            }
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
       },
     }
 

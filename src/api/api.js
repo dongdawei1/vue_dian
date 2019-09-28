@@ -142,8 +142,8 @@ export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExa
 //待审批酒
 export const adminWineAndTableware= params => { return axios.post(`${base}/api/toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 export const adminDepartmentStore= params => { return axios.post(`${base}/api/toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-
-
+export const getAddressDetailed= params => { return axios.post(`${base}/api/toExamine/getAddressDetailed`, params).then(res =>  res.data);  };
+export const createAddressDetailed= params => { return axios.post(`${base}/api/toExamine/createAddressDetailed`, params).then(res =>  res.data);  };
 
 //除实名外所有审核
 export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
@@ -464,6 +464,7 @@ function isButtonAndListusermrp(res,type) {
         }
       }
     }
+
     //管理员获取  实名 招聘  简历
 
     else if(type===3 || type===9){
