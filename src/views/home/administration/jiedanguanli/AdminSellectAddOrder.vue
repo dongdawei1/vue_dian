@@ -64,11 +64,19 @@
       </el-table-column>
 
       <el-table-column
+        prop="isReceipt"
+        label="通知状态"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="detailed"
         label="所在城区"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
+
+
 
       <el-table-column
         prop="addReceiptTime"
@@ -151,7 +159,8 @@
             <el-radio label="5">用户放弃</el-radio>
           </el-radio-group>
         </el-form-item>
-        通知成功必须选择签约时间和签约地点<br>
+        注 ：通知成功必须选择签约时间和签约地点<br>
+
         <el-form-item label="签约时间"   >
           <el-date-picker
             v-model="form.value1"
@@ -161,6 +170,7 @@
             value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
+
 
         <el-form-item label="签约地点"   >
           <el-autocomplete
@@ -174,7 +184,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
+        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">已联系完该用户！确认提交</el-button>
       </div>
 
       <!--添加 线下签约地址  开始-->
@@ -329,6 +339,11 @@
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
         this.dialogVisible=true;
+        if(row.isbianji===true){
+        this.form.value1=row.qianyueTime;
+        this.form.addressDetailed=row.qianyueDetailed;
+        this.form.isReceipt='4';
+        }
       },
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
@@ -408,6 +423,7 @@
         admin_select_addOrder(this.realName).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
+            console.log(res)
             this.tableData = res.data.datas;
           }else{
             isRoleMessage(res.msg);

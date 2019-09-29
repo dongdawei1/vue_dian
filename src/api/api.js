@@ -125,7 +125,7 @@ export const getRealNameById = params => {
 
 //待审核实名
 export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
-export const admin_select_addOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_addOrder`, params).then(res => res.data); };
+export const admin_select_addOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
 
 //待审批招聘
 export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
@@ -142,7 +142,7 @@ export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExa
 //待审批酒
 export const adminWineAndTableware= params => { return axios.post(`${base}/api/toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 export const adminDepartmentStore= params => { return axios.post(`${base}/api/toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-export const getAddressDetailed= params => { return axios.post(`${base}/api/toExamine/getAddressDetailed`, params).then(res =>  isButtonAndListusermrp(res.data,10) ); };
+export const getAddressDetailed= params => { return axios.post(`${base}/api/toExamine/getAddressDetailed`, params).then(res =>  res.data);  };
 export const createAddressDetailed= params => { return axios.post(`${base}/api/toExamine/createAddressDetailed`, params).then(res =>  res.data);  };
 export const admin_update_addOrder= params => { return axios.post(`${base}/api/toExamine/admin_update_addOrder`, params).then(res =>  res.data);  };
 
@@ -669,7 +669,7 @@ function isButtonAndListusermrp(res,type) {
           list[a].isReceipt = '未通知';
           list[a].istongzhi = true;
           list[a].isbianji = false;
-        }else if(authentiCationStatus===4){
+        }else if(isReceipt===4){
           list[a].isReceipt = '已通知';
           list[a].istongzhi = false;
           list[a].isbianji = true;
