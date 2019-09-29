@@ -176,7 +176,7 @@
           <el-autocomplete
             v-model="form.addressDetailed"
             :fetch-suggestions="querySearchAsync"
-            placeholder="请输入或点击选择服务/销售类型"
+            placeholder="请输入或点击选择签约地点"
             clearable></el-autocomplete>
           <!--@select="handleSelect"-->
           <el-button type="primary" @click="dialogFormVisible = true" plain>添加签约地点</el-button>

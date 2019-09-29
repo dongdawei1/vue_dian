@@ -5,12 +5,15 @@
       <AdminSellectAddOrder v-if="isAdminSellectAddOrder"></AdminSellectAddOrder>
     </el-tab-pane>
 
-
+    <el-tab-pane label="添加接单" name="addAddOrder" :key="'addAddOrder'">
+      <AdminAddAddOrder v-if="isAdminAddAddOrder"></AdminAddAddOrder>
+    </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
   import AdminSellectAddOrder from './jiedanguanli/AdminSellectAddOrder'
+  import AdminAddAddOrder from './jiedanguanli/AdminAddAddOrder'
 
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
@@ -18,13 +21,14 @@
   export default {
     components: {
       AdminSellectAddOrder:AdminSellectAddOrder,
-
+      AdminAddAddOrder:AdminAddAddOrder,
     },
 
     data() {
       return {
         activeName: 'sellectAddOrder',//默认打开的导航
         isAdminSellectAddOrder:true,
+        isAdminAddAddOrder:false,
       };
     },
 
@@ -36,8 +40,10 @@
       handleClick(tab, event) {
         if(tab.name === "sellectAddOrder") {
           this.isAdminSellectAddOrder=true;
-        }else if(tab.name === "rcruit") {
+          this.isAdminAddAddOrder=false;
+        }else if(tab.name === "addAddOrder") {
           this.isAdminSellectAddOrder=false;
+          this.isAdminAddAddOrder=true;
         }
 
       },
