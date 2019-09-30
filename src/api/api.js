@@ -127,6 +127,15 @@ export const getRealNameById = params => {
 export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
 export const admin_select_addOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
 export const admin_select_signingOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_signingOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
+export const admin_select_signingOrderById = params => {
+  return axios({
+    url: `${base}/api/toExamine/admin_select_signingOrderById`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
 //待审批招聘
 export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核简历

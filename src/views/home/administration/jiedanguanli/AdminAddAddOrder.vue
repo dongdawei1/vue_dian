@@ -225,8 +225,8 @@
     },
 
     methods: {
-      handleClick(row) {  //点击查看详细
-        this.tableDataNo=row;
+      handleClick(id) {  //点击查看详细
+        this.$router.push('/home/adminAddjiedan/'+id);  //带参数页面跳转  name:'editMAndRAndP',
       },
 
       handleCurrentChange(currentPage) {

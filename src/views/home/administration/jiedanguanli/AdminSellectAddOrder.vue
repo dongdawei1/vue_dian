@@ -423,7 +423,6 @@
         admin_select_addOrder(this.realName).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
-            console.log(res)
             this.tableData = res.data.datas;
           }else{
             isRoleMessage(res.msg);

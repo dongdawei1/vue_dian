@@ -74,7 +74,7 @@ import Characteristic from '../views/home/Characteristic'
 
 import ToExamine from '../views/home/administration/ToExamine'
 import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
-
+import AdminAddjiedan from '../views/home/administration/jiedanguanli/addjiedan/AdminAddjiedan'
 
 
 import Details from '../views/Details.vue'
@@ -88,6 +88,9 @@ import WineAndTablewareDetails  from '../views/detailes/WineAndTablewareDetails'
 import DepartmentStoreDetails  from '../views/detailes/DepartmentStoreDetails'
 
 import PurchaseCreateOrder from '../views/home/releases/createOrder/PurchaseCreateOrder'
+
+
+
 
 //   全局挂载
 Vue.use(VueRouter)
@@ -377,6 +380,14 @@ export default new VueRouter ({
           path: '/home/businessEnquiry',
           component: BusinessEnquiry
         },
+        {
+          path: '/home/adminAddjiedan/:id',
+          name:'adminAddjiedan',
+          component: AdminAddjiedan
+        },
+
+
+
 
         {
           path: '',
