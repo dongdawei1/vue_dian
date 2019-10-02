@@ -2,139 +2,91 @@
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" >
       请认真填写信息
-      <el-form-item  label="发布类型" prop="releaseType">
-        <template>
-          <el-radio-group v-model="ruleForm.releaseType" :disabled="true">
-            <el-radio :label="33" >电器/设备出售</el-radio>
-            <el-radio :label="34" >二手电器/设备出售</el-radio>
-            <el-radio :label="18" >维修电器/设备</el-radio>
-          </el-radio-group>
-        </template>
-      </el-form-item>
+        <el-form-item label="所在城区"   prop="selectedOptions">
+          <el-cascader
+            size="large"
+            :options="options"
+            v-model="ruleForm.selectedOptions"
+            @change="handleChange">
+          </el-cascader>
+        </el-form-item>
 
-      <el-form-item label="具体类型"  prop="serviceType" >
-        <el-autocomplete
-          v-model="ruleForm.serviceType"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="请输入或点击选择服务/销售类型"
-          clearable></el-autocomplete>
-        <!--@select="handleSelect"-->
-        <el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>
-      </el-form-item>
-
-      <div  v-for="(item, index) in ruleForm.serviceAndprice" :key="index"  >
-        <el-row >
-          <el-col :span="7" >
-            <el-form-item label="项目/规格" prop="project" class="el-form-itemUser">
-              <el-input v-model="item.project" placeholder="服务项目或商品型号"  ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="参考价格" prop="price" class="el-form-itemUser">
-              <el-input v-model.number="item.price" placeholder="请输入整数" >
-              </el-input>
-            </el-form-item>
-          </el-col>
-
-          <div class="form-zhushi">
-            注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
-          </div>
-
-          <div  v-if="index==0">
-            <el-col :span="6" class="el-form-itemUser">
-              <el-button type="primary" @click="addItem" plain>增加一行项目/规格</el-button>
-            </el-col>
-          </div>
-
-          <div  v-if="index>0">
-            <el-col :span="6" class="el-form-itemUser">
-              <el-button type="info" @click="deleteItem(item, index)" >删除</el-button>
-            </el-col>
-          </div>
-        </el-row>
-      </div>
-
-
-
-
-      <el-form-item label="标题" prop="releaseTitle">
-        <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
-      </el-form-item>
-      <el-form-item label="具体描述" prop="serviceIntroduction">
-        <el-input
-          type="textarea"
-          placeholder="如：具体服务/销售地址，企业信息等"
-          v-model="ruleForm.serviceIntroduction"
-          maxlength="500"
-          show-word-limit
-        >
-        </el-input>
-      </el-form-item>
-
-      <el-form-item label="备注" prop="remarks" >
-        <el-input v-model="ruleForm.remarks" placeholder="备注30字以内"></el-input>
-      </el-form-item>
-
-
-      <el-form-item label="服务区域"  prop="serviceDetailed">
-        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务/销售区域">
-          <el-option label="全市" value="全市"></el-option>
-          <el-option label="来电确认" value="来电确认"></el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="图片" prop="pictureUrl">
-        <el-upload
-          ref="upload"
-          action="/api/uploadDown/upload"
-          name="picture"
-          list-type="picture-card"
-          :limit="8"
-          :on-exceed="onExceed"
-          :before-upload="beforeUpload"
-          :on-preview="handlePreview"
-          :on-success="handleSuccess"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible"   >
-          <img width="100%"   :src="dialogImageUrl" alt="">
-        </el-dialog>
-      </el-form-item>
-
-
-      <el-form-item label="联系人" prop="consigneeName">
+      <el-form-item label="姓名" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
       <el-form-item label="联系方式"  prop="contact">
         <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
-
-      <el-form-item label="所在城市" >
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
+      <el-form-item label="执照名"  prop="companyName">
+        <el-input v-model="ruleForm.companyName"  autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
+      </el-form-item>
+      <el-form-item label="经营地址"  prop="addressDetailed">
+        <el-input v-model="ruleForm.addressDetailed"  autocomplete="off" :placeholder="ruleForm.addressDetailed"></el-input>
       </el-form-item>
 
+
+      <el-form-item label="送货范围"    prop="delivery"  >
+        <el-radio v-model="ruleForm.delivery" label="全市">全市</el-radio>
+        <el-radio v-model="ruleForm.delivery" label="本区">本区</el-radio>
+      </el-form-item>
+
+
+      <el-form-item label="紧急联系人" >
+        <el-input v-model="ruleForm.urgentName"  autocomplete="off" ></el-input>
+      </el-form-item>
+      <el-form-item label="紧急联系方式"  prop="urgentContact">
+        <el-input v-model="ruleForm.urgentContact"  autocomplete="off" ></el-input>
+      </el-form-item>
+
+
+      <el-form-item label="备注" >
+        <el-input v-model="ruleForm.licenseUrl" placeholder="备注"></el-input>
+      </el-form-item>
+
+
+
+      <el-form-item label="执照截止日"  prop="licenseEndTime" >
+        <el-date-picker
+          v-model="ruleForm.licenseEndTime"
+          type="date"
+          placeholder="请选择执照到期日"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="健康证截止"  prop="healthyEndTime" >
+        <el-date-picker
+          v-model="ruleForm.healthyEndTime"
+          type="date"
+          placeholder="请选择健康证到期日"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+
+      <el-form-item  label="用户类型" prop="userType">
+        <template>
+          <el-radio-group v-model="ruleForm.userType">
+            <el-radio :label="1" >自营</el-radio>
+            <el-radio :label="2" >合作</el-radio>
+            <el-radio :label="3" >加盟</el-radio>
+          </el-radio-group>
+        </template>
+      </el-form-item>
+
+      <el-form-item label="合同编号"  prop="contractNo">
+        <el-input v-model="ruleForm.contractNo" placeholder="请输入纸质合同编号"></el-input>
+      </el-form-item>
+
+
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">添加</el-button>
       </el-form-item>
     </el-form>
 
 
-    <!--添加商品/服务类型弹窗开始-->
-    <el-dialog title="添加商品/服务具体类型" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form" >
-        <el-form-item label="商品/设备名" :label-width="formLabelWidth" prop="serviceTypeName">
-          <el-input v-model="form.serviceTypeName" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="create_serviceType('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!--添加商品/服务类型弹窗结束-->
+
   </div>
 </template>
 <script>
@@ -142,113 +94,81 @@
 
   import {  isRoleMessage } from '../../../../../api/api';
 
+  import { regionData } from 'element-china-area-data'
 
-  import {  checke_isButten } from '../../../../../api/api';
-
-  import {   get_serviceType } from '../../../../../api/api';
-  import {   create_serviceType } from '../../../../../api/api';
-  import {  operation_userequipment } from '../../../../../api/api';
+  import {  admin_create_orderUser } from '../../../../../api/api';
   import {   admin_select_signingOrderById } from '../../../../../api/api';
-  import { echo_display } from '../../../../../api/api';
   export default {
     name:'adminAddjiedan',
     data() {
-      var checkAge = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('价格不能为空'));
-        }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字值'));
-          }  else {
-            callback();
 
-          }
-        }, 100);
-      };
       return {
         id:this.$route.params.id,
-        restaurants: [],//标题下拉
-        timeout:  null,
-        dialogFormVisible: false,//添加商品类型弹窗
-        fileList:[],
-
+        //城市组件相关开始
+        options: regionData,//城市   npm install element-china-area-data -S  城市联动组件 @4.1.2
         fullscreenLoading:false,
-
-        //文件上传的参数
-        dialogImageUrl: '',
-        dialogVisible: false,
         ruleForm: {
           userId:'',
-          realnameId:'',//发布类型
+          id:'',//
           contact:'',//收/送货联系方式
           consigneeName:'',// 收/送货人姓名
           companyName:'',// 企业名称
           addressDetailed:'',//详细地址，
-          detailed:'',// 省市区
+          selectedOptions:[],// 省市区
 
-          delivery:'',//送货范围  送货范围 1 本区2 全市
-          urgentContact:'',//紧急联系方式
-          urgentName:'',//紧急联系人
-          licenseUrl:'', //图片存贮地址
+          delivery:' ',//送货范围  送货范围 1 本区2 全市
+          urgentContact:' ',//紧急联系方式
+          urgentName:' ',//紧急联系人
+
+          licenseUrl:' ', //备注
           licenseEndTime:'' ,//营业执照结束时间
           healthyEndTime:'',//健康证结束时间
           userType:'',//1自营2合作
           contractNo:'',//合同编号
 
         },
-        form: {
-          serviceTypeName: '',
-          releaseType:18,
-        },
-        formLabelWidth: '100px',
+
         rules: {
-          releaseType: [
-            { required: true, message: '发布类型不能为空', trigger: 'change' },
+          selectedOptions: [
+            { required: true, message: '请选择城市和地区'}
           ],
-
-          serviceDetailed: [
-            { required: true, message: '请选服务/销售城区', trigger: 'change' }
+          companyName:[
+            {  required: true, message: '公司名称不能为空', trigger: 'blur'},
+            { max: 100, message: '公司名称不能大于100字' }
           ],
-          serviceType: [
-            { required: true, message: '请选服务/销售类型', trigger: 'change' }
+          addressDetailed:[
+            {  required: true, message: '经营地址不能为空', trigger: 'blur'},
+            { max: 100, message: '经营地址不能大于100字' }
           ],
-          releaseTitle:[
-            {  required: true, message: '标题不能为空', trigger: 'blur'},
-            { min: 6, max: 14, message: '标题在6-14字之内' }
+          delivery: [
+            { required: true, message: '请选择送货范围', trigger: 'change' }
           ],
-          serviceIntroduction:[
-            {  required: true, message: '具体描述不能为空', trigger: 'blur' },
-            { min: 1, max: 500, message: '具体描述不能超过500个字' }
+          licenseEndTime: [
+            { required: true, message: '请选择营业执照到期日', trigger: 'change' }
           ],
-
-          remarks:[
-            {  max: 30, message: '备注小于30字' }
+          healthyEndTime: [
+            { required: true, message: '请选择健康证到期日', trigger: 'change' }
           ],
-
-          pictureUrl:[
-            { required: true, message: '如果已上传请继续提交' },
+          userType: [
+            { required: true, message: '请选择用户类型', trigger: 'change' }
           ],
           contact:[
             { required: true, message: '请输入手机', trigger: 'blur' },
             { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
           ],
+          urgentContact:[
+            { min: 11, max: 11, message: '紧急联系联系方式手机号格式错误', trigger: 'blur' }
+          ],
           consigneeName:[
             { required: true, message: '请输入姓名' },
             { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
           ],
-          serviceTypeName:[
-            { required: true, message: '请输入商品/服务类型' },
-            { min:2,max: 15, message: '长度在2至15位之间', trigger: 'blur' }
+          contractNo:[
+            { required: true, message: '请输入合同编号' },
+            { max: 20, message: '合同编号不能为空', trigger: 'blur' }
           ],
-          project:[
-            { required: true, message: '请输入项目/规格' },
-            { min:2,max: 12, message: '长度在2至12位之间', trigger: 'blur' }
-          ],
-          price:[
-            { required: true,validator: checkAge, trigger: 'blur'},
-            // { type: 'number', message: '年龄必须为数字值'}
-          ],}
+
+     }
       }
     },
 
@@ -259,39 +179,15 @@
 
       //提交
       submitForm(ruleForm) {
-        this.fullscreenLoading=true;
+      this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            let length=this.ruleForm.serviceAndprice.length;
-            if(length>1){
-              for(let a=0;a<length;a++){
-                let serviceAndpriceNoa=this.ruleForm.serviceAndprice[a];
-                if(serviceAndpriceNoa.project==='' || serviceAndpriceNoa.price==='' ){
-                  this. deleteItem (serviceAndpriceNo, length-1)
-                  this.$message.error("新增加:项目/规格或者价格不能有空值")
-                  return false;
-                }
-              }
-            }
 
-            length=0;
-            for(let i=0;i<this.ruleForm.pictureUrl.length;i++){
-              if(this.ruleForm.pictureUrl[i].useStatus===1 ||this.ruleForm.pictureUrl[i].useStatus===3){
-                length++;
-              }
-            }
-            if(length<=0){
-              this.$message.error("图片不能为空");
-              this.fullscreenLoading=false;
-              return false;
-            }
-            this.ruleForm.type=6;
-
-            operation_userequipment(this.ruleForm).then(res => {
+            admin_create_orderUser(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
-                this.$message.success('编辑成功，审核约24小时内完成');
-                this.$router.push('/home/myRelease');
+                this.$message.success("添加成功");
+                this.$router.push('/home/businessEnquiry');
               } else {
                 isRoleMessage(res.msg);
               }
@@ -309,145 +205,23 @@
         admin_select_signingOrderById(this.id).then(res => {
                 if (res.status === 0) {
                   this.ruleForm=res.data;
-                  let fileListAndPictureUrl=  echo_display(this.ruleForm);
-                  //图片回显和表格参数
-                  this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
-                  this.fileList=fileListAndPictureUrl.fileList;
-
-                  let serviceAndpricelist=JSON.parse(this.ruleForm.serviceAndprice);
-                  this.ruleForm.project=serviceAndpricelist[0].project; //没有这两个输入框失去焦点会报错
-                  this.ruleForm.price=serviceAndpricelist[0].price;
-
-                  this.ruleForm.serviceAndprice=serviceAndpricelist;
-
+                  let selectedOptions=[]
+                  selectedOptions=selectedOptions.concat(this.ruleForm.provincesId.toString());
+                  selectedOptions=selectedOptions.concat(this.ruleForm.cityId.toString());
+                  selectedOptions=selectedOptions.concat(this.ruleForm.districtCountyId.toString());
+                  this.ruleForm.selectedOptions=selectedOptions;
+                  this.ruleForm.urgentContact='';//紧急联系方式
+                    this.ruleForm.urgentName='';//紧急联系人
+                    this.ruleForm.licenseUrl=''; //备注
                 } else {
                   isRoleMessage(res.msg);
                 }
               });
       },
 
-      //图片上传相关
-      //文件上传成功的钩子函数
-      handleSuccess(res, file) {
-        if(res.status===0){
-          let resdata=res.data;
-          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
-          this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
-        }
+      //城市组件
+      handleChange (value) {
       },
-
-      //删除文件之前的钩子函数
-      handleRemove(file,fileList) {
-        for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(file.id===undefined){
-            if(file.response.data.id===this.ruleForm.pictureUrl[i].id){
-              this.ruleForm.pictureUrl[i].useStatus=2;
-              break;
-            }
-          }else if(file.id===this.ruleForm.pictureUrl[i].id){
-            this.ruleForm.pictureUrl[i].useStatus=2;
-            break;
-          }
-        }
-      },
-      //点击列表中已上传的文件事的钩子函数
-      handlePreview(file) {
-      },
-      //上传的文件个数超出设定时触发的函数
-      onExceed(files, fileList) {
-        this.$message({
-          type: 'info',
-          message: '最多只能上传8张图片',
-          duration: 2000
-        });
-
-      },
-      //文件上传前的前的钩子函数
-      //参数是上传的文件，若返回false，或返回Primary且被reject，则停止上传
-      beforeUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isGIF = file.type === 'image/gif';
-        const isPNG = file.type === 'image/png';
-        const isBMP = file.type === 'image/bmp';
-        const isLt8M = file.size / 1024 / 1024 < 8;
-        if (!isJPG && !isGIF && !isPNG && !isBMP) {
-          this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
-        }
-        if (!isLt8M) {
-          this.$message.error('上传图片大小不能超过 8MB!');
-        }
-        return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
-      },
-
-      //下拉
-      querySearchAsync(queryString, cb) {
-        // this.releaseWelfare.releaseTitle=queryString;
-        this.get_serviceType();
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(this.restaurants);
-        }, 3000 * Math.random());
-      },
-      createStateFilter(queryString) {
-        return (state) => {
-          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      get_serviceType(){
-        let param={
-          serviceType:this.ruleForm.serviceType,
-          releaseType:18
-        };
-        get_serviceType(param).then((res) => {
-          if(res.status===0) {
-            let list=res.data;
-            let releaseTitleList=[];
-            for(let i=0;i<list.length;i++){
-              let  releaseTitle={ "value":list[i] , "address": list[i]};
-              releaseTitleList=releaseTitleList.concat(releaseTitle);
-            }
-            this.restaurants=releaseTitleList;
-            //没有找到用户输入的类型引导添加
-            if(this.restaurants.length===0){
-              this.$message.error("没有找到您输入的:具体类型,可手动添加");
-              this.form.serviceTypeName=this.ruleForm.serviceType;
-              this.ruleForm.serviceType='';
-            }
-          }else {
-            isRoleMessage(res.msg);
-          }
-        });
-      },
-      create_serviceType(){
-        this.fullscreenLoading=true;
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
-            create_serviceType(this.form).then(res => {
-              this.fullscreenLoading=false;
-              if (res.status === 0) {
-                this.$message.success("添加成功");
-                this.ruleForm.serviceType=this.form.serviceTypeName;
-                this.dialogFormVisible=false;
-              } else {
-                isRoleMessage(res.msg);
-              }
-            });
-          } else {
-            this.fullscreenLoading=false;
-            return false;
-          }
-        });
-      },
-
-      addItem () {
-        this.ruleForm.serviceAndprice.push({
-          project: '',
-          price: ''
-        })
-      },
-      deleteItem (item, index) {
-        this.ruleForm.serviceAndprice.splice(index, 1)
-      }
     }
   }
 

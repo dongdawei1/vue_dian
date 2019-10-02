@@ -297,7 +297,7 @@
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 this.$message.success('编辑成功，审核约24小时内完成');
-                this.$router.push('/home/myRelease');
+                this.$router.push('/home/');
               } else {
                 isRoleMessage(res.msg);
               }

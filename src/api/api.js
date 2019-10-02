@@ -134,7 +134,7 @@ export const admin_select_signingOrderById = params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
-
+export const admin_create_orderUser = params => { return axios.post(`${base}/api/toExamine/admin_create_orderUser`, params).then(res => res.data);};
 
 //待审批招聘
 export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
