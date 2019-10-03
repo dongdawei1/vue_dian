@@ -32,10 +32,10 @@
 
 
       <el-form-item label="紧急联系人" >
-        <el-input v-model="ruleForm.urgentName"  autocomplete="off" ></el-input>
+        <el-input v-model="ruleForm.urgentName"   ></el-input>
       </el-form-item>
       <el-form-item label="紧急联系方式"  prop="urgentContact">
-        <el-input v-model="ruleForm.urgentContact"  autocomplete="off" ></el-input>
+        <el-input v-model="ruleForm.urgentContact"   ></el-input>
       </el-form-item>
 
 
@@ -79,6 +79,20 @@
         <el-input v-model="ruleForm.contractNo" placeholder="请输入纸质合同编号"></el-input>
       </el-form-item>
 
+     账户信息:银行卡或者支付宝必须填一个
+      <el-form-item label="银行卡号" >
+        <el-input v-model="ruleForm.bankCard" placeholder="请输入银行卡号"></el-input>
+      </el-form-item>
+      <el-form-item label="支付宝号" >
+        <el-input v-model="ruleForm.alipay" placeholder="请输入支付宝号"></el-input>
+      </el-form-item>
+      <el-form-item label="退款人姓名"  prop="accountName">
+        <el-input v-model="ruleForm.accountName" placeholder="退还质量保证金银行卡姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="质保金(元)"  prop="availableAmount">
+        <el-input v-model.number="ruleForm.availableAmount" autocomplete="off" placeholder="收取的质保金金额"></el-input>
+      </el-form-item>
+
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">添加</el-button>
@@ -101,7 +115,19 @@
   export default {
     name:'adminAddjiedan',
     data() {
+      var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('质保金不能为空'));
+        }
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('质保金只能为整百数字'));
+          }  else {
+            callback();
 
+          }
+        }, 100);
+      };
       return {
         id:this.$route.params.id,
         //城市组件相关开始
@@ -126,6 +152,11 @@
           userType:'',//1自营2合作
           contractNo:'',//合同编号
 
+          //账户相关
+          accountName:'',//银行卡姓名
+          bankCard:'',//银行卡号
+          alipay:'',//支付宝账户
+          availableAmount:'',//金额
         },
 
         rules: {
@@ -167,7 +198,13 @@
             { required: true, message: '请输入合同编号' },
             { max: 20, message: '合同编号不能为空', trigger: 'blur' }
           ],
-
+          availableAmount:[
+            { required: true,validator: checkAge, trigger: 'blur'},
+          ],
+          accountName:[
+            { required: true, message: '请输入退款人姓名' },
+            { min:2,max: 12, message: '长度在2至12位之间', trigger: 'blur' }
+          ],
      }
       }
     },
@@ -179,7 +216,13 @@
 
       //提交
       submitForm(ruleForm) {
-      this.fullscreenLoading=true;
+
+console.log(this.ruleForm)
+      if(this.ruleForm.bankCard==='' && this.ruleForm.alipay===''){
+        this.$message.error("银行卡或者支付宝必须填写一个");
+        return false;
+      }
+    //    this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
 
@@ -204,15 +247,21 @@
       checke_isButten(){
         admin_select_signingOrderById(this.id).then(res => {
                 if (res.status === 0) {
-                  this.ruleForm=res.data;
+                  res.data.urgentContact='';//紧急联系方式
+                  res.data.urgentName='';//紧急联系人
+                  res.data.licenseUrl=''; //备注
+                  res.data.accountName=res.data.consigneeName;
+                  res.data.availableAmount=300;
+                  res.data.bankCard='';
+                  res.data.alipay='';
+                  res.data.isReceipt=2;
                   let selectedOptions=[]
-                  selectedOptions=selectedOptions.concat(this.ruleForm.provincesId.toString());
-                  selectedOptions=selectedOptions.concat(this.ruleForm.cityId.toString());
-                  selectedOptions=selectedOptions.concat(this.ruleForm.districtCountyId.toString());
-                  this.ruleForm.selectedOptions=selectedOptions;
-                  this.ruleForm.urgentContact='';//紧急联系方式
-                    this.ruleForm.urgentName='';//紧急联系人
-                    this.ruleForm.licenseUrl=''; //备注
+                  selectedOptions=selectedOptions.concat(res.data.provincesId.toString());
+                  selectedOptions=selectedOptions.concat(res.data.cityId.toString());
+                  selectedOptions=selectedOptions.concat(res.data.districtCountyId.toString());
+                  res.data.selectedOptions=selectedOptions;
+
+                  this.ruleForm=res.data;
                 } else {
                   isRoleMessage(res.msg);
                 }
