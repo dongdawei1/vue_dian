@@ -220,7 +220,7 @@
         this.$message.error("银行卡或者支付宝必须填写一个");
         return false;
       }
-       //this.fullscreenLoading=true;
+       this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
 
@@ -228,7 +228,8 @@
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 this.$message.success("添加成功");
-             //  this.$router.push('/home/businessEnquiry');
+                this.ruleForm='';
+               this.$router.push('/home/businessEnquiry');
               } else {
                 isRoleMessage(res.msg);
               }

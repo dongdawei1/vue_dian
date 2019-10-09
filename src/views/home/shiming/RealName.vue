@@ -53,6 +53,42 @@
       </el-form-item>
     </el-form>
 
+
+    <!--如果是批发商就展示下边的开始-->
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="iswholesale" class="demo-ruleForm">
+      <el-form-item label="市场名称"    prop="companyName1"  >
+        <el-input v-model="ruleForm.companyName"  placeholder="市场全称"></el-input>
+      </el-form-item>
+
+      <el-form-item label="市场所在地"   prop="selectedOptions">
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="ruleForm.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="地址详情"    prop="address_detailed"  >
+        <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
+      </el-form-item>
+
+      <el-form-item label="实名手机"    prop="contact"  >
+        <el-input v-model="ruleForm.contact"  placeholder="在线下单联系方式"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人姓名"    prop="consignee_name"  >
+        <el-input v-model="ruleForm.consignee_name"  placeholder="下单后联系人"></el-input>
+      </el-form-item>
+
+
+
+
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+      </el-form-item>
+    </el-form>
+    <!--批发商结束-->
+
+
   <!--如果是求职就展示下边的开始-->
     <el-form :model="ruleFormnotbusiness" :rules="rules" ref="ruleFormnotbusiness" label-width="100px"   v-if ="iswanted" class="demo-ruleForm">
 
@@ -154,6 +190,7 @@
         isbusiness:false, //商家
         iswanted:false,//求职
         islease:false,//出租
+        iswholesale:false,//批发
         isnotbusiness:false,//非商家
         isNewRealName:false,//判断是第一次还是重新发起
         pathString:'/home/GrainAndOilPage',
@@ -220,6 +257,9 @@
           companyName:[
             { required: true, message: '请输入企业名称', trigger: 'blur' }
           ],
+          companyName1:[
+            { required: true, message: '请输入市场名称', trigger: 'blur' }
+          ],
         }
       }
     },
@@ -244,6 +284,8 @@
               this.iswanted=true;
             }else if(role===6){
               this.islease=true;
+            }else if(role===13){
+              this.iswholesale=true;
             }else{
               this.$router.push({ path: '/home/myAccount' });
             }
