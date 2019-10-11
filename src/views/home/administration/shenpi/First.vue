@@ -33,6 +33,12 @@
         width="200">
       </el-table-column>
       <el-table-column
+        prop="companyName"
+        label="公司/市场名"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="authentiCationStatus"
         label="审核状态"
         width="100">

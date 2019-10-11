@@ -422,6 +422,7 @@
 
       //下拉
       querySearchAsync(queryString, cb) {
+
         // this.releaseWelfare.releaseTitle=queryString;
         this.get_serviceType();
         clearTimeout(this.timeout);

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <br>审核失败原因 ：<span v-if="isbusiness">{{ruleForm.authentiCationFailure}}<br></span>
-                   <span v-if="iswanted">{{ruleFormnotbusiness.authentiCationFailure}}<br></span>
-                   <span v-if="islease">{{ruleForm.authentiCationFailure}}<br></span>
-
+    <br>审核失败原因 ：{{ruleForm.authentiCationFailure}}<br>
          <!--商户重新实名开始-->
     <br><el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="isbusiness" class="demo-ruleForm">
       <el-form-item label="城区"   prop="selectedOptions">
@@ -54,48 +51,89 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm',2)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
       </el-form-item>
     </el-form>
     <!--商户重新实名结束-->
+
+    <!--如果是批发商就展示下边的开始-->
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if="iswholesale" class="demo-ruleForm">
+
+
+      <el-form-item label="市场所在地"   prop="selectedOptions">
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="ruleForm.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="地址详情"    prop="addressDetailed"  >
+        <el-input v-model="ruleForm.addressDetailed"  placeholder="请输入地址详情，100字内"></el-input>
+      </el-form-item>
+
+      <el-form-item label="市场名称"  prop="companyName1" >
+        <el-autocomplete
+          v-model="ruleForm.companyName"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入或点击选择市场名称"
+          clearable></el-autocomplete>
+        <!--@select="handleSelect"-->
+        <!--<el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>-->
+      </el-form-item>
+      <el-form-item label="实名手机"    prop="contact"  >
+        <el-input v-model="ruleForm.contact"  placeholder="在线下单联系方式"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人姓名"    prop="consigneeName"  >
+        <el-input v-model="ruleForm.consigneeName"  placeholder="下单后联系人"></el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('ruleForm',13)"  v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+      </el-form-item>
+    </el-form>
+    <!--批发商结束-->
+
+
+
     <!--如果是求职就展示下边的开始-->
-    <el-form :model="ruleFormnotbusiness" :rules="rules" ref="ruleFormnotbusiness" label-width="100px"   v-if ="iswanted" class="demo-ruleForm">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleFormnotbusiness" label-width="100px"   v-if ="iswanted" class="demo-ruleForm">
       <el-form-item label="求职地域"   prop="selectedOptions">
         <el-cascader
           size="large"
           :options="options"
-          v-model="ruleFormnotbusiness.selectedOptions"
+          v-model="ruleForm.selectedOptions"
           @change="handleChange">
         </el-cascader>
       </el-form-item>
 
       <el-form-item label="现居住地"    prop="addressDetailed"  >
-        <el-input v-model="ruleFormnotbusiness.addressDetailed"  placeholder="请输入地址详情，100字内"></el-input>
+        <el-input v-model="ruleForm.addressDetailed"  placeholder="请输入地址详情，100字内"></el-input>
       </el-form-item>
 
       <el-form-item label="手机"    prop="contact"  >
-        <el-input v-model="ruleFormnotbusiness.contact"  placeholder="请输入手机"></el-input>
+        <el-input v-model="ruleForm.contact"  placeholder="请输入手机"></el-input>
       </el-form-item>
       <el-form-item label="姓名"    prop="consigneeName"  >
-        <el-input v-model="ruleFormnotbusiness.consigneeName"  placeholder="请输入姓名"></el-input>
+        <el-input v-model="ruleForm.consigneeName"  placeholder="请输入姓名"></el-input>
       </el-form-item>
 
       <el-form-item label="年龄"    prop="eag"    placeholder="请输入年龄" >
-        <el-input v-model="ruleFormnotbusiness.eag"  placeholder="请输入年龄"></el-input>
+        <el-input v-model="ruleForm.eag"  placeholder="请输入年龄"></el-input>
       </el-form-item>
 
       <el-form-item label="性别"        placeholder="请选择性别" >
-        <el-radio v-model="ruleFormnotbusiness.gender" label="男">男</el-radio>
-        <el-radio v-model="ruleFormnotbusiness.gender" label="女">女</el-radio>
+        <el-radio v-model="ruleForm.gender" label="男">男</el-radio>
+        <el-radio v-model="ruleForm.gender" label="女">女</el-radio>
       </el-form-item>
 
       <el-form-item label="邮箱"    prop="email"  >
-        <el-input v-model="ruleFormnotbusiness.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
+        <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
       </el-form-item>
 
 
       <el-form-item>
-        <el-button type="primary" @click="resetFormWanted('ruleFormnotbusiness')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm',11)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
       </el-form-item>
     </el-form>
 
@@ -143,15 +181,8 @@
           <img width="100%"   :src="dialogImageUrl" alt="">
         </el-dialog>
       </el-form-item>
-
-
-
-
-
-
-
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm',2)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
       </el-form-item>
     </el-form>
     <!--商户重新实名结束-->
@@ -168,14 +199,37 @@
 
   import { getUserRealName } from '../../../api/api';
   import { echo_display } from '../../../api/api';
+  import {  getwholesale} from '../../../api/api';
   export default {
 
     data() {
+      var checkAge = (rule, value, callback) => {
+        value=this.ruleForm.companyName;
+        if (!value) {
+          return callback(new Error('市场名称不能为空'));
+        }
+        if(value.length>30){
+          return callback(new Error('市场名称不能大于30字'));
+        }else {
+          callback();
+        }
+        // setTimeout(() => {
+        //   if (!Number.isInteger(value)) {
+        //     callback(new Error('请输入数字值'));
+        //   }  else {
+        //     callback();
+        //
+        //   }
+        // }, 100);
+      };
       return {
+        restaurants: [],//标题下拉
+        timeout:  null,
         fullscreenLoading:false,
         isbusiness:false,//商家
         iswanted:false,//求职
         islease:false,//出租
+        iswholesale:false,//批发
         fileList:[],
         pathString:'/home/GrainAndOilPage',
         //文件上传的参数
@@ -196,20 +250,10 @@
           email:'',//邮箱
           companyName:'',//企业名称
           licenseUrl:[],//营业执照图片
-          authentiCationFailure:''
-        },
-        ruleFormnotbusiness: {   //求职
-          selectedOptions: [], //三级联动城市
-          provincesId:'',
-          cityId:'',
-          districtCountyId:'',
-          addressDetailed: '',//详细地址收/送货地址
-          contact:'',//收送货人联系方式
-          consigneeName:'', //收/送货人姓名
+          authentiCationFailure:'',
           eag:'', // 年龄
           gender:'男',//性别
-          email:'',//邮箱
-          authentiCationFailure:''
+
         },
         permission:'',
         role:'',
@@ -242,6 +286,10 @@
           companyName:[
             { required: true, message: '请输入企业名称', trigger: 'blur' }
           ],
+          companyName1:[
+            // { required: true, message: '请输入市场名称', trigger: 'change'}
+            { required: true,validator: checkAge, trigger: 'change'},
+          ],
 
         }
       }
@@ -257,26 +305,26 @@
           let status=res.status;
           if (status === 0) {
             let user=JSON.parse(res.data);
+            console.log(user)
             if( user.isAuthentication===3) {
               //拉取实名信息
               getUserRealName().then((res) => {
                 if (res.status === 0) {
                   let role = user.role;
+                  this.ruleForm = res.data;
                   if (role === 1 ||role === 2 || role === 3 || role === 4 || role === 5 || role === 7 || role === 12) {
-                    this.ruleForm = res.data;
-                    console.log(this.ruleForm )
                     this.ruleForm.pictureUrl= this.ruleForm.licenseUrl
                     let fileListAndPictureUrl=  echo_display(this.ruleForm);
                     //图片回显和表格参数
                     this.ruleForm.licenseUrl=fileListAndPictureUrl.pictureUrl;
                     this.fileList=fileListAndPictureUrl.fileList;
-
                     this.isbusiness = true;
                   } else if (role === 11) {
-                    this.ruleFormnotbusiness= res.data;
                     this.iswanted = true;
-                  } else if (role === 6) {
-                    this.ruleForm = res.data;
+                  }else if (role === 13) {
+                    this.iswholesale = true;
+                  }
+                  else if (role === 6) {
                     this.ruleForm.pictureUrl= this.ruleForm.licenseUrl
                     let fileListAndPictureUrl=  echo_display(this.ruleForm);
                     //图片回显和表格参数
@@ -286,8 +334,11 @@
                   } else {
                     this.$router.push({path: '/home/myAccount'});
                   }
-
-
+                  let selectedOptions=[];
+                  selectedOptions[0]=res.data.provincesId.toString();
+                  selectedOptions[1]=res.data.cityId.toString();
+                  selectedOptions[2]=res.data.districtCountyId.toString();
+                  this.ruleForm.selectedOptions=selectedOptions;
                 } else {//获取实名信息失败
                   this.$message.error(res.msg);
                 }
@@ -306,58 +357,32 @@
         this.ruleForm.provincesId=this.ruleForm.selectedOptions[0];
         this.ruleForm.cityId=this.ruleForm.selectedOptions[1];
         this.ruleForm.districtCountyId=this.ruleForm.selectedOptions[2];
-
-        this.ruleFormnotbusiness.provincesId=this.ruleFormnotbusiness.selectedOptions[0];
-        this.ruleFormnotbusiness.cityId=this.ruleFormnotbusiness.selectedOptions[1];
-        this.ruleFormnotbusiness.districtCountyId=this.ruleFormnotbusiness.selectedOptions[2];
       },
 
 
       //商家
-      submitForm(formName) {
+      submitForm(formName,type) {
         this.$refs[formName].validate((valid) => {
           var data ={
             'ruleForm': this.ruleForm,
-            'isbusiness':2   //是否是商家
+            'isbusiness':type   //是否是商家
           }
           if (valid) {
             this.fullscreenLoading=true;
 
             let length=0;
-            for(let i=0;i< this.ruleForm.licenseUrl.length;i++){
-              if(this.ruleForm.licenseUrl[i].useStatus===1 || this.ruleForm.licenseUrl[i].useStatus===3){
-                length++;
+            if(type===2){
+              for(let i=0;i< this.ruleForm.licenseUrl.length;i++){
+                if(this.ruleForm.licenseUrl[i].useStatus===1){
+                  length++;
+                }
+              }
+              if(length===0){
+                this.fullscreenLoading=false;
+                this.$message.error('图片不能为空');
+                return  false;
               }
             }
-            if(length===0){
-              this.fullscreenLoading=false;
-              this.$message.error('图片不能为空');
-              return ;
-            }
-            updateRealName(data).then(data => {
-              this.fullscreenLoading=false;
-              if (data && data.status === 0) {
-                this.$message.success(data.msg);
-                this.$router.push({ path: '/home/myAccount' });
-              }  else {
-                isRoleMessage(data.msg);
-              }
-            });
-          } else {
-            return false;
-          }
-        });
-      },
-      //求职提交
-
-      resetFormWanted(ruleFormnotbusiness) {
-        this.$refs[ruleFormnotbusiness].validate((valid) => {
-          var data ={
-            'ruleForm': this.ruleFormnotbusiness,
-            'isbusiness':11   //是否是商家
-          }
-          if (valid) {
-            this.fullscreenLoading=true;
             updateRealName(data).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {
@@ -424,6 +449,48 @@
           this.$message.error('上传图片大小不能超过 8MB!');
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
+      },
+
+      //下拉
+      querySearchAsync(queryString, cb) {
+        if(this.ruleForm.selectedOptions.length===0){
+          this.$message.error("请先选择市场所在地")
+          return false;
+        }
+        this.getwholesale();
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(this.restaurants);
+        }, 3000 * Math.random());
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+
+      getwholesale(){
+        let  param= {
+          selectedOptions:this.ruleForm.selectedOptions,
+          companyName:this.ruleForm.companyName
+        };
+        getwholesale(param).then((res) => {
+          if(res.status===0) {
+            let list=res.data;
+            let releaseTitleList=[];
+            for(let i=0;i<list.length;i++){
+              let  releaseTitle={ "value":list[i] , "address": list[i]};
+              releaseTitleList=releaseTitleList.concat(releaseTitle);
+            }
+            this.restaurants=releaseTitleList;
+            //没有找到用户输入的类型引导添加
+            if(this.restaurants.length===0){
+              this.$message.error("没有找到您输入的:市场名称可以联系客服添加");
+            }
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
       },
     }
   }

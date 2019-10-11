@@ -388,6 +388,9 @@ export const get_userDepartmentStore_id= params => {
   }).then(res => res.data); };
 export const getDepartmentStoreTitleList= params => { return axios.post(`${base}/api/departmentStore/getDepartmentStoreTitleList`, params).then(res => res.data); };
 export const getDepartmentStorePublicList= params => { return axios.post(`${base}/api/departmentStore/getDepartmentStorePublicList`, params).then(res => res.data); };
+
+export const getwholesale= params => { return axios.post(`${base}/api/wholesale/getwholesale`, params).then(res => res.data); };
+
 export const getDepartmentStoreDetails= params => {
   return axios({
     url: `${base}/api/departmentStore/getDepartmentStoreDetails`,

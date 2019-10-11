@@ -64,6 +64,30 @@
       </div>
     </div>
     <!--商户实名信息结束-->
+
+    <!--批发商户开始-->
+    <div   v-if="iswholesale"   >
+      <span>用户实名信息</span>
+      <div  class="gerentablecss_content">
+        <span>所在城区 : {{realName.detailed }}</span><br>
+        <span>市场地址 : {{ realName.addressDetailed}}</span><br>
+        <span>市场名 : {{ realName.companyName}}</span><br>
+        <span>姓名 : {{ realName.consigneeName}}</span><br>
+        <span>手机 : {{ realName.contact}}</span><br>
+        <span>实名状态 : {{ realName.authentiCationStatus}}</span><br>
+        <span v-if="authentication_status">审核失败原因 : {{ realName.authentiCationFailure}}</span><br>
+      </div>
+      <div  class="gerentablecss_butten"  v-if="authentication_status" >
+        <el-row>
+          <el-button type="info" plain>
+            <router-link
+              v-on:click.native=""
+              to="/home/updateRealName"  class="a">重新发起实名 </router-link></el-button>
+        </el-row>
+      </div>
+    </div>
+    <!--批发商户结束-->
+
     <!--求职实名信息开始-->
     <div   v-if="iswanted"   >
       <span>用户实名信息</span>
@@ -167,7 +191,7 @@
         iswanted:false,//求职
         islease:false,//出租
         isfree:false,//自由供货者
-
+        iswholesale:false,
         authentication_status:false, //审核是失败的状态
 
         form: {
@@ -251,7 +275,11 @@
                 this.islease=true;
               }else if(role===8){
                 this.isfree=true;
-              }  else{
+              }else if(role===13){
+                this.iswholesale=true;
+              }
+
+              else{
                 this.$message.error("获取用户信息失败");
               }
             }else {
