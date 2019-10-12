@@ -305,7 +305,6 @@
           let status=res.status;
           if (status === 0) {
             let user=JSON.parse(res.data);
-            console.log(user)
             if( user.isAuthentication===3) {
               //拉取实名信息
               getUserRealName().then((res) => {
