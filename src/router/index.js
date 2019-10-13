@@ -72,6 +72,10 @@ import EditMAndRAndP  from '../views/home/meichong/EditMAndRAndP'
 import Integral from '../views/home/Integral'
 import Characteristic from '../views/home/Characteristic'
 
+import WholesaleMarket from '../views/home/WholesaleMarket'
+import CreateWholesaleMarket from '../views/home/wholesaleMarket/pifa/CreateWholesaleMarket'
+
+
 import ToExamine from '../views/home/administration/ToExamine'
 import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 import AdminAddjiedan from '../views/home/administration/jiedanguanli/addjiedan/AdminAddjiedan'
@@ -196,6 +200,18 @@ export default new VueRouter ({
           path: '/home/PurchaseCreateOrder/:id',  //发布
           component: PurchaseCreateOrder
         },
+
+
+        {
+          path: '/home/wholesaleMarket',  //批发市场
+          component: WholesaleMarket
+        },
+        {
+          path: '/home/createWholesaleMarket',  //批发市场创建商品
+          component: CreateWholesaleMarket
+        },
+
+
 
        /*市场区开始*/
             {

@@ -188,7 +188,7 @@
   import { uploadDown_update } from '../../../api/api';
   import { get_user_info } from '../../../api/api';
   import {  newRealName } from '../../../api/api';
-  import { regionData } from 'element-china-area-data'
+  import { regionData } from 'element-china-area-data';
   import {  isRoleMessage} from '../../../api/api';
   import {  getwholesale} from '../../../api/api';
 
