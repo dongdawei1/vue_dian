@@ -308,6 +308,17 @@ export const get_serviceType = params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
+export const get_serviceTypeUrl = params => {
+  return axios({
+    url: `${base}/api/serviceType/get_serviceTypeUrl`,
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    params: { releaseType: params.releaseType,
+      serviceType:params.serviceType},
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
+
 export const create_serviceType= params => { return axios.post(`${base}/api/serviceType/create_serviceType`, params).then(res => res.data);};
 export const admin_create_serviceType= params => { return axios.post(`${base}/api/toExamine/admin_create_serviceType`, params).then(res => res.data);};
 

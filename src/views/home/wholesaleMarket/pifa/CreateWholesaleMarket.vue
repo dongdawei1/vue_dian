@@ -19,9 +19,16 @@
           v-model="ruleForm.serviceType"
           :fetch-suggestions="querySearchAsync"
           placeholder="请输入或点击选择商品名称"
+
+          @select="serviceTypeUrl"
           clearable></el-autocomplete>
       </el-form-item>
 
+      <div>
+        <div v-if="commodityUrl!= null && commodityUrl!=''">
+          &nbsp;&nbsp; &nbsp; 参照图片 <img :src="commodityUrl"  >
+        </div>
+      </div>
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="如：红薯（黄心红薯）某某品种"></el-input>
       </el-form-item>
@@ -53,6 +60,19 @@
 
       <el-form-item :label="jiagetype" prop="commodityJiage" >
         <el-input v-model.number="ruleForm.commodityJiage" placeholder="请输入整数"  ></el-input>
+      </el-form-item>
+      &nbsp; &nbsp; 注:只有在您选定的价格有效期内展示本条商品信息，<br>
+      &nbsp;&nbsp;  蔬菜类开始时间最多是 2天后 结束时间最多是4天后；
+      <el-form-item label="价格有效期" prop="value1">
+        <el-date-picker
+          @change="value11"
+          v-model="ruleForm.value1"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss">
+        </el-date-picker>
       </el-form-item>
 
           <el-form-item :label="type" prop="commodityCountNo" >
@@ -106,7 +126,22 @@
         </template>
       </el-form-item>
 
-      deliveryType
+
+      <el-form-item  label="送货方式" prop="deliveryType" v-if="isdeliveryType">
+        <template>
+          <el-radio-group v-model="ruleForm.deliveryType" @change="deliveryTypeChange">
+            <el-radio :label="1" >自提</el-radio>
+            <el-radio :label="2" >有偿送货</el-radio>
+            <el-radio :label="3" >自提/有偿送货均支持</el-radio>
+            <el-radio :label="4" >满N元免运费</el-radio>
+          </el-radio-group>
+        </template>
+      </el-form-item>
+      <el-form-item :label="deliveryCollectType" prop="deliveryCollect" v-if="isdeliveryCollect">
+        <el-input v-model="ruleForm.deliveryCollect" placeholder="请输入金额"></el-input>
+      </el-form-item>
+
+
 
       <el-form-item label="图片" prop="pictureUrl">
         <el-upload
@@ -114,7 +149,7 @@
           action="/api/uploadDown/upload"
           name="picture"
           list-type="picture-card"
-          :limit="8"
+          :limit="5"
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -130,13 +165,14 @@
       </el-form-item>
 
 
-      <el-form-item label="联系人" prop="consigneeName">
-        <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
+
+      实名信息(修改实名信息请到-个人中心)
+      <el-form-item label="联系人">
+        <el-input v-model="ruleForm.consigneeName"  :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式"  prop="contact">
-        <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+      <el-form-item label="联系方式" >
+        <el-input v-model="ruleForm.contact" :disabled="true"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
-      实名信息
       <el-form-item label="市场名称"  >
         <el-input v-model="realName.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
       </el-form-item>
@@ -179,7 +215,7 @@
   import { uploadDown_update } from '../../../../api/api';
   import {  checke_isButten } from '../../../../api/api';
 
-  import {   get_serviceType } from '../../../../api/api';
+  import {   get_serviceTypeUrl } from '../../../../api/api';
   import {   create_equipment } from '../../../../api/api';
   import { regionData } from 'element-china-area-data';
 
@@ -187,11 +223,11 @@
     data() {
       var checkAge = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('商品总数不能为空'));
+          return callback(new Error('不能为空'));
         }
         setTimeout(() => {
           if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字'));
+            callback(new Error('请输入整数'));
           }  else {
             callback();
           }
@@ -227,8 +263,13 @@
         isServiceAndprice:false,//散装就不展示了
         isg:false,
         isl:false,
+        isdeliveryType: false,//是否展示送货方式
+        isdeliveryCollect:false,//是否展示收取运费
+        deliveryCollectType:'运费',
         type:'总数(kg)',
         jiagetype:'单价(斤/kg)',
+        urllist:[],//示例图片list
+        commodityUrl:'',//示例图片
         ruleForm: {
           userId:'',
           releaseType:'',//发布类型
@@ -243,17 +284,14 @@
           commodityCountNo:'',//总量
           serviceIntroduction:'',//介绍
           remarks:'',//备注
-
+          value1:'',//价格开始结束时间
           reserve:'',//是否接受预定
-
-
-          deliveryType:'',//送货方式
+          deliveryType:1,//送货方式
+          deliveryCollect:0,
           serviceDetailed:'',//服务地址 来电确认和全市
           pictureUrl:[],//图片
           //实名中获取
 
-          contact:'',  //实名联系联系方式 回显 可修改
-          consigneeName:'', //联系人姓名 回显可修改
         },
 
         rules: {
@@ -277,6 +315,15 @@
           ],
           reserve: [
             { required: true, message: '请选择是否支持线上预定', trigger: 'change' },
+          ],
+          deliveryType: [
+            { required: true, message: '请选择送货方式', trigger: 'change' },
+          ],
+          deliveryCollect:[
+            { required: true,validator: checkAge, trigger: 'blur'},
+          ],
+          value1: [
+            { required: true, message: '请选择价格有效期', trigger: 'change' },
           ],
           serviceDetailed: [
             { required: true, message: '请选服务/销售城区', trigger: 'change' }
@@ -305,27 +352,8 @@
 
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
-          ],
-          contact:[
-            { required: true, message: '请输入手机', trigger: 'blur' },
-            { min: 11, max: 11, message: '手机号格式错误', trigger: 'blur' }
-          ],
-          consigneeName:[
-            { required: true, message: '请输入姓名' },
-            { min:2,max: 12, message: '长度在2至11位之间', trigger: 'blur' }
-          ],
-          serviceTypeName:[
-            { required: true, message: '请输入商品/服务类型' },
-            { min:2,max: 15, message: '长度在2至15位之间', trigger: 'blur' }
-          ],
-          project:[
-            { required: true, message: '请输入项目/规格' },
-            { min:2,max: 12, message: '长度在2至12位之间', trigger: 'blur' }
-          ],
-          price:[
-            { required: true,validator: checkAge, trigger: 'blur'},
-            // { type: 'number', message: '年龄必须为数字值'}
-          ],}
+          ]
+          }
       }
     },
 
@@ -444,7 +472,7 @@
       onExceed(files, fileList) {
         this.$message({
           type: 'info',
-          message: '最多只能上传8张图片',
+          message: '最多只能上传5张图片',
           duration: 2000
         });
 
@@ -492,15 +520,20 @@
           serviceType:this.ruleForm.serviceType,
           releaseType:this.ruleForm.releaseType,
         };
-        get_serviceType(param).then((res) => {
+        get_serviceTypeUrl(param).then((res) => {
           if(res.status===0) {
             let list=res.data;
             let releaseTitleList=[];
+            let urllist=[];
             for(let i=0;i<list.length;i++){
-              let  releaseTitle={ "value":list[i] , "address": list[i]};
+              let  releaseTitle={ "value":list[i].serviceTypeName, "address": list[i].id};
               releaseTitleList=releaseTitleList.concat(releaseTitle);
+
+              let  url={"serviceTypeName" : list[i].serviceTypeName ,"pictureUrl":list[i].pictureUrl};
+              urllist=urllist.concat(url);
             }
             this.restaurants=releaseTitleList;
+            this.urllist=urllist;
             //没有找到用户输入的类型引导添加
             if(this.restaurants.length===0){
               this.$message.error("没有找到您输入的:商品名称,可联系客服添加");
@@ -523,7 +556,7 @@
       else  if(this.ruleForm.commodityPacking===2){
           this.isServiceAndprice=true;
          this.isg=true;
-           this.isl=false;
+          this.isl=false;
          this.ruleForm.cations='';
          this.type='总数(袋)';
          this.jiagetype='单价(元/袋)';
@@ -535,7 +568,43 @@
          this.type='总数(瓶)';
          this.jiagetype='单价(元/瓶)';
        }
+      },
 
+      reserveChange(){
+        if(this.ruleForm.reserve===1){
+          this.isdeliveryType=true;
+        }else if(this.ruleForm.reserve===2){
+          this.isdeliveryType=false;
+        }
+      },
+
+     deliveryTypeChange(){
+        if(this.ruleForm.deliveryType===1){
+          this.isdeliveryCollect=false;
+          this.deliveryCollectType='运费';
+          this.ruleForm.deliveryCollect=0;
+        }else if(this.ruleForm.deliveryType===2 ||this.ruleForm.deliveryType===3){
+          this.isdeliveryCollect=true;
+          this.deliveryCollectType='运费(元)';
+          this.ruleForm.deliveryCollect='';
+        }else if(this.ruleForm.deliveryType===4 ){
+          this.isdeliveryCollect=true;
+          this.deliveryCollectType='满(元)免';
+          this.ruleForm.deliveryCollect='';
+        }
+  },
+
+      value11(){
+        console.log(this.ruleForm.value1)
+      },
+
+      serviceTypeUrl(){
+        for(let i=0;i<this.urllist.length;i++){
+          let serviceTypeName=this.urllist[i].serviceTypeName;
+           if(this.ruleForm.serviceType===serviceTypeName){
+             this.commodityUrl=this.urllist[i].pictureUrl;
+           }
+        }
       },
 
     }
