@@ -419,6 +419,8 @@ export const get_userWineAndTableware_id= params => {
   }).then(res => res.data); };
 
 export const create_wholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);};
+export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
+
 
 function isButtonAndListusermrp(res,type) {
 

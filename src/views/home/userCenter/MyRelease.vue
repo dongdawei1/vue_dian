@@ -33,7 +33,9 @@
     <el-tab-pane label="工服/绿植/百货/装饰用品" name="myDepartmentStore" v-if="isDepartmentStore" :key="'myDepartmentStore'">
       <myDepartmentStore v-if="departmentStore"></myDepartmentStore>
     </el-tab-pane>
-
+    <el-tab-pane label="发布米面/蔬菜/水产蛋禽批发" name="myWholesaleCommodity" v-if="isWholesaleCommodity" :key="'myWholesaleCommodity'">
+      <myWholesaleCommodity v-if="wholesaleCommodity"></myWholesaleCommodity>
+    </el-tab-pane>
 
 
   </el-tabs>
@@ -49,6 +51,7 @@
   import MyFoodAndGrain from './myreleases/MyFoodAndGrain'
   import MyDepartmentStore from './myreleases/MyDepartmentStore'
   import MyWineAndTableware from './myreleases/MyWineAndTableware'
+  import MyWholesaleCommodity from './myreleases/MyWholesaleCommodity'
   import { get_user_info } from '../../../api/api';
 
   export default {
@@ -60,7 +63,8 @@
       myEquipment:MyEquipment,
       myFoodAndGrain:MyFoodAndGrain,
       myWineAndTableware:MyWineAndTableware,
-      myDepartmentStore:MyDepartmentStore
+      myDepartmentStore:MyDepartmentStore,
+      myWholesaleCommodity:MyWholesaleCommodity
     },
 
     data() {
@@ -92,6 +96,8 @@
         isJobWanted:false,//求职11
         jobWanted:false,
 
+        isWholesaleCommodity:false,//批发
+        wholesaleCommodity:false,
         activeName: '',//默认打开的导航 ,根据每个不同的商户判断然后确认打开那个默认
         user:'', //用户
         role:''
@@ -114,6 +120,7 @@
             this.rent=false;
             this.createFoodAndGrain=false;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           } else if(tab.name === "myJobWanted") {
             this.mAndRAndP=false;
             this.jobWanted=true;
@@ -123,6 +130,7 @@
             this.rent=false;
             this.createFoodAndGrain=false;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           }else if(tab.name === "createPosition") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -132,6 +140,7 @@
             this.rent=false;
             this.createFoodAndGrain=false;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           }else if(tab.name === "myWineAndTableware") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -141,6 +150,7 @@
             this.rent=false;
             this.createFoodAndGrain=false;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           }else if(tab.name === "myEquipment") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -150,6 +160,7 @@
             this.rent=false;
             this.createFoodAndGrain=false;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           }else if(tab.name === "rent") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -159,6 +170,7 @@
             this.rent=true;
             this.createFoodAndGrain=false;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           }else if(tab.name === "createFoodAndGrain") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -168,6 +180,7 @@
             this.rent=false;
             this.createFoodAndGrain=true;
             this.departmentStore=false;
+            this.wholesaleCommodity=false;
           }else if(tab.name === "myDepartmentStore") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -176,8 +189,21 @@
             this.equipment=false;
             this.rent=false;
             this.createFoodAndGrain=false;
+            this.wholesaleCommodity=false;
             this.departmentStore=true;
+          }else if(tab.name === "myWholesaleCommodity") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+            this.wholesaleCommodity=true;
           }
+
+
       },
 
       //判断是否登录
@@ -200,7 +226,7 @@
              this.isFoodAndGrain=true;
              this.isWineAndTableware=true;
              this.isDepartmentStore=true;
-
+             this.isWholesaleCommodity=true;
              this.mAndRAndP=true;
             this.activeName='mrp';
            }
@@ -236,6 +262,10 @@
               this.isDepartmentStore=true;
              this.activeName='myDepartmentStore';
             }
+           else if(role===13){
+             this.isWholesaleCommodity=true;
+             this.activeName='myWholesaleCommodity';
+           }
 
 
           }

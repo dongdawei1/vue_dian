@@ -62,7 +62,8 @@
         <el-input v-model="ruleForm.commodityJiage" placeholder="请输入价格,最多两位小数"  ></el-input>
       </el-form-item>
       &nbsp; &nbsp; 注:只有在您选定的价格有效期内展示本条商品信息，<br>
-      &nbsp;&nbsp;  蔬菜类开始时间最多是 2天后 结束时间最多是4天后；
+      &nbsp;&nbsp;  蔬菜类开始时间最多是 2天后 结束时间最多是4天后；<br>
+      &nbsp;&nbsp;  非蔬菜类开始时间最多是 2天后 结束时间最多是15天后；
       <el-form-item label="价格有效期" prop="value1">
         <el-date-picker
           @change="value11"
@@ -573,7 +574,6 @@
   },
 
       value11(){
-        console.log(this.ruleForm.value1)
       },
 
       serviceTypeUrl(){
