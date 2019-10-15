@@ -59,7 +59,7 @@
 
 
       <el-form-item :label="jiagetype" prop="commodityJiage" >
-        <el-input v-model.number="ruleForm.commodityJiage" placeholder="请输入整数"  ></el-input>
+        <el-input v-model="ruleForm.commodityJiage" placeholder="请输入价格,最多两位小数"  ></el-input>
       </el-form-item>
       &nbsp; &nbsp; 注:只有在您选定的价格有效期内展示本条商品信息，<br>
       &nbsp;&nbsp;  蔬菜类开始时间最多是 2天后 结束时间最多是4天后；
@@ -75,7 +75,7 @@
         </el-date-picker>
       </el-form-item>
 
-          <el-form-item :label="type" prop="commodityCountNo" >
+       <el-form-item :label="type" prop="commodityCountNo" >
             <el-input v-model.number="ruleForm.commodityCountNo" placeholder="请输入整数"  ></el-input>
           </el-form-item>
 
@@ -138,7 +138,7 @@
         </template>
       </el-form-item>
       <el-form-item :label="deliveryCollectType" prop="deliveryCollect" v-if="isdeliveryCollect">
-        <el-input v-model="ruleForm.deliveryCollect" placeholder="请输入金额"></el-input>
+        <el-input v-model.number="ruleForm.deliveryCollect" placeholder="请输入整数金额"></el-input>
       </el-form-item>
 
 
@@ -168,10 +168,10 @@
 
       实名信息(修改实名信息请到-个人中心)
       <el-form-item label="联系人">
-        <el-input v-model="ruleForm.consigneeName"  :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
+        <el-input v-model="realName.consigneeName"  :disabled="true" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
       <el-form-item label="联系方式" >
-        <el-input v-model="ruleForm.contact" :disabled="true"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="realName.contact" :disabled="true"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
       <el-form-item label="市场名称"  >
         <el-input v-model="realName.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
@@ -216,14 +216,14 @@
   import {  checke_isButten } from '../../../../api/api';
 
   import {   get_serviceTypeUrl } from '../../../../api/api';
-  import {   create_equipment } from '../../../../api/api';
+  import {   create_wholesaleCommodity } from '../../../../api/api';
   import { regionData } from 'element-china-area-data';
 
   export default {
     data() {
       var checkAge = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('不能为空'));
+          return callback(new Error('不能为空或者0'));
         }
         setTimeout(() => {
           if (!Number.isInteger(value)) {
@@ -237,14 +237,13 @@
         if (!value) {
           return callback(new Error('价格不能为空'));
         }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字'));
-          }  else {
-            callback();
-          }
-        }, 100);
+
+     if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(value)) {
+       callback();
+     }
+      return callback(new Error('价格输入有误！请输入数字最多两位小数'));
       };
+
       return {
         restaurants: [],//标题下拉
         timeout:  null,
@@ -284,11 +283,10 @@
           commodityCountNo:'',//总量
           serviceIntroduction:'',//介绍
           remarks:'',//备注
-          value1:'',//价格开始结束时间
+          value1:[],//价格开始结束时间
           reserve:'',//是否接受预定
           deliveryType:1,//送货方式
           deliveryCollect:0,
-          serviceDetailed:'',//服务地址 来电确认和全市
           pictureUrl:[],//图片
           //实名中获取
 
@@ -367,33 +365,17 @@
       },
       //提交
       submitForm(ruleForm) {
-        this.fullscreenLoading=true;
+      //  this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            let serviceAndpriceNo={
-              project: this.ruleForm.project,
-              price: this.ruleForm.price,
-            };
-            this.ruleForm.serviceAndprice=this.ruleForm.serviceAndprice.concat(serviceAndpriceNo);
-            let length=this.ruleForm.serviceAndprice.length;
-            if(length>1){
-              for(let a=0;a<length;a++){
-                let serviceAndpriceNoa=this.ruleForm.serviceAndprice[a];
-                if(serviceAndpriceNoa.project==='' || serviceAndpriceNoa.price==='' ){
-                  this. deleteItem (serviceAndpriceNo, length-1)
-                  this.$message.error("新增加:项目/规格或者价格不能有空值")
-                  return false;
-                }
-              }
-            }
 
-            create_equipment(this.ruleForm).then(res => {
+
+            create_wholesaleCommodity(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗
                 this.fileList=[];
                 this.ruleForm.pictureUrl=[];
-                this.ruleForm.serviceAndprice=[];
                 this.centerDialogVisible=true;
               } else {
                 isRoleMessage(res.msg);
@@ -413,8 +395,6 @@
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
-            this.ruleForm.contact= this.realName.contact;
-            this.ruleForm.consigneeName= this.realName.consigneeName;
           }else {
             isRoleMessage(res.msg);
           }
@@ -586,11 +566,9 @@
         }else if(this.ruleForm.deliveryType===2 ||this.ruleForm.deliveryType===3){
           this.isdeliveryCollect=true;
           this.deliveryCollectType='运费(元)';
-          this.ruleForm.deliveryCollect='';
         }else if(this.ruleForm.deliveryType===4 ){
           this.isdeliveryCollect=true;
           this.deliveryCollectType='满(元)免';
-          this.ruleForm.deliveryCollect='';
         }
   },
 

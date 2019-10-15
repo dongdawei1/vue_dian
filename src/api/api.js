@@ -417,6 +417,9 @@ export const get_userWineAndTableware_id= params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+
+export const create_wholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);};
+
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
@@ -722,6 +725,14 @@ function isButtonAndListusermrp(res,type) {
   }
 }
 
+
+export const changeNum = params =>{
+  if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(params)) {
+    console.log('有效');
+    return true;
+  }
+  return false;
+};
 export const newstr= params => {
   if(params.type===1){
     return   params.res.replace("(商品类型不存在，如果合规请手动添加: )","");
@@ -738,7 +749,7 @@ export const newstr= params => {
     } else {
 
     }
-  }
+  };
 //参数n为休眠时间，单位为毫秒:
   export const sleep = params => {
     var start = new Date().getTime();
@@ -749,5 +760,8 @@ export const newstr= params => {
       }
     }
     // console.log('休眠后：' + new Date().getTime());
-  }
+  };
+
+
+
 
