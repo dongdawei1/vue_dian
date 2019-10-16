@@ -13,9 +13,17 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="价格有效期"  >
+        <el-select v-model="releaseWelfare.commodityType" placeholder="请选择价格有效期状态" clearable
+                   @change="serviceTypecheck(1)">
+          <el-option label="价格有效期内" value="1"></el-option>
+          <el-option label="价格有效期已结束" value="2"></el-option>
+          <el-option label="价格有效期未开始" value="3"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="发布状态"  >
         <template>
-          <el-select v-model="releaseWelfare.welfareStatus" clearable placeholder="请选择发布状态">
+          <el-select v-model="releaseWelfare.welfareStatus" clearable placeholder="请选择发布状态" @change="serviceTypecheck(2)">
             <el-option
               v-for="item in  welfareStatuss"
               :key="item.label"
@@ -24,22 +32,14 @@
             </el-option>
           </el-select>
         </template>
-      </el-form-item>
-
-      <el-form-item label="价格有效期"  >
-        <el-select v-model="releaseWelfare.commodityType" placeholder="请选择价格有效期状态" clearable >
-          <el-option label="价格有效期内" value="1"></el-option>
-          <el-option label="价格有效期已结束" value="2"></el-option>
-          <el-option label="价格有效期未开始" value="3"></el-option>
-        </el-select>
-      </el-form-item>  <br>
+      </el-form-item> <br>
 
       <el-form-item label="商品名称"   >
         <el-autocomplete
           v-model="releaseWelfare.serviceType"
           :fetch-suggestions="querySearchAsync"
           placeholder="请输入或点击选择商品名称"
-          @select="serviceTypeUrl"
+          @change="serviceTypecheck"
           clearable></el-autocomplete>
       </el-form-item>
 
@@ -62,13 +62,13 @@
       <el-table-column
         fixed
         prop="releaseType"
-        label="发布类型"
+        label="商品类型"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="serviceType"
-        label="具体项目"
+        label="商品名称"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -78,11 +78,24 @@
         width="90">
       </el-table-column>
       <el-table-column
-        prop="authentiCationFailure"
-        label="失败原因"
+        prop="commodityJiage"
+        label="价格(元)"
         width="90"
         :show-overflow-tooltip="true">
       </el-table-column>
+      <el-table-column
+        prop="commoditySpecifications"
+        label="包装规格"
+        width="110"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="isValidity"
+        label="显示状态"
+        width="190"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
       <el-table-column
         prop="releaseTitle"
         label="标题"
@@ -91,34 +104,18 @@
       </el-table-column>
 
       <el-table-column
-        prop="serviceDetailed"
-        label="销售区域"
-        width="120"
+        prop="startTime"
+        label="价格开始时间"
+        width="110"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
-        prop="servicFrequenc"
-        label="服务次数"
-        width="100"
+        prop="endTime"
+        label="价格结束时间"
+        width="110"
         :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column
-        prop="contact"
-        label="联系方式"
-        width="110">
-      </el-table-column>
-      <el-table-column
-        prop="consigneeName"
-        label="联系人"
-        width="120"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="创建时间"
-        width="120"
-        :show-overflow-tooltip="true">
-      </el-table-column>
+
       <el-table-column
         fixed="right"
         label="操作"
@@ -212,6 +209,8 @@
   import { get_wholesaleCommodity_serviceType} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
   import {   getRealName } from '../../../../api/api';
+  import {   get_myWholesaleCommodity_list } from '../../../../api/api';
+
   export default {
 
     data() {
@@ -226,10 +225,9 @@
         total: 0,
         //分页结束
         welfareStatuss:[
-          { "value": "发布中", "label": "1" },
+          { "value": "审核通过", "label": "1" },
           { "value": "隐藏中", "label": "2" },
-          { "value": "审核中", "label": "4" },
-          { "value": "非有效期", "label": "5" },
+          { "value": "审核中", "label": "4" }
         ],//查询条件职位状态
         releaseWelfare: { //查询条件
           releaseType:'4', //服务类型
@@ -331,15 +329,15 @@
       get_position_list(){
         console.log(12)
         console.log(this.releaseWelfare)
-        // get_myFoodAndGrain_list(this.releaseWelfare).then((res) => {
-        //   console.log(12)
-        //   if(res.status===0) {
-        //     this.total = res.data.totalno; //总条数
-        //     this.tableData = res.data.datas;
-        //   }else{
-        //     isRoleMessage(res.msg);
-        //   }
-        // });
+        get_myWholesaleCommodity_list(this.releaseWelfare).then((res) => {
+          console.log(res)
+          if(res.status===0) {
+            this.total = res.data.totalno; //总条数
+            this.tableData = res.data.datas;
+          }else{
+            isRoleMessage(res.msg);
+          }
+        });
       },
 
       //判断是否实名和登陆状态
@@ -372,8 +370,6 @@
 
       //下拉
       querySearchAsync(queryString, cb) {
-
-        // this.releaseWelfare.releaseTitle=queryString;
         if(this.releaseWelfare.releaseType===''){
           this.$message.error("请先选择:发布类型")
           return false;
@@ -394,26 +390,32 @@
           if(res.status===0) {
             let list=res.data;
             let releaseTitleList=[];
-            let urllist=[];
             for(let i=0;i<list.length;i++){
-              let  releaseTitle={ "value":list[i].serviceTypeName, "address": list[i].id};
+              let  releaseTitle={ "value":list[i], "address": list[i]};
               releaseTitleList=releaseTitleList.concat(releaseTitle);
-
-              let  url={"serviceTypeName" : list[i].serviceTypeName ,"pictureUrl":list[i].pictureUrl};
-              urllist=urllist.concat(url);
             }
             this.restaurants=releaseTitleList;
-            this.urllist=urllist;
+
             //没有找到用户输入的类型引导添加
             if(this.restaurants.length===0){
-              this.$message.error("没有找到您输入的:商品名称,可联系客服添加");
+              this.$message.error({
+                type: 'info',
+                message: '没找到商品,可以尝试更换筛选条件',
+                duration: 2000
+              });
             }
           }else {
             isRoleMessage(res.msg);
           }
         });
       },
-
+      serviceTypecheck(type){
+        if(type===1){
+        this.releaseWelfare.welfareStatus='';
+        }else if(type===2){
+          this.releaseWelfare.commodityType='';
+        }
+      }
     }
   }
 </script>

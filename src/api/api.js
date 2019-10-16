@@ -420,7 +420,7 @@ export const get_userWineAndTableware_id= params => {
 
 export const create_wholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);};
 export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
-
+export const get_myWholesaleCommodity_list= params => { return axios.post(`${base}/api/wholesaleCommodity/get_myWholesaleCommodity_list`, params).then(res => isButtonAndListusermrp(res.data,13) ); };
 
 function isButtonAndListusermrp(res,type) {
 
@@ -551,16 +551,29 @@ function isButtonAndListusermrp(res,type) {
       }
     }
     //用户获取自己发布的租房
-    else if(type===5 || type===7){
+    else if(type===5 || type===7 || type===13){
       for (let a = 0; a < list.length; a++) {
         list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
         if(type===7){
          list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
         }
-
+         if(type===13){let  commodityPacking=list[a].commodityPacking;
+           if(commodityPacking===1){
+             list[a].commodityPacking='散装';
+           }else if(commodityPacking===2){
+             list[a].commodityPacking='袋装';
+             list[a].commoditySpecifications=list[a].commoditySpecifications+'/袋';
+           }else if(commodityPacking===3){
+             list[a].commoditySpecifications=list[a].commoditySpecifications+'/瓶/桶';
+             list[a].commodityPacking='瓶/桶装';
+           }}
         let welfareStatus = list[a].welfareStatus;
         if (welfareStatus === 1) {
+          if(type===13){
+            list[a].welfareStatus = '审核通过';
+          }else{
           list[a].welfareStatus = '发布中';
+          }
           list[a].authentiCationFailure = '';
           list[a].isDisplayRefresh = true;
           list[a].isDisplayHide = true;
@@ -711,6 +724,7 @@ function isButtonAndListusermrp(res,type) {
         }
       }
     }
+
  //查看和删除全部有 除了审批scope.row.isDisplaySee">查看，scope.row.isDisplayDelete"   >删除，
 //       </el-button>
 //       scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>

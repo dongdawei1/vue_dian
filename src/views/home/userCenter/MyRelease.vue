@@ -250,20 +250,25 @@
              this.isWineAndTableware=true;
              this.activeName='myWineAndTableware';
             }else if(role===6){
+             this.rent=true;
              this.isRent=true; //窗口123456
              this.activeName='rent';
             }else if(role===7){
               this.isMenuAndRenovationAndPestControl=true;//菜谱 7//装修7//灭虫7
+             this.mAndRAndP=true;
              this.activeName='mrp';
             }else if(role===11){
               this.activeName='myJobWanted';
               this.isJobWanted=true;
+              this.jobWanted=true;
             }else if(role===12){
               this.isDepartmentStore=true;
+              this.departmentStore=true;
              this.activeName='myDepartmentStore';
             }
            else if(role===13){
              this.isWholesaleCommodity=true;
+             this.wholesaleCommodity=true;
              this.activeName='myWholesaleCommodity';
            }
 
