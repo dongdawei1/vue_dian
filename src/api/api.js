@@ -148,6 +148,9 @@ export const adminMent= params => { return axios.post(`${base}/api/toExamine/adm
 export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审核菜
 export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+//待审核批发菜
+export const adminWholesaleCommodity= params => { return axios.post(`${base}/api/toExamine/adminWholesaleCommodity`, params).then(res => isButtonAndListusermrp(res.data,14) ); };
+
 //待审批酒
 export const adminWineAndTableware= params => { return axios.post(`${base}/api/toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 export const adminDepartmentStore= params => { return axios.post(`${base}/api/toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
@@ -557,7 +560,15 @@ function isButtonAndListusermrp(res,type) {
         if(type===7){
          list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
         }
-         if(type===13){let  commodityPacking=list[a].commodityPacking;
+         if(type===13){
+           let isButten=list[a].isButten;
+           list[a].isDisplayEdit = isButten.edit;
+           list[a].isDisplayHide = isButten.hide;
+           list[a].isDisplayRelease = isButten.release;
+           list[a].isDisplayRefresh = isButten.refresh;
+           list[a].isDisplayDelete = isButten.delete;
+           list[a].isDisplaySee = true;
+           let  commodityPacking=list[a].commodityPacking;
            if(commodityPacking===1){
              list[a].commodityPacking='散装';
            }else if(commodityPacking===2){
@@ -575,18 +586,24 @@ function isButtonAndListusermrp(res,type) {
           list[a].welfareStatus = '发布中';
           }
           list[a].authentiCationFailure = '';
+          if(type!==13){
           list[a].isDisplayRefresh = true;
           list[a].isDisplayHide = true;
           list[a].isDisplayEdit = true;
+          }
         } else if (welfareStatus === 2) {
           list[a].welfareStatus = '隐藏中';
           list[a].authentiCationFailure = '';  //审核失败原因
-          list[a].isDisplayRelease = true;
+          if(type!==13) {
+            list[a].isDisplayRelease = true;
+          }
         } else if (welfareStatus === 4) {
           let authentiCationStatus = list[a].authentiCationStatus;
           if (authentiCationStatus === 3) {
             list[a].welfareStatus = '审核失败';
-            list[a].isDisplayEdit = true;
+            if(type!==13) {
+              list[a].isDisplayEdit = true;
+            }
           } else {
             list[a].welfareStatus = '审核中'
             list[a].authentiCationFailure = '';
@@ -594,11 +611,14 @@ function isButtonAndListusermrp(res,type) {
         } else if (welfareStatus === 5) {
           list[a].welfareStatus = '已过期';
           list[a].authentiCationFailure = '';
-          list[a].isDisplayDelay = true;
+          if(type!==13) {
+            list[a].isDisplayDelay = true;
+          }
         }
-
-        list[a].isDisplaySee = true;
-        list[a].isDisplayDelete = true;
+        if(type!==13) {
+          list[a].isDisplaySee = true;
+          list[a].isDisplayDelete = true;
+        }
         let releaseType=list[a].releaseType;
         if(releaseType===14){
           list[a].releaseType='店面/窗口出租';
@@ -644,10 +664,22 @@ function isButtonAndListusermrp(res,type) {
       }
     }
     //管理员租房
-    else if(type===6 || type===8  ){
+    else if(type===6 || type===8  || type===14){
       for (let a = 0; a < list.length; a++) {
         if(type===8){
           list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
+        }
+        if(type===14){
+
+          list[a].commodityJiage= list[a].commodityJiage;
+        let  commodityPacking=list[a].commodityPacking;
+         if(commodityPacking===1){
+           list[a].commodityPacking='散装';
+         }else if(commodityPacking===2){
+           list[a].commodityPacking='袋装';
+         }else if(commodityPacking===3){
+           list[a].commodityPacking='瓶/桶装';
+         }
         }
         list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
         let authentiCationStatus = list[a].authentiCationStatus;

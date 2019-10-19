@@ -9,9 +9,27 @@
           <el-option label="副食/调料" value="6"></el-option>
           <el-option label="水产/禽蛋" value="29" ></el-option>
           <el-option label="清洁用品" value="9"></el-option>
-          <el-option label="桌椅餐具" value="11" ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="所在城区"   >
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="releaseWelfare.selectedOptions"
+          @change="handleChange"
+          clearable>
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="市场名称"  >
+        <el-autocomplete
+          v-model="releaseWelfare.companyName"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入或点击选择市场名称"
+          clearable></el-autocomplete>
+        <!--@select="handleSelect"-->
+        <!--<el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>-->
+      </el-form-item><br>
+
       <el-form-item label="手机号">
         <el-input v-model="releaseWelfare.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
@@ -213,15 +231,20 @@
 </template>
 <script>
 
-  import { adminFoodAndGrain} from '../../../../api/api';
+  import { adminWholesaleCommodity} from '../../../../api/api';
   import { examineAll} from '../../../../api/api';
 
   import { isRoleMessage } from '../../../../api/api';
   import { admin_create_serviceType } from '../../../../api/api';
   import { newstr } from '../../../../api/api';
+  import { regionData } from 'element-china-area-data'
+  import {  getwholesale} from '../../../../api/api';
   export default {
     data() {
       return {
+        restaurants: [],//标题下拉
+        timeout:  null,
+
         shenhezhihui:false, //审核弹窗置灰
         fullscreenLoading:false,
         pathString:'/home/releaseWelfare',
@@ -233,10 +256,13 @@
         releaseWelfare: { //查询条件
           contact:'',//手机号
           releaseType:'4', //服务类型
+          selectedOptions: [], //三级联动城市
+          companyName:'',//市场名称
           currentPage: 1,
           pageSize: 20,//每页显示的数量
         },
         tableData:[], //全部数据
+        options: regionData,//城市
         tableDataNo:{
           serviceAndprice:'',
           evaluateid:'',
@@ -362,7 +388,10 @@
         this.get_position_list();
       },
       get_position_list(){
-        adminFoodAndGrain(this.releaseWelfare).then((res) => {
+        console.log(this.releaseWelfare)
+        adminWholesaleCommodity(this.releaseWelfare).then((res) => {
+
+
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -371,7 +400,56 @@
           }
         });
       },
+      //城市组件
+      handleChange (value) {
+      },
+
+
+      //下拉
+      querySearchAsync(queryString, cb) {
+        // this.releaseWelfare.releaseTitle=queryString;
+        if(this.releaseWelfare.selectedOptions.length===0){
+          this.$message.error("请先选择市场所在地")
+          return false;
+        }
+        this.getwholesale();
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(this.restaurants);
+        }, 3000 * Math.random());
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+
+      getwholesale(){
+        let  param= {
+          selectedOptions:this.releaseWelfare.selectedOptions,
+          companyName:this.releaseWelfare.companyName
+        };
+        getwholesale(param).then((res) => {
+          if(res.status===0) {
+            let list=res.data;
+            let releaseTitleList=[];
+            for(let i=0;i<list.length;i++){
+              let  releaseTitle={ "value":list[i] , "address": list[i]};
+              releaseTitleList=releaseTitleList.concat(releaseTitle);
+            }
+            this.restaurants=releaseTitleList;
+            //没有找到用户输入的类型引导添加
+            if(this.restaurants.length===0){
+              this.$message.error("没有找到您输入的:市场名称可以手动添加");
+            }
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
+
     },
+
   }
 </script>
 <style>

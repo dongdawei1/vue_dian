@@ -22,8 +22,12 @@
       <AdminEquipment  v-if="isAdminEquipment"></AdminEquipment>
     </el-tab-pane>
 
-    <el-tab-pane label="菜米调料蛋" name="foodAndGrain" :key="'foodAndGrain'">
+    <el-tab-pane label="零售菜米调料蛋" name="foodAndGrain" :key="'foodAndGrain'">
       <AdminFoodAndGrain  v-if="isAdminFoodAndGrain"></AdminFoodAndGrain>
+    </el-tab-pane>
+
+    <el-tab-pane label="批发菜米调料蛋" name="wholesaleCommodity" :key="'wholesaleCommodity'">
+      <AdminWholesaleCommodity  v-if="isAdminWholesaleCommodity"></AdminWholesaleCommodity>
     </el-tab-pane>
 
     <el-tab-pane label="酒水/消毒餐具" name="wineAndTableware" :key="'wineAndTableware'">
@@ -51,6 +55,7 @@
   import AdminWineAndTableware from './shenpi/AdminWineAndTableware'
   import AddAdminServiceType from './shenpi/AddAdminServiceType'
   import AdminDepartmentStore from './shenpi/AdminDepartmentStore'
+  import  AdminWholesaleCommodity from './shenpi/AdminWholesaleCommodity'
   import {  checke_isButten } from '../../../api/api';
   import {  isRoleMessage } from '../../../api/api';
 
@@ -65,7 +70,8 @@
       AdminFoodAndGrain:AdminFoodAndGrain,
       AdminWineAndTableware:AdminWineAndTableware,
       AddAdminServiceType:AddAdminServiceType,
-      AdminDepartmentStore:AdminDepartmentStore
+      AdminDepartmentStore:AdminDepartmentStore,
+      AdminWholesaleCommodity:AdminWholesaleCommodity,
     },
 
     data() {
@@ -82,7 +88,8 @@
         isAdminFoodAndGrain:false,
         isAdminWineAndTableware:false,
         isAddAdminServiceType:false,
-        isAdminDepartmentStore:false
+        isAdminDepartmentStore:false,
+        isAdminWholesaleCommodity:false,
       };
     },
 
@@ -103,6 +110,7 @@
             this.isAdminWineAndTableware=false;
             this.isAddAdminServiceType=false;
             this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "rcruit") {
           this.isFirst=false;
           this.isRecruit=true;
@@ -114,6 +122,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "resume") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -125,6 +134,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "third") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -136,6 +146,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "fourth") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -147,6 +158,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "equipment") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -158,6 +170,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "foodAndGrain") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -169,6 +182,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "wineAndTableware") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -180,6 +194,7 @@
           this.isAdminWineAndTableware=true;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "departmentStore") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -191,6 +206,7 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=false;
           this.isAdminDepartmentStore=true;
+          this.isAdminWholesaleCommodity=false;
         }else if(tab.name === "addAdminServiceType") {
           this.isFirst=false;
           this.isRecruit=false;
@@ -202,8 +218,21 @@
           this.isAdminWineAndTableware=false;
           this.isAddAdminServiceType=true;
           this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=false;
         }
-
+        else if(tab.name === "wholesaleCommodity") {
+          this.isFirst=false;
+          this.isRecruit=false;
+          this.isResume=false;
+          this.isMrp=false;
+          this.isAdminMent=false;
+          this.isAdminEquipment=false;
+          this.isAdminFoodAndGrain=false;
+          this.isAdminWineAndTableware=false;
+          this.isAddAdminServiceType=false;
+          this.isAdminDepartmentStore=false;
+          this.isAdminWholesaleCommodity=true;
+        }
 
 
       },
