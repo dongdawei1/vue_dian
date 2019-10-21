@@ -47,14 +47,8 @@
       style="width: 100%"  >
       <el-table-column
         fixed
-        prop="userType"
-        label="用户类型"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        fixed
         prop="releaseType"
-        label="发布类型"
+        label="商品类型"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -76,34 +70,49 @@
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
+
       <el-table-column
         prop="serviceType"
-        label="商品类型带(需审批)"
+        label="商品名"
         width="170"
         :show-overflow-tooltip="true">
       </el-table-column>
+
       <el-table-column
-        prop="serviceDetailed"
-        label="服务城区"
+        prop="commodityJiage"
+        label="单价(元)"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
 
-
       <el-table-column
-        prop="contact"
-        label="联系方式"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="consigneeName"
-        label="联系人"
+        prop="commoditySpecifications"
+        label="包装规格"
         width="110"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
-        prop="createTime"
-        label="创建时间"
+        prop="commodityPacking"
+        label="包装方式"
+        width="100">
+      </el-table-column>
+
+      <el-table-column
+        prop="commodityCountNo"
+        label="商品总数"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column
+        prop="deliveryType"
+        label="送货方式"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="deliveryCollect"
+        label="运费/满N减(元)"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
@@ -239,12 +248,14 @@
   import { newstr } from '../../../../api/api';
   import { regionData } from 'element-china-area-data'
   import {  getwholesale} from '../../../../api/api';
+  import {  getRealNameByuserId} from '../../../../api/api';
+
   export default {
     data() {
       return {
         restaurants: [],//标题下拉
         timeout:  null,
-
+        realName:'',
         shenhezhihui:false, //审核弹窗置灰
         fullscreenLoading:false,
         pathString:'/home/releaseWelfare',
@@ -289,8 +300,6 @@
             { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
           ]
         }
-
-
       }
     },
     created () {
@@ -301,8 +310,11 @@
       handleClick(row) {  //点击查看详细
         this.tableDataNo=row;
         this.dialogVisible=true;
+        this.getRealName(this.tableDataNo.userId);
+        console.log( this.realName)
       },
       handleClose(done) { //关闭查看详情
+        this.realName='',
         this.dialogVisible=false;
       },
 
@@ -388,10 +400,7 @@
         this.get_position_list();
       },
       get_position_list(){
-        console.log(this.releaseWelfare)
         adminWholesaleCommodity(this.releaseWelfare).then((res) => {
-
-
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -447,7 +456,17 @@
           }
         });
       },
-
+      getRealName(realNameId){
+        getRealNameByuserId(realNameId).then(res =>{
+          console.log(realNameId)
+          console.log(res)
+          if(res.status===0){
+            this.realName=res.data;
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      }
     },
 
   }

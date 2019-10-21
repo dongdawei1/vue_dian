@@ -123,6 +123,17 @@ export const getRealNameById = params => {
 
   }).then(res => res.data); };
 
+export const getRealNameByuserId = params => {
+
+  return axios({
+    url: `${base}/api/realName/getRealNameByuserId`,
+    params: { id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+
+  }).then(res => res.data); };
+
 //待审核实名
 export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
 export const admin_select_addOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
@@ -425,6 +436,28 @@ export const create_wholesaleCommodity= params => { return axios.post(`${base}/a
 export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
 export const get_myWholesaleCommodity_list= params => { return axios.post(`${base}/api/wholesaleCommodity/get_myWholesaleCommodity_list`, params).then(res => isButtonAndListusermrp(res.data,13) ); };
 
+
+//制保留2位小数，如：2，会在2后面补上00.即2.00
+
+function toDecimal2(x) {
+  var f = parseFloat(x);
+  if (isNaN(f)) {
+    return false;
+  }
+  //转换单位
+  var f = Math.round(x*100)/10000;
+  var s = f.toString();
+  var rs = s.indexOf('.');
+  if (rs < 0) {
+    rs = s.length;
+    s += '.';
+  }
+  while (s.length <= rs + 2) {
+    s += '0';
+  }
+  return s;
+}
+
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
@@ -670,8 +703,23 @@ function isButtonAndListusermrp(res,type) {
           list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
         }
         if(type===14){
+        //价格相关转换金额
+          list[a].commodityJiage=toDecimal2( list[a].commodityJiage);
+          list[a].deliveryCollect=toDecimal2( list[a].deliveryCollect);
 
-          list[a].commodityJiage= list[a].commodityJiage;
+       //   1自取,2送货,3自取+送货4满免 deliveryType
+       let deliveryType=list[a].deliveryType;
+       if(deliveryType===1){
+         list[a].deliveryType='自取';
+       }else if(deliveryType===2){
+         list[a].deliveryType='送货';
+       }else if(deliveryType===3){
+         list[a].deliveryType='自取+送货';
+       }else if(deliveryType===4){
+         list[a].deliveryType='满免';
+       }
+
+
         let  commodityPacking=list[a].commodityPacking;
          if(commodityPacking===1){
            list[a].commodityPacking='散装';
