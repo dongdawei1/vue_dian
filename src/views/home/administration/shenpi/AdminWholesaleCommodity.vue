@@ -135,7 +135,7 @@
     <el-dialog title="审核" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="审批状态" prop="authentiCationStatus">
-          <el-radio-group v-model="form.authentiCationStatus"  :disabled="shenhezhihui">
+          <el-radio-group v-model="form.authentiCationStatus" >
             <el-radio label="2">通过</el-radio>
             <el-radio label="3">不通过</el-radio>
           </el-radio-group>
@@ -144,28 +144,10 @@
         <el-form-item label="失败原因" prop="authentiCationFailure"  >
           <el-input v-model="form.authentiCationFailure"  placeholder="选择不通过时必须输入，小于15个字"></el-input>
         </el-form-item>
-        <div class="shenpibeizhu">
-          备注 ：已经审批过的类型不带(待审批或不通过..)选择1<br>
-          示例 ：<br>
-          1审批状态不通过，发布类型可以通过；<br>
-          2新服务类型不通过，审批状态必须不通过；<br>
-          3服务类型不带()备注的，只能选1；<br>
-        </div>
-        服务类型 ：{{tableDataNo.serviceType}}<br>
-        <el-form-item  label="服务类型" prop="isServiceType">
-          <template>
-            <el-radio-group v-model="form.isServiceType" :disabled="shenhezhihui">
-              <el-radio label="1" >已有服务类型</el-radio>
-              <el-radio label="2" >新服务类型通过</el-radio>
-              <el-radio label="3" >新服务类型不通过</el-radio>
-            </el-radio-group>
-          </template>
-        </el-form-item>
       </el-form>
 
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitServiceType"  v-loading.fullscreen.lock="fullscreenLoading"  v-if="shenhezhihui">商品类型合规在此手动添加</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
       </div>
@@ -176,44 +158,37 @@
 
     <!--查看详情弹窗开始-->
     <el-dialog
-      title="审核详情"
+      title="发布详情"
       :visible.sync="dialogVisible"
       width="60%"
       :before-close="handleClose">
 
-      <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>城区范围 : {{tableDataNo.serviceDetailed }}</span><br>
-      <span>服务城区 : {{tableDataNo.detailed }}</span><br>
-
-      <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
-      <span>具体类型 : {{tableDataNo.serviceType }}</span><br>
-      <!--表格开始-->
-      <el-table
-        :data="tableDataNo.serviceAndprice"
-        border
-        style="width: 60%"  >
-        <el-table-column
-          fixed
-          prop="project"
-          label="具体项目名称或规格"
-          width="220">
-        </el-table-column>
-        <el-table-column
-          fixed
-          prop="price"
-          label="具体价格"
-          width="140">
-        </el-table-column>
-      </el-table>
+      <span>商品类型 : {{tableDataNo.releaseType }}</span><br>
+      <span>下单方式 : {{tableDataNo.reserve }}</span><br>
+      <span>商品名 : {{tableDataNo.serviceType }}</span><br>
       <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
+      <span>产地详情 : {{tableDataNo.addressDetailed }}</span><br>
+      <span>产地 : {{tableDataNo.detailed }}</span><br>
+
+
+      <span>包装规格 : {{tableDataNo.commoditySpecifications }}</span><br>
+      <span>单价 : {{tableDataNo.commodityJiage }}</span><br>
+      <span>商品数量 : {{tableDataNo.commodityCountNo }}</span><br>
+      <span>包装方式 : {{tableDataNo.commodityPacking }}</span><br>
+      <span>商品介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
       <span>备注 : {{tableDataNo.remarks }}</span><br>
-      <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
-      <span>申请时间 : {{tableDataNo.createTime }}</span><br>
-      <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
+      <span>送货方式 : {{tableDataNo.deliveryType }}</span><br>
+      <span>运费/满N减 : {{tableDataNo.deliveryCollect }}(元)</span><br>
+      <span>价格开始 : {{tableDataNo.startTime }}</span><br>
+      <span>价格结束 : {{tableDataNo.endTime }}</span><br>
+      <span>创建时间 : {{tableDataNo.createTime }}</span><br>
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
+
+      <br>实名信息<br>
+      <span>所在地 : {{realName.detailed }}</span><br>
+      <span>市场详情 : {{realName.addressDetailed }}</span><br>
+      <span>市场名: {{realName.companyName }}</span><br>
       <span>图片 : </span><br>
       <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
         <img :src="p.pictureUrl" width="100%">
@@ -256,7 +231,6 @@
         restaurants: [],//标题下拉
         timeout:  null,
         realName:'',
-        shenhezhihui:false, //审核弹窗置灰
         fullscreenLoading:false,
         pathString:'/home/releaseWelfare',
         //分页开始
@@ -283,9 +257,9 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:18, //维修，电器，二手
-          isServiceType:'',
-          serviceTypeId:''
+          tabuleType:35, //维修，电器，二手
+
+
         },
         formLabelWidth: '120px',
         fileList:'',
@@ -311,7 +285,6 @@
         this.tableDataNo=row;
         this.dialogVisible=true;
         this.getRealName(this.tableDataNo.userId);
-        console.log( this.realName)
       },
       handleClose(done) { //关闭查看详情
         this.realName='',
@@ -319,19 +292,8 @@
       },
 
       examineClick(row){ //点击审批打开弹窗
-        this.shenhezhihui=false;
-        this.form.authentiCationFailure='';
-        this.form.authentiCationStatus='';
-        this.form.isServiceType='';
         this.tableDataNo=row;
-        this.form.serviceTypeId=this.tableDataNo.evaluateid;
         this.dialogFormVisible=true;
-        if(this.form.serviceTypeId===-1){
-          this.form.authentiCationStatus="3";
-          this.form.isServiceType="3";
-          this.form.authentiCationFailure="新发布类型审核失败";
-          this.shenhezhihui=true;
-        }
       },
       submitServiceType(){
         this.fullscreenLoading=true;
@@ -360,14 +322,6 @@
             this.fullscreenLoading=true;
             this.form.userId=this.tableDataNo.userId;
             this.form.id=this.tableDataNo.id;
-            if(this.form.authentiCationStatus==='2'){
-              if(this.form.isServiceType==='3'){
-                this.fullscreenLoading=false;
-                this.$message.error("服务类型不通过，审核必须也选不通过");
-                return false;
-              }
-            }
-
             examineAll(this.form).then(data => {
               this.fullscreenLoading=false;
               if (data && data.status === 0) {

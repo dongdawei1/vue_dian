@@ -600,7 +600,9 @@ function isButtonAndListusermrp(res,type) {
            list[a].isDisplayRelease = isButten.release;
            list[a].isDisplayRefresh = isButten.refresh;
            list[a].isDisplayDelete = isButten.delete;
+           list[a].isDisplayOrder = isButten.order;
            list[a].isDisplaySee = true;
+           delete list[a].isButten;
            let  commodityPacking=list[a].commodityPacking;
            if(commodityPacking===1){
              list[a].commodityPacking='散装';
@@ -642,10 +644,13 @@ function isButtonAndListusermrp(res,type) {
             list[a].authentiCationFailure = '';
           }
         } else if (welfareStatus === 5) {
-          list[a].welfareStatus = '已过期';
-          list[a].authentiCationFailure = '';
           if(type!==13) {
+            list[a].welfareStatus = '已过期';
+            list[a].authentiCationFailure = '';
             list[a].isDisplayDelay = true;
+          }else{
+            list[a].welfareStatus = '审核通过';
+            list[a].authentiCationFailure = '';
           }
         }
         if(type!==13) {
@@ -706,6 +711,12 @@ function isButtonAndListusermrp(res,type) {
         //价格相关转换金额
           list[a].commodityJiage=toDecimal2( list[a].commodityJiage);
           list[a].deliveryCollect=toDecimal2( list[a].deliveryCollect);
+      let reserve=list[a].reserve;
+      if(reserve===1){
+        list[a].reserve='支持在线下单';
+      }else{
+        list[a].reserve='只支持在线预订';
+      }
 
        //   1自取,2送货,3自取+送货4满免 deliveryType
        let deliveryType=list[a].deliveryType;

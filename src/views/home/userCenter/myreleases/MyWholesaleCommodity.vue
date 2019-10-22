@@ -67,6 +67,12 @@
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
+        prop="id"
+        label="商品编号"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="serviceType"
         label="商品名称"
         width="120"
@@ -74,8 +80,14 @@
       </el-table-column>
       <el-table-column
         prop="welfareStatus"
-        label="发布状态"
+        label="审核状态"
         width="90">
+      </el-table-column>
+      <el-table-column
+        prop="isValidity"
+        label="显示状态"
+        width="190"
+        :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="commodityJiage"
@@ -89,12 +101,7 @@
         width="110"
         :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column
-        prop="isValidity"
-        label="显示状态"
-        width="190"
-        :show-overflow-tooltip="true">
-      </el-table-column>
+
 
       <el-table-column
         prop="releaseTitle"
@@ -119,7 +126,7 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="210">
+        width="280">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
           <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
@@ -128,6 +135,7 @@
           <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
           <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
           <!-- 只有失败的才显示 编辑键 -->
+          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayOrder" >查看订单</el-button>
           <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
         </template>
       </el-table-column>
