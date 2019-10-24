@@ -594,6 +594,26 @@ function isButtonAndListusermrp(res,type) {
          list[a].serviceAndprice=JSON.parse( list[a].serviceAndprice);
         }
          if(type===13){
+           //价格相关转换金额
+           list[a].commodityJiage=toDecimal2( list[a].commodityJiage);
+           list[a].deliveryCollect=toDecimal2( list[a].deliveryCollect);
+           let reserve=list[a].reserve;
+           if(reserve===1){
+             list[a].reserve='支持在线下单';
+           }else{
+             list[a].reserve='只支持在线预订';
+           }
+           //   1自取,2送货,3自取+送货4满免 deliveryType
+           let deliveryType=list[a].deliveryType;
+           if(deliveryType===1){
+             list[a].deliveryType='自取';
+           }else if(deliveryType===2){
+             list[a].deliveryType='送货';
+           }else if(deliveryType===3){
+             list[a].deliveryType='自取+送货';
+           }else if(deliveryType===4){
+             list[a].deliveryType='满免';
+           }
            let isButten=list[a].isButten;
            list[a].isDisplayEdit = isButten.edit;
            list[a].isDisplayHide = isButten.hide;

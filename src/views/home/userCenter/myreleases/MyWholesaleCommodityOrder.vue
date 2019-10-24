@@ -3,7 +3,7 @@
     <!--我的发布 已发布的批发。查询开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
-      <el-form-item label="发布类型"  >
+      <el-form-item label="商品类型"  >
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
           <el-option label="蔬菜" value="4"></el-option>
           <el-option label="粮油" value="5"></el-option>
@@ -12,6 +12,9 @@
           <el-option label="清洁用品" value="9"></el-option>
         </el-select>
       </el-form-item>
+
+
+      <!--根据商品 类型， id,送取货时间查找，状态   -->
 
       <el-form-item label="价格有效期"  >
         <el-select v-model="releaseWelfare.commodityType" placeholder="请选择价格有效期状态" clearable
@@ -78,67 +81,7 @@
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column
-        prop="welfareStatus"
-        label="审核状态"
-        width="90">
-      </el-table-column>
-      <el-table-column
-        prop="isValidity"
-        label="显示状态"
-        width="190"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="commodityJiage"
-        label="价格(元)"
-        width="90"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="commoditySpecifications"
-        label="包装规格"
-        width="110"
-        :show-overflow-tooltip="true">
-      </el-table-column>
 
-
-      <el-table-column
-        prop="releaseTitle"
-        label="标题"
-        width="120"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-
-      <el-table-column
-        prop="startTime"
-        label="价格开始时间"
-        width="110"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="endTime"
-        label="价格结束时间"
-        width="110"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="280">
-        <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
-          <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
-          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
-          <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
-          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
-          <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
-          <!-- 只有失败的才显示 编辑键 -->
-          <el-button @click="handleClick1(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayOrder" >查看订单</el-button>
-          <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <!--表格结束-->
     <!--查看详情弹窗开始-->
@@ -185,12 +128,12 @@
 
         </div>
 
-         <br> 实名信息<br>
+        <br> 实名信息<br>
         <span>联系人 : {{realName.consigneeName }}</span><br>
         <span>联系方式 : {{realName.contact }}</span><br>
-          <span>市场名称: {{realName.companyName }}</span><br>
+        <span>市场名称: {{realName.companyName }}</span><br>
         <span>所在城区 : {{realName.detailed }}</span><br>
-          <span>地址详情: {{realName.addressDetailed }}</span><br>
+        <span>地址详情: {{realName.addressDetailed }}</span><br>
 
 
         <span>商品图片 : </span><br>
@@ -226,7 +169,7 @@
   import {   get_myWholesaleCommodity_list } from '../../../../api/api';
 
   export default {
-
+    props: ["CommodityId"],
     data() {
       return {
         restaurants: [],//标题下拉
@@ -290,9 +233,6 @@
         this.dialogVisible=true;
       },
 
-      handleClick1(row,type){
-        this.$emit('change',row.id);
-      },
 
       handleClose(done) { //关闭查看详情
         this.dialogVisible=false;
@@ -345,6 +285,10 @@
         this.get_position_list();
       },
       get_position_list(){
+        console.log(12)
+        console.log(this.CommodityId)
+        console.log(12)
+        console.log(this.releaseWelfare)
         get_myWholesaleCommodity_list(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
@@ -426,7 +370,7 @@
       },
       serviceTypecheck(type){
         if(type===1){
-        this.releaseWelfare.welfareStatus='';
+          this.releaseWelfare.welfareStatus='';
         }else if(type===2){
           this.releaseWelfare.commodityType='';
         }
