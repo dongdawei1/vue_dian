@@ -435,7 +435,7 @@ export const get_userWineAndTableware_id= params => {
 export const create_wholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);};
 export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
 export const get_myWholesaleCommodity_list= params => { return axios.post(`${base}/api/wholesaleCommodity/get_myWholesaleCommodity_list`, params).then(res => isButtonAndListusermrp(res.data,13) ); };
-
+export const operation_userWholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/operation_userWholesaleCommodity`, params).then(res => res.data);};
 
 //制保留2位小数，如：2，会在2后面补上00.即2.00
 

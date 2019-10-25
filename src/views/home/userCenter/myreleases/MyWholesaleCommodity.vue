@@ -130,12 +130,11 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
           <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
-          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
           <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
-          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
+          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">显示</el-button>
           <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
           <!-- 只有失败的才显示 编辑键 -->
-          <el-button @click="handleClick1(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayOrder" >查看订单</el-button>
+          <el-button @click="handleClick1(scope.row,0)" type="text" size="small"  v-if="scope.row.isDisplayOrder" >查看订单</el-button>
           <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
         </template>
       </el-table-column>
@@ -218,7 +217,7 @@
   </div>
 </template>
 <script>
-  import {  operation_userFoodAndGrain } from '../../../../api/api';
+  import {  operation_userWholesaleCommodity } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
   import { get_wholesaleCommodity_serviceType} from '../../../../api/api';
   import { isRoleMessage } from '../../../../api/api';
@@ -305,8 +304,8 @@
         data.type=type;
         data.userId= form.userId;
         data.id=form.id;
-        if(type===1 || type===2 ||   type===3|| type===4 || type===5){
-          operation_userFoodAndGrain(data).then(data => {
+        if(type===1 || type===3 ||   type===4 || type===5){
+          operation_userWholesaleCommodity(data).then(data => {
             this.fullscreenLoading=false;
             let msg=data.msg;
             if (data && data.status === 0) {
