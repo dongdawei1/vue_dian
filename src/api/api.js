@@ -436,7 +436,13 @@ export const create_wholesaleCommodity= params => { return axios.post(`${base}/a
 export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
 export const get_myWholesaleCommodity_list= params => { return axios.post(`${base}/api/wholesaleCommodity/get_myWholesaleCommodity_list`, params).then(res => isButtonAndListusermrp(res.data,13) ); };
 export const operation_userWholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/operation_userWholesaleCommodity`, params).then(res => res.data);};
-
+export const get_userWholesaleCommodity_id= params => {
+  return axios({
+    url: `${base}/api/wholesaleCommodity/get_userWholesaleCommodity_id`,
+    params:{ id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 //制保留2位小数，如：2，会在2后面补上00.即2.00
 
 function toDecimal2(x) {
@@ -458,6 +464,24 @@ function toDecimal2(x) {
   return s;
 }
 
+export const  toDecimal= x =>{
+  var f = parseFloat(x);
+  if (isNaN(f)) {
+    return false;
+  }
+  //转换单位
+  var f = Math.round(x*100)/10000;
+  var s = f.toString();
+  var rs = s.indexOf('.');
+  if (rs < 0) {
+    rs = s.length;
+    s += '.';
+  }
+  while (s.length <= rs + 2) {
+    s += '0';
+  }
+  return s;
+}
 function isButtonAndListusermrp(res,type) {
 
   if (res.status === 0) {
@@ -597,6 +621,7 @@ function isButtonAndListusermrp(res,type) {
            //价格相关转换金额
            list[a].commodityJiage=toDecimal2( list[a].commodityJiage);
            list[a].deliveryCollect=toDecimal2( list[a].deliveryCollect);
+
            let reserve=list[a].reserve;
            if(reserve===1){
              list[a].reserve='支持在线下单';
@@ -624,13 +649,23 @@ function isButtonAndListusermrp(res,type) {
            list[a].isDisplaySee = true;
            delete list[a].isButten;
            let  commodityPacking=list[a].commodityPacking;
+           let specifi=list[a].specifi;
            if(commodityPacking===1){
              list[a].commodityPacking='散装';
            }else if(commodityPacking===2){
              list[a].commodityPacking='袋装';
-             list[a].commoditySpecifications=list[a].commoditySpecifications+'/袋';
+             if(specifi===1){
+               list[a].commoditySpecifications=list[a].cations+'g'+'/袋';
+             }else  if(specifi===2){
+               list[a].commoditySpecifications=list[a].cations+'kg'+'/袋';
+             }
            }else if(commodityPacking===3){
-             list[a].commoditySpecifications=list[a].commoditySpecifications+'/瓶/桶';
+             if(specifi===3){
+               list[a].commoditySpecifications=list[a].cations+'ML'+'/瓶/桶';
+             }else  if(specifi===4){
+               list[a].commoditySpecifications=list[a].cations+'L'+'/瓶/桶';
+             }
+
              list[a].commodityPacking='瓶/桶装';
            }}
         let welfareStatus = list[a].welfareStatus;
@@ -752,13 +787,25 @@ function isButtonAndListusermrp(res,type) {
 
 
         let  commodityPacking=list[a].commodityPacking;
-         if(commodityPacking===1){
-           list[a].commodityPacking='散装';
-         }else if(commodityPacking===2){
-           list[a].commodityPacking='袋装';
-         }else if(commodityPacking===3){
-           list[a].commodityPacking='瓶/桶装';
-         }
+          let specifi=list[a].specifi;
+          if(commodityPacking===1){
+            list[a].commodityPacking='散装';
+          }else if(commodityPacking===2){
+            list[a].commodityPacking='袋装';
+            if(specifi===1){
+              list[a].commoditySpecifications=list[a].cations+'g'+'/袋';
+            }else  if(specifi===2){
+              list[a].commoditySpecifications=list[a].cations+'kg'+'/袋';
+            }
+          }else if(commodityPacking===3){
+            if(specifi===3){
+              list[a].commoditySpecifications=list[a].cations+'ML'+'/瓶/桶';
+            }else  if(specifi===4){
+              list[a].commoditySpecifications=list[a].cations+'L'+'/瓶/桶';
+            }
+
+            list[a].commodityPacking='瓶/桶装';
+          }
         }
         list[a].pictureUrl=JSON.parse(list[a].pictureUrl);
         let authentiCationStatus = list[a].authentiCationStatus;

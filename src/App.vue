@@ -3,7 +3,7 @@
     <transition name="fade"
                 mode="out-in">
       <!--   <router-view :key="$route.fullPath" />    强制刷新-->
-    <router-view></router-view>
+    <router-view ></router-view>
 
 
     </transition>
@@ -15,6 +15,9 @@
 <script>
   export default {
     name: 'app',
+
+
+
     components: {
     }
   }

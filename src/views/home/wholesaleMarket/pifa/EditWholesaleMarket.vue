@@ -4,7 +4,7 @@
       请认真填写信息
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
-          <el-radio-group v-model="ruleForm.releaseType">
+          <el-radio-group v-model="ruleForm.releaseType" :disabled="true">
             <el-radio :label="4" >蔬菜出售</el-radio>
             <el-radio :label="5" >粮油出售</el-radio>
             <el-radio :label="6" >调料/副食出售</el-radio>
@@ -15,20 +15,9 @@
       </el-form-item>
 
       <el-form-item label="商品名称"  prop="serviceType" >
-        <el-autocomplete
-          v-model="ruleForm.serviceType"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="请输入或点击选择商品名称"
-
-          @select="serviceTypeUrl"
-          clearable></el-autocomplete>
+        <el-input v-model="ruleForm.serviceType" :disabled="true"></el-input>
       </el-form-item>
 
-      <div>
-        <div v-if="commodityUrl!= null && commodityUrl!=''">
-          &nbsp;&nbsp; &nbsp; 参照图片 <img :src="commodityUrl"  >
-        </div>
-      </div>
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="如：红薯（黄心红薯）某某品种"></el-input>
       </el-form-item>
@@ -61,11 +50,10 @@
       <el-form-item :label="jiagetype" prop="commodityJiage" >
         <el-input v-model="ruleForm.commodityJiage" placeholder="请输入价格,最多两位小数"  ></el-input>
       </el-form-item>
-      &nbsp; &nbsp;
 
-       <el-form-item :label="type" prop="commodityCountNo" >
-            <el-input v-model.number="ruleForm.commodityCountNo" placeholder="请输入整数"  ></el-input>
-          </el-form-item>
+      <el-form-item :label="type" prop="commodityCountNo" >
+        <el-input v-model.number="ruleForm.commodityCountNo" placeholder="请输入整数"  ></el-input>
+      </el-form-item>
 
 
 
@@ -89,7 +77,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      注:只有在您选定的价格有效期内展示本条商品信息，<br>
+      &nbsp; &nbsp; 注:只有在您选定的价格有效期内展示本条商品信息，<br>
       &nbsp;&nbsp;  蔬菜类开始时间最多是 2天后 结束时间最多是4天后；<br>
       &nbsp;&nbsp;  非蔬菜类开始时间最多是 2天后 结束时间最多是15天后；
       <el-form-item label="价格有效期" prop="value1">
@@ -103,6 +91,7 @@
           value-format="yyyy-MM-dd HH:mm:ss">
         </el-date-picker>
       </el-form-item>
+
       <el-form-item label="商品描述" prop="serviceIntroduction">
         <el-input
           type="textarea"
@@ -139,7 +128,7 @@
         </template>
       </el-form-item>
       <el-form-item :label="deliveryCollectType" prop="deliveryCollect" v-if="isdeliveryCollect">
-        <el-input v-model.number="ruleForm.deliveryCollect" placeholder="请输入金额,最多两位小数"></el-input>
+        <el-input v-model.number="ruleForm.deliveryCollect" placeholder="请输入整数金额"></el-input>
       </el-form-item>
 
 
@@ -187,23 +176,6 @@
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
       </el-form-item>
     </el-form>
-    <!-- 成功弹窗  -->
-    <el-dialog
-      title="发布成功"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-      :before-close="cntinue"
-    >
-      <span>请关注审核状态，约24小时内完成审核</span>
-      <span slot="footer" class="dialog-footer">
-   <el-button type="primary"><router-link
-     v-on:click.native="goRelease"
-     to="" class="a" >查看我的发布</router-link></el-button>
-     </span>
-    </el-dialog>
-    <!-- 成功弹窗结束  -->
-
 
   </div>
 </template>
@@ -213,14 +185,20 @@
   import {  isRoleMessage } from '../../../../api/api';
   import { getRealName } from '../../../../api/api';
 
-  import { uploadDown_update } from '../../../../api/api';
+  import {  operation_userWholesaleCommodity } from '../../../../api/api';
   import {  checke_isButten } from '../../../../api/api';
 
-  import {   get_serviceTypeUrl } from '../../../../api/api';
-  import {   create_wholesaleCommodity } from '../../../../api/api';
+  import { echo_display } from '../../../../api/api';
+  import {   get_userWholesaleCommodity_id } from '../../../../api/api';
+  import {   toDecimal } from '../../../../api/api';
+
   import { regionData } from 'element-china-area-data';
 
+
+
+
   export default {
+
     data() {
       var checkAge = (rule, value, callback) => {
         if (!value) {
@@ -234,24 +212,22 @@
           }
         }, 100);
       };
-   var   checkjiage= (rule, value, callback) => {
+      var   checkjiage= (rule, value, callback) => {
         if (!value) {
           return callback(new Error('不能为空'));
         }
 
-     if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(value)) {
-       callback();
-     }
-      return callback(new Error('输入有误！请输入数字最多两位小数'));
+        if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(value)) {
+          callback();
+        }
+        return callback(new Error('输入有误！请输入数字最多两位小数'));
       };
 
       return {
-        restaurants: [],//标题下拉
-        timeout:  null,
-        dialogFormVisible: false,//添加商品类型弹窗
+        id:this.$route.params.id,
+
         StringPath:'/home/wholesaleMarket',
         fileList:[],
-        centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
         realName:'',//用户实名信息
@@ -268,8 +244,6 @@
         deliveryCollectType:'运费',
         type:'总数(kg)',
         jiagetype:'单价(斤/kg)',
-        urllist:[],//示例图片list
-        commodityUrl:'',//示例图片
         ruleForm: {
           userId:'',
           releaseType:'',//发布类型
@@ -352,7 +326,7 @@
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
           ]
-          }
+        }
       }
     },
 
@@ -360,24 +334,37 @@
       this.checke_isButten();
     },
     methods: {
+
       goRelease(){
         this.centerDialogVisible=false;
         this.$router.push({path: '/home/myRelease'});
       },
       //提交
       submitForm(ruleForm) {
-      //  this.fullscreenLoading=true;
+        //  this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
+            length=0;
+            for(let i=0;i<this.ruleForm.pictureUrl.length;i++){
+              if(this.ruleForm.pictureUrl[i].useStatus===1 ||this.ruleForm.pictureUrl[i].useStatus===3){
+                length++;
+              }
+            }
+            if(length<=0){
+              this.$message.error("图片不能为空");
+              this.fullscreenLoading=false;
+              return false;
+            }
+            this.ruleForm.type=6;
 
-
-            create_wholesaleCommodity(this.ruleForm).then(res => {
+            operation_userWholesaleCommodity(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
-                //成功弹窗
+                this.id='';
+                this.ruleForm='';
                 this.fileList=[];
-                this.ruleForm.pictureUrl=[];
-                this.centerDialogVisible=true;
+                this.$message.success('编辑成功，审核约24小时内完成');
+                this.$router.push('/home/myRelease');
               } else {
                 isRoleMessage(res.msg);
               }
@@ -403,18 +390,46 @@
       },
 
       checke_isButten(){
+
         checke_isButten(this.StringPath).then((res) => {
           if(res.status===0){
-            if (res.data.isCreate === true) {
-              if (res.data.isAuthentication !== 2) {
-                this.$router.push({path: '/home/myAccount'});
-              }else {
-                this.resdata =res.data.data;
-                this.ruleForm.userId=this.resdata.id;
-                this.getRealName();
-              }} else {
+            if (res.data.isCreate !== true) {
               this.$router.push({path: '/home/release'});
-            }}else{
+            }
+            if (res.data.isAuthentication !== 2) {
+              this.$router.push({path: '/home/myAccount'});
+            }else {
+              get_userWholesaleCommodity_id(this.id).then(res => {
+                if (res.status === 0) {
+                  this.ruleForm=res.data.data;
+
+                  let selectedOptions=res.data.selectedOptions;
+                  selectedOptions[0]=selectedOptions[0].toString();
+                  selectedOptions[1]=selectedOptions[1].toString();
+                  selectedOptions[2]=selectedOptions[2].toString();
+                  this.ruleForm.selectedOptions=selectedOptions;
+
+                  let fileListAndPictureUrl=  echo_display(this.ruleForm);
+                  //图片回显和表格参数
+                  this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
+                  this.fileList=fileListAndPictureUrl.fileList;
+                  let value1=[];
+                  value1[0]= this.ruleForm.startTime;
+                    value1[1]=this.ruleForm.endTime;
+                  this.ruleForm.value1=value1;
+                  this.ruleForm.commodityJiage=toDecimal(this.ruleForm.commodityJiage);
+                  this.ruleForm.deliveryCollect=toDecimal(this.ruleForm.deliveryCollect);
+                  this.commodityPackingChange();
+                  this.reserveChange();
+                  this.deliveryTypeChange();
+                  this.ruleForm.cations=this.ruleForm.authentiCationFailure;
+                  this.getRealName();
+                } else {
+                  isRoleMessage(res.msg);
+                }
+              });
+            }
+          }else{
             isRoleMessage(res.msg);
           }
         });
@@ -430,18 +445,17 @@
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
         }
       },
+
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
-
-        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(resdata.id===this.ruleForm.pictureUrl[i].id){
-            uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-              if(res.status!==0 ){
-                this.$message.error(res.msg);
-              }
-              this.ruleForm.pictureUrl.splice(i,1)
-            });
+          if(file.id===undefined){
+            if(file.response.data.id===this.ruleForm.pictureUrl[i].id){
+              this.ruleForm.pictureUrl[i].useStatus=2;
+              break;
+            }
+          }else if(file.id===this.ruleForm.pictureUrl[i].id){
+            this.ruleForm.pictureUrl[i].useStatus=2;
             break;
           }
         }
@@ -474,81 +488,36 @@
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
       },
+
       //城市组件
       handleChange (value) {
       },
-      //下拉
-      querySearchAsync(queryString, cb) {
 
-        // this.releaseWelfare.releaseTitle=queryString;
-        if(this.ruleForm.releaseType===''){
-          this.$message.error("请先选择:发布类型")
-          return false;
-        }
-        this.get_serviceType();
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(this.restaurants);
-        }, 3000 * Math.random());
-      },
-      createStateFilter(queryString) {
-        return (state) => {
-          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      get_serviceType(){
-        let param={
-          serviceType:this.ruleForm.serviceType,
-          releaseType:this.ruleForm.releaseType,
-        };
-        get_serviceTypeUrl(param).then((res) => {
-          if(res.status===0) {
-            let list=res.data;
-            let releaseTitleList=[];
-            let urllist=[];
-            for(let i=0;i<list.length;i++){
-              let  releaseTitle={ "value":list[i].serviceTypeName, "address": list[i].id};
-              releaseTitleList=releaseTitleList.concat(releaseTitle);
-
-              let  url={"serviceTypeName" : list[i].serviceTypeName ,"pictureUrl":list[i].pictureUrl};
-              urllist=urllist.concat(url);
-            }
-            this.restaurants=releaseTitleList;
-            this.urllist=urllist;
-            //没有找到用户输入的类型引导添加
-            if(this.restaurants.length===0){
-              this.$message.error("没有找到您输入的:商品名称,可联系客服添加");
-            }
-          }else {
-            isRoleMessage(res.msg);
-          }
-        });
-      },
       commodityPackingChange(){
-       if(this.ruleForm.commodityPacking===1){
+        if(this.ruleForm.commodityPacking===1){
           this.isServiceAndprice=false;
-         this.isg=false;
-         this.isl=false;
-         this.ruleForm.cations=0;
-         this.ruleForm.specifi=2; //kg
-         this.type='总数(kg)';
-         this.jiagetype='单价(元/kg)';
-        }
-      else  if(this.ruleForm.commodityPacking===2){
-          this.isServiceAndprice=true;
-         this.isg=true;
+          this.isg=false;
           this.isl=false;
-         this.ruleForm.cations='';
-         this.type='总数(袋)';
-         this.jiagetype='单价(元/袋)';
+          this.ruleForm.cations=0;
+          this.ruleForm.specifi=2; //kg
+          this.type='总数(kg)';
+          this.jiagetype='单价(元/kg)';
+        }
+        else  if(this.ruleForm.commodityPacking===2){
+          this.isServiceAndprice=true;
+          this.isg=true;
+          this.isl=false;
+          this.ruleForm.cations='';
+          this.type='总数(袋)';
+          this.jiagetype='单价(元/袋)';
         }  else  if(this.ruleForm.commodityPacking===3){
-         this.isServiceAndprice=true;
-         this.isg=false;
-         this.isl=true;
-         this.ruleForm.cations='';
-         this.type='总数(瓶)';
-         this.jiagetype='单价(元/瓶)';
-       }
+          this.isServiceAndprice=true;
+          this.isg=false;
+          this.isl=true;
+          this.ruleForm.cations='';
+          this.type='总数(瓶)';
+          this.jiagetype='单价(元/瓶)';
+        }
       },
 
       reserveChange(){
@@ -559,7 +528,7 @@
         }
       },
 
-     deliveryTypeChange(){
+      deliveryTypeChange(){
         if(this.ruleForm.deliveryType===1){
           this.isdeliveryCollect=false;
           this.deliveryCollectType='运费';
@@ -571,20 +540,10 @@
           this.isdeliveryCollect=true;
           this.deliveryCollectType='满(元)免';
         }
-  },
+      },
 
       value11(){
       },
-
-      serviceTypeUrl(){
-        for(let i=0;i<this.urllist.length;i++){
-          let serviceTypeName=this.urllist[i].serviceTypeName;
-           if(this.ruleForm.serviceType===serviceTypeName){
-             this.commodityUrl=this.urllist[i].pictureUrl;
-           }
-        }
-      },
-
     }
   }
 

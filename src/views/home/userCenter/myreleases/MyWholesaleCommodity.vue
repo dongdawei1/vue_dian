@@ -135,7 +135,7 @@
           <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
           <!-- 只有失败的才显示 编辑键 -->
           <el-button @click="handleClick1(scope.row,0)" type="text" size="small"  v-if="scope.row.isDisplayOrder" >查看订单</el-button>
-          <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
+          <el-button @click="examineClick(scope.row.id)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -233,7 +233,7 @@
 
         fullscreenLoading:false,
         realName:'',//实名信息
-        pathString:'/home/createFoodAndGrain',
+        pathString:'/home/createWholesaleMarket',
         //分页开始
         total: 0,
         //分页结束
@@ -278,8 +278,8 @@
       this.getRealName();
     },
     methods: {
-      examineClick(row){
-        this.$router.push('/home/editFoodAndGrain/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
+      examineClick(id){
+        this.$router.push('/home/editWholesaleMarket/'+id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },
 
