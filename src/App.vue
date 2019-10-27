@@ -3,7 +3,7 @@
     <transition name="fade"
                 mode="out-in">
       <!--   <router-view :key="$route.fullPath" />    强制刷新-->
-    <router-view ></router-view>
+    <router-view v-if="isRouterAlive"></router-view>
 
 
     </transition>
@@ -17,11 +17,24 @@
     name: 'app',
 
 
-
-    components: {
-    }
-  }
-
+    provide(){
+      return {
+        reload: this.reload
+      };
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    };
+  },
+  methods: {
+    //刷新当前页面
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+  });
+    }}}
 </script>
 
 <style >

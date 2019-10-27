@@ -195,7 +195,7 @@
   import { isRoleMessage } from '../../../../api/api';
   import {   getRealName } from '../../../../api/api';
   export default {
-
+    inject: ["reload"],
     data() {
       return {
         fullscreenLoading:false,
@@ -243,6 +243,7 @@
     },
     methods: {
       examineClick(row){
+        this.reload();
         this.$router.push('/home/editFoodAndGrain/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },

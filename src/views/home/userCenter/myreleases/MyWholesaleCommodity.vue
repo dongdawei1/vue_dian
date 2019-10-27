@@ -225,7 +225,7 @@
   import {   get_myWholesaleCommodity_list } from '../../../../api/api';
 
   export default {
-
+    inject: ["reload"],
     data() {
       return {
         restaurants: [],//标题下拉
@@ -279,6 +279,7 @@
     },
     methods: {
       examineClick(id){
+        this.reload();
         this.$router.push('/home/editWholesaleMarket/'+id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },
