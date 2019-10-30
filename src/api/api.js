@@ -443,6 +443,7 @@ export const get_userWholesaleCommodity_id= params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+export const wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/wholesaleCommodity_serviceType`, params).then(res => res.data);};
 //制保留2位小数，如：2，会在2后面补上00.即2.00
 
 function toDecimal2(x) {
