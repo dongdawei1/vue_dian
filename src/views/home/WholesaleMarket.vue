@@ -81,7 +81,7 @@
   import {  wholesaleCommodity_serviceType } from '../../api/api';
   import { get_user_info_sign } from '../../api/api';
   import { regionData } from 'element-china-area-data'
-  import { getmrpList } from '../../api/api';
+  import { getWholesaleCommodityPublicList } from '../../api/api';
   import VmRpList from '../../components/vm-mrp-list';
   import {  getwholesale} from '../../api/api';
   export default {
@@ -161,7 +161,7 @@
             selectedOptions[2]=this.realName.districtCountyId.toString();
 
             this.releaseWelfare.selectedOptions=selectedOptions;
-        //    this.getmrpList();     //获取列表
+            this.getmrpList();     //获取列表
           }
         });
       },
@@ -171,10 +171,11 @@
         this.getmrpList()
       },
       getmrpList(){
-        getmrpList(this.releaseWelfare).then((res) => {
+        getWholesaleCommodityPublicList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData.tableDatas = res.data.datas;
+            console.log(this.tableData.tableDatas )
           }else {
             isRoleMessage(res.msg);
           }
@@ -195,7 +196,7 @@
             if(this.restaurants.length===0){
               this.$message({
                 type: 'error',
-                message: '没有找到您输入的商品名称,如果选择了市场名，可以更换一下试试！',
+                message: '没有找到商品,如果选择了市场名，可以更换一下试试！',
                 duration: 1500
               });
             }

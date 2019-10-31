@@ -444,6 +444,9 @@ export const get_userWholesaleCommodity_id= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 export const wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/wholesaleCommodity_serviceType`, params).then(res => res.data);};
+
+export const getWholesaleCommodityPublicList= params => { return axios.post(`${base}/api/wholesaleCommodity/getWholesaleCommodityPublicList`, params).then(res => isButtonAndListusermrp(res.data,15) ); };
+
 //制保留2位小数，如：2，会在2后面补上00.即2.00
 
 function toDecimal2(x) {
@@ -882,6 +885,45 @@ function isButtonAndListusermrp(res,type) {
 
         }
       }
+    }
+    //批量列表
+    else if(type===15 || type===16){
+      if(type===15){
+      for (let a = 0; a < list.length; a++) {
+        list[a].commodityJiage=toDecimal2( list[a].commodityJiage);
+        list[a].deliveryCollect=toDecimal2( list[a].deliveryCollect);
+        let reserve=list[a].reserve;
+        if(reserve===1){
+          list[a].reserve='支持在线下单';
+        }else{
+          list[a].reserve='只支持在线预订';
+        }
+        let  commodityPacking=list[a].commodityPacking;
+        let specifi=list[a].specifi;
+        if(commodityPacking===1){
+          list[a].commodityPacking='散装';
+        }else if(commodityPacking===2){
+          list[a].commodityPacking='袋装';
+          if(specifi===1){
+            list[a].commoditySpecifications=list[a].cations+'g'+'/袋';
+          }else  if(specifi===2){
+            list[a].commoditySpecifications=list[a].cations+'kg'+'/袋';
+          }
+        }else if(commodityPacking===3){
+          if(specifi===3){
+            list[a].commoditySpecifications=list[a].cations+'ML'+'/瓶/桶';
+          }else  if(specifi===4){
+            list[a].commoditySpecifications=list[a].cations+'L'+'/瓶/桶';
+          }
+
+          list[a].commodityPacking='瓶/桶装';
+        }
+      }
+      }
+     else if( type===16){}
+
+
+
     }
 
  //查看和删除全部有 除了审批scope.row.isDisplaySee">查看，scope.row.isDisplayDelete"   >删除，
