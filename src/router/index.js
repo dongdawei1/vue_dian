@@ -88,8 +88,8 @@ import RentDetails  from '../views/detailes/RentDetails'
 import EquipmentDetails  from '../views/detailes/EquipmentDetails'
 import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
 import WineAndTablewareDetails  from '../views/detailes/WineAndTablewareDetails'
-
 import DepartmentStoreDetails  from '../views/detailes/DepartmentStoreDetails'
+import WholesaleCommodityDetailes  from '../views/detailes/WholesaleCommodityDetailes'
 
 import PurchaseCreateOrder from '../views/home/releases/createOrder/PurchaseCreateOrder'
 
@@ -184,6 +184,15 @@ export default new VueRouter ({
           name: 'departmentStoreDetails',
           component:   DepartmentStoreDetails  //酒等
         },
+        {
+          hidden: true , //用户包中
+          path: '/details/wholesaleCommodityDetailes/:id/:releaseType',
+          name: 'wholesaleCommodityDetailes',
+          component:   WholesaleCommodityDetailes  //批发
+        },
+
+
+
 
       ],
     },

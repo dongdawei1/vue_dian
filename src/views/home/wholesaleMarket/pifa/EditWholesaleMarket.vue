@@ -110,8 +110,8 @@
       <el-form-item  label="预定方式" prop="reserve">
         <template>
           <el-radio-group v-model="ruleForm.reserve" @change="reserveChange">
-            <el-radio :label="1" >支持线上预定</el-radio>
-            <el-radio :label="2" >不支持线上预定</el-radio>
+            <el-radio :label="1" >支持线上下单</el-radio>
+            <el-radio :label="2" >仅可电话咨询</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -243,7 +243,7 @@
         isdeliveryCollect:false,//是否展示收取运费
         deliveryCollectType:'运费',
         type:'总数(kg)',
-        jiagetype:'单价(斤/kg)',
+        jiagetype:'单价(元/kg)',
         ruleForm: {
           userId:'',
           releaseType:'',//发布类型

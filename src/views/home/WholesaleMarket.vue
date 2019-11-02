@@ -59,7 +59,7 @@
       </el-form-item>
     </el-form>
 
-    <VmRpList :tableData="tableData" class="vm-margin"></VmRpList>
+    <VmWholesaleCommoditylist :tableData="tableData" class="vm-margin"></VmWholesaleCommoditylist>
     <!-- 分页 -->
     <el-pagination
       background
@@ -82,12 +82,13 @@
   import { get_user_info_sign } from '../../api/api';
   import { regionData } from 'element-china-area-data'
   import { getWholesaleCommodityPublicList } from '../../api/api';
-  import VmRpList from '../../components/vm-mrp-list';
+  import VmWholesaleCommoditylist from '../../components/vm-wholesaleCommodity-list';
   import {  getwholesale} from '../../api/api';
+
   export default {
     props: ["tableDataEnter"],
     components: {
-      VmRpList
+      VmWholesaleCommoditylist
     },
     data() {
       return {
@@ -122,7 +123,6 @@
     },
 
     created () {
-      this.tableData.releaseType =this.tableDataEnter;
       this.jurisdiction()
     },
     methods: {
@@ -175,7 +175,7 @@
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData.tableDatas = res.data.datas;
-            console.log(this.tableData.tableDatas )
+            this.tableData.releaseType =this.releaseWelfare.releaseType;
           }else {
             isRoleMessage(res.msg);
           }

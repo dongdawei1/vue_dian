@@ -81,7 +81,7 @@
       getBunner(){
         getBunner(this.tableData).then((res) => {
           if(res.status===0) {
-            if(res.data!==null){
+            if(res.data.length!==0){
              let list=res.data;
                 if(list.length===1){
                   this.res1=true;

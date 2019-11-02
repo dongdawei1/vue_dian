@@ -18,7 +18,7 @@
     </div>
     <div   class="evaluatebody" v-if="jiage">
       <div class="evaluateType">
-        服务价格 </div>
+        价格 </div>
         <div class="evaluateNo">
           合理 ({{tableData.jiagedi}})<br>
           偏高 ({{tableData.jiagezhong}})<br>
@@ -88,15 +88,15 @@
     },
     methods: {
       zhanshi(){
-        let permissionid=this.tableData.permissionid;
-        if(permissionid===13){
+        if(this.tableData.permissionid!=='' && this.tableData.permissionid!==null){
+          let permissionid=this.tableData.permissionid;
+          if(permissionid===13){
             this.shouhou=true;
             this.zhuangye=true;
+          }else if(permissionid==='401'|| permissionid==='501' || permissionid==='601' || permissionid==='901' || permissionid==='2901'){
+            this.zhilian=true;
+          }
         }
-
-
-
-
       }
     },
 
