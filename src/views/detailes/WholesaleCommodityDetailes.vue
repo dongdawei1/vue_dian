@@ -24,15 +24,21 @@
 
         <ReservationService></ReservationService>
       </div>
+      <div class="buttonGoumai">
+        <el-form :model="form" ref="form" label-width="100px" class="demo-ruleForm">
+        <div v-if="isDianhua">  <el-button type="primary" disabled>电话联系卖家吧！</el-button></div>
+        <div v-if="isXiadan">
+          购买数量(整数):&emsp;<el-input-number v-model.number="form.num" @change="handleChange" :min="1" :max="max"
+        >
+        </el-input-number>{{commodityPackingFangshi}}&emsp;
+          <el-button type="primary" @click="examineClick()">购买</el-button>
+        </div>
 
+        </el-form>
+      </div>
       <div class="juzhong">商品介绍 </div>
       <div class="fuwujieshao">  &emsp; &emsp;&emsp;{{wholesaleCommodity.serviceIntroduction}}<br></div>
 
-
-      <div v-if="isDianhua">  <el-button type="primary" disabled>电话联系卖家吧！</el-button></div>
-      <div v-if="isXiadan">
-        <el-button type="primary" @click="" >购买</el-button>
-      </div>
 
       <!--引入评价-->
       <Evaluate :tableData="tableData" ></Evaluate>
@@ -50,6 +56,29 @@
 
     <!--引入评价-->
     <DibuBunner :tableData="tableBunner" ></DibuBunner>
+
+
+
+    <!--购买弹窗开始-->
+    <el-dialog title="审核" :visible.sync="dialogFormVisible">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="审批状态" prop="authentiCationStatus">
+          <el-radio-group v-model="form.authentiCationStatus" >
+            <el-radio label="2">通过</el-radio>
+            <el-radio label="3">不通过</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="失败原因" prop="authentiCationFailure"  >
+          <el-input v-model="form.authentiCationFailure"  placeholder="选择不通过时必须输入，小于15个字"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
+      </div>
+    </el-dialog>
+    <!--购买弹窗结束-->
   </div>
 </template>
 <script>
@@ -83,12 +112,38 @@
         },
         realName:'',
         fileList:[],
-
         isDianhua:false,
-        isXiadan:true,
+        isXiadan:false,
+        dialogFormVisible: false,        //购买弹窗
+        form: {   //审核表单
+          num:'',//实际购买量
+          authentiCationStatus: '',
+          authentiCationFailure:'', //失败原因
+
+        },
+
+
+        max:'',//最大购买量
+
       }
     },
 
+
+    examineClick(){ //点击打开购买弹窗
+      if (!Number.isInteger(this.form.num)) {
+        console.log(11)
+        console.log(this.form.num)
+        this.$message({
+          type: 'error',
+          message: '购买数量只能是整数',
+          duration: 1500
+        });
+        return false;
+      }
+      console.log(21)
+      console.log(this.form.num)
+      this.dialogFormVisible=true;
+    },
     created () {
       this.tableBunner.permissionid= Number(this.releaseType);
       this.tableData.permissionid=this.releaseType;
@@ -136,12 +191,13 @@
             }
 
 
-            // let reserve=this.wholesaleCommodity.reserve;
-            // if(reserve===1){
-            //   wholesaleCommodity.reserve='支持在线下单';
-            // }else{
-            //   wholesaleCommodity.reserve='只支持在线预订';
-            // }
+            let reserve=this.wholesaleCommodity.reserve;
+            if(reserve===1){
+                this.isXiadan=true;
+            }else{
+              this.isDianhua=true;
+            }
+            this.max=this.wholesaleCommodity.commoditySurplusNo;
             this.realName=res.data.realName;
             let pictureUrl=JSON.parse(this.wholesaleCommodity.pictureUrl);
             let list=[];
@@ -192,6 +248,10 @@
     padding:5px 5px 3px 35%;
 
   }
+  .buttonGoumai{
+    margin:10px 5% 10px 0px;
+    padding:5px 5px 3px 35%;
+  }
   img{
 
     display: block;
@@ -207,4 +267,5 @@
   .mrpDetailsUrlno{
     padding:5px 5px 3px 8%; /*调整图片*/
   }
+
 </style>
