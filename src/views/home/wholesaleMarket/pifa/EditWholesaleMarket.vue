@@ -120,10 +120,10 @@
       <el-form-item  label="送货方式" prop="deliveryType" v-if="isdeliveryType">
         <template>
           <el-radio-group v-model="ruleForm.deliveryType" @change="deliveryTypeChange">
-            <el-radio :label="1" >自提</el-radio>
-            <el-radio :label="2" >有偿送货</el-radio>
+            <el-radio :label="1" disabled >自提</el-radio>
+          <!--  <el-radio :label="2" >有偿送货</el-radio>
             <el-radio :label="3" >自提/有偿送货均支持</el-radio>
-            <el-radio :label="4" >满N元免运费</el-radio>
+            <el-radio :label="4" >满N元免运费</el-radio> -->
           </el-radio-group>
         </template>
       </el-form-item>

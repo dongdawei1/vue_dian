@@ -28,10 +28,10 @@
         <el-form :model="form" ref="form" label-width="100px" class="demo-ruleForm">
         <div v-if="isDianhua">  <el-button type="primary" disabled>电话联系卖家吧！</el-button></div>
         <div v-if="isXiadan">
-          购买数量(整数):&emsp;<el-input-number v-model.number="form.num" @change="handleChange" :min="1" :max="max"
+          购买数量(整数):&emsp;<el-input-number v-model.number="form.num"  :min="1" :max="max"
         >
         </el-input-number>{{commodityPackingFangshi}}&emsp;
-          <el-button type="primary" @click="examineClick()">购买</el-button>
+          <el-button type="primary" @click="examineClick" v-loading.fullscreen.lock="fullscreenLoading">购买</el-button>
         </div>
 
         </el-form>
@@ -59,26 +59,6 @@
 
 
 
-    <!--购买弹窗开始-->
-    <el-dialog title="审核" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="审批状态" prop="authentiCationStatus">
-          <el-radio-group v-model="form.authentiCationStatus" >
-            <el-radio label="2">通过</el-radio>
-            <el-radio label="3">不通过</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="失败原因" prop="authentiCationFailure"  >
-          <el-input v-model="form.authentiCationFailure"  placeholder="选择不通过时必须输入，小于15个字"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
-      </div>
-    </el-dialog>
-    <!--购买弹窗结束-->
   </div>
 </template>
 <script>
@@ -114,36 +94,20 @@
         fileList:[],
         isDianhua:false,
         isXiadan:false,
-        dialogFormVisible: false,        //购买弹窗
+      //  dialogFormVisible: false,        //购买弹窗
         form: {   //审核表单
           num:'',//实际购买量
-          authentiCationStatus: '',
-          authentiCationFailure:'', //失败原因
 
         },
 
-
+        fullscreenLoading:false,
         max:'',//最大购买量
 
       }
     },
 
 
-    examineClick(){ //点击打开购买弹窗
-      if (!Number.isInteger(this.form.num)) {
-        console.log(11)
-        console.log(this.form.num)
-        this.$message({
-          type: 'error',
-          message: '购买数量只能是整数',
-          duration: 1500
-        });
-        return false;
-      }
-      console.log(21)
-      console.log(this.form.num)
-      this.dialogFormVisible=true;
-    },
+
     created () {
       this.tableBunner.permissionid= Number(this.releaseType);
       this.tableData.permissionid=this.releaseType;
@@ -151,6 +115,24 @@
 
     },
     methods: {
+      examineClick(){ //点击打开购买弹窗
+        this.fullscreenLoading=true;
+        console.log(this.form.num)
+        if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(this.form.num)) {
+          console.log(this.form.num)
+          console.log(this.wholesaleCommodity)
+         this.fullscreenLoading=false;
+          return true;
+        }
+        this.fullscreenLoading=false;
+        this.$message({
+          type: 'error',
+          message: '购买数量只能是数字最多2位小数',
+          duration: 1500
+        });
+        return false;
+      },
+
       getMrpDetails(){
         getWholesaleCommodityPublicId(this.id).then(res =>{
           if(res.status===0){
