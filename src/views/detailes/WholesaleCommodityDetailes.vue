@@ -25,10 +25,10 @@
         <ReservationService></ReservationService>
       </div>
       <div class="buttonGoumai">
-        <el-form :model="form" ref="form" label-width="100px" class="demo-ruleForm">
+        <el-form :model="wholesaleCommodity" ref="wholesaleCommodity" label-width="100px" class="demo-ruleForm">
         <div v-if="isDianhua">  <el-button type="primary" disabled>电话联系卖家吧！</el-button></div>
         <div v-if="isXiadan">
-          购买数量(整数):&emsp;<el-input-number v-model.number="form.num"  :min="1" :max="max"
+          购买数量(整数):&emsp;<el-input-number v-model.number="wholesaleCommodity.commodityReserveNo"  :min="1" :max="max"
         >
         </el-input-number>{{commodityPackingFangshi}}&emsp;
           <el-button type="primary" @click="examineClick" v-loading.fullscreen.lock="fullscreenLoading">购买</el-button>
@@ -81,6 +81,7 @@
         commodityPackingFangshi:'',//包装方式
         wholesaleCommodity:{
           releaseType:'',
+          commodityReserveNo:'',
         },
 
         tableData:{
@@ -95,10 +96,7 @@
         isDianhua:false,
         isXiadan:false,
       //  dialogFormVisible: false,        //购买弹窗
-        form: {   //审核表单
-          num:'',//实际购买量
 
-        },
 
         fullscreenLoading:false,
         max:'',//最大购买量
@@ -117,10 +115,12 @@
     methods: {
       examineClick(){ //点击打开购买弹窗
         this.fullscreenLoading=true;
-        console.log(this.form.num)
-        if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(this.form.num)) {
-          console.log(this.form.num)
+
+        if(this.wholesaleCommodity.commodityPacking===1){
+        if ( /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(this.wholesaleCommodity.commodityReserveNo)) {
+
           console.log(this.wholesaleCommodity)
+
          this.fullscreenLoading=false;
           return true;
         }
@@ -131,6 +131,20 @@
           duration: 1500
         });
         return false;
+        }else{
+          if (  /^\+?[1-9][0-9]*$/.test(this.wholesaleCommodity.commodityReserveNo)) {
+            console.log(this.wholesaleCommodity)
+            this.fullscreenLoading=false;
+            return true;
+          }
+          this.fullscreenLoading=false;
+          this.$message({
+            type: 'error',
+            message: '购买数量只能是正整数',
+            duration: 1500
+          });
+          return false;
+        }
       },
 
       getMrpDetails(){

@@ -453,6 +453,16 @@ export const getWholesaleCommodityPublicId= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res =>isButtonAndListusermrp(res.data,16) ); };
 
+
+export const getPurchaseCreateOrderVo= params => {
+  return axios({
+    url: `${base}/api/orderVoAddCommonMenu/getPurchaseCreateOrderVo`,
+    params:{},
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
 //制保留2位小数，如：2，会在2后面补上00.即2.00
 
 function toDecimal2(x) {

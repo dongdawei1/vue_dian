@@ -121,20 +121,20 @@
       <el-form-item  label="预定方式" prop="reserve">
         <template>
           <el-radio-group v-model="ruleForm.reserve" @change="reserveChange">
-            <el-radio :label="1" >支持线上下单</el-radio>
-            <el-radio :label="2" >仅可电话咨询</el-radio>
-          </el-radio-group>
-        </template>
-      </el-form-item>
+            <!--     <el-radio :label="1" disabled>支持线上下单</el-radio> -->
+                 <el-radio :label="2" >仅可电话咨询</el-radio>
+            </el-radio-group>
+          </template>
+        </el-form-item>
 
 
-      <el-form-item  label="送货方式" prop="deliveryType" v-if="isdeliveryType">
-        <template>
-          <el-radio-group v-model="ruleForm.deliveryType" @change="deliveryTypeChange">
-            <el-radio :label="1" disabled >自提</el-radio>
-         <!--   <el-radio :label="2" >有偿送货</el-radio>
-            <el-radio :label="3" >自提/有偿送货均支持</el-radio>
-            <el-radio :label="4" >满N元免运费</el-radio> -->
+        <el-form-item  label="送货方式" prop="deliveryType" v-if="isdeliveryType">
+          <template>
+            <el-radio-group v-model="ruleForm.deliveryType" @change="deliveryTypeChange">
+              <el-radio :label="1" disabled >自提</el-radio>
+           <!--   <el-radio :label="2" >有偿送货</el-radio>
+              <el-radio :label="3" >自提/有偿送货均支持</el-radio>
+              <el-radio :label="4" >满N元免运费</el-radio> -->
           </el-radio-group>
         </template>
       </el-form-item>
@@ -285,7 +285,7 @@
           serviceIntroduction:'',//介绍
           remarks:'',//备注
           value1:[],//价格开始结束时间
-          reserve:'',//是否接受预定
+          reserve:2,//是否接受预定
           deliveryType:1,//送货方式
           deliveryCollect:0,
           pictureUrl:[],//图片

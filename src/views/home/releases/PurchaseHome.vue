@@ -20,17 +20,22 @@
       </el-row>
 
       <el-row  v-if="isButton">
+
+      
+
         <el-button type="primary"><router-link
-          v-on:click.native="isAuthenticationM('/home/PurchaseCreateOrder/-1')"
-          to="" class="a" >发布采购信息</router-link></el-button>
+          v-on:click.native="isAuthenticationM('/home/purchaseCreateOrder')"
+          to="" class="a" >蔬菜实时采购信息</router-link></el-button>
+
+
 
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM('/home/createLease')"
-          to="" class="a" >发布窗口/早点出租信息</router-link></el-button>
+          to="" class="a" >窗口/早点出租信息</router-link></el-button>
 
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM('/home/releaseWelfare')"
-          to="" class="a" >发布招聘信息</router-link></el-button>
+          to="" class="a" >招聘信息</router-link></el-button>
 
         <el-button type="primary"><router-link
           v-on:click.native="isAuthenticationM('/home/myRelease')"

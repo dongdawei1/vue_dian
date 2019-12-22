@@ -206,7 +206,7 @@ export default new VueRouter ({
           component: Release
         },
         {
-          path: '/home/PurchaseCreateOrder/:id',  //发布
+          path: '/home/purchaseCreateOrder',  //发布
           component: PurchaseCreateOrder
         },
 
