@@ -341,7 +341,9 @@
       },
       //提交
       submitForm(ruleForm) {
-        //  this.fullscreenLoading=true;
+
+        console.log(this.ruleForm)
+          this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             length=0;

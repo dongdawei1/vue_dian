@@ -3,19 +3,25 @@
 
   <div v-if="isFromData" class="fromDataClass">
     <div class="fromDataTitleClass" >
-     我的商品
+     采购订单信息
     </div>
-    <span v-for="(p, index) in fromData" :key="index">
-      {{p.serviceType}}&nbsp;  {{p.commodityPacking}}&nbsp;
-      <span v-if="p.specifi_cations!='--'">{{p.specifi_cations}}&nbsp;</span>
-      数量:{{p.number}}&nbsp;
-      <span v-if="p.remarks!=''">备注:{{p.remarks}}&nbsp;</span>
+
+    <span v-for="(p, index) in fromData" :key="index" >
+      <div  class="forFromData">
+      {{p.serviceType}}&nbsp;
+      采购数量:{{p.number}}&nbsp;{{p.specifiName}}&nbsp;
+
+       <span v-if="p.specifi_cations!=='--'">包装规格:{{p.specifi_cations}}&nbsp;</span>
+       <span v-if="p.remarks!==''&& p.remarks!== null">备注:{{p.remarks}}&nbsp;</span>
+
          <el-button type="text" @click="deleteFromData(index,p)">
            <i class="el-icon-delete"></i>
-         </el-button>&nbsp;,&nbsp;
+         </el-button>；
+        </div>&nbsp;&nbsp;
     </span>
+
     <div  class="submitFormButton">
-    <el-button type="primary" size="mini"  @click="submitForm" v-loading.fullscreen.lock="fullscreenLoading" plain>发布</el-button>
+    <el-button type="primary" size="mini"  @click="submitForm" v-loading.fullscreen.lock="fullscreenLoading" plain>发布采购信息</el-button>
     </div>
   </div>
 
@@ -30,43 +36,50 @@
     :cell-style="{padding:'1px'}">
     <el-table-column
       label="常用商品名称"
-      width="120">
+      width="150"
+      show-overflow-tooltip >
       <template slot-scope="scope">{{ scope.row.serviceType }}</template>
     </el-table-column>
 
     <el-table-column
-      prop="commodityPacking"
+      prop="commodityPackingName"
       label="包装方式"
-      width="120">
+      width="100">
     </el-table-column>
-
     <el-table-column
       prop="specifi_cations"
       label="包装规格"
+      width="120"
       show-overflow-tooltip>
     </el-table-column>
 
-    <el-table-column label="数量">
+    <el-table-column label="数量" width="120" >
       <template slot-scope="scope">
-        <el-input v-model="scope.row.number" :disabled="scope.row.isPlacing"></el-input>
-      </template>
-    </el-table-column>
-    <el-table-column label="备注">
-      <template slot-scope="scope">
-        <el-input v-model="scope.row.remarks"  :disabled="scope.row.isPlacing"></el-input>
+        <el-input v-model="scope.row.number" :disabled="scope.row.isPlacing" placeholder="需小于100"></el-input>
       </template>
     </el-table-column>
 
     <el-table-column
-      align="right">
-      <template slot="header" slot-scope="scope" >
-        <el-input
-          v-model="search"
-          size="mini"
-          placeholder="输入关键字搜索"/>
+      prop="specifiName"
+      label=""
+      width="60"
+      show-overflow-tooltip>
+    </el-table-column>
+
+    <el-table-column label="备注" width="240">
+      <template slot-scope="scope">
+        <el-input placeholder="15字之内"
+                  type="text"
+                  v-model="scope.row.remarks"
+                  :placeholder="scope.row.remarks"
+                  :disabled="scope.row.isPlacing"
+                  maxlength="15"
+                  show-word-limit
+                  clearable></el-input>
       </template>
     </el-table-column>
-    <el-table-column>
+
+    <el-table-column  width="150">
       <template slot-scope="scope">
         <el-button
           size="mini"
@@ -74,6 +87,15 @@
         <el-button
           size="mini"
           @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.isPlacing">编辑</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column
+      align="right"  >
+      <template slot="header" slot-scope="scope" >
+        <el-input
+          v-model="search"
+          size="mini"
+          placeholder="输入关键字搜索"/>
       </template>
     </el-table-column>
 
@@ -93,33 +115,60 @@
 
     <el-table-column
       label="全部商品名称"
-      width="120">
+      width="150"
+      show-overflow-tooltip >
       <template slot-scope="scope">{{ scope.row.serviceType }}</template>
     </el-table-column>
+
     <el-table-column
-      prop="commodityPacking"
+      prop="commodityPackingName"
       label="包装方式"
-      width="120">
+      width="100">
     </el-table-column>
     <el-table-column
       prop="specifi_cations"
       label="包装规格"
+      width="120"
       show-overflow-tooltip>
     </el-table-column>
 
-      <el-table-column label="数量">
+      <el-table-column label="数量" width="120" >
         <template slot-scope="scope">
-            <el-input v-model="scope.row.number" :disabled="scope.row.isPlacing"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="备注">
-        <template slot-scope="scope">
-            <el-input v-model="scope.row.remarks"  :disabled="scope.row.isPlacing"></el-input>
+            <el-input v-model="scope.row.number" :disabled="scope.row.isPlacing" placeholder="需小于100"></el-input>
         </template>
       </el-table-column>
 
     <el-table-column
-      align="right">
+      prop="specifiName"
+      label=""
+      width="60"
+      show-overflow-tooltip>
+    </el-table-column>
+
+      <el-table-column label="备注"  width="240">
+        <template slot-scope="scope">
+          <el-input placeholder="15字之内"
+                    type="text"
+                    v-model="scope.row.remarks"
+                    :disabled="scope.row.isPlacing"
+                    maxlength="15"
+                    show-word-limit
+                    ></el-input>
+        </template>
+      </el-table-column>
+
+    <el-table-column  width="150">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          @click="handlePreservation(scope.$index, scope.row)"  v-if="!scope.row.isPlacing">保存</el-button>
+        <el-button
+          size="mini"
+          @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.isPlacing">编辑</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column
+      align="right"  >
       <template slot="header" slot-scope="scope" >
         <el-input
           v-model="search"
@@ -127,16 +176,7 @@
           placeholder="输入关键字搜索"/>
       </template>
     </el-table-column>
-<el-table-column>
-    <template slot-scope="scope">
-      <el-button
-        size="mini"
-        @click="handlePreservation(scope.$index, scope.row)"  v-if="!scope.row.isPlacing">保存</el-button>
-      <el-button
-        size="mini"
-        @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.isPlacing">编辑</el-button>
-    </template>
-    </el-table-column>
+
 
   </el-table>
 
@@ -226,6 +266,11 @@
           this.$message.error("数量只能是数字");
           return false;
         }
+        if (row.number>100) {
+          this.$message.error("数量不能超过100");
+          return false;
+        }
+
         if( row.type===1){
           this.myCommonMenuTableData[index].number=row.number;
           this.myCommonMenuTableData[index].remarks=row.remarks;
@@ -279,76 +324,15 @@
               this.$router.push({path: '/home/myAccount'});
             }
             getPurchaseCreateOrderVo().then(res => {
-              var commonMenu_list=[];
-              var commonMenu={
-                serviceType:'',
-                commodityPacking:'',
-                specifi_cations:'' , //包装方式
-                number:'',
-                remarks:'',
-                isPlacing:false,
-                type:''
-              };
+              console.log(res)
               if(res.status===0){
                   if(res.data.isCommonMenu===1){
                     this.isCommonMenuButton=true;
-                    var tableDataListmyCommonMenu=res.data.myCommonMenu;
-                    for(let a=0;a<tableDataListmyCommonMenu.length;a++){
-                      commonMenu={};
-                      commonMenu.serviceType=tableDataListmyCommonMenu[a].serviceType;
-                      if(tableDataListmyCommonMenu[a].commodityPacking===1){
-                        commonMenu.commodityPacking='散装';
-                        commonMenu.specifi_cations='--';
-                      }else if(tableDataListmyCommonMenu[a].commodityPacking===2){
-                        commonMenu.commodityPacking='袋装';
-                        if(tableDataListmyCommonMenu[a].specifi===1){
-                          commonMenu.specifi_cations=tableDataListmyCommonMenu[a].cations+'/g';
-                        }else if(tableDataListmyCommonMenu[a].specifi===2){
-                          commonMenu.specifi_cations=tableDataListmyCommonMenu[a].cations+'/kg';
-                        }
-                      }else if(tableDataListmyCommonMenu[a].commodityPacking===3){
-                        commonMenu.commodityPacking='瓶装';
-                        if(tableDataListmyCommonMenu[a].specifi===3){
-                          commonMenu.specifi_cations=tableDataListmyCommonMenu[a].cations+'/ML';
-                        }else if(tableDataListmyCommonMenu[a].specifi===4){
-                          commonMenu.specifi_cations=tableDataListmyCommonMenu[a].cations+'/L';
-                        }
-                      }
-                      commonMenu.type=1;
-                      commonMenu.serviceType=tableDataListmyCommonMenu[a].serviceType;
-                      commonMenu_list=commonMenu_list.concat(commonMenu);
-                    }
-                  this.myCommonMenuTableData=commonMenu_list;
+                    this.myCommonMenuTableData=res.data.myCommonMenu;
                   }else{
                     this.maxHeight=470;
                   }
-                var tableDataListallCommonMenu=res.data.allCommonMenu;
-                  commonMenu_list=[];
-                for(let a=0;a<tableDataListallCommonMenu.length;a++){
-                     commonMenu={};
-                  if(tableDataListallCommonMenu[a].commodityPacking===1){
-                    commonMenu.commodityPacking='散装';
-                    commonMenu.specifi_cations='--';
-                  }else if(tableDataListallCommonMenu[a].commodityPacking===2){
-                    commonMenu.commodityPacking='袋装';
-                    if(tableDataListallCommonMenu[a].specifi===1){
-                      commonMenu.specifi_cations=tableDataListallCommonMenu[a].cations+'/g';
-                    }else if(tableDataListallCommonMenu[a].specifi===2){
-                      commonMenu.specifi_cations=tableDataListallCommonMenu[a].cations+'/kg';
-                    }
-                  }else if(tableDataListallCommonMenu[a].commodityPacking===3){
-                    commonMenu.commodityPacking='瓶装';
-                    if(tableDataListallCommonMenu[a].specifi===3){
-                      commonMenu.specifi_cations=tableDataListallCommonMenu[a].cations+'/ML';
-                    }else if(tableDataListallCommonMenu[a].specifi===4){
-                      commonMenu.specifi_cations=tableDataListallCommonMenu[a].cations+'/L';
-                    }
-                  }
-                  commonMenu.type=0;
-                  commonMenu.serviceType=tableDataListallCommonMenu[a].serviceType;
-                  commonMenu_list=commonMenu_list.concat(commonMenu);
-                }
-                this.allCommonMenuTableData=commonMenu_list;
+                this.allCommonMenuTableData=res.data.allCommonMenu;
               }else{
                 isRoleMessage(res.msg);
               }
@@ -367,6 +351,8 @@
           this.$message.error("采购列表不能为空")
           return false;
         }
+
+        console.log(this.fromData)
         operation_userWholesaleCommodity(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
@@ -406,5 +392,9 @@
   .submitFormButton{
     text-align:right;
     margin:4px 121px 2px 10px;
+  }
+  .forFromData{
+    background:#F4FBFD;
+    display: inline
   }
 </style>

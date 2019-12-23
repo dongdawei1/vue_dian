@@ -290,7 +290,7 @@
           deliveryCollect:0,
           pictureUrl:[],//图片
           //实名中获取
-
+          serviceDetailed:'',
         },
 
         rules: {
@@ -324,9 +324,7 @@
           value1: [
             { required: true, message: '请选择价格有效期', trigger: 'change' },
           ],
-          serviceDetailed: [
-            { required: true, message: '请选服务/销售城区', trigger: 'change' }
-          ],
+
           serviceType: [
             { required: true, message: '请选商品名称', trigger: 'change' }
           ],
@@ -366,10 +364,16 @@
       },
       //提交
       submitForm(ruleForm) {
-      //  this.fullscreenLoading=true;
+
+       this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
 
+            if(this.ruleForm.pictureUrl.length<1){
+              this.$message.error("图片不能为空");
+              this.fullscreenLoading=false;
+              return false;
+            }
 
             create_wholesaleCommodity(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
