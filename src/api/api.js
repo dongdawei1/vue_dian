@@ -453,6 +453,8 @@ export const getWholesaleCommodityPublicId= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res =>isButtonAndListusermrp(res.data,16) ); };
 
+export const create_purchase_order= params => { return axios.post(`${base}/api/order/create_purchase_order`, params).then(res => res.data);};
+export const create_order_evaluation= params => { return axios.post(`${base}/api/order/create_order_evaluation`, params).then(res => res.data);};
 
 export const getPurchaseCreateOrderVo= params => {
   return axios({

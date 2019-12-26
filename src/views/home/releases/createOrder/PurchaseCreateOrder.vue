@@ -21,7 +21,7 @@
     </span>
 
     <div  class="submitFormButton">
-    <el-button type="primary" size="mini"  @click="submitForm" v-loading.fullscreen.lock="fullscreenLoading" plain>发布采购信息</el-button>
+    <el-button type="primary" size="mini"  @click="submitForm"  plain>查看预估价格</el-button>
     </div>
   </div>
 
@@ -55,7 +55,7 @@
 
     <el-table-column label="数量" width="120" >
       <template slot-scope="scope">
-        <el-input v-model="scope.row.number" :disabled="scope.row.isPlacing" placeholder="需小于100"></el-input>
+        <el-input v-model="scope.row.number" :disabled="scope.row.placing" placeholder="需小于100"></el-input>
       </template>
     </el-table-column>
 
@@ -72,21 +72,21 @@
                   type="text"
                   v-model="scope.row.remarks"
                   :placeholder="scope.row.remarks"
-                  :disabled="scope.row.isPlacing"
+                  :disabled="scope.row.placing"
                   maxlength="15"
                   show-word-limit
                   clearable></el-input>
       </template>
     </el-table-column>
 
-    <el-table-column  width="150">
+    <el-table-column  width="130">
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handlePreservation(scope.$index, scope.row)"  v-if="!scope.row.isPlacing">保存</el-button>
+          @click="handlePreservation(scope.$index, scope.row)"  v-if="!scope.row.placing">保存</el-button>
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.isPlacing">编辑</el-button>
+          @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.placing">编辑</el-button>
       </template>
     </el-table-column>
     <el-table-column
@@ -95,7 +95,8 @@
         <el-input
           v-model="search"
           size="mini"
-          placeholder="输入关键字搜索"/>
+          placeholder="输入关键字搜索"
+          clearable/>
       </template>
     </el-table-column>
 
@@ -134,7 +135,7 @@
 
       <el-table-column label="数量" width="120" >
         <template slot-scope="scope">
-            <el-input v-model="scope.row.number" :disabled="scope.row.isPlacing" placeholder="需小于100"></el-input>
+            <el-input v-model="scope.row.number" :disabled="scope.row.placing" placeholder="需小于100"></el-input>
         </template>
       </el-table-column>
 
@@ -150,35 +151,83 @@
           <el-input placeholder="15字之内"
                     type="text"
                     v-model="scope.row.remarks"
-                    :disabled="scope.row.isPlacing"
+                    :disabled="scope.row.placing"
                     maxlength="15"
                     show-word-limit
                     ></el-input>
         </template>
       </el-table-column>
 
-    <el-table-column  width="150">
+    <el-table-column  width="130">
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handlePreservation(scope.$index, scope.row)"  v-if="!scope.row.isPlacing">保存</el-button>
+          @click="handlePreservation(scope.$index, scope.row)"  v-if="!scope.row.placing">保存</el-button>
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.isPlacing">编辑</el-button>
+          @click="handleEdit(scope.$index, scope.row)"  v-if="scope.row.placing">编辑</el-button>
       </template>
     </el-table-column>
     <el-table-column
       align="right"  >
-      <template slot="header" slot-scope="scope" >
+      <template slot="header" slot-scope="scope"  >
         <el-input
           v-model="search"
           size="mini"
-          placeholder="输入关键字搜索"/>
+          placeholder="输入关键字搜索"
+          clearable/>
       </template>
     </el-table-column>
 
 
   </el-table>
+
+  <!--地址确认框-->
+  <el-dialog title="采购信息" :visible.sync="dialogFormVisible">
+    <el-form :model="form" :rules="rules" ref="form">
+
+      <el-form-item label="参考价格"   :label-width="formLabelWidth">
+        <el-input v-model="form.commodityJiage"  :disabled="true"  autocomplete="off" :placeholder="form.commodityJiage"></el-input>
+      </el-form-item>
+
+      <el-form-item label="收货地址"  :label-width="formLabelWidth">
+        <el-input v-model="form.addressDetailed"  :disabled="true"  autocomplete="off" :placeholder="form.contact"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人"   :label-width="formLabelWidth">
+        <el-input v-model="form.consigneeName"  :disabled="true"  autocomplete="off" :placeholder="form.consigneeName"></el-input>
+      </el-form-item>
+      <el-form-item label="联系方式"  :label-width="formLabelWidth">
+        <el-input v-model="form.contact"  :disabled="true"  autocomplete="off" :placeholder="form.contact"></el-input>
+      </el-form-item>
+      <el-form-item label="送货时间"  prop="giveTakeTime" :label-width="formLabelWidth">
+        <el-date-picker
+          v-model="form.giveTakeTime"
+          type="datetime"
+          placeholder="选择日期时间"
+          default-time="09:00:00"
+          :picker-options="pickerOption"
+          value-format="yyyy-MM-dd HH:mm:ss"
+         >
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="备注"  :label-width="formLabelWidth">
+        <el-input v-model="form.remarks"
+                  type="text"
+                  placeholder="最多30字"
+                  maxlength="30"
+                  show-word-limit
+                  clearable></el-input>
+      </el-form-item>
+
+
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="commitForm('form')"  v-loading.fullscreen.lock="fullscreenLoading">发布采购信息</el-button>
+    </div>
+  </el-dialog>
+  <!--审核弹窗结束-->
+
 
 </div>
 </template>
@@ -186,40 +235,51 @@
 
 <script>
   import {  isRoleMessage } from '../../../../api/api';
-
-
-  import {  operation_userWholesaleCommodity } from '../../../../api/api';
+  import {  create_purchase_order } from '../../../../api/api';
+  import {  create_order_evaluation } from '../../../../api/api';
   import {  checke_isButten } from '../../../../api/api';
-
-  import { echo_display } from '../../../../api/api';
-  import {   get_userWholesaleCommodity_id } from '../../../../api/api';
-  import {   toDecimal } from '../../../../api/api';
-
+  import { getRealName } from '../../../../api/api';
   import {   getPurchaseCreateOrderVo } from '../../../../api/api';
 
 
 
-
   export default {
-
     data() {
       return {
+        pickerOption: {
+          disabledDate(time) {
+            let curDate = (new Date()).getTime();
+            let three = 2 * 24 * 3600 * 1000;
+            let threeMonths = curDate + three;
+            return time.getTime() <= Date.now() || time.getTime() > threeMonths;
+          }
+        },
         maxHeight:'280',
         isCommonMenuButton:false, //是否有常用菜单
         search: '',
         StringPath:'/home/purchaseCreateOrder',
-
-        ruleForm: {
-          userId:'',
-          releaseType:'',//发布类型
-        },
-
-        rules:{},
+        dialogFormVisible:false,//确认弹窗
+        formLabelWidth: '120px',
         myCommonMenuTableData:[],
         allCommonMenuTableData: [],
         fromData:[],
         isFromData:false,
         fullscreenLoading:false,
+        form:{
+          addressDetailed:'',
+          giveTakeTime:'',
+          contact:'',
+          consigneeName:'',
+          remarks:'',
+          fromData:'',
+          isCommonMenu:'',
+          commodityJiage:''
+        },
+        rules: {
+          giveTakeTime: [
+            { required: true, message: '送货时间不能为空', trigger: 'change' },
+          ],
+        }
       }
     },
 
@@ -227,6 +287,7 @@
       this.checke_isButten();
     },
     methods: {
+
       deleteFromData(index,p){
         if(p.type===1){
           for(let a=0;a<this.myCommonMenuTableData.length;a++){
@@ -235,7 +296,7 @@
               && this.myCommonMenuTableData[a].specifi_cations===p.specifi_cations){
               this.myCommonMenuTableData[a].number='';
               this.myCommonMenuTableData[a].remarks='';
-              this.myCommonMenuTableData[a].isPlacing=false;
+              this.myCommonMenuTableData[a].placing=false;
               this.fromData.splice(index, 1);
               if(this.fromData.length===0){
                 this.isFromData=false;
@@ -250,7 +311,7 @@
               && this.allCommonMenuTableData[a].specifi_cations===p.specifi_cations){
               this.allCommonMenuTableData[a].number='';
               this.allCommonMenuTableData[a].remarks='';
-              this.allCommonMenuTableData[a].isPlacing=false;
+              this.allCommonMenuTableData[a].placing=false;
               this.fromData.splice(index, 1);
               if(this.fromData.length===0){
                 this.isFromData=false;
@@ -274,13 +335,13 @@
         if( row.type===1){
           this.myCommonMenuTableData[index].number=row.number;
           this.myCommonMenuTableData[index].remarks=row.remarks;
-          this.myCommonMenuTableData[index].isPlacing=true;
+          this.myCommonMenuTableData[index].placing=true;
           //在这里保存
           this.upFromData(row);
         }else {
           this.allCommonMenuTableData[index].number=row.number;
           this.allCommonMenuTableData[index].remarks=row.remarks;
-          this.allCommonMenuTableData[index].isPlacing=true;
+          this.allCommonMenuTableData[index].placing=true;
           //在这里保存
           this.upFromData(row);
         }
@@ -288,9 +349,9 @@
       },
       handleEdit(index, row) {
         if( row.type===1){
-          this.myCommonMenuTableData[index].isPlacing=false;
+          this.myCommonMenuTableData[index].placing=false;
         }else {
-          this.allCommonMenuTableData[index].isPlacing=false;
+          this.allCommonMenuTableData[index].placing=false;
         }
       },
       upFromData(row){
@@ -332,7 +393,9 @@
                   }else{
                     this.maxHeight=470;
                   }
+                this.form.isCommonMenu=res.data.isCommonMenu;
                 this.allCommonMenuTableData=res.data.allCommonMenu;
+
               }else{
                 isRoleMessage(res.msg);
               }
@@ -343,28 +406,58 @@
         });
       },
 
+      getRealName(){
+        getRealName().then((res) => { //获取实名信息填充
+          if(res.status ===0 ) {
+            this.form.addressDetailed=res.data.addressDetailed;
+            this.form.contact=res.data.contact;
+            this.form.consigneeName=res.data.consigneeName;
 
+          }else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
       //提交
       submitForm() {
-        //  this.fullscreenLoading=true;
         if(this.fromData.length===0){
           this.$message.error("采购列表不能为空")
           return false;
         }
+        this.getRealName();
+        let fromData={
+          fromData:this.fromData
+        }
+        create_order_evaluation(fromData).then(res => {
+          this.fullscreenLoading = false;
+          if (res.status === 0) {
+            console.log(res)
+            this.form.commodityJiage=res.msg;
+          } else {
+            isRoleMessage(res.msg);
+          }
+        });
+        this.dialogFormVisible=true;
+      },
 
-        console.log(this.fromData)
-        operation_userWholesaleCommodity(this.ruleForm).then(res => {
-              this.fullscreenLoading=false;
+      commitForm(form){
+        this.$refs['form'].validate((valid) => {
+          this.fullscreenLoading = true;
+          if (valid) {
+            this.form.fromData=this.fromData;
+            create_purchase_order(this.form).then(res => {
+              this.fullscreenLoading = false;
               if (res.status === 0) {
-                this.id='';
-                this.ruleForm='';
-                this.fileList=[];
-                this.$message.success('编辑成功，审核约24小时内完成');
-                this.$router.push('/home/myRelease');
+
               } else {
                 isRoleMessage(res.msg);
               }
             });
+          } else {
+            this.fullscreenLoading = false;
+            return false;
+          }
+        });
       },
 
       cntinue(){  //留在本页继续发布
