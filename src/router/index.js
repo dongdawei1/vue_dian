@@ -414,9 +414,6 @@ export default new VueRouter ({
           component: AdminAddjiedan
         },
 
-
-
-
         {
           path: '',
           redirect: '/home/release'

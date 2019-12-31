@@ -63,6 +63,7 @@
     },
     data() {
       return {
+
         changePurchaseConductOrder:false,
         changePurchaseHome:false,
         changeSaleConductOrder:false,
@@ -77,7 +78,7 @@
 
         user:'',
         StringPath:'/home/release',
-        activeName:''
+        activeName:this.$route.params.activeName,
       }
     },
 

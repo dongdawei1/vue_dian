@@ -454,6 +454,15 @@ export const getWholesaleCommodityPublicId= params => {
   }).then(res =>isButtonAndListusermrp(res.data,16) ); };
 
 export const create_purchase_order= params => { return axios.post(`${base}/api/order/create_purchase_order`, params).then(res => res.data);};
+
+export const get_conduct_purchase_order= params => {
+  return axios({
+    url: `${base}/api/order/get_conduct_purchase_order`,
+    params:{},
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
 export const create_order_evaluation= params => { return axios.post(`${base}/api/order/create_order_evaluation`, params).then(res => res.data);};
 
 export const getPurchaseCreateOrderVo= params => {
