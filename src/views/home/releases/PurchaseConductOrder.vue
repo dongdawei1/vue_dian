@@ -55,12 +55,28 @@
                 width="180"
                 show-overflow-tooltip>
               </el-table-column>
+
               <el-table-column
-                prop="orderCommonOffer.saleUserAddressDetailed"
-                label="地址"
-                show-overflow-tooltip>
+                prop="orderCommonOffer.consigneeName"
+                label="联系人"
+                width="180"
+                show-overflow-tooltip
+                v-if="props.row.orderStatu4 ||props.row.orderStatu12 || props.row.orderStatu13 || props.row.orderStatu16">
+              </el-table-column>
+              <el-table-column
+                prop="orderCommonOffer.contact"
+                label="联系方式"
+                width="180"
+                show-overflow-tooltip
+                v-if="props.row.orderStatu4 ||props.row.orderStatu12 || props.row.orderStatu13 || props.row.orderStatu16">
               </el-table-column>
 
+
+              <el-table-column
+                prop="orderCommonOffer.saleUserAddressDetailed"
+                label="商户地址"
+                show-overflow-tooltip>
+              </el-table-column>
 
               <el-table-column
                 prop=""
@@ -97,7 +113,7 @@
                 show-overflow-tooltip>
 
                 <template slot-scope="scope">
-                  <el-button @click="choice(scope.row,props.row )" type="text" size="small"
+                  <el-button @click="choice(scope.row,props.row, 13)" type="text" size="small"
                              v-if="props.row.orderStatu11"
                              v-loading.fullscreen.lock="fullscreenLoading">选择此商户
                   </el-button>
@@ -143,14 +159,37 @@
         prop="">
 
         <template slot-scope="scope">
-          <el-button @click="operationRow(scope.row,1)" type="text" size="small"
-                     v-if="scope.row.orderStatu11 || scope.row.orderStatu12"
+          <el-button @click="operationRow(scope.row,3)" type="text" size="small"
+                     v-if="scope.row.orderStatu11 || scope.row.orderStatu13"
                      v-loading.fullscreen.lock="fullscreenLoading">关单
           </el-button>
 
-          <el-button @click="operationRow(scope.row,2)" type="text" size="small"
-                     v-if="scope.row.orderStatu12"
+          <el-button @click="operationRow(scope.row,4)" type="text" size="small"
+                     v-if="scope.row.orderStatu13"
                      v-loading.fullscreen.lock="fullscreenLoading">支付定金
+          </el-button>
+
+          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
+                     v-if="scope.row.orderStatu3 || scope.row.orderStatu17"
+                     v-loading.fullscreen.lock="fullscreenLoading">再次开启发布
+          </el-button>
+
+          <el-button @click="operationRow(scope.row,5)" type="text" size="small"
+                     v-if="scope.row.orderStatu16"
+                     v-loading.fullscreen.lock="fullscreenLoading">确认收货
+          </el-button>
+          <el-button @click="operationRow(scope.row,6)" type="text" size="small"
+                     v-if="scope.row.orderStatu5"
+                     v-loading.fullscreen.lock="fullscreenLoading">去评价
+          </el-button>
+
+          <el-button @click="" type="text" size="small"
+                     v-if="scope.row.orderStatu4"
+                     disabled>送货中
+          </el-button>
+          <el-button @click="" type="text" size="small"
+                     v-if="scope.row.orderStatu6"
+                     disabled>已完成
           </el-button>
         </template>
       </el-table-column>
@@ -198,7 +237,10 @@
         console.log(props)
       },
       operationRow(scope, type) {
-        //type=1  关单， 2支付定金
+        //11--》3关单  或者 13 抢单确认-->12 支付按键-->支付成功变成4 （送货者操作4 变成16） --> 16 确认
+
+        // -->状态==5  （去评价）   status==3|| 17   传给后端 11再次开启
+
 
       },
     }
