@@ -110,7 +110,8 @@
               <el-table-column
                 prop=""
                 label="操作"
-                show-overflow-tooltip>
+                show-overflow-tooltip
+                v-if="props.row.orderStatu11">
 
                 <template slot-scope="scope">
                   <el-button @click="choice(scope.row,props.row, 13)" type="text" size="small"
@@ -160,12 +161,12 @@
 
         <template slot-scope="scope">
           <el-button @click="operationRow(scope.row,3)" type="text" size="small"
-                     v-if="scope.row.orderStatu11 || scope.row.orderStatu13"
+                     v-if="scope.row.orderStatu11 || scope.row.orderStatu12"
                      v-loading.fullscreen.lock="fullscreenLoading">关单
           </el-button>
 
           <el-button @click="operationRow(scope.row,4)" type="text" size="small"
-                     v-if="scope.row.orderStatu13"
+                     v-if="scope.row.orderStatu12"
                      v-loading.fullscreen.lock="fullscreenLoading">支付定金
           </el-button>
 
@@ -191,6 +192,10 @@
                      v-if="scope.row.orderStatu6"
                      disabled>已完成
           </el-button>
+          <el-button @click="" type="text" size="small"
+                     v-if="scope.row.orderStatu13"
+                     disabled>待销售商确认
+          </el-button>
         </template>
       </el-table-column>
 
@@ -203,13 +208,14 @@
 <script>
   import {get_conduct_purchase_order} from '../../../api/api';
   import {isRoleMessage} from '../../../api/api';
-
+  import {operation_purchase_order} from '../../../api/api';
 
   export default {
     data() {
       return {
         tableData: [],
         fullscreenLoading: false,
+        //order:'',
       }
     },
 
@@ -230,13 +236,41 @@
           }
         });
       },
-      choice(scope, props) {
+      choice(scope, props, type) {
         this.fullscreenLoading = true;
 
         console.log(scope);
         console.log(props)
+
+        let order = {};
+        order.id = props.voOrder.id;
+        order.type = type;
+        order.orderCommonOfferId = scope.orderCommonOffer.id;
+        order.commodityZongJiage= scope.orderCommonOffer.commodityZongJiage;
+          operation_purchase_order(order).then(res => {
+            console.log(res)
+          this.fullscreenLoading = false;
+          if (res.status === 0) {
+            this.checke_isButten();
+          } else {
+            isRoleMessage(res.msg);
+          }
+        });
       },
       operationRow(scope, type) {
+        console.log(scope);
+        console.log(type)
+        let order = {};
+        order.id = scope.voOrder.id;
+        order.type = type;
+        operation_purchase_order(order).then(res => {
+          if (res.status === 0) {
+            this.checke_isButten();
+          } else {
+            isRoleMessage(res.msg);
+          }
+        });
+
         //11--》3关单  或者 13 抢单确认-->12 支付按键-->支付成功变成4 （送货者操作4 变成16） --> 16 确认
 
         // -->状态==5  （去评价）   status==3|| 17   传给后端 11再次开启

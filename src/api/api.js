@@ -465,6 +465,10 @@ export const get_conduct_purchase_order= params => {
 
 export const create_order_evaluation= params => { return axios.post(`${base}/api/order/create_order_evaluation`, params).then(res => res.data);};
 
+
+export const operation_purchase_order= params => { return axios.post(`${base}/api/order/operation_purchase_order`, params).then(res => res.data);};
+
+
 export const getPurchaseCreateOrderVo= params => {
   return axios({
     url: `${base}/api/orderVoAddCommonMenu/getPurchaseCreateOrderVo`,
