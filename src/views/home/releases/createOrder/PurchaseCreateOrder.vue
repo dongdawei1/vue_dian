@@ -208,8 +208,8 @@
           <el-date-picker
             v-model="form.giveTakeTime"
             type="datetime"
-            placeholder="选择日期时间"
-            default-time="09:00:00"
+            placeholder="日期时间必须是2小时后"
+            default-time="08:30:00"
             :picker-options="pickerOption"
             value-format="yyyy-MM-dd HH:mm:ss"
           >
@@ -218,7 +218,7 @@
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="form.remarks"
                     type="text"
-                    placeholder="最多30字"
+                    placeholder="送货时间或其他重要信息"
                     maxlength="30"
                     show-word-limit
                     clearable></el-input>
@@ -270,10 +270,11 @@
       return {
         pickerOption: {
           disabledDate(time) {
-            let curDate = (new Date()).getTime();
-            let three = 2 * 24 * 3600 * 1000;
-            let threeMonths = curDate + three;
-            return time.getTime() <= Date.now() || time.getTime() > threeMonths;
+            var nowDate = new Date();
+            let yesterDayDate = new Date(nowDate.getTime() - (24 * 60 * 60 * 1000)); // 获取昨天的日期对象
+            yesterDayDate.setHours(23, 59, 59, 0);
+            let datenow=yesterDayDate.getTime();
+            return time.getTime() <= datenow || time.getTime() > datenow +(3 * 24 * 3600 * 1000);
           }
         },
         maxHeight: '280',
@@ -307,6 +308,7 @@
     },
 
     created() {
+
       this.checke_isButten();
     },
     methods: {
@@ -399,6 +401,7 @@
       },
 
       checke_isButten() {
+
         checke_isButten(this.StringPath).then((data) => {
           if (data.status === 0) {
             if (data.data.isCreate !== true) {

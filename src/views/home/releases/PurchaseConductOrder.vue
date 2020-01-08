@@ -153,6 +153,20 @@
         label="报价剩余时间"
         prop="orderStatuName"
         show-overflow-tooltip>
+        <template slot-scope="props">
+          <mv-count-down @startCallback="countDownS"
+                         @endCallback="countDownE"
+                         :startTime="new Date().getTime()"
+                         :endTime="headercell(props.row)"
+                         :endText="'报价结束'"
+                         :dayTxt="'天'"
+                         :hourTxt="'小时'"
+                         :minutesTxt="'分钟'"
+                         :secondsTxt="'秒'"
+                         :isStart="props.row.orderStatu11"
+                         v-if="props.row.orderStatu11"></mv-count-down>
+          <span v-if="!props.row.orderStatu11">--</span>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -210,7 +224,13 @@
   import {isRoleMessage} from '../../../api/api';
   import {operation_purchase_order} from '../../../api/api';
 
+
+  import MvCountDown from '../../../components/MvCountDown/MvCountDown.vue'
+
   export default {
+    components: {
+      MvCountDown
+    },
     data() {
       return {
         tableData: [],
@@ -238,17 +258,12 @@
       },
       choice(scope, props, type) {
         this.fullscreenLoading = true;
-
-        console.log(scope);
-        console.log(props)
-
         let order = {};
         order.id = props.voOrder.id;
         order.type = type;
         order.orderCommonOfferId = scope.orderCommonOffer.id;
-        order.commodityZongJiage= scope.orderCommonOffer.commodityZongJiage;
-          operation_purchase_order(order).then(res => {
-            console.log(res)
+        order.commodityZongJiage = scope.orderCommonOffer.commodityZongJiage;
+        operation_purchase_order(order).then(res => {
           this.fullscreenLoading = false;
           if (res.status === 0) {
             this.checke_isButten();
@@ -258,8 +273,6 @@
         });
       },
       operationRow(scope, type) {
-        console.log(scope);
-        console.log(type)
         let order = {};
         order.id = scope.voOrder.id;
         order.type = type;
@@ -274,9 +287,33 @@
         //11--》3关单  或者 13 抢单确认-->12 支付按键-->支付成功变成4 （送货者操作4 变成16） --> 16 确认
 
         // -->状态==5  （去评价）   status==3|| 17   传给后端 11再次开启
-
-
       },
+      //倒计时相关开始
+      headercell(row) {
+        if (row.orderStatu11 === true) {
+          //获取创建时间
+          let newDateGetTime = new Date().getTime();
+          let date2 = new Date(row.voOrder.createTime);
+          //获取时间差 毫秒，getTime()获取毫秒值
+          let second = newDateGetTime - date2.getTime() ;
+          if (second < 1800000) {
+            return newDateGetTime + 1800000-second;
+          }else{
+            return 0;
+          }
+        }
+      },
+
+
+      countDownS(x) {
+        // 开始倒计时回调
+       // console.log(x)
+      },
+      countDownE() {
+        // 结束倒计时回调
+        //this.checke_isButten();
+      }
+      //倒计时相关结束
     }
   }
 
