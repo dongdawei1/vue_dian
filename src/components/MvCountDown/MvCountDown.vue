@@ -1,15 +1,16 @@
 <template>
-  <div class="mv-count-down">
-    <p v-if="msTime.show">
+  <div >
+    
       <!--<span v-if="tipShow">{{tipText}}:</span>-->
       <!--<span v-if="!tipShow">{{tipTextEnd}}:</span>-->
       <!--<span v-if="msTime.day>0"><span>{{msTime.day}}</span><i>{{dayTxt}}</i></span>-->
       <!--<span>{{msTime.hour}}</span><i>{{hourTxt}}</i>-->
-      <span>{{msTime.minutes}}</span><i>{{minutesTxt}}</i>
-      <span>{{msTime.seconds}}</span><i>{{secondsTxt}}</i>
-    </p>
-    <p v-if="!msTime.show">{{endText}}</p>
+      <span v-if="msTime.show">{{msTime.minutes}}{{minutesTxt}}{{msTime.seconds}}{{secondsTxt}}</span>
+      <span v-if="!msTime.show">{{endText}}</span>
+
+
   </div>
+
 </template>
 <script>
 export default {

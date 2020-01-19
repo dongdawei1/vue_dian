@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div v-if="voSocket" class="voSocketClass">
+      有进行中的报价,数据每3分钟刷新一次
+    </div>
+
     <el-table
       :data="tableData"
       style="width: 100%">
@@ -236,6 +240,8 @@
         tableData: [],
         fullscreenLoading: false,
         //order:'',
+        myInterval: null,
+        voSocket: false,
       }
     },
 
@@ -244,17 +250,40 @@
     },
     methods: {
       checke_isButten() {
-        get_conduct_purchase_order().then(res => {
+        let uuid = Date.parse(new Date());
+        get_conduct_purchase_order(uuid).then(res => {
           if (res.status === 0) {
-            console.log(111)
-            console.log(res)
             this.tableData = res.data.listPurchaseSeeOrderVo;
-            console.log(this.tableData)
-
+            if (res.data.voSocket === 0) {
+              this.voSocket = true;
+              this.initList();
+            } else {
+              this.voSocket = false;
+              this.beforeDestroy();
+            }
           } else {
             isRoleMessage(res);
           }
         });
+      },
+//轮询开始
+      initList() {
+        this.beforeDestroy();
+        if (this.$route.path==='/home/release') {
+          this.myInterval = window.setInterval(() => {
+            setTimeout(() => {
+              this.checke_isButten() //调用接口的方法
+            }, 1)
+          }, 3*1000);
+        }else{
+          this.beforeDestroy();
+        }
+      },
+
+      //轮询关闭
+      beforeDestroy() {
+        clearInterval(this.myInterval)
+        this.myInterval = null;
       },
       choice(scope, props, type) {
         this.fullscreenLoading = true;
@@ -295,10 +324,10 @@
           let newDateGetTime = new Date().getTime();
           let date2 = new Date(row.voOrder.createTime);
           //获取时间差 毫秒，getTime()获取毫秒值
-          let second = newDateGetTime - date2.getTime() ;
+          let second = newDateGetTime - date2.getTime();
           if (second < 1800000) {
-            return newDateGetTime + 1800000-second;
-          }else{
+            return newDateGetTime + 1800000 - second;
+          } else {
             return 0;
           }
         }
@@ -307,13 +336,16 @@
 
       countDownS(x) {
         // 开始倒计时回调
-       // console.log(x)
+        // console.log(x)
       },
       countDownE() {
         // 结束倒计时回调
-        //this.checke_isButten();
+        this.checke_isButten();
       }
       //倒计时相关结束
+    },
+    watch: {
+      "$route": 'initList'    // 要watch route , 一旦发生变化，就调用 fetchData方法
     }
   }
 
@@ -345,5 +377,12 @@
   .forFromData {
     background: #F4FBFD;
     display: inline
+  }
+
+  .voSocketClass {
+    padding: 3px 45px 10px 0px;
+    color: #6F6B6E;
+    font-size: 18px;
+    float: right
   }
 </style>
