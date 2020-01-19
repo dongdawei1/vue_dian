@@ -1,14 +1,12 @@
 <template>
   <div >
-    
+
       <!--<span v-if="tipShow">{{tipText}}:</span>-->
       <!--<span v-if="!tipShow">{{tipTextEnd}}:</span>-->
       <!--<span v-if="msTime.day>0"><span>{{msTime.day}}</span><i>{{dayTxt}}</i></span>-->
       <!--<span>{{msTime.hour}}</span><i>{{hourTxt}}</i>-->
-      <span v-if="msTime.show">{{msTime.minutes}}{{minutesTxt}}{{msTime.seconds}}{{secondsTxt}}</span>
+      <span v-if="msTime.show">{{nameText}}{{msTime.minutes}}{{minutesTxt}}{{msTime.seconds}}{{secondsTxt}}</span>
       <span v-if="!msTime.show">{{endText}}</span>
-
-
   </div>
 
 </template>
@@ -68,6 +66,11 @@ export default {
     endText: {
       type: String,
       default: '已结束'
+    },
+    // 倒计时结束显示文本
+    nameText: {
+      type: String,
+      default: ''
     },
     //自定义显示文字:天
     dayTxt: {

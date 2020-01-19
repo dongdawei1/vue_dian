@@ -115,11 +115,11 @@
                 prop=""
                 label="操作"
                 show-overflow-tooltip
-                v-if="props.row.orderStatu11">
+                v-if="props.row.orderStatu11 || props.row.orderStatu18 ">
 
                 <template slot-scope="scope">
                   <el-button @click="choice(scope.row,props.row, 13)" type="text" size="small"
-                             v-if="props.row.orderStatu11"
+
                              v-loading.fullscreen.lock="fullscreenLoading">选择此商户
                   </el-button>
                 </template>
@@ -154,22 +154,36 @@
       </el-table-column>
 
       <el-table-column
-        label="报价剩余时间"
+        label="该状态剩余处理时间"
         prop="orderStatuName"
         show-overflow-tooltip>
         <template slot-scope="props">
-          <mv-count-down @startCallback="countDownS"
-                         @endCallback="countDownE"
+          <mv-count-down @startCallback=""
+                         @endCallback=""
                          :startTime="new Date().getTime()"
                          :endTime="headercell(props.row)"
                          :endText="'报价结束'"
+                         :nameText="'报价剩余'"
                          :dayTxt="'天'"
                          :hourTxt="'小时'"
                          :minutesTxt="'分钟'"
                          :secondsTxt="'秒'"
                          :isStart="props.row.orderStatu11"
                          v-if="props.row.orderStatu11"></mv-count-down>
-          <span v-if="!props.row.orderStatu11">--</span>
+
+          <mv-count-down @startCallback="countDownS"
+                         @endCallback="countDownE"
+                         :startTime="new Date().getTime()"
+                         :endTime="headercel8(props.row)"
+                         :endText="'选择结束'"
+                         :nameText="'选择商家剩余'"
+                         :dayTxt="'天'"
+                         :hourTxt="'小时'"
+                         :minutesTxt="'分钟'"
+                         :secondsTxt="'秒'"
+                         :isStart="props.row.orderStatu18"
+                         v-if="props.row.orderStatu18"></mv-count-down>
+          <span v-if="!props.row.orderStatu11 && !props.row.orderStatu18">--</span>
         </template>
       </el-table-column>
 
@@ -189,9 +203,14 @@
           </el-button>
 
           <el-button @click="operationRow(scope.row,11)" type="text" size="small"
-                     v-if="scope.row.orderStatu3 || scope.row.orderStatu17"
+                     v-if="scope.row.orderStatu3 "
                      v-loading.fullscreen.lock="fullscreenLoading">再次开启发布
           </el-button>
+          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
+                     v-if=" scope.row.orderStatu17"
+                     v-loading.fullscreen.lock="fullscreenLoading">无商户报价延时30分钟
+          </el-button>
+
 
           <el-button @click="operationRow(scope.row,5)" type="text" size="small"
                      v-if="scope.row.orderStatu16"
@@ -214,6 +233,12 @@
                      v-if="scope.row.orderStatu13"
                      disabled>待销售商确认
           </el-button>
+          <!--有人报价可以选择关单-->
+          <el-button @click="operationRow(scope.row,3)" type="text" size="small"
+                     v-if="scope.row.orderStatu18"
+                     v-loading.fullscreen.lock="fullscreenLoading">关单
+          </el-button>
+
         </template>
       </el-table-column>
 
@@ -253,6 +278,7 @@
         let uuid = Date.parse(new Date());
         get_conduct_purchase_order(uuid).then(res => {
           if (res.status === 0) {
+            console.log(res)
             this.tableData = res.data.listPurchaseSeeOrderVo;
             if (res.data.voSocket === 0) {
               this.voSocket = true;
@@ -269,13 +295,13 @@
 //轮询开始
       initList() {
         this.beforeDestroy();
-        if (this.$route.path==='/home/release') {
+        if (this.$route.path === '/home/release') {
           this.myInterval = window.setInterval(() => {
             setTimeout(() => {
               this.checke_isButten() //调用接口的方法
             }, 1)
-          }, 3*1000);
-        }else{
+          }, 3 * 1000 * 60);
+        } else {
           this.beforeDestroy();
         }
       },
@@ -332,7 +358,20 @@
           }
         }
       },
-
+      headercel8(row) {
+        if (row.orderStatu18 === true) {
+          //获取创建时间
+          let newDateGetTime = new Date().getTime();
+          let date2 = new Date(row.voOrder.createTime);
+          //获取时间差 毫秒，getTime()获取毫秒值
+          let second = newDateGetTime - date2.getTime();
+          if (second > 1800000 && second <= 45*60*1000) {
+            return newDateGetTime + 45*60*1000 - second;
+          } else {
+            return 0;
+          }
+        }
+      },
 
       countDownS(x) {
         // 开始倒计时回调
