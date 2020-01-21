@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="voSocket" class="voSocketClass">
-      有进行中的报价,数据每3分钟刷新一次
+      有进行中订单,数据每2分钟刷新一次
     </div>
 
     <el-table
@@ -133,17 +133,20 @@
       <el-table-column
         label="发布时间"
         prop="voOrder.createTime"
+        width="160"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         label="收货时间"
         prop="voOrder.giveTakeTime"
+        width="160"
         show-overflow-tooltip>
       </el-table-column>
 
       <el-table-column
         label="预估价格(元)"
         prop="voOrder.commodityJiage"
+        width="100"
         show-overflow-tooltip>
       </el-table-column>
 
@@ -156,34 +159,72 @@
       <el-table-column
         label="该状态剩余处理时间"
         prop="orderStatuName"
+        width="180"
         show-overflow-tooltip>
         <template slot-scope="props">
-          <mv-count-down @startCallback=""
-                         @endCallback=""
-                         :startTime="new Date().getTime()"
-                         :endTime="headercell(props.row)"
-                         :endText="'报价结束'"
-                         :nameText="'报价剩余'"
-                         :dayTxt="'天'"
-                         :hourTxt="'小时'"
-                         :minutesTxt="'分钟'"
-                         :secondsTxt="'秒'"
-                         :isStart="props.row.orderStatu11"
-                         v-if="props.row.orderStatu11"></mv-count-down>
+          <span v-if="props.row.orderStatu11" class="orderStatuNameClass">
+          <MvCountDown
+            @startCallback=""
+            @endCallback="checke_isButten"
+            :startTime="new Date().getTime()"
+            :endTime="headercell(props.row)"
+            :endText="'报价结束'"
+            :nameText="'报价剩余'"
+            :dayTxt="'天'"
+            :hourTxt="'小时'"
+            :minutesTxt="'分'"
+            :secondsTxt="'秒'"
+            :isStart="props.row.orderStatu11"
+          ></MvCountDown>
+          </span>
+          <span v-if="props.row.orderStatu18" class="orderStatuNameClass">
+          <MvCountDown
+            @startCallback="countDownS"
+            @endCallback="operationRow(props.row,18)"
+            :startTime="new Date().getTime()"
+            :endTime="headercel8(props.row)"
+            :endText="'超时未选择商家-关单'"
+            :nameText="'选择商家剩余'"
+            :dayTxt="'天'"
+            :hourTxt="'小时'"
+            :minutesTxt="'分'"
+            :secondsTxt="'秒'"
+            :isStart="props.row.orderStatu18"
+          ></MvCountDown>
+          </span>
+          <span v-if="props.row.orderStatu13" class="orderStatuNameClass">
+                      <MvCountDown15
+                        @startCallback=""
+                        @endCallback=""
+                        :startTime="new Date().getTime()"
+                        :endTime="headercel3(props.row,15)"
+                        :endText="'超时未支付质保金-关单'"
+                        :nameText="'付质保金剩余'"
+                        :dayTxt="'天'"
+                        :hourTxt="'小时'"
+                        :minutesTxt="'分'"
+                        :secondsTxt="'秒'"
+                        :isStart="props.row.orderStatu13"
+                      ></MvCountDown15>
+          </span>
 
-          <mv-count-down @startCallback="countDownS"
-                         @endCallback="countDownE"
-                         :startTime="new Date().getTime()"
-                         :endTime="headercel8(props.row)"
-                         :endText="'选择结束'"
-                         :nameText="'选择商家剩余'"
-                         :dayTxt="'天'"
-                         :hourTxt="'小时'"
-                         :minutesTxt="'分钟'"
-                         :secondsTxt="'秒'"
-                         :isStart="props.row.orderStatu18"
-                         v-if="props.row.orderStatu18"></mv-count-down>
-          <span v-if="!props.row.orderStatu11 && !props.row.orderStatu18">--</span>
+          <span v-if="props.row.orderStatu12" class="orderStatuNameClass">
+                      <MvCountDown12
+                        @startCallback=""
+                        @endCallback="operationRow(props.row,19)"
+                        :startTime="new Date().getTime()"
+                        :endTime="headercel3(props.row,10)"
+                        :endText="'超时未支付定金-关单'"
+                        :nameText="'付定金剩余'"
+                        :dayTxt="'天'"
+                        :hourTxt="'小时'"
+                        :minutesTxt="'分'"
+                        :secondsTxt="'秒'"
+                        :isStart="props.row.orderStatu12"
+                      ></MvCountDown12>
+          </span>
+          <span
+            v-if="!props.row.orderStatu11 && !props.row.orderStatu18 && !props.row.orderStatu13 && !props.row.orderStatu12">--</span>
         </template>
       </el-table-column>
 
@@ -208,10 +249,17 @@
           </el-button>
           <el-button @click="operationRow(scope.row,11)" type="text" size="small"
                      v-if=" scope.row.orderStatu17"
-                     v-loading.fullscreen.lock="fullscreenLoading">无商户报价延时30分钟
+                     v-loading.fullscreen.lock="fullscreenLoading">无销售商报价重新发布
           </el-button>
 
-
+          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
+                     v-if=" scope.row.orderStatu20"
+                     v-loading.fullscreen.lock="fullscreenLoading">未支付质保金重新发布
+          </el-button>
+          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
+                     v-if=" scope.row.orderStatu19"
+                     v-loading.fullscreen.lock="fullscreenLoading">未支付定金重新发布
+          </el-button>
           <el-button @click="operationRow(scope.row,5)" type="text" size="small"
                      v-if="scope.row.orderStatu16"
                      v-loading.fullscreen.lock="fullscreenLoading">确认收货
@@ -231,7 +279,7 @@
           </el-button>
           <el-button @click="" type="text" size="small"
                      v-if="scope.row.orderStatu13"
-                     disabled>待销售商确认
+                     disabled>待销售商支付保证金
           </el-button>
           <!--有人报价可以选择关单-->
           <el-button @click="operationRow(scope.row,3)" type="text" size="small"
@@ -255,10 +303,14 @@
 
 
   import MvCountDown from '../../../components/MvCountDown/MvCountDown.vue'
+  import MvCountDown15 from '../../../components/MvCountDown/MvCountDown15.vue'
+  import MvCountDown12 from '../../../components/MvCountDown/MvCountDown12.vue'
 
   export default {
     components: {
-      MvCountDown
+      MvCountDown,
+      MvCountDown12,
+      MvCountDown15
     },
     data() {
       return {
@@ -267,6 +319,7 @@
         //order:'',
         myInterval: null,
         voSocket: false,
+        isLunxun: false,
       }
     },
 
@@ -280,9 +333,11 @@
           if (res.status === 0) {
             console.log(res)
             this.tableData = res.data.listPurchaseSeeOrderVo;
+
+
             if (res.data.voSocket === 0) {
-              this.voSocket = true;
               this.initList();
+              this.voSocket = true;
             } else {
               this.voSocket = false;
               this.beforeDestroy();
@@ -296,19 +351,20 @@
       initList() {
         this.beforeDestroy();
         if (this.$route.path === '/home/release') {
-          this.myInterval = window.setInterval(() => {
-            setTimeout(() => {
-              this.checke_isButten() //调用接口的方法
-            }, 1)
-          }, 3 * 1000 * 60);
+            this.myInterval = window.setInterval(() => {
+              setTimeout(() => {
+                this.checke_isButten() //调用接口的方法
+              }, 1)
+            }, 2 * 1000 * 60);
         } else {
+          this.voSocket=false;
           this.beforeDestroy();
         }
       },
 
       //轮询关闭
       beforeDestroy() {
-        clearInterval(this.myInterval)
+        clearInterval(this.myInterval);
         this.myInterval = null;
       },
       choice(scope, props, type) {
@@ -328,6 +384,7 @@
         });
       },
       operationRow(scope, type) {
+        console.log(type)
         let order = {};
         order.id = scope.voOrder.id;
         order.type = type;
@@ -358,6 +415,7 @@
           }
         }
       },
+      //超过30分钟有报价，给15分钟buffer
       headercel8(row) {
         if (row.orderStatu18 === true) {
           //获取创建时间
@@ -365,13 +423,29 @@
           let date2 = new Date(row.voOrder.createTime);
           //获取时间差 毫秒，getTime()获取毫秒值
           let second = newDateGetTime - date2.getTime();
-          if (second > 1800000 && second <= 45*60*1000) {
-            return newDateGetTime + 45*60*1000 - second;
+          if (second > 1800000 && second <= 45 * 60 * 1000) {
+            return newDateGetTime + 45 * 60 * 1000 - second;
           } else {
             return 0;
           }
         }
       },
+      //待销售支付定金15分钟
+      headercel3(row, num) {
+        if (row.orderStatu13 === true || row.orderStatu12 === true) {
+          //获取创建时间
+          let newDateGetTime = new Date().getTime();
+          let date2 = new Date(row.voOrder.updateTime);
+          //获取时间差 毫秒，getTime()获取毫秒值
+          let second = newDateGetTime - date2.getTime();
+          if (second < num * 60 * 1000) {
+            return newDateGetTime + num * 60 * 1000 - second;
+          } else {
+            return 0;
+          }
+        }
+      },
+
 
       countDownS(x) {
         // 开始倒计时回调
@@ -423,5 +497,9 @@
     color: #6F6B6E;
     font-size: 18px;
     float: right
+  }
+
+  .orderStatuNameClass {
+    color: #FC1A40;
   }
 </style>

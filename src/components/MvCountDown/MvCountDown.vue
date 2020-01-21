@@ -27,6 +27,7 @@ export default {
       star: '',			//活动开始时间
       end: '',				//活动结束时间
       current: '',         //当前时间
+      guan:'',
     }
   },
   props: {
@@ -98,7 +99,7 @@ export default {
     },
   },
   mounted () {
-    console.log(this)
+    //console.log(this)
 
   },
   watch: {
@@ -137,7 +138,7 @@ export default {
          * 当前时间小于开始时间 活动尚未开始
          */
         this.$set(this, 'tipShow', true);
-        setTimeout(() => {
+        this.guan=setTimeout(() => {
           this.runTime(this.star, this.current, this.start_message);
         }, 1);
       }
@@ -148,7 +149,7 @@ export default {
         this.$set(this, 'tipShow', false);
         this.msTime.show = true;
         this.$emit('start_callback', this.msTime.show);
-        setTimeout(() => {
+        this.guan=setTimeout(() => {
           this.runTime(this.end, this.star, this.end_message, true)
         }, 1);
       }
@@ -181,7 +182,7 @@ export default {
         let _s = Date.now();
         let _e = Date.now();
         let diffPerFunc = _e - _s;
-        setTimeout(() => {
+        this.guan=setTimeout(() => {
           if (type) {
             this.runTime(this.end, endTime += 1000, callFun, true);
           } else {
@@ -196,7 +197,7 @@ export default {
     start_message () {
       this.$set(this, 'tipShow', false);
       this.$emit('startCallback', this.msTime.show);
-      setTimeout(() => {
+      this.guan=setTimeout(() => {
         this.runTime(this.end, this.star, this.end_message, true)
       }, 1);
     },
@@ -206,7 +207,8 @@ export default {
         return;
       }
       this.$emit('endCallback', this.msTime.show);
-    }
+    },
+
   },
   destroyed () {
 
