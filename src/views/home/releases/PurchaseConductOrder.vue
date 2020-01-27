@@ -213,7 +213,7 @@
                         @startCallback=""
                         @endCallback="operationRow(props.row,19)"
                         :startTime="new Date().getTime()"
-                        :endTime="headercel3(props.row,10)"
+                        :endTime="headercel3(props.row,15)"
                         :endText="'超时未支付定金-关单'"
                         :nameText="'付定金剩余'"
                         :dayTxt="'天'"
@@ -238,9 +238,9 @@
                      v-loading.fullscreen.lock="fullscreenLoading">关单
           </el-button>
 
-          <el-button @click="operationRow(scope.row,4)" type="text" size="small"
+          <el-button @click="payOrder(scope.row.voOrder.id)" type="text" size="small"
                      v-if="scope.row.orderStatu12"
-                     v-loading.fullscreen.lock="fullscreenLoading">支付定金
+                     v-loading.fullscreen.lock="fullscreenLoading">支付定金(微信扫码支付)
           </el-button>
 
           <el-button @click="operationRow(scope.row,11)" type="text" size="small"
@@ -300,6 +300,7 @@
   import {get_conduct_purchase_order} from '../../../api/api';
   import {isRoleMessage} from '../../../api/api';
   import {operation_purchase_order} from '../../../api/api';
+  import {native_pay_order} from '../../../api/api';
 
 
   import MvCountDown from '../../../components/MvCountDown/MvCountDown.vue'
@@ -333,10 +334,8 @@
           if (res.status === 0) {
             console.log(res)
             this.tableData = res.data.listPurchaseSeeOrderVo;
-
-
             if (res.data.voSocket === 0) {
-              this.initList();
+              this.initList(2);
               this.voSocket = true;
             } else {
               this.voSocket = false;
@@ -347,15 +346,34 @@
           }
         });
       },
+
+      payOrder(id){
+        this.fullscreenLoading=true;
+        native_pay_order(id).then(res => {
+          this.fullscreenLoading=false;
+          console.log(res)
+          //this.fullscreenLoading = false;
+          if (res.status === 0) {
+            this.checke_isButten();
+          } else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
 //轮询开始
-      initList() {
+      initList(num) {
+        console.log(num);
+        if(num===null || num==='' || num===undefined){
+          console.log(num);
+          num=2;
+        }
         this.beforeDestroy();
         if (this.$route.path === '/home/release') {
             this.myInterval = window.setInterval(() => {
               setTimeout(() => {
                 this.checke_isButten() //调用接口的方法
               }, 1)
-            }, 2 * 1000 * 60);
+            }, num * 1000 * 60);
         } else {
           this.voSocket=false;
           this.beforeDestroy();

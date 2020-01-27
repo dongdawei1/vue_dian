@@ -463,6 +463,15 @@ export const get_conduct_purchase_order= params => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
+export const native_pay_order= params => {
+  return axios({
+    url: `${base}/api/order/native_pay_order`,
+    params: { id: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
 export const create_order_evaluation= params => { return axios.post(`${base}/api/order/create_order_evaluation`, params).then(res => res.data);};
 
 
