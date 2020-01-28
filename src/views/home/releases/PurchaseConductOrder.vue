@@ -6,6 +6,7 @@
 
     <el-table
       :data="tableData"
+
       style="width: 100%">
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -129,6 +130,13 @@
             </el-table>
           </div>
         </template>
+      </el-table-column>
+
+      <el-table-column
+        label="订单ID"
+        prop="voOrder.id"
+        width="80"
+        show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         label="发布时间"
@@ -292,7 +300,23 @@
 
 
     </el-table>
+    <!--生成二维码弹窗-->
+    <el-dialog
+      title="支付完成后窗口自动关闭"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      >
+      <span>请使用微信“扫一扫”扫码支付，超时将关单；若已支付请耐心等待。</span>
+
+        <div class="dialogClass">
+        <canvas id="canvas" class="qrcode"></canvas>
+        </div>
+
+
+    </el-dialog>
   </div>
+
+
 </template>
 
 
@@ -302,7 +326,7 @@
   import {operation_purchase_order} from '../../../api/api';
   import {native_pay_order} from '../../../api/api';
 
-
+  import QRCode from 'qrcode'; //引入生成二维码插件
   import MvCountDown from '../../../components/MvCountDown/MvCountDown.vue'
   import MvCountDown15 from '../../../components/MvCountDown/MvCountDown15.vue'
   import MvCountDown12 from '../../../components/MvCountDown/MvCountDown12.vue'
@@ -311,16 +335,22 @@
     components: {
       MvCountDown,
       MvCountDown12,
-      MvCountDown15
+      MvCountDown15,
+      QRCode: QRCode
+
     },
     data() {
       return {
         tableData: [],
+        centerDialogVisible: false,//二维码弹窗
         fullscreenLoading: false,
         //order:'',
         myInterval: null,
         voSocket: false,
         isLunxun: false,
+        codes: '',
+
+
       }
     },
 
@@ -346,36 +376,51 @@
           }
         });
       },
-
-      payOrder(id){
-        this.fullscreenLoading=true;
+      //获取微信支付二维码链接
+      payOrder(id) {
+        this.fullscreenLoading = true;
         native_pay_order(id).then(res => {
-          this.fullscreenLoading=false;
+          this.fullscreenLoading = false;
           console.log(res)
-          //this.fullscreenLoading = false;
           if (res.status === 0) {
-            this.checke_isButten();
+            let codeUrl = res.msg;
+            this.useqrcode(codeUrl)
           } else {
             isRoleMessage(res.msg);
           }
         });
       },
+      //生成二维码
+      useqrcode(codeUrl) {
+        console.log(codeUrl)
+        this.centerDialogVisible = true;
+        this.$nextTick(() => { //不加这个第一次打开弹窗时canvas=null
+          var canvas = document.getElementById('canvas')
+          console.log(canvas)
+          QRCode.toCanvas(canvas, codeUrl, function (error) {
+            if (error){
+              this.message.error("生成二维码失败，刷新后重试");
+            }
+          })
+        })
+      },
+
 //轮询开始
       initList(num) {
         console.log(num);
-        if(num===null || num==='' || num===undefined){
+        if (num === null || num === '' || num === undefined) {
           console.log(num);
-          num=2;
+          num = 2;
         }
         this.beforeDestroy();
         if (this.$route.path === '/home/release') {
-            this.myInterval = window.setInterval(() => {
-              setTimeout(() => {
-                this.checke_isButten() //调用接口的方法
-              }, 1)
-            }, num * 1000 * 60);
+          this.myInterval = window.setInterval(() => {
+            setTimeout(() => {
+              this.checke_isButten() //调用接口的方法
+            }, 1)
+          }, num * 1000 * 60);
         } else {
-          this.voSocket=false;
+          this.voSocket = false;
           this.beforeDestroy();
         }
       },
@@ -520,4 +565,15 @@
   .orderStatuNameClass {
     color: #FC1A40;
   }
+
+  /*二维码大小*/
+  .qrcode {
+    width: 20rem !important;
+    height: 20rem !important;
+    margin:0 auto;
+  }
+  .dialogClass{
+    text-align:center
+  }
+
 </style>
