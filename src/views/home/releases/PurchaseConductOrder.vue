@@ -3,7 +3,9 @@
     <div v-if="voSocket" class="voSocketClass">
       有进行中订单,数据每2分钟刷新一次
     </div>
-
+    <div v-if="voSocketPay" class="voSocketClass">
+      有未支付的订单,请及时处理,超时将关单！
+    </div>
     <el-table
       :data="tableData"
 
@@ -242,14 +244,16 @@
 
         <template slot-scope="scope">
           <el-button @click="operationRow(scope.row,3)" type="text" size="small"
-                     v-if="scope.row.orderStatu11 || scope.row.orderStatu12"
+                     v-if="scope.row.orderStatu11 || scope.row.orderStatu12 || scope.row.orderStatu21"
                      v-loading.fullscreen.lock="fullscreenLoading">关单
           </el-button>
 
           <el-button @click="payOrder(scope.row.voOrder.id)" type="text" size="small"
-                     v-if="scope.row.orderStatu12"
-                     v-loading.fullscreen.lock="fullscreenLoading">支付定金(微信扫码支付)
+                     v-if="scope.row.orderStatu12 || scope.row.orderStatu21"
+                     v-loading.fullscreen.lock="fullscreenLoading">定金二维码(微信扫码)
           </el-button>
+
+
 
           <el-button @click="operationRow(scope.row,11)" type="text" size="small"
                      v-if="scope.row.orderStatu3 "
@@ -325,6 +329,8 @@
   import {isRoleMessage} from '../../../api/api';
   import {operation_purchase_order} from '../../../api/api';
   import {native_pay_order} from '../../../api/api';
+  import {get_pay_order_all} from '../../../api/api';
+  import {get_pay_order_byOrderId} from '../../../api/api';
 
   import QRCode from 'qrcode'; //引入生成二维码插件
   import MvCountDown from '../../../components/MvCountDown/MvCountDown.vue'
@@ -345,8 +351,10 @@
         centerDialogVisible: false,//二维码弹窗
         fullscreenLoading: false,
         //order:'',
-        myInterval: null,
+        myInterval: null, //订单状态轮询
+        myIntervalPay:null, //支付结果轮询
         voSocket: false,
+        voSocketPay: false,
         isLunxun: false,
         codes: '',
 
@@ -362,7 +370,6 @@
         let uuid = Date.parse(new Date());
         get_conduct_purchase_order(uuid).then(res => {
           if (res.status === 0) {
-            console.log(res)
             this.tableData = res.data.listPurchaseSeeOrderVo;
             if (res.data.voSocket === 0) {
               this.initList(2);
@@ -370,66 +377,116 @@
             } else {
               this.voSocket = false;
               this.beforeDestroy();
+              get_pay_order_all().then(date => { //检查是否有待支付的订单
+                if (date.status === 0) {
+                  if(date.data==='YES'){
+                    this.initList(1);
+                    this.voSocketPay = true;
+                  }else{
+                    this.voSocketPay = false;
+                    this.beforeDestroyPay();
+                  }
+                } else {
+                    isRoleMessage(res);
+                  }
+                });
             }
           } else {
             isRoleMessage(res);
           }
         });
       },
+
+
+
       //获取微信支付二维码链接
       payOrder(id) {
         this.fullscreenLoading = true;
         native_pay_order(id).then(res => {
           this.fullscreenLoading = false;
-          console.log(res)
           if (res.status === 0) {
-            let codeUrl = res.msg;
-            this.useqrcode(codeUrl)
+            this.useqrcode(res.msg,id)
           } else {
             isRoleMessage(res.msg);
           }
         });
       },
       //生成二维码
-      useqrcode(codeUrl) {
-        console.log(codeUrl)
+      useqrcode(codeUrl,id) {
         this.centerDialogVisible = true;
         this.$nextTick(() => { //不加这个第一次打开弹窗时canvas=null
           var canvas = document.getElementById('canvas')
-          console.log(canvas)
           QRCode.toCanvas(canvas, codeUrl, function (error) {
-            if (error){
-              this.message.error("生成二维码失败，刷新后重试");
-            }
-          })
+          });
+          this.initListPay(0.3,id)
         })
       },
+     //获取支付结果
+      getPayResult(id){
+        get_pay_order_byOrderId(id).then(res => {
+          if (res.status === 0) {
+            let result = res.data;
+            if(result==='YES'){
+              this.$message.success("支付成功");
+              this.voSocketPay = false;
+              this.centerDialogVisible = false;
+              this.beforeDestroyPay();
+              this.checke_isButten();
+            }else if(result==='FAIL'){
+              this.$message.error("支付失败");
+              this.voSocketPay = false;
+              this.centerDialogVisible = false;
+              this.beforeDestroyPay();
+              this.checke_isButten();
+            }
+          } else {
+            isRoleMessage(res.msg);
+          }
+        });
+      },
 
-//轮询开始
+
+//订单状态轮询开始
       initList(num) {
-        console.log(num);
         if (num === null || num === '' || num === undefined) {
-          console.log(num);
           num = 2;
         }
         this.beforeDestroy();
-        if (this.$route.path === '/home/release') {
           this.myInterval = window.setInterval(() => {
             setTimeout(() => {
               this.checke_isButten() //调用接口的方法
             }, 1)
           }, num * 1000 * 60);
-        } else {
-          this.voSocket = false;
-          this.beforeDestroy();
-        }
       },
 
-      //轮询关闭
+      //订单状态轮询关闭
       beforeDestroy() {
         clearInterval(this.myInterval);
         this.myInterval = null;
       },
+
+
+
+
+      //订单支付状态轮询开始
+      initListPay(num,id) {
+        if (num === null || num === '' || num === undefined) {
+          num = 0.3;
+        }
+        this.beforeDestroyPay();
+          this.myIntervalPay = window.setInterval(() => {
+            setTimeout(() => {
+             this.getPayResult(id) //支付结果
+            }, 1)
+          }, num * 1000 * 60);
+      },
+
+      //订单支付状态轮询关闭
+      beforeDestroyPay() {
+        clearInterval(this.myIntervalPay);
+        this.myIntervalPay = null;
+      },
+
       choice(scope, props, type) {
         this.fullscreenLoading = true;
         let order = {};
@@ -521,7 +578,25 @@
       //倒计时相关结束
     },
     watch: {
-      "$route": 'initList'    // 要watch route , 一旦发生变化，就调用 fetchData方法
+      "$route"(to,from){
+        if(from.path==='/home/release'){
+          this.beforeDestroy();
+          this.beforeDestroyPay();
+          this.centerDialogVisible=false;
+        }
+        if(to.path==='/home/release'){
+          this.checke_isButten();
+          if(this.voSocket){
+            get_pay_order_all().then(date => { //检查是否有待支付的订单
+              if (date.status === 0) {
+                if(date.data==='YES'){
+                  this.voSocketPay = true;
+                }
+              }
+            });
+          }
+        }
+      }
     }
   }
 

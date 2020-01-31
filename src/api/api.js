@@ -477,6 +477,23 @@ export const create_order_evaluation= params => { return axios.post(`${base}/api
 
 export const operation_purchase_order= params => { return axios.post(`${base}/api/order/operation_purchase_order`, params).then(res => res.data);};
 
+//检查是否有待支付的订单
+export const get_pay_order_all = params => {
+  return axios({
+    url: `${base}/api/order/get_pay_order_all`,
+    params: { uuid: Date.parse(new Date())},
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+export const get_pay_order_byOrderId= params => {
+  return axios({
+    url: `${base}/api/order/get_pay_order_byOrderId`,
+    params: { orderId: params,
+                 uuid: Date.parse(new Date())  },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
 
 export const getPurchaseCreateOrderVo= params => {
   return axios({
@@ -485,6 +502,10 @@ export const getPurchaseCreateOrderVo= params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+
+
+
+
 
 
 //制保留2位小数，如：2，会在2后面补上00.即2.00
