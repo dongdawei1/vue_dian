@@ -12,10 +12,13 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="收/送货地址"    prop="addressDetailed"  >
+      <el-form-item label="街道/小区"    prop="addressDetailed"  >
         <el-input v-model="ruleForm.addressDetailed"  :placeholder="ruleForm.addressDetailed"></el-input>
       </el-form-item>
 
+    <el-form-item label="详细楼号"    prop="address_dianming"  >
+      <el-input v-model="ruleForm.address_dianming"  placeholder="如:4号楼三层"></el-input>
+    </el-form-item>
 
       <el-form-item label="收/送人手机"    prop="contact"  >
         <el-input v-model="ruleForm.contact"  placeholder="请输入收/送货人手机号"></el-input>
@@ -182,7 +185,7 @@
         </el-dialog>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm',2)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm',6)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
       </el-form-item>
     </el-form>
     <!--商户重新实名结束-->
@@ -245,6 +248,7 @@
           cityId:'',
           districtCountyId:'',
           addressDetailed: '',//详细地址收/送货地址
+          address_dianming:'',
           contact:'',//收送货人联系方式
           consigneeName:'', //收/送货人姓名
           email:'',//邮箱
@@ -262,7 +266,11 @@
             { required: true, message: '请选择城市和地区', trigger: 'change'  }
           ],
           addressDetailed:[
-            { required: true, message: '请输入详细地址', trigger: 'blur' },
+            { required: true, message: '请输入街道/小区', trigger: 'blur' },
+            { max: 100, message: '不能超过100个字', trigger: 'blur' }
+          ],
+          address_dianming:[
+            { required: true, message: '请输入详细楼号/店名', trigger: 'blur' },
             { max: 100, message: '不能超过100个字', trigger: 'blur' }
           ],
           contact:[

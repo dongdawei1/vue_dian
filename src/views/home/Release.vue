@@ -5,7 +5,7 @@
       <el-tab-pane label="我的首页" v-if="isPurchaseHome"  name="purchaseHome" :key="'purchaseHome'">
         <PurchaseHome v-if="changePurchaseHome"></PurchaseHome>
       </el-tab-pane>
-      <el-tab-pane label="进行中的采购订单" v-if="isPurchaseConductOrder"  name="purchaseConductOrder" :key="'purchaseConductOrder'">
+      <el-tab-pane label="近三天采购订单" v-if="isPurchaseConductOrder"  name="purchaseConductOrder" :key="'purchaseConductOrder'">
         <PurchaseConductOrder v-if="changePurchaseConductOrder"></PurchaseConductOrder>
       </el-tab-pane>
 
@@ -17,7 +17,7 @@
         <SaleHome v-if="changeSaleHome"></SaleHome>
       </el-tab-pane>
 
-      <el-tab-pane label="待报价订单" v-if="isSaleOrderAll"  name="saleOrderAll" :key="'saleOrderAll'">
+      <el-tab-pane label="待报价的采购订单" v-if="isSaleOrderAll"  name="saleOrderAll" :key="'saleOrderAll'">
         <SaleOrderAll v-if="changeSaleOrderAll"></SaleOrderAll>
       </el-tab-pane>
 

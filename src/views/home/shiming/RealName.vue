@@ -10,8 +10,12 @@
           @change="handleChange">
         </el-cascader>
       </el-form-item>
-      <el-form-item label="实名地址"    prop="address_detailed"  >
-        <el-input v-model="ruleForm.address_detailed"  placeholder="请输入地址详情，100字内"></el-input>
+      <el-form-item label="街道/小区"    prop="address_detailed"  >
+        <el-input v-model="ruleForm.address_detailed"  placeholder="如:天通中苑X区或东小口镇太平庄中街太平家园"></el-input>
+      </el-form-item>
+
+      <el-form-item label="详细楼号"    prop="address_dianming"  >
+        <el-input v-model="ruleForm.address_dianming"  placeholder="如:4号楼三层"></el-input>
       </el-form-item>
 
       <el-form-item label="实名手机"    prop="contact"  >
@@ -24,7 +28,7 @@
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
       </el-form-item>
       <el-form-item label="企业名称"    prop="companyName"  >
-        <el-input v-model="ruleForm.companyName"  placeholder="请输入企业/公司名称"></el-input>
+        <el-input v-model="ruleForm.companyName"  placeholder="请输入公司或店面名"></el-input>
       </el-form-item>
 
 
@@ -152,7 +156,7 @@
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
       </el-form-item>
       <el-form-item label="企业名称"    prop="companyName"  >
-        <el-input v-model="ruleForm.companyName"  placeholder="请输入企业/公司名称"></el-input>
+        <el-input v-model="ruleForm.companyName"  placeholder="请输入公司或店面名"></el-input>
       </el-form-item>
       <el-form-item label="商铺图片" prop="licenseUrl">
         <el-upload
@@ -175,7 +179,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm',2)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm',6)" v-loading.fullscreen.lock="fullscreenLoading">立即实名</el-button>
 
       </el-form-item>
     </el-form>
@@ -239,6 +243,7 @@
           city_id:'',
           district_county_id:'',
           address_detailed: '',//详细地址收/送货地址
+          address_dianming:'',//楼号
           contact:'',//收送货人联系方式
           consignee_name:'', //收/送货人姓名
           email:'',//邮箱
@@ -256,7 +261,11 @@
             { required: true, message: '请选择城市和地区' }
           ],
           address_detailed:[
-            { required: true, message: '请输入详细地址', trigger: 'blur' },
+            { required: true, message: '请输入街道小区名称', trigger: 'blur' },
+            { max: 100, message: '不能超过100个字', trigger: 'blur' }
+          ],
+          address_dianming:[
+            { required: true, message: '请输入详细楼号', trigger: 'blur' },
             { max: 100, message: '不能超过100个字', trigger: 'blur' }
           ],
           contact:[

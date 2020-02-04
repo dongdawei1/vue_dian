@@ -115,6 +115,7 @@
             }
             this.fileList=list;
             this.tableData=res.data.evaluate;
+            console.log(res.data.evaluate);
             this. getRealName();
           }else {
             isRoleMessage(res.msg);

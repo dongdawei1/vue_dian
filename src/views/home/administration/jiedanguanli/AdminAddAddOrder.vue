@@ -298,8 +298,16 @@
           }
         });
       },
-    }
+    },
+    watch: {
+      "$route"(to,from){
+        if(to.path==='/home/businessEnquiry'){
+          this.getReleaseWelfareAllSelect();
+        }
+      }
 
+
+    }
   }
 </script>
 <style>

@@ -464,7 +464,7 @@
             this.restaurants=releaseTitleList;
             //没有找到用户输入的类型引导添加
             if(this.restaurants.length===0){
-              this.$message.error("没有找到您输入的:具体类型,可手动添加");
+              this.$message.error("该区域线下培训地址查询失败，请手动添加");
               this.form.serviceTypeName=this.ruleForm.serviceType;
               this.ruleForm.serviceType='';
             }
