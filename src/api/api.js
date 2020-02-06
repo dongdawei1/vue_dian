@@ -476,7 +476,7 @@ export const create_order_evaluation= params => { return axios.post(`${base}/api
 
 
 export const operation_purchase_order= params => { return axios.post(`${base}/api/order/operation_purchase_order`, params).then(res => res.data);};
-
+export const peceiptGetPendingOrders= params => { return axios.post(`${base}/api/order/peceiptGetPendingOrders`, params).then(res => res.data);};
 //检查是否有待支付的订单
 export const get_pay_order_all = params => {
   return axios({
