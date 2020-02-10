@@ -26,6 +26,46 @@
         <el-button type="primary" @click="peceiptGetPendingOrders">查询</el-button>
       </el-form-item>
     </el-form>
+    <!-- 列表开始 -->
+    <el-table
+      :data="tableData"
+      style="width: 100%">
+      <el-table-column
+        prop="addressDetailed"
+        label="送货地址"
+        width="180"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+      prop="giveTakeTime"
+      label="送货时间"
+      width="180">
+    </el-table-column>
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="remarks"
+        label="备注"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        prop="address"
+        label="操作">
+        <!--有人报价可以选择关单-->
+        <el-button @click="" type="text" size="small"
+                   v-if="isReceipt" disabled>请到APP中接单
+        </el-button>
+        <el-button @click="" type="text" size="small"
+                   v-if="!isReceipt"  disabled> 接单用户可查看
+        </el-button>
+      </el-table-column>
+    </el-table>
+    <!-- 列表结束 -->
+
+
     <!-- 分页 -->
     <el-pagination
       background
@@ -42,12 +82,15 @@
   import {isRoleMessage} from '../../../api/api';
   import {regionData} from 'element-china-area-data'
 
+
   export default {
     components: {},
     data() {
       return {
+        isReceipt:true,//是否显示接单按钮
         options: regionData,//城市
         total: 0,
+        tableData:[],
         myInterval: '',
         params: {
           currentPage: 1,
@@ -60,19 +103,25 @@
     },
 
     created() {
-      // this.islogin()
+      this.peceiptGetPendingOrders()
     },
     methods: {
 
       //判断是否登录 获取用户权限
       peceiptGetPendingOrders() {
-        console.log(this.params);
         peceiptGetPendingOrders(this.params).then((res) => {
-          console.log(res.data.datas.length);
+          var vm = this;
           if (res.status === 0) {
-            if (res.msg === 'YES' && res.data.datas.length > 0) {
+            if (res.msg === 'YES' && res.data.datas !== null) {
               this.initList(1);
+              this.tableData=res.data.datas;
+              vm.$forceUpdate();
+            } else if (res.msg === 'YES') {
+              this.tableData=[];
+              this.initList(0.5);
             } else {
+              this.tableData=[];
+              this.isReceipt=false;
               this.beforeDestroy();
             }
           } else {
@@ -109,8 +158,18 @@
         clearInterval(this.myInterval);
         this.myInterval = null;
       },
-    }
+    },
+    watch: {
+      "$route"(to, from) {
+        if (from.path === '/home/release') {
+          this.beforeDestroy();
+        }
+        if (to.path === '/home/release') {
+          this.peceiptGetPendingOrders();
 
+        }
+      }
+    }
   }
 </script>
 

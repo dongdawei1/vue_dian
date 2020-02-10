@@ -372,7 +372,7 @@
           if (res.status === 0) {
             this.tableData = res.data.listPurchaseSeeOrderVo;
             if (res.data.voSocket === 0) {
-              this.initList(2);
+              this.initList(0.2);
               this.voSocket = true;
             } else {
               this.voSocket = false;
@@ -504,7 +504,6 @@
         });
       },
       operationRow(scope, type) {
-        console.log(type)
         let order = {};
         order.id = scope.voOrder.id;
         order.type = type;

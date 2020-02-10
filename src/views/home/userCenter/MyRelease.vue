@@ -1,6 +1,9 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="采购发布" name="myPurchase"  v-if="isPurchase" :key="'myPurchase'">
+
+
+    <el-tab-pane label="采购信息" name="myPurchase"  v-if="isPurchase" :key="'myPurchase'">
+      <myPurchase v-if="purchase"></myPurchase>
     </el-tab-pane>
 
 
@@ -27,7 +30,7 @@
       <myFoodAndGrain v-if="createFoodAndGrain"></myFoodAndGrain>
     </el-tab-pane>
 
-    <el-tab-pane label="发布招聘" name="createPosition" v-if="isCreatePosition" :key="'createPosition'">
+    <el-tab-pane label="招聘信息" name="createPosition" v-if="isCreatePosition" :key="'createPosition'">
       <myZhiWei v-if="zhiWei"></myZhiWei>
     </el-tab-pane>
     <el-tab-pane label="工服/绿植/百货/装饰用品" name="myDepartmentStore" v-if="isDepartmentStore" :key="'myDepartmentStore'">
@@ -58,7 +61,7 @@
   import MyWineAndTableware from './myreleases/MyWineAndTableware'
   import MyWholesaleCommodity from './myreleases/MyWholesaleCommodity'
   import MyWholesaleCommodityOrder from './myreleases/MyWholesaleCommodityOrder'
-
+  import MyPurchase from './myreleases/MyPurchase'
   import { get_user_info } from '../../../api/api';
 
   export default {
@@ -73,6 +76,7 @@
       myDepartmentStore:MyDepartmentStore,
       myWholesaleCommodity:MyWholesaleCommodity,
       myWholesaleCommodityOrder:MyWholesaleCommodityOrder,
+      myPurchase:MyPurchase
 
     },
 
@@ -81,11 +85,12 @@
         commodityOrder:0,
         //服装百货  自己一个角色
          isDepartmentStore:false, //12角色
-         departmentStore:'',
+         departmentStore:false,
         //商家2
         isCreatePosition:false,//发布职位权限 2,5
         zhiWei:false,
         isPurchase:false,//采购信息 2
+        purchase:false,
         // 厨具/电器/设备维修3
         isMyEquipment:false,
         equipment:false,
@@ -146,8 +151,22 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
 
-          } else if(tab.name === "myJobWanted") {
+          } else   if(tab.name === "myPurchase") {
+            this.mAndRAndP=false;
+            this.jobWanted=false;
+            this.zhiWei=false;
+            this.wineAndTableware=false;
+            this.equipment=false;
+            this.rent=false;
+            this.createFoodAndGrain=false;
+            this.departmentStore=false;
+            this.wholesaleCommodity=false;
+            this.wholesaleCommodityOrder=false;
+            this.purchase=true;
+          }
+          else if(tab.name === "myJobWanted") {
             this.mAndRAndP=false;
             this.jobWanted=true;
             this.zhiWei=false;
@@ -158,6 +177,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "createPosition") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -169,6 +189,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "myWineAndTableware") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -180,6 +201,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "myEquipment") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -191,6 +213,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "rent") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -202,6 +225,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "createFoodAndGrain") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -213,6 +237,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "myDepartmentStore") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -224,6 +249,7 @@
             this.wholesaleCommodity=false;
             this.departmentStore=true;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "myWholesaleCommodity") {
             this.mAndRAndP=false;
             this.jobWanted=false;
@@ -235,6 +261,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=true;
             this.wholesaleCommodityOrder=false;
+            this.purchase=false;
           }else if(tab.name === "myWholesaleCommodityOrder") {
             this.commodityOrder=0;
 
@@ -248,6 +275,7 @@
             this.departmentStore=false;
             this.wholesaleCommodity=false;
             this.wholesaleCommodityOrder=true;
+            this.purchase=false;
           }
 
 

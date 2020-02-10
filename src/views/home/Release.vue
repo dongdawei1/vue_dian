@@ -21,7 +21,9 @@
         <SaleOrderAll v-if="changeSaleOrderAll"></SaleOrderAll>
       </el-tab-pane>
 
-      <el-tab-pane label="未完成送货的订单" v-if="isSaleConductOrder"  name="saleConductOrder" :key="'saleConductOrder'">
+
+
+      <el-tab-pane label="送货订单" v-if="isSaleConductOrder"  name="saleConductOrder" :key="'saleConductOrder'">
         <SaleConductOrder v-if="changeSaleConductOrder"></SaleConductOrder>
       </el-tab-pane>
 

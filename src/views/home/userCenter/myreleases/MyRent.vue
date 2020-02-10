@@ -270,7 +270,7 @@
       },
       get_position_listselect(){
         this.releaseWelfare.currentPage=1;
-        this.get_myRent_list();
+        this.get_position_list();
       },
       get_position_list(){
         get_myRent_list(this.releaseWelfare).then((res) => {

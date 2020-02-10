@@ -113,8 +113,8 @@
   </div>
 </template>
 <script>
-  import {isRoleMessage} from '../../../api/api';
-  import {myPurchaseOrder} from '../../../api/api';
+  import {isRoleMessage} from '../../../../api/api';
+  import {myPurchaseOrder} from '../../../../api/api';
 
 
   export default {
