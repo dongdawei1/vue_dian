@@ -78,7 +78,7 @@
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
-        label="订单状态"
+        label="备注信息"
         width="150"
         prop="remarks"
         show-overflow-tooltip>

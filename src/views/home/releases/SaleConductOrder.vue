@@ -1,4 +1,5 @@
 <template>
+
   <div class="vm-image-list">
     <!--我的发布 已发布过的装修等  c查询框开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
@@ -7,22 +8,26 @@
         <el-date-picker type="date"
                         :clearable="false"
                         placeholder="选择日期"
-                        v-model="releaseWelfare.createTime"
+                        v-model="releaseWelfare.giveTakeTime"
                         value-format="yyyy-MM-dd"
                         style="width: 80%;">
 
         </el-date-picker>
       </el-form-item>
+
+      <el-form-item label="订单状态">
+        <el-select v-model="releaseWelfare.orderStatus"  placeholder="请选择状态">
+          <el-option label="送货中" value="2"></el-option>
+          <el-option label="已完成" value="3"></el-option>
+          <el-option label="全部" value="9"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="get_position_listselect">查询</el-button>
-        <el-button type="primary">
-          <router-link
-            v-on:click.native="isAuthenticationM()"
-            to="" class="a">发布采购信息
-          </router-link>
+        <el-button type="test" disabled>
+          抢单中的请去app中查看
         </el-button>
       </el-form-item>
-
     </el-form>
     <!--c查询框结束-->
     <el-table
@@ -49,50 +54,40 @@
 
       <el-table-column
         label="订单ID"
-        width="100"
+
         prop="id"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         label="订单类型"
-        width="120"
+
         prop="paymentTime"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        label="发布时间"
-        prop="createTime"
-        width="160"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         label="收货时间"
         prop="collectTime"
-        width="160"
+
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         label="订单状态"
-        width="100"
+
         prop="guanShanReason"
         show-overflow-tooltip>
       </el-table-column>
-      <el-table-column
-        label="订单状态"
-        width="150"
-        prop="remarks"
-        show-overflow-tooltip>
-      </el-table-column>
+
 
       <el-table-column
-        label="订单总价"
+        label="订单总额"
         prop="guanShanTime"
-        width="100"
+
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
-        label="接单商户名称"
-        prop="addressDetailed"
+        label="应收金额"
+        prop="balanceMoney"
+
         show-overflow-tooltip>
       </el-table-column>
 
@@ -114,7 +109,7 @@
 </template>
 <script>
   import {isRoleMessage} from '../../../api/api';
-  import {myPurchaseOrder} from '../../../api/api';
+  import {mySaleOrder} from '../../../api/api';
 
 
   export default {
@@ -124,8 +119,9 @@
         total: 0,
         //分页结束
         releaseWelfare: { //查询条件
+          orderStatus:'2',
           releaseType: '', //服务类型
-          createTime: '',//发布时间
+          giveTakeTime: '',//送货时间
           currentPage: 1,
           pageSize: 20,//每页显示的数量
         },
@@ -149,9 +145,8 @@
         this.get_myPurchase_Order();
       },
       get_myPurchase_Order() {
-        myPurchaseOrder(this.releaseWelfare).then((res) => {
+        mySaleOrder(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
-            console.log(res)
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           } else {

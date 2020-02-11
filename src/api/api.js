@@ -474,6 +474,7 @@ export const native_pay_order= params => {
 
 export const create_order_evaluation= params => { return axios.post(`${base}/api/order/create_order_evaluation`, params).then(res => res.data);};
 export const myPurchaseOrder= params => { return axios.post(`${base}/api/order/myPurchaseOrder`, params).then(res => res.data);};
+export const mySaleOrder= params => { return axios.post(`${base}/api/order/mySaleOrder`, params).then(res => res.data);};
 
 export const operation_purchase_order= params => { return axios.post(`${base}/api/order/operation_purchase_order`, params).then(res => res.data);};
 export const peceiptGetPendingOrders= params => { return axios.post(`${base}/api/order/peceiptGetPendingOrders`, params).then(res => res.data);};
