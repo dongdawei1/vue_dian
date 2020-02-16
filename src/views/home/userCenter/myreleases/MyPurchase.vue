@@ -14,7 +14,8 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="get_position_listselect">查询</el-button>
+        <el-button type="primary" @click="get_position_listselect"
+                   v-loading.fullscreen.lock="fullscreenLoading">查询</el-button>
         <el-button type="primary">
           <router-link
             v-on:click.native="isAuthenticationM()"
@@ -120,6 +121,7 @@
   export default {
     data() {
       return {
+        fullscreenLoading:false,
         //分页开始
         total: 0,
         //分页结束
@@ -149,9 +151,10 @@
         this.get_myPurchase_Order();
       },
       get_myPurchase_Order() {
+        this.fullscreenLoading=true;
         myPurchaseOrder(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
-            console.log(res)
+            this.fullscreenLoading=false;
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           } else {

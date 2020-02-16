@@ -23,7 +23,9 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="get_position_listselect">查询</el-button>
+        <el-button type="primary" @click="get_position_listselect"
+                   v-loading.fullscreen.lock="fullscreenLoading"
+        >查询</el-button>
         <el-button type="test" disabled>
           抢单中的请去app中查看
         </el-button>
@@ -115,6 +117,7 @@
   export default {
     data() {
       return {
+        fullscreenLoading:false,
         //分页开始
         total: 0,
         //分页结束
@@ -145,7 +148,9 @@
         this.get_myPurchase_Order();
       },
       get_myPurchase_Order() {
+        this.fullscreenLoading=true;
         mySaleOrder(this.releaseWelfare).then((res) => {
+          this.fullscreenLoading=false;
           if (res.status === 0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;

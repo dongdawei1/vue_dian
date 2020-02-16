@@ -65,7 +65,7 @@ export const checke_isButten=  params => {
 export const getPermission = params => {
 
     return axios({
-        url: `${base}/permission/loadData`,
+        url: `${base}/api/permission/loadData`,
        // params: { uuid: params },
         method: 'get',    //application/x-www-form-urlencoded    ,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
