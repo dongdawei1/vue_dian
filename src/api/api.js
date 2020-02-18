@@ -2,20 +2,23 @@ import axios from 'axios';
 import router from "../router";
 import { Message } from 'element-ui';
 let base = '';
+let pcApi='/api/v1/vp/';
+let v1Api='/api/v3/';
+let commonApi='/api/v2/';
 //登陆
 
 
 axios.defaults.timeout = 15000;
+axios.defaults.headers.common["appId"] = "p";
 
 
 
-
-export const requestLogin = params => { return axios.post(`${base}/api/user/login`, params).then(res => res.data); };
+export const requestLogin = params => { return axios.post(`${base}${commonApi}log/login`, params).then(res => res.data); };
 
 
 //获取验证码
 export const getCaptcha1 = params => { return axios({
-    url: `${base}/api/user/captcha`,
+    url: `${base}${commonApi}log/captcha`,
     params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -25,12 +28,12 @@ export const getCaptcha1 = params => { return axios({
 
 
 //上传图片时删除
-export const uploadDown_update = params   => { return axios.post( `${base}/api/uploadDown/update`, params).then(res => res.data); };
+export const uploadDown_update = params   => { return axios.post( `${base}${v1Api}uploadDown/update`, params).then(res => res.data); };
 
 
 export const get_user_info = params => {
   return axios({
-    url: `${base}/api/user/get_user_info`,
+    url: `${base}${pcApi}user/get_user_info`,
     // params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -51,7 +54,7 @@ export const get_user_info_sign = params => {
 //检查权限
 export const checke_isButten=  params => {
   return axios({
-  url: `${base}/api/getRole/getIsRole`,
+  url: `${base}${pcApi}getRole/getIsRole`,
   params: { StringPath: params },
   method: 'get',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -65,7 +68,7 @@ export const checke_isButten=  params => {
 export const getPermission = params => {
 
     return axios({
-        url: `${base}/api/permission/loadData`,
+        url: `${base}${pcApi}permission/loadData`,
        // params: { uuid: params },
         method: 'get',    //application/x-www-form-urlencoded    ,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -74,23 +77,23 @@ export const getPermission = params => {
     }).then(res => res.data); };
 
 //注册
-export const requestCreate = params => { return axios.post(`${base}/api/user/create`, params).then(res => res.data); };
+export const requestCreate = params => { return axios.post(`${base}${commonApi}log/create`, params).then(res => res.data); };
 //修改用户基本信息
-export const update_information = params => { return axios.post(`${base}/api/user/update_information`, params).then(res => res.data); };
+export const update_information = params => { return axios.post(`${base}${pcApi}user/update_information`, params).then(res => res.data); };
 //退出
-export const userlogout = params => { return axios.post(`${base}/api/user/logout`, params).then(res => res.data); };
+export const userlogout = params => { return axios.post(`${base}${pcApi}user/logout`, params).then(res => res.data); };
 //s实名
-export const newRealName = params => { return axios.post(`${base}/api/realName/newRealName`, params).then(res => res.data); };
+export const newRealName = params => { return axios.post(`${base}${pcApi}realName/newRealName`, params).then(res => res.data); };
 //重新实名
-export const updateRealName = params => { return axios.post(`${base}/api/realName/updateRealName`, params).then(res => res.data); };
-export const addOrder = params => { return axios.post(`${base}/api/realName/addOrder`, params).then(res => res.data); };
+export const updateRealName = params => { return axios.post(`${base}${pcApi}realName/updateRealName`, params).then(res => res.data); };
+export const addOrder = params => { return axios.post(`${base}${pcApi}realName/addOrder`, params).then(res => res.data); };
 
 
 //获取实名信息
 export const getRealName = params => {
 
   return axios({
-    url: `${base}/api/realName/getRealName`,
+    url: `${base}${pcApi}realName/getRealName`,
     // params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -103,7 +106,7 @@ export const getRealName = params => {
 export const getUserRealName = params => {
 
   return axios({
-    url: `${base}/api/realName/getUserRealName`,
+    url: `${base}${pcApi}realName/getUserRealName`,
     // params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -115,7 +118,7 @@ export const getUserRealName = params => {
 export const getRealNameById = params => {
 
   return axios({
-    url: `${base}/api/realName/getRealNameById`,
+    url: `${base}${pcApi}realName/getRealNameById`,
     params: { id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -126,7 +129,7 @@ export const getRealNameById = params => {
 export const getRealNameByuserId = params => {
 
   return axios({
-    url: `${base}/api/realName/getRealNameByuserId`,
+    url: `${base}${pcApi}realName/getRealNameByuserId`,
     params: { id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -135,141 +138,141 @@ export const getRealNameByuserId = params => {
   }).then(res => res.data); };
 
 //待审核实名
-export const getRealNameAll = params => { return axios.post(`${base}/api/toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
-export const admin_select_addOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
-export const admin_select_signingOrder = params => { return axios.post(`${base}/api/toExamine/admin_select_signingOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
+export const getRealNameAll = params => { return axios.post(`${base}${pcApi}toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
+export const admin_select_addOrder = params => { return axios.post(`${base}${pcApi}toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
+export const admin_select_signingOrder = params => { return axios.post(`${base}${pcApi}toExamine/admin_select_signingOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
 export const admin_select_signingOrderById = params => {
   return axios({
-    url: `${base}/api/toExamine/admin_select_signingOrderById`,
+    url: `${base}${pcApi}toExamine/admin_select_signingOrderById`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
-export const admin_create_orderUser = params => { return axios.post(`${base}/api/toExamine/admin_create_orderUser`, params).then(res => res.data);};
+export const admin_create_orderUser = params => { return axios.post(`${base}${pcApi}toExamine/admin_create_orderUser`, params).then(res => res.data);};
 
 //待审批招聘
-export const getReleaseWelfareAll = params => { return axios.post(`${base}/api/toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+export const getReleaseWelfareAll = params => { return axios.post(`${base}${pcApi}toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核简历
-export const getTrialResumeAll = params => { return axios.post(`${base}/api/toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+export const getTrialResumeAll = params => { return axios.post(`${base}${pcApi}toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核装修灭虫列表
-export const getmrpAll= params => { return axios.post(`${base}/api/toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
+export const getmrpAll= params => { return axios.post(`${base}${pcApi}toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
 //待审核出租房
-export const adminMent= params => { return axios.post(`${base}/api/toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
+export const adminMent= params => { return axios.post(`${base}${pcApi}toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
 //待审核电器二手
-export const adminEquipment= params => { return axios.post(`${base}/api/toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminEquipment= params => { return axios.post(`${base}${pcApi}toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审核菜
-export const adminFoodAndGrain= params => { return axios.post(`${base}/api/toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminFoodAndGrain= params => { return axios.post(`${base}${pcApi}toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审核批发菜
-export const adminWholesaleCommodity= params => { return axios.post(`${base}/api/toExamine/adminWholesaleCommodity`, params).then(res => isButtonAndListusermrp(res.data,14) ); };
+export const adminWholesaleCommodity= params => { return axios.post(`${base}${pcApi}toExamine/adminWholesaleCommodity`, params).then(res => isButtonAndListusermrp(res.data,14) ); };
 
 //待审批酒
-export const adminWineAndTableware= params => { return axios.post(`${base}/api/toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-export const adminDepartmentStore= params => { return axios.post(`${base}/api/toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-export const getAddressDetailed= params => { return axios.post(`${base}/api/toExamine/getAddressDetailed`, params).then(res =>  res.data);  };
-export const getAccurateressDetailed= params => { return axios.post(`${base}/api/toExamine/getAccurateressDetailed`, params).then(res =>  res.data);  };
-export const createAddressDetailed= params => { return axios.post(`${base}/api/toExamine/createAddressDetailed`, params).then(res =>  res.data);  };
-export const admin_update_addOrder= params => { return axios.post(`${base}/api/toExamine/admin_update_addOrder`, params).then(res =>  res.data);  };
+export const adminWineAndTableware= params => { return axios.post(`${base}${pcApi}toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminDepartmentStore= params => { return axios.post(`${base}${pcApi}toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const getAddressDetailed= params => { return axios.post(`${base}${pcApi}toExamine/getAddressDetailed`, params).then(res =>  res.data);  };
+export const getAccurateressDetailed= params => { return axios.post(`${base}${pcApi}toExamine/getAccurateressDetailed`, params).then(res =>  res.data);  };
+export const createAddressDetailed= params => { return axios.post(`${base}${pcApi}toExamine/createAddressDetailed`, params).then(res =>  res.data);  };
+export const admin_update_addOrder= params => { return axios.post(`${base}${pcApi}toExamine/admin_update_addOrder`, params).then(res =>  res.data);  };
 
 //除实名外所有审核
-export const examineAll= params => { return axios.post(`${base}/api/toExamine/examineAll`, params).then(res => res.data);};
+export const examineAll= params => { return axios.post(`${base}${pcApi}toExamine/examineAll`, params).then(res => res.data);};
 //实名审核
-export const examineRealName = params => { return axios.post(`${base}/api/toExamine/examineRealName`, params).then(res => res.data); };
+export const examineRealName = params => { return axios.post(`${base}${pcApi}toExamine/examineRealName`, params).then(res => res.data); };
 
 //分页查询招聘
-export const getPositionAll = params => { return axios.post(`${base}/api/releaseWelfare/get_position_all`, params).then(res => res.data);};
+export const getPositionAll = params => { return axios.post(`${base}${pcApi}releaseWelfare/get_position_all`, params).then(res => res.data);};
 //分页查询简历
-export const getResumeAll = params => { return axios.post(`${base}/api/resume/get_resume_all`, params).then(res => res.data);};
+export const getResumeAll = params => { return axios.post(`${base}${pcApi}resume/get_resume_all`, params).then(res => res.data);};
 
 
 
 
 
 //查询所有联系方式
-export const getContact= params => { return axios.post(`${base}/api/getPublishings/getContact`, params).then(res => res.data);};
+export const getContact= params => { return axios.post(`${base}${pcApi}getPublishings/getContact`, params).then(res => res.data);};
 //获取职位类型
 export const get_position = params => {
   return axios({
-    url: `${base}/api/releaseWelfare/get_position`,
+    url: `${base}${pcApi}releaseWelfare/get_position`,
     // params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
   }).then(res => res.data); };
 //发布职位
-export const create_position = params => { return axios.post(`${base}/api/releaseWelfare/create_position`, params).then(res => res.data); };
+export const create_position = params => { return axios.post(`${base}${pcApi}releaseWelfare/create_position`, params).then(res => res.data); };
 
 
 //用户分页查询自己发布的职位
-export const get_position_list = params => { return axios.post(`${base}/api/releaseWelfare/get_position_list`, params).then(res =>isButtonAndListusermrp(res.data,4) ); };
+export const get_position_list = params => { return axios.post(`${base}${pcApi}releaseWelfare/get_position_list`, params).then(res =>isButtonAndListusermrp(res.data,4) ); };
 //用户操作自己发布的职位
-export const position_operation = params => { return axios.post(`${base}/api/releaseWelfare/position_operation`, params).then(res =>res.data) };
+export const position_operation = params => { return axios.post(`${base}${pcApi}releaseWelfare/position_operation`, params).then(res =>res.data) };
 
 
 //创建简历
-export const create_resume = params => { return axios.post(`${base}/api/resume/create_resume`, params).then(res => res.data); };
+export const create_resume = params => { return axios.post(`${base}${pcApi}resume/create_resume`, params).then(res => res.data); };
 //简历操作
-export const operation_resume = params => { return axios.post(`${base}/api/resume/operation_resume`, params).then(res => res.data); };
+export const operation_resume = params => { return axios.post(`${base}${pcApi}resume/operation_resume`, params).then(res => res.data); };
 //操作灭虫
-export const operation_usermrp = params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/operation_usermrp`, params).then(res => res.data); };
+export const operation_usermrp = params => { return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/operation_usermrp`, params).then(res => res.data); };
 
 
 
 //获取自己发布的简历
 export const select_resume_by_id = params => {
   return axios({
-    url: `${base}/api/resume/select_resume_by_id`,
+    url: `${base}${pcApi}resume/select_resume_by_id`,
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
 //灭虫广告装修
-export const create_menuAndRenovationAndPestControl= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/create_menuAndRenovationAndPestControl`, params).then(res => res.data); };
+export const create_menuAndRenovationAndPestControl= params => { return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/create_menuAndRenovationAndPestControl`, params).then(res => res.data); };
 //用户查询自己发布的装修等
-export const get_usermrp_list= params => { return axios.post(`${base}/api/menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data,1) ); };
+export const get_usermrp_list= params => { return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data,1) ); };
 //根据id获取发布的装修
 export const get_usermrp_id= params => {
   return axios({
-    url: `${base}/api/menuAndRenovationAndPestControl/get_usermrp_id`,
+    url: `${base}${pcApi}menuAndRenovationAndPestControl/get_usermrp_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 //获取装修等标题（灭虫等列表页）
-export const getReleaseTitleList= params =>  { return axios.post(`${base}/api/menuAndRenovationAndPestControl/getReleaseTitleList`, params).then(res => res.data); };
+export const getReleaseTitleList= params =>  { return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/getReleaseTitleList`, params).then(res => res.data); };
 
 //获取装修等标题（灭虫等列表页）
-export const getmrpList= params =>  { return axios.post(`${base}/api/menuAndRenovationAndPestControl/getmrpList`, params).then(res => res.data); };
+export const getmrpList= params =>  { return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/getmrpList`, params).then(res => res.data); };
 //获取装修详情公开
 
 export const getMrpDetails = params => {
   return axios({
-    url: `${base}/api/menuAndRenovationAndPestControl/getMrpDetails`,
+    url: `${base}${pcApi}menuAndRenovationAndPestControl/getMrpDetails`,
     method: 'get',    //application/x-www-form-urlencoded    ,
     params: { id: params },
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
 //创建租房
-export const create_rent= params => { return axios.post(`${base}/api/rent/create_rent`, params).then(res => res.data); };
+export const create_rent= params => { return axios.post(`${base}${pcApi}rent/create_rent`, params).then(res => res.data); };
 //获取自己发布的租房信息
-export const get_myRent_list= params => { return axios.post(`${base}/api/rent/get_myRent_list`, params).then(res => isButtonAndListusermrp(res.data,5) ); };
+export const get_myRent_list= params => { return axios.post(`${base}${pcApi}rent/get_myRent_list`, params).then(res => isButtonAndListusermrp(res.data,5) ); };
 //操作自己发布的租房信息
-export const operation_userment= params => { return axios.post(`${base}/api/rent/operation_userment`, params).then(res => res.data);};
+export const operation_userment= params => { return axios.post(`${base}${pcApi}rent/operation_userment`, params).then(res => res.data);};
 //根据id查询自己发布租房
 export const get_userrent_id= params => {
   return axios({
-    url: `${base}/api/rent/get_userrent_id`,
+    url: `${base}${pcApi}rent/get_userrent_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 //公开概览租房
-export const getrentList= params => { return axios.post(`${base}/api/rent/getrentList`, params).then(res => res.data);};
+export const getrentList= params => { return axios.post(`${base}${pcApi}rent/getrentList`, params).then(res => res.data);};
 //租房详情
 
 export const get_rent_id= params => {
   return axios({
-    url: `${base}/api/rent/get_rent_id`,
+    url: `${base}${pcApi}rent/get_rent_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -277,13 +280,13 @@ export const get_rent_id= params => {
 
 
 //获取租房title
-export const getServiceDetailedList= params => { return axios.post(`${base}/api/rent/getServiceDetailedList`, params).then(res => res.data);};
+export const getServiceDetailedList= params => { return axios.post(`${base}${pcApi}rent/getServiceDetailedList`, params).then(res => res.data);};
 
 
 //获取bunner
 export const getBunner = params => {
   return axios({
-    url: `${base}/api/bunner/getBunner`,
+    url: `${base}${pcApi}bunner/getBunner`,
     method: 'get',    //application/x-www-form-urlencoded    ,
     params: { permissionid: params.permissionid,
               bunnerType: params.bunnerType},
@@ -315,7 +318,7 @@ export const echo_display= params => {
 //获取服务商品名称
 export const get_serviceType = params => {
   return axios({
-    url: `${base}/api/serviceType/get_serviceType`,
+    url: `${base}${pcApi}serviceType/get_serviceType`,
     method: 'get',    //application/x-www-form-urlencoded    ,
     params: { releaseType: params.releaseType,
               serviceType:params.serviceType},
@@ -324,7 +327,7 @@ export const get_serviceType = params => {
 
 export const get_serviceTypeUrl = params => {
   return axios({
-    url: `${base}/api/serviceType/get_serviceTypeUrl`,
+    url: `${base}${pcApi}serviceType/get_serviceTypeUrl`,
     method: 'get',    //application/x-www-form-urlencoded    ,
     params: { releaseType: params.releaseType,
       serviceType:params.serviceType},
@@ -333,19 +336,19 @@ export const get_serviceTypeUrl = params => {
 
 
 
-export const create_serviceType= params => { return axios.post(`${base}/api/serviceType/create_serviceType`, params).then(res => res.data);};
+export const create_serviceType= params => { return axios.post(`${base}${pcApi}serviceType/create_serviceType`, params).then(res => res.data);};
 export const admin_create_serviceType= params => { return axios.post(`${base}/api/toExamine/admin_create_serviceType`, params).then(res => res.data);};
 
 //创建电器/维修
-export const create_equipment= params => { return axios.post(`${base}/api/equipment/create_equipment`, params).then(res => res.data); };
+export const create_equipment= params => { return axios.post(`${base}${pcApi}equipment/create_equipment`, params).then(res => res.data); };
 //用户获取自己创建电器/维修
-export const get_myEquipment_list= params => { return axios.post(`${base}/api/equipment/get_myEquipment_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+export const get_myEquipment_list= params => { return axios.post(`${base}${pcApi}equipment/get_myEquipment_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
 //电器操作列
-export const operation_userequipment= params => { return axios.post(`${base}/api/equipment/operation_userequipment`, params).then(res => res.data); };
+export const operation_userequipment= params => { return axios.post(`${base}${pcApi}equipment/operation_userequipment`, params).then(res => res.data); };
 //用户根据id获取
 export const get_userequipment_id= params => {
   return axios({
-    url: `${base}/api/equipment/get_userequipment_id`,
+    url: `${base}${pcApi}equipment/get_userequipment_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -353,26 +356,26 @@ export const get_userequipment_id= params => {
 //公开根据id获取
 export const getEquipmentDetails= params => {
   return axios({
-    url: `${base}/api/equipment/getEquipmentDetails`,
+    url: `${base}${pcApi}equipment/getEquipmentDetails`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
-export const getEquipmentReleaseTitleList= params => { return axios.post(`${base}/api/equipment/getEquipmentReleaseTitleList`, params).then(res => res.data); };
-export const getEquipmentPublicList= params => { return axios.post(`${base}/api/equipment/getEquipmentPublicList`, params).then(res => res.data); };
+export const getEquipmentReleaseTitleList= params => { return axios.post(`${base}${pcApi}equipment/getEquipmentReleaseTitleList`, params).then(res => res.data); };
+export const getEquipmentPublicList= params => { return axios.post(`${base}${pcApi}equipment/getEquipmentPublicList`, params).then(res => res.data); };
 
-export const create_foodAndGrain= params => { return axios.post(`${base}/api/foodAndGrain/create_foodAndGrain`, params).then(res => res.data);};
+export const create_foodAndGrain= params => { return axios.post(`${base}${pcApi}foodAndGrain/create_foodAndGrain`, params).then(res => res.data);};
 //用户获取自己创建菜
-export const get_myFoodAndGrain_list= params => { return axios.post(`${base}/api/foodAndGrain/get_myFoodAndGrain_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+export const get_myFoodAndGrain_list= params => { return axios.post(`${base}${pcApi}foodAndGrain/get_myFoodAndGrain_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
 //操作菜
-export const operation_userFoodAndGrain= params => { return axios.post(`${base}/api/foodAndGrain/operation_userFoodAndGrain`, params).then(res => res.data); };
-export const getFoodAndGrainTitleList= params => { return axios.post(`${base}/api/foodAndGrain/getFoodAndGrainTitleList`, params).then(res => res.data); };
-export const getFoodAndGrainPublicList= params => { return axios.post(`${base}/api/foodAndGrain/getFoodAndGrainPublicList`, params).then(res => res.data); };
+export const operation_userFoodAndGrain= params => { return axios.post(`${base}${pcApi}foodAndGrain/operation_userFoodAndGrain`, params).then(res => res.data); };
+export const getFoodAndGrainTitleList= params => { return axios.post(`${base}${pcApi}foodAndGrain/getFoodAndGrainTitleList`, params).then(res => res.data); };
+export const getFoodAndGrainPublicList= params => { return axios.post(`${base}${pcApi}foodAndGrain/getFoodAndGrainPublicList`, params).then(res => res.data); };
 //公开根据id获取
 export const getFoodAndGrainDetails= params => {
   return axios({
-    url: `${base}/api/foodAndGrain/getFoodAndGrainDetails`,
+    url: `${base}${pcApi}foodAndGrain/getFoodAndGrainDetails`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -380,45 +383,45 @@ export const getFoodAndGrainDetails= params => {
 //用户根据id获取
 export const get_userFoodAndGrain_id= params => {
   return axios({
-    url: `${base}/api/foodAndGrain/get_userFoodAndGrain_id`,
+    url: `${base}${pcApi}foodAndGrain/get_userFoodAndGrain_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 //酒水
-export const create_wineAndTableware= params => { return axios.post(`${base}/api/wineAndTableware/create_wineAndTableware`, params).then(res => res.data);};
-export const get_myWineAndTableware_list= params => { return axios.post(`${base}/api/wineAndTableware/get_myWineAndTableware_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
-export const operation_userWineAndTableware= params => { return axios.post(`${base}/api/wineAndTableware/operation_userWineAndTableware`, params).then(res => res.data); };
-export const getWineAndTablewareTitleList= params => { return axios.post(`${base}/api/wineAndTableware/getWineAndTablewareTitleList`, params).then(res => res.data); };
-export const getWineAndTablewarePublicList= params => { return axios.post(`${base}/api/wineAndTableware/getWineAndTablewarePublicList`, params).then(res => res.data); };
+export const create_wineAndTableware= params => { return axios.post(`${base}${pcApi}wineAndTableware/create_wineAndTableware`, params).then(res => res.data);};
+export const get_myWineAndTableware_list= params => { return axios.post(`${base}${pcApi}wineAndTableware/get_myWineAndTableware_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+export const operation_userWineAndTableware= params => { return axios.post(`${base}${pcApi}wineAndTableware/operation_userWineAndTableware`, params).then(res => res.data); };
+export const getWineAndTablewareTitleList= params => { return axios.post(`${base}${pcApi}wineAndTableware/getWineAndTablewareTitleList`, params).then(res => res.data); };
+export const getWineAndTablewarePublicList= params => { return axios.post(`${base}${pcApi}wineAndTableware/getWineAndTablewarePublicList`, params).then(res => res.data); };
 export const getWineAndTablewareDetails= params => {
   return axios({
-    url: `${base}/api/wineAndTableware/getWineAndTablewareDetails`,
+    url: `${base}${pcApi}wineAndTableware/getWineAndTablewareDetails`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
 //b百货工服
-export const create_departmentStore= params => { return axios.post(`${base}/api/departmentStore/create_departmentStore`, params).then(res => res.data);};
-export const get_myDepartmentStore_list= params => { return axios.post(`${base}/api/departmentStore/get_myDepartmentStore_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
-export const operation_userDepartmentStore= params => { return axios.post(`${base}/api/departmentStore/operation_userDepartmentStore`, params).then(res => res.data);};
+export const create_departmentStore= params => { return axios.post(`${base}${pcApi}departmentStore/create_departmentStore`, params).then(res => res.data);};
+export const get_myDepartmentStore_list= params => { return axios.post(`${base}${pcApi}departmentStore/get_myDepartmentStore_list`, params).then(res =>  isButtonAndListusermrp(res.data,7) ); };
+export const operation_userDepartmentStore= params => { return axios.post(`${base}${pcApi}departmentStore/operation_userDepartmentStore`, params).then(res => res.data);};
 //用户根据id获取
 export const get_userDepartmentStore_id= params => {
   return axios({
-    url: `${base}/api/departmentStore/get_userDepartmentStore_id`,
+    url: `${base}${pcApi}departmentStore/get_userDepartmentStore_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
-export const getDepartmentStoreTitleList= params => { return axios.post(`${base}/api/departmentStore/getDepartmentStoreTitleList`, params).then(res => res.data); };
-export const getDepartmentStorePublicList= params => { return axios.post(`${base}/api/departmentStore/getDepartmentStorePublicList`, params).then(res => res.data); };
+export const getDepartmentStoreTitleList= params => { return axios.post(`${base}${pcApi}departmentStore/getDepartmentStoreTitleList`, params).then(res => res.data); };
+export const getDepartmentStorePublicList= params => { return axios.post(`${base}${pcApi}departmentStore/getDepartmentStorePublicList`, params).then(res => res.data); };
 
-export const getwholesale= params => { return axios.post(`${base}/api/wholesale/getwholesale`, params).then(res => res.data); };
+export const getwholesale= params => { return axios.post(`${base}${pcApi}wholesale/getwholesale`, params).then(res => res.data); };
 
 export const getDepartmentStoreDetails= params => {
   return axios({
-    url: `${base}/api/departmentStore/getDepartmentStoreDetails`,
+    url: `${base}${pcApi}departmentStore/getDepartmentStoreDetails`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -426,38 +429,38 @@ export const getDepartmentStoreDetails= params => {
 //用户根据id获取
 export const get_userWineAndTableware_id= params => {
   return axios({
-    url: `${base}/api/wineAndTableware/get_userWineAndTableware_id`,
+    url: `${base}${pcApi}wineAndTableware/get_userWineAndTableware_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
-export const create_wholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);};
-export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
-export const get_myWholesaleCommodity_list= params => { return axios.post(`${base}/api/wholesaleCommodity/get_myWholesaleCommodity_list`, params).then(res => isButtonAndListusermrp(res.data,13) ); };
-export const operation_userWholesaleCommodity= params => { return axios.post(`${base}/api/wholesaleCommodity/operation_userWholesaleCommodity`, params).then(res => res.data);};
+export const create_wholesaleCommodity= params => { return axios.post(`${base}${pcApi}wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);};
+export const get_wholesaleCommodity_serviceType= params => { return axios.post(`${base}${pcApi}wholesaleCommodity/get_wholesaleCommodity_serviceType`, params).then(res => res.data);};
+export const get_myWholesaleCommodity_list= params => { return axios.post(`${base}${pcApi}wholesaleCommodity/get_myWholesaleCommodity_list`, params).then(res => isButtonAndListusermrp(res.data,13) ); };
+export const operation_userWholesaleCommodity= params => { return axios.post(`${base}${pcApi}wholesaleCommodity/operation_userWholesaleCommodity`, params).then(res => res.data);};
 export const get_userWholesaleCommodity_id= params => {
   return axios({
-    url: `${base}/api/wholesaleCommodity/get_userWholesaleCommodity_id`,
+    url: `${base}${pcApi}wholesaleCommodity/get_userWholesaleCommodity_id`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
-export const wholesaleCommodity_serviceType= params => { return axios.post(`${base}/api/wholesaleCommodity/wholesaleCommodity_serviceType`, params).then(res => res.data);};
-export const getWholesaleCommodityPublicList= params => { return axios.post(`${base}/api/wholesaleCommodity/getWholesaleCommodityPublicList`, params).then(res => isButtonAndListusermrp(res.data,15) ); };
+export const wholesaleCommodity_serviceType= params => { return axios.post(`${base}${pcApi}wholesaleCommodity/wholesaleCommodity_serviceType`, params).then(res => res.data);};
+export const getWholesaleCommodityPublicList= params => { return axios.post(`${base}${pcApi}wholesaleCommodity/getWholesaleCommodityPublicList`, params).then(res => isButtonAndListusermrp(res.data,15) ); };
 export const getWholesaleCommodityPublicId= params => {
   return axios({
-    url: `${base}/api/wholesaleCommodity/getWholesaleCommodityPublicId`,
+    url: `${base}${pcApi}wholesaleCommodity/getWholesaleCommodityPublicId`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res =>isButtonAndListusermrp(res.data,16) ); };
 
-export const create_purchase_order= params => { return axios.post(`${base}/api/order/create_purchase_order`, params).then(res => res.data);};
+export const create_purchase_order= params => { return axios.post(`${base}${pcApi}order/create_purchase_order`, params).then(res => res.data);};
 
 export const get_conduct_purchase_order= params => {
   return axios({
-    url: `${base}/api/order/get_conduct_purchase_order`,
+    url: `${base}${pcApi}order/get_conduct_purchase_order`,
     params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -465,23 +468,23 @@ export const get_conduct_purchase_order= params => {
 
 export const native_pay_order= params => {
   return axios({
-    url: `${base}/api/order/native_pay_order`,
+    url: `${base}${pcApi}order/native_pay_order`,
     params: { id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
 
 
-export const create_order_evaluation= params => { return axios.post(`${base}/api/order/create_order_evaluation`, params).then(res => res.data);};
-export const myPurchaseOrder= params => { return axios.post(`${base}/api/order/myPurchaseOrder`, params).then(res => res.data);};
-export const mySaleOrder= params => { return axios.post(`${base}/api/order/mySaleOrder`, params).then(res => res.data);};
+export const create_order_evaluation= params => { return axios.post(`${base}${pcApi}order/create_order_evaluation`, params).then(res => res.data);};
+export const myPurchaseOrder= params => { return axios.post(`${base}${pcApi}order/myPurchaseOrder`, params).then(res => res.data);};
+export const mySaleOrder= params => { return axios.post(`${base}${pcApi}order/mySaleOrder`, params).then(res => res.data);};
 
-export const operation_purchase_order= params => { return axios.post(`${base}/api/order/operation_purchase_order`, params).then(res => res.data);};
-export const peceiptGetPendingOrders= params => { return axios.post(`${base}/api/order/peceiptGetPendingOrders`, params).then(res => res.data);};
+export const operation_purchase_order= params => { return axios.post(`${base}${pcApi}order/operation_purchase_order`, params).then(res => res.data);};
+export const peceiptGetPendingOrders= params => { return axios.post(`${base}${pcApi}order/peceiptGetPendingOrders`, params).then(res => res.data);};
 //检查是否有待支付的订单
 export const get_pay_order_all = params => {
   return axios({
-    url: `${base}/api/order/get_pay_order_all`,
+    url: `${base}${pcApi}order/get_pay_order_all`,
     params: { uuid: Date.parse(new Date())},
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -489,7 +492,7 @@ export const get_pay_order_all = params => {
 
 export const get_pay_order_byOrderId= params => {
   return axios({
-    url: `${base}/api/order/get_pay_order_byOrderId`,
+    url: `${base}${pcApi}order/get_pay_order_byOrderId`,
     params: { orderId: params,
                  uuid: Date.parse(new Date())  },
     method: 'get',    //application/x-www-form-urlencoded    ,
@@ -498,7 +501,7 @@ export const get_pay_order_byOrderId= params => {
 
 export const getPurchaseCreateOrderVo= params => {
   return axios({
-    url: `${base}/api/orderVoAddCommonMenu/getPurchaseCreateOrderVo`,
+    url: `${base}${pcApi}orderVoAddCommonMenu/getPurchaseCreateOrderVo`,
     params:{},
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}

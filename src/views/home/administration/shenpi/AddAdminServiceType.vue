@@ -27,7 +27,7 @@
     <br><el-form-item label="示例图片" >
       <el-upload
         ref="upload"
-        action="/api/uploadDown/upload"
+        :action="uploadDownUrl"
         name="picture"
         list-type="picture-card"
         :limit="1"

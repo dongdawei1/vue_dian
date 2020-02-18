@@ -42,7 +42,7 @@
       <el-form-item label="身份证照" prop="licenseUrl">
         <el-upload
           ref="upload"
-          action="/api/uploadDown/upload"
+          :action="uploadDownUrl"
           name="picture"
           list-type="picture-card"
           :limit="3"

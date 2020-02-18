@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" >
      请认真填写信息
       <el-form-item  label="发布类型" prop="releaseType">
@@ -47,11 +48,10 @@
       <el-form-item label="详细地址"  prop="serviceDetailed">
         <el-input v-model="ruleForm.serviceDetailed" placeholder="地址详情100字以内"></el-input>
       </el-form-item>
-
       <el-form-item label="图片" prop="pictureUrl">
         <el-upload
           ref="upload"
-          action="/api/uploadDown/upload"
+          :action="uploadDownUrl"
           name="picture"
           list-type="picture-card"
           :limit="8"

@@ -44,7 +44,7 @@
       <el-form-item label="服务图片" prop="pictureUrl">
         <el-upload
           ref="upload"
-          action="/api/uploadDown/upload"
+          :action="uploadDownUrl"
           name="picture"
           list-type="picture-card"
           :limit="8"

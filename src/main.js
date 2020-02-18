@@ -16,6 +16,8 @@ import axios from 'axios';
 Vue.use(ElementUI)
 Vue.use(iView)
 
+import apiUrl from './components/url.vue'
+Vue.prototype.uploadDownUrl = apiUrl.uploadDownUrl;
 
 // router.beforeEach((to, from, next) => {
 //
@@ -31,16 +33,16 @@ Vue.use(iView)
 //
 //
 //   next();
-  //NProgress.start();
-  // if (to.path == '/home') {
-  //   sessionStorage.removeItem('user');
-  // }
-  // let user = JSON.parse(sessionStorage.getItem('user'));
-  // if (!user && to.path != '/login') {
-  //   next({ path: '/login' })
-  // } else {
-  //   next()
-  // }
+//NProgress.start();
+// if (to.path == '/home') {
+//   sessionStorage.removeItem('user');
+// }
+// let user = JSON.parse(sessionStorage.getItem('user'));
+// if (!user && to.path != '/login') {
+//   next({ path: '/login' })
+// } else {
+//   next()
+// }
 //})
 
 /* eslint-disable no-new */
