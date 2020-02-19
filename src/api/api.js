@@ -3,7 +3,7 @@ import router from "../router";
 import { Message } from 'element-ui';
 let base = '';
 let pcApi='/api/v1/vp/';
-let v1Api='/api/v3/';
+let v1Api='/api/v3/'; //图片上传相关
 let commonApi='/api/v2/';
 //登陆
 
@@ -33,7 +33,7 @@ export const uploadDown_update = params   => { return axios.post( `${base}${v1Ap
 
 export const get_user_info = params => {
   return axios({
-    url: `${base}${pcApi}user/get_user_info`,
+    url: `${base}${commonApi}log/get_user_info`,
     // params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -54,7 +54,7 @@ export const get_user_info_sign = params => {
 //检查权限
 export const checke_isButten=  params => {
   return axios({
-  url: `${base}${pcApi}getRole/getIsRole`,
+  url: `${base}${commonApi}getRole/getIsRole`,
   params: { StringPath: params },
   method: 'get',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
