@@ -9,7 +9,7 @@ let commonApi='/api/v2/';
 
 
 axios.defaults.timeout = 15000;
-axios.defaults.headers.common["appId"] = "p";
+axios.defaults.headers.common["appid"] = "p";
 
 
 

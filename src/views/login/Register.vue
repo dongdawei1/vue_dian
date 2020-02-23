@@ -158,7 +158,6 @@
             requestCreate(loginParams).then(data => {
               this.fullscreenLoading = false;
 
-              let { msg, code, user } = data;
               if (data && data.status === 0) {
                 this.dialogVisible= true;
               }  else {
