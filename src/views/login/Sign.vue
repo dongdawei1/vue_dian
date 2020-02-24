@@ -47,7 +47,7 @@
 import { requestLogin } from '../../api/api';
 import { getCaptcha1 } from '../../api/api';
 import { get_user_info } from '../../api/api';
-
+import { checkLog } from '../../common/logmainjs.js';
 
 export default {
  data () {
@@ -94,13 +94,12 @@ export default {
          this.fullscreenLoading = true;
          requestLogin(loginParams).then(data => {
              this.fullscreenLoading = false;
-           let { msg, code, user } = data;
-           if (data && data.status === 0) {
-           this.$router.push({ path: '/home/release' });
-           }  else {
-             this.getCaptcha()
-             this.$message.error(data.msg)
+           if(!checkLog(data)) {
+             this.getCaptcha();
+             this.$message.error(data.msg);
+             return false;
            }
+           this.$router.push({ path: '/home/release' });
          });
        } else {
          return false;
@@ -124,7 +123,7 @@ export default {
    getCaptcha () {
      this.dataForm.uuid=Date.parse(new Date());
      this.captchaPath = getCaptcha1( this.dataForm.uuid).then((res) => {
-       this.captchaPath=res.data.msg
+       this.captchaPath=res.data.data;
 
      });
    }

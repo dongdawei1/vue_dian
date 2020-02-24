@@ -285,6 +285,7 @@
     },
 
     created () {
+
       this.checke_isButten();
     },
     methods: {
@@ -350,6 +351,7 @@
       },
 
       checke_isButten(){
+
         checke_isButten(this.StringPath).then((res) => {
           if(res.status===0){
             if (res.data.isCreate === true) {

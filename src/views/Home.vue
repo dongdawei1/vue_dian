@@ -47,6 +47,7 @@
 <script>
   import { getPermission } from '../api/api';
   import { userlogout } from '../api/api';
+  import { logOu } from '../common/logmainjs.js';
 	export default {
 		data() {
 			return {
@@ -65,7 +66,9 @@
         getPermission().then((res) => {
           let status=res.status;
           if (status === 0) {
+
             this.menuList = res.data
+            console.log(this.menuList)
           }else{
               this.$router.push({ path: '/login/sign' });
           }
@@ -76,13 +79,12 @@
         userlogout().then((res) => {
           let status=res.status;
           if (status === 0) {
+            logOu();
             this.$router.push({ path: '/login/sign' });
           }else{
             this.$message.error(res.msg)
           }
         });
-
-
       }
 
 

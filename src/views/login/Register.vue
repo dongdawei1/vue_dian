@@ -73,9 +73,8 @@
 <script>
 
   import { requestCreate } from '../../api/api';
-
   import { getCaptcha1 } from '../../api/api';
-
+  import { checkLog } from '../../common/logmainjs.js';
   export default {
     data() {
       var validatePass = (rule, value, callback) => {
@@ -145,28 +144,18 @@
         this.$refs['ruleForm'].validate((valid) => {
 
           if (valid) {
-            var loginParams = {
-             'name': this.ruleForm.name,
-              'pass': this.ruleForm.pass,
-              'checkPass': this.ruleForm.checkPass,
-              'mobilePhone': this.ruleForm.mobilePhone,
-              'role': this.ruleForm.role,
-              'uuid': this.ruleForm.uuid,
-              'captcha': this.ruleForm.captcha
-            };
             this.fullscreenLoading = true;
-            requestCreate(loginParams).then(data => {
+            requestCreate(this.ruleForm).then(data => {
               this.fullscreenLoading = false;
 
-              if (data && data.status === 0) {
+                if(!checkLog(data)){
+                  this.getCaptcha();
+                  this.$message.error(data.msg);
+                  return false;
+                }
                 this.dialogVisible= true;
-              }  else {
-                this.getCaptcha()
-                this.$message.error(data.msg)
-              }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -176,14 +165,12 @@
         done();
         this.$router.push({ path: '/home/release' });
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
+
       // 获取验证码
       getCaptcha () {
         this.ruleForm.uuid=Date.parse(new Date());
         this.captchaPath = getCaptcha1(this.ruleForm.uuid).then((res) => {
-          this.captchaPath=res.data.msg
+          this.captchaPath=res.data.data;
 
         });
       }

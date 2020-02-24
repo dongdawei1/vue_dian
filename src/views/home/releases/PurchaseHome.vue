@@ -78,6 +78,8 @@
 
       //判断是否登录
       islogin(){
+
+
         get_user_info().then((res) => {
           let status=res.status;
           if (status !== 0) {
