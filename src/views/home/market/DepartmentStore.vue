@@ -1,5 +1,5 @@
 <template>
-  <!--百货-->
+  <!--百货 等-->
   <div >
     <DepartmentStoreAll :tableDataEnter="12" class="vm-margin"></DepartmentStoreAll>
   </div>

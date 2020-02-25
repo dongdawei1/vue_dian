@@ -254,7 +254,6 @@
           </el-button>
 
 
-
           <el-button @click="operationRow(scope.row,11)" type="text" size="small"
                      v-if="scope.row.orderStatu3 "
                      v-loading.fullscreen.lock="fullscreenLoading">再次开启发布
@@ -309,12 +308,12 @@
       title="支付完成后窗口自动关闭"
       :visible.sync="centerDialogVisible"
       width="30%"
-      >
+    >
       <span>请使用微信“扫一扫”扫码支付，超时将关单；若已支付请耐心等待。</span>
 
-        <div class="dialogClass">
+      <div class="dialogClass">
         <canvas id="canvas" class="qrcode"></canvas>
-        </div>
+      </div>
 
 
     </el-dialog>
@@ -326,7 +325,6 @@
 
 <script>
   import {get_conduct_purchase_order} from '../../../api/api';
-  import {isRoleMessage} from '../../../api/api';
   import {operation_purchase_order} from '../../../api/api';
   import {native_pay_order} from '../../../api/api';
   import {get_pay_order_all} from '../../../api/api';
@@ -352,7 +350,7 @@
         fullscreenLoading: false,
         //order:'',
         myInterval: null, //订单状态轮询
-        myIntervalPay:null, //支付结果轮询
+        myIntervalPay: null, //支付结果轮询
         voSocket: false,
         voSocketPay: false,
         isLunxun: false,
@@ -367,9 +365,11 @@
     },
     methods: {
       checke_isButten() {
-        let uuid = Date.parse(new Date());
-        get_conduct_purchase_order(uuid).then(res => {
+        get_conduct_purchase_order(Date.parse(new Date())).then(res => {
           if (res.status === 0) {
+            if (res.data === null) {
+              return false;
+            }
             this.tableData = res.data.listPurchaseSeeOrderVo;
             if (res.data.voSocket === 0) {
               this.initList(0.2);
@@ -379,24 +379,24 @@
               this.beforeDestroy();
               get_pay_order_all().then(date => { //检查是否有待支付的订单
                 if (date.status === 0) {
-                  if(date.data==='YES'){
+                  if (date.data === 'YES') {
                     this.initList(1);
                     this.voSocketPay = true;
-                  }else{
+                  } else {
                     this.voSocketPay = false;
                     this.beforeDestroyPay();
                   }
                 } else {
-                    isRoleMessage(res);
-                  }
-                });
+                  this.$msgdeal(res.msg);
+
+                }
+              });
             }
           } else {
-            isRoleMessage(res);
+            this.$msgdeal(res.msg);
           }
         });
       },
-
 
 
       //获取微信支付二维码链接
@@ -405,34 +405,34 @@
         native_pay_order(id).then(res => {
           this.fullscreenLoading = false;
           if (res.status === 0) {
-            this.useqrcode(res.msg,id)
+            this.useqrcode(res.msg, id)
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
       //生成二维码
-      useqrcode(codeUrl,id) {
+      useqrcode(codeUrl, id) {
         this.centerDialogVisible = true;
         this.$nextTick(() => { //不加这个第一次打开弹窗时canvas=null
           var canvas = document.getElementById('canvas')
           QRCode.toCanvas(canvas, codeUrl, function (error) {
           });
-          this.initListPay(0.3,id)
+          this.initListPay(0.3, id)
         })
       },
-     //获取支付结果
-      getPayResult(id){
+      //获取支付结果
+      getPayResult(id) {
         get_pay_order_byOrderId(id).then(res => {
           if (res.status === 0) {
             let result = res.data;
-            if(result==='YES'){
+            if (result === 'YES') {
               this.$message.success("支付成功");
               this.voSocketPay = false;
               this.centerDialogVisible = false;
               this.beforeDestroyPay();
               this.checke_isButten();
-            }else if(result==='FAIL'){
+            } else if (result === 'FAIL') {
               this.$message.error("支付失败");
               this.voSocketPay = false;
               this.centerDialogVisible = false;
@@ -440,7 +440,7 @@
               this.checke_isButten();
             }
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -452,11 +452,11 @@
           num = 2;
         }
         this.beforeDestroy();
-          this.myInterval = window.setInterval(() => {
-            setTimeout(() => {
-              this.checke_isButten() //调用接口的方法
-            }, 1)
-          }, num * 1000 * 60);
+        this.myInterval = window.setInterval(() => {
+          setTimeout(() => {
+            this.checke_isButten() //调用接口的方法
+          }, 1)
+        }, num * 1000 * 60);
       },
 
       //订单状态轮询关闭
@@ -466,19 +466,17 @@
       },
 
 
-
-
       //订单支付状态轮询开始
-      initListPay(num,id) {
+      initListPay(num, id) {
         if (num === null || num === '' || num === undefined) {
           num = 0.3;
         }
         this.beforeDestroyPay();
-          this.myIntervalPay = window.setInterval(() => {
-            setTimeout(() => {
-             this.getPayResult(id) //支付结果
-            }, 1)
-          }, num * 1000 * 60);
+        this.myIntervalPay = window.setInterval(() => {
+          setTimeout(() => {
+            this.getPayResult(id) //支付结果
+          }, 1)
+        }, num * 1000 * 60);
       },
 
       //订单支付状态轮询关闭
@@ -499,7 +497,7 @@
           if (res.status === 0) {
             this.checke_isButten();
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -511,7 +509,7 @@
           if (res.status === 0) {
             this.checke_isButten();
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
 
@@ -577,18 +575,18 @@
       //倒计时相关结束
     },
     watch: {
-      "$route"(to,from){
-        if(from.path==='/home/release'){
+      "$route"(to, from) {
+        if (from.path === '/home/release') {
           this.beforeDestroy();
           this.beforeDestroyPay();
-          this.centerDialogVisible=false;
+          this.centerDialogVisible = false;
         }
-        if(to.path==='/home/release'){
+        if (to.path === '/home/release') {
           this.checke_isButten();
-          if(this.voSocket){
+          if (this.voSocket) {
             get_pay_order_all().then(date => { //检查是否有待支付的订单
               if (date.status === 0) {
-                if(date.data==='YES'){
+                if (date.data === 'YES') {
                   this.voSocketPay = true;
                 }
               }
@@ -644,10 +642,11 @@
   .qrcode {
     width: 20rem !important;
     height: 20rem !important;
-    margin:0 auto;
+    margin: 0 auto;
   }
-  .dialogClass{
-    text-align:center
+
+  .dialogClass {
+    text-align: center
   }
 
 </style>

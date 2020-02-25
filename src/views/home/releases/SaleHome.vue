@@ -108,9 +108,7 @@
 <script>
 
   import { get_user_info } from '../../../api/api';
-  import { get_user_info_sign } from '../../../api/api';
   import { getRealName } from '../../../api/api';
-  import {  isRoleMessage } from '../../../api/api';
   import {  addOrder } from '../../../api/api';
 
   export default {
@@ -158,7 +156,7 @@
     methods: {
 
       isAuthenticationM(path){
-        get_user_info_sign(path);
+        this.$router.push({path: path});
       },
 
       //判断是否登录
@@ -166,11 +164,10 @@
         get_user_info().then((res) => {
           let status=res.status;
           if (status !== 0) {
-            this.$router.push({ path: '/login/sign' });
+            this.$msgdeal(res.msg);
           }else{
-            this.user=JSON.parse(res.data);
+            this.user=res.data;
             this.role=this.user.role;
-
               let isAuthentication=this.user.isAuthentication;
               if(isAuthentication===2){
                 this.isButton=true;
@@ -227,7 +224,7 @@
                 this.isReceiptTrue=true;
               }
            }else {
-            isRoleMessage(res.msg);
+             this.$msgdeal(res.msg);
            }
          });
       },
@@ -249,7 +246,7 @@
             this.isReceiptTrue=true;
             this.dialogVisible=false;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       }

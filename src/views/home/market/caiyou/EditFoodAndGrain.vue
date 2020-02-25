@@ -119,7 +119,7 @@
         <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
       <el-form-item label="联系方式"  prop="contact">
-        <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="ruleForm.contact"  :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
 
       <el-form-item label="所在城市" >
@@ -149,12 +149,6 @@
 </template>
 <script>
 
-
-  import {  isRoleMessage } from '../../../../api/api';
-
-
-  import {  checke_isButten } from '../../../../api/api';
-
   import {   get_serviceType } from '../../../../api/api';
   import {   create_serviceType } from '../../../../api/api';
   import {  operation_userFoodAndGrain } from '../../../../api/api';
@@ -182,7 +176,6 @@
         timeout:  null,
         dialogFormVisible: false,//添加商品类型弹窗
         fileList:[],
-        StringPath:'/home/foodAndGrain',
         fullscreenLoading:false,
 
         //文件上传的参数
@@ -303,7 +296,7 @@
                 this.$message.success('编辑成功，审核约24小时内完成');
                 this.$router.push('/home/myRelease');
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {
@@ -316,14 +309,6 @@
 
       //检查登陆和权限
       checke_isButten(){
-        checke_isButten(this.StringPath).then((res) => {
-          if(res.status===0){
-            if (res.data.isCreate !== true) {
-              this.$router.push({path: '/home/release'});
-            }
-            if (res.data.isAuthentication !== 2) {
-              this.$router.push({path: '/home/myAccount'});
-            }else {
               get_userFoodAndGrain_id(this.id).then(res => {
                 if (res.status === 0) {
                   this.ruleForm=res.data;
@@ -340,14 +325,9 @@
                   this.ruleForm.serviceAndprice=serviceAndpricelist;
 
                 } else {
-                  isRoleMessage(res.msg);
+                  this.$msgdeal(res.msg);
                 }
               });
-
-            }}else{
-            isRoleMessage(res.msg);
-          }
-        });
       },
 
       //图片上传相关
@@ -438,7 +418,7 @@
               this.ruleForm.serviceType='';
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -454,7 +434,7 @@
                 this.ruleForm.serviceType=this.form.serviceTypeName;
                 this.dialogFormVisible=false;
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {

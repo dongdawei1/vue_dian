@@ -21,6 +21,12 @@ import {msgdealft} from './common/msgdeal.js';
 
 Vue.prototype.$msgdeal = msgdealft;
 
+
+import {getisAut} from './common/userinifjs.js';
+Vue.prototype.$isAuthentication = getisAut;
+import {getrole} from './common/userinifjs.js';
+Vue.prototype.$role = getrole;
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

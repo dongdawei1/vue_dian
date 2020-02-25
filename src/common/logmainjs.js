@@ -1,6 +1,6 @@
-function checkLog(data) {
-  if(data.status===0){
-    let user=data.data;
+function checkLog(res) {
+  if(res.status===0){
+    let user=res.data;
     window.localStorage.setItem('dian_isAuthentication',user.isAuthentication);
     window.localStorage.setItem('dian_role',user.role);
     return true;
@@ -19,7 +19,7 @@ function logOu(){
 // 修改
 // window.localStorage.setItem()
 // 读取
-// window.localStorage.getItem()
+// window.localStorage.getItem()   如果读取不到返回    null
 export { //很关键
   checkLog,
   logOu

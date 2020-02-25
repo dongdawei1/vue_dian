@@ -1,4 +1,5 @@
 <template>
+  <!--蔬菜区-->
   <div >
     <FoodAndGrainAll :tableDataEnter="4" class="vm-margin"></FoodAndGrainAll>
   </div>

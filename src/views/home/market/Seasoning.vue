@@ -1,4 +1,5 @@
 <template>
+  <!--副食调料-->
   <div >
     <FoodAndGrainAll :tableDataEnter="6" class="vm-margin"></FoodAndGrainAll>
   </div>

@@ -1,7 +1,7 @@
 <template>
 
   <div class="vm-image-list">
-    <!--我的发布 已发布过的装修等  c查询框开始-->
+    <!--除接单中的所有订单-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
       <el-form-item label="发布日期">
@@ -110,10 +110,7 @@
   </div>
 </template>
 <script>
-  import {isRoleMessage} from '../../../api/api';
   import {mySaleOrder} from '../../../api/api';
-
-
   export default {
     data() {
       return {
@@ -155,7 +152,8 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
+
           }
         });
       },

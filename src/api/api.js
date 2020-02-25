@@ -5,6 +5,7 @@ let base = '';
 let pcApi='/api/v1/vp/';
 let v1Api='/api/v3/'; //图片上传相关
 let commonApi='/api/v2/';
+
 //登陆
 
 
@@ -34,7 +35,7 @@ export const uploadDown_update = params   => { return axios.post( `${base}${v1Ap
 export const get_user_info = params => {
   return axios({
     url: `${base}${commonApi}log/get_user_info`,
-    // params: { uuid: params },
+    params: { uuid: new Date().getTime() },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
@@ -62,19 +63,6 @@ export const checke_isButten=  params => {
 
 }).then(res => res.data); };
 
-
-
-//获取菜单
-export const getPermission = params => {
-
-    return axios({
-        url: `${base}${pcApi}permission/loadData`,
-       // params: { uuid: params },
-        method: 'get',    //application/x-www-form-urlencoded    ,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
-        // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
-
-    }).then(res => res.data); };
 
 //注册
 export const requestCreate = params => { return axios.post(`${base}${commonApi}log/create`, params).then(res => res.data); };

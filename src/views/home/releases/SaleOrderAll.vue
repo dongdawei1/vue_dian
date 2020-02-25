@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :inline="true" :model="params" class="demo-form-inline">
-      <el-form-item label="送货城区" placeholder="请选职位城区">
+      <el-form-item label="送货城区" placeholder="请选城区">
         <el-cascader
           size="large"
           :options="options"

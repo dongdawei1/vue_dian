@@ -288,7 +288,7 @@
           if (status !== 0) {
             this.$router.push({ path: '/login/sign' });
           }else{
-            this.user=JSON.parse(res.data);
+            this.user=res.data;
             let role=this.user.role;
             this.role=role;
            if(role===1){
@@ -347,8 +347,6 @@
              this.isWholesaleCommodityOrder=true;
              this.activeName='myWholesaleCommodity';
            }
-
-
           }
         });
       },

@@ -195,7 +195,7 @@
 
         <el-form-item label="收货地址" :label-width="formLabelWidth">
           <el-input v-model="form.addressDetailed" :disabled="true" autocomplete="off"
-                    :placeholder="form.contact"></el-input>
+                    :placeholder="form.addressDetailed"></el-input>
         </el-form-item>
         <el-form-item label="联系人" :label-width="formLabelWidth">
           <el-input v-model="form.consigneeName" :disabled="true" autocomplete="off"
@@ -257,10 +257,8 @@
 
 
 <script>
-  import {isRoleMessage} from '../../../../api/api';
   import {create_purchase_order} from '../../../../api/api';
   import {create_order_evaluation} from '../../../../api/api';
-  import {checke_isButten} from '../../../../api/api';
   import {getRealName} from '../../../../api/api';
   import {getPurchaseCreateOrderVo} from '../../../../api/api';
 
@@ -273,15 +271,14 @@
             var nowDate = new Date();
             let yesterDayDate = new Date(nowDate.getTime() - (24 * 60 * 60 * 1000)); // 获取昨天的日期对象
             yesterDayDate.setHours(23, 59, 59, 0);
-            let datenow=yesterDayDate.getTime();
-            return time.getTime() <= datenow || time.getTime() > datenow +(3 * 24 * 3600 * 1000);
+            let datenow = yesterDayDate.getTime();
+            return time.getTime() <= datenow || time.getTime() > datenow + (3 * 24 * 3600 * 1000);
           }
         },
         maxHeight: '280',
         isCommonMenuButton: false, //是否有常用菜单
         centerDialogVisible: false,//发布成功弹窗
         search: '',
-        StringPath: '/home/purchaseCreateOrder',
         dialogFormVisible: false,//确认弹窗
         formLabelWidth: '120px',
         myCommonMenuTableData: [],
@@ -400,34 +397,32 @@
       },
 
       checke_isButten() {
-
-        checke_isButten(this.StringPath).then((data) => {
-          if (data.status === 0) {
-            if (data.data.isCreate !== true) {
-              this.$router.push({path: '/home/release'});
-            }
-            if (data.data.isAuthentication !== 2) {
-              this.$router.push({path: '/home/myAccount'});
-            }
-            getPurchaseCreateOrderVo().then(res => {
-              if (res.status === 0) {
-                if (res.data.isCommonMenu === 1) {
-                  this.isCommonMenuButton = true;
-                  this.myCommonMenuTableData = res.data.myCommonMenu;
-                } else {
-                  this.maxHeight = 470;
-                }
-                this.form.isCommonMenu = res.data.isCommonMenu;
-                this.allCommonMenuTableData = res.data.allCommonMenu;
-
-              } else {
-                isRoleMessage(res.msg);
-              }
-            });
-          } else {
-            isRoleMessage(data.msg);
+        let role = window.localStorage.getItem('dian_role');
+        if (role === null || role === '') {
+          this.$router.push({path: '/home/release'});
+        }
+        if (role === '1' || role === '2') {
+          let isAuthentication = window.localStorage.getItem('dian_isAuthentication');
+          if (isAuthentication !== '2') {
+            this.$router.push({path: '/home/myAccount'});
           }
-        });
+          getPurchaseCreateOrderVo().then(res => {
+            if (res.status === 0) {
+              if (res.data.isCommonMenu === 1) {
+                this.isCommonMenuButton = true;
+                this.myCommonMenuTableData = res.data.myCommonMenu;
+              } else {
+                this.maxHeight = 470;
+              }
+              this.form.isCommonMenu = res.data.isCommonMenu;
+              this.allCommonMenuTableData = res.data.allCommonMenu;
+
+            } else {
+              this.$msgdeal(res.msg);
+            }
+          });
+        }
+        this.$router.push({path: '/home/release'});
       },
 
       getRealName() {
@@ -436,9 +431,8 @@
             this.form.addressDetailed = res.data.addressDetailed;
             this.form.contact = res.data.contact;
             this.form.consigneeName = res.data.consigneeName;
-
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -455,9 +449,9 @@
         create_order_evaluation(fromData).then(res => {
           this.fullscreenLoading = false;
           if (res.status === 0) {
-            this.form.commodityJiage = res.msg;
+            this.form.commodityJiage = res.data;
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
         this.dialogFormVisible = true;
@@ -477,7 +471,7 @@
                 this.centerDialogVisible = true;
                 this.checke_isButten();
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {
