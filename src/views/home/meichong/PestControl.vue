@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import MapAll from '../../components/pages/MapAll';
+  import MapAll from '../../../components/pages/MapAll';
   export default {
     components: {
       MapAll

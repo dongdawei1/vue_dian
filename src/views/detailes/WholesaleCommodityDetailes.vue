@@ -63,7 +63,6 @@
 </template>
 <script>
 
-  import {  isRoleMessage } from '../../api/api';
   import Evaluate from '../../components/pages/Evaluate';
   import { getWholesaleCommodityPublicId } from '../../api/api';
   import ReservationService from "../../components/pages/ReservationService";
@@ -205,7 +204,8 @@
             this.fileList=list;
             this.tableData=res.data.evaluate;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
+            return false;
           }
 
 

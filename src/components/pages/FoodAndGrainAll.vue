@@ -1,6 +1,6 @@
 <template>
   <div class="mrpbody">
-    <!-- 筛选区 -->
+    <!-- 零售市场筛选区 -->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
       <el-form-item label="所在城区">
@@ -31,7 +31,7 @@
         <!--@select="handleSelect"-->
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getmrpList">查询</el-button>
+        <el-button type="primary" @click="get_button">查询</el-button>
       </el-form-item>
       <el-form-item v-if="isCreate">
         <el-button type="primary">
@@ -110,16 +110,10 @@
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction() {
+        if(!this.$fsAuthent()){
+          return false;
+        };
         let role = window.localStorage.getItem('dian_role');
-        if (role === null || role === '') {
-          this.$router.push({path: '/home/release'});
-        }
-        if (window.localStorage.getItem('dian_isAuthentication') !== '2') {
-          this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
-            dangerouslyUseHTMLString: true
-          });
-          this.$router.push({path: '/home/myAccount'});
-        }
         if (role === '1' || role === '4') {
           this.isCreate = true; //是否展示发布键
         }
@@ -137,6 +131,9 @@
             this.releaseWelfare.selectedOptions[2] = this.realName.districtCountyId;
             this.releaseWelfare.releaseType = this.tableDataEnter;
             this.getmrpList();     //获取列表
+          } else {
+            this.$msgdeal(res.msg);
+            return false;
           }
         });
       },
@@ -145,13 +142,21 @@
         this.releaseWelfare.currentPage = currentPage;
         this.getmrpList()
       },
+      get_button() {
+        this.releaseWelfare.currentPage = 1;
+        this.getmrpList();
+      },
       getmrpList() {
+        if(!this.$fsAuthent()){
+          return false;
+        };
         getFoodAndGrainPublicList(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
             this.total = res.data.totalno; //总条数
             this.tableData.tableDatas = res.data.datas;
           } else {
             this.$msgdeal(res.msg);
+            return false;
           }
         });
       },
@@ -173,6 +178,7 @@
 
           } else {
             this.$msgdeal(res.msg);
+            return false;
           }
         });
       },

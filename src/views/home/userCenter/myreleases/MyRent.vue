@@ -1,6 +1,6 @@
 <template>
   <div class="vm-image-list">
-    <!--我的发布 已发布过的装修等  c查询框开始-->
+    <!--我的发布店面-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
       <el-form-item label="发布状态"  >
@@ -163,7 +163,6 @@
   import {  operation_userment } from '../../../../api/api';
   import { get_user_info } from '../../../../api/api';
   import { get_myRent_list} from '../../../../api/api';
-  import { isRoleMessage } from '../../../../api/api';
   import {   getRealName } from '../../../../api/api';
 
 
@@ -233,14 +232,14 @@
         }else{
           data.releaseType=14;
         }
-        if(type===1 || type===2|| type===3|| type===4 || type===5){
+        if(type===1 || type===2|| type===3|| type===4 || type===5 ){
           operation_userment(data).then(data => {
             this.fullscreenLoading=false;
             let msg=data.msg;
             if (data && data.status === 0) {
               this.$message.success(msg);
             }  else {
-              isRoleMessage(msg);
+              this.$msgdeal(msg);
             }
           });
         }else{
@@ -278,7 +277,7 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -288,7 +287,7 @@
           if(res.status ===0 ) {
             this.realName=res.data;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -297,7 +296,7 @@
       get_user_info(){
         get_user_info().then((res) => {
           if(res.status===0){
-            this.resdata=JSON.parse(res.data)
+            this.resdata=res.data;
             if(this.resdata.isAuthentication===2){
               this.get_position_list();
             }else{
@@ -305,8 +304,9 @@
                 dangerouslyUseHTMLString: true
               });
               this.$router.push({ path: '/home/myAccount' });
+              return false;
             }}else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

@@ -157,14 +157,10 @@
 
 
 <script>
-
-  import { get_user_info_sign } from '../../../api/api';
   import { getRealName } from '../../../api/api';
   import { get_position } from '../../../api/api';
   import { getPositionAll } from '../../../api/api';
   import { getContact} from '../../../api/api';
-  import {  checke_isButten } from '../../../api/api';
-  import {  isRoleMessage } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
   export default {
 
@@ -172,14 +168,12 @@
 
     data() {
       return {
-        resdata:'',
         role:'',
         isCreate:false,
         tableData: [],
         total: 0,
         dialogVisible: false,//联系方式弹窗
         contact :'', //联系方式
-        pathString:'/home/releaseWelfare',
         restaurants: [],// 职位类型下拉,
         options: regionData,//城市
         realName:'',//实名信息
@@ -193,13 +187,12 @@
           currentPage: 1,
           pageSize: 20,//每页显示的数量
           //分页结束
-          StringPath: '/home/recruitWorkers',
         },
       }
     },
 
     created () {
-      this.jurisdiction()
+      this.getRealName();
     },
     methods: { //关闭联系方式弹窗
       handleClose(done) {
@@ -219,38 +212,25 @@
             this.contact=res.data;
             this.dialogVisible=true;//联系方式弹窗
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
       //判断是否实名和登陆状态
       isAuthenticationM(){
-          get_user_info_sign(this.pathString);
-      },
-      //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
-      jurisdiction(){
-        checke_isButten(this.releaseWelfare.StringPath).then((res) => {
-         if(res.status===0){
-          if(res.data.isAuthentication !==2 ){
-            this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
-              dangerouslyUseHTMLString: true
-            });
-            this.$router.push({ path: '/home/myAccount' });
-          }else{
-            this.isCreate=res.data.isCreate; //是否展示发布键
-            this.resdata=res.data.data; //用户信息
-            this.getRealName();          //获取实名信息,初始化城市
-            this.loadAll();
-
-          }}else{isRoleMessage(res.msg);}
-
-
-        });
+        this.$router.push({path: '/home/releaseWelfare'});
       },
 
 
       //获取用户实名信息判断展示哪个城市的信息
       getRealName(){
+        if (!this.$fsAuthent()) {
+          return false;
+        };
+        let role = window.localStorage.getItem('dian_role');
+        if (role === '1' || role === '5'|| role === '2') {
+          this.isCreate=true;
+        }
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
@@ -258,6 +238,9 @@
             this.releaseWelfare.cityId=this.realName.cityId;
             this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
             this.getPositionAll(); //分页查询
+            this.loadAll();
+          }else{
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -273,7 +256,7 @@
             }
             this.restaurants=releaseTitleList;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -308,6 +291,9 @@
         this.getPositionAll();
       },
       getPositionAll(){
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         getPositionAll(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
@@ -323,7 +309,7 @@
               }
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       }

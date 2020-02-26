@@ -1,4 +1,5 @@
 <template>
+  <!--店面/窗口出租-->
   <div>
   <StorefrontPublic  :tableDataEnter="StringPath"></StorefrontPublic>
   </div>

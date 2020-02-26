@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import RentList from '../home/dianmian/RentList';
+  import RentList from './RentList';
   export default {
     components: {
       RentList

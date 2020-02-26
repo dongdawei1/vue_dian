@@ -365,37 +365,49 @@
     },
     methods: {
       checke_isButten() {
-        get_conduct_purchase_order(Date.parse(new Date())).then(res => {
-          if (res.status === 0) {
-            if (res.data === null) {
-              return false;
-            }
-            this.tableData = res.data.listPurchaseSeeOrderVo;
-            if (res.data.voSocket === 0) {
-              this.initList(0.2);
-              this.voSocket = true;
-            } else {
-              this.voSocket = false;
-              this.beforeDestroy();
-              get_pay_order_all().then(date => { //检查是否有待支付的订单
-                if (date.status === 0) {
-                  if (date.data === 'YES') {
-                    this.initList(1);
-                    this.voSocketPay = true;
-                  } else {
-                    this.voSocketPay = false;
-                    this.beforeDestroyPay();
-                  }
-                } else {
-                  this.$msgdeal(res.msg);
-
-                }
-              });
-            }
-          } else {
-            this.$msgdeal(res.msg);
+        if (!this.$fsAuthent()) {
+          return false;
+        };
+        let role = window.localStorage.getItem('dian_role');
+        if (role === '1' || role === '2') {
+          let isAuthentication = window.localStorage.getItem('dian_isAuthentication');
+          if (isAuthentication===null ||  isAuthentication !== '2') {
+            this.$router.push({path: '/home/myAccount'});
+            return false;
           }
-        });
+
+          get_conduct_purchase_order(Date.parse(new Date())).then(res => {
+            if (res.status === 0) {
+              if (res.data === null) {
+                return false;
+              }
+              this.tableData = res.data.listPurchaseSeeOrderVo;
+              if (res.data.voSocket === 0) {
+                this.initList(0.2);
+                this.voSocket = true;
+              } else {
+                this.voSocket = false;
+                this.beforeDestroy();
+                get_pay_order_all().then(date => { //检查是否有待支付的订单
+                  if (date.status === 0) {
+                    if (date.data === 'YES') {
+                      this.initList(1);
+                      this.voSocketPay = true;
+                    } else {
+                      this.voSocketPay = false;
+                      this.beforeDestroyPay();
+                    }
+                  } else {
+                    this.$msgdeal(res.msg);
+
+                  }
+                });
+              }
+            } else {
+              this.$msgdeal(res.msg);
+            }
+          });
+        }
       },
 
 

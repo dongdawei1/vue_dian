@@ -344,13 +344,15 @@
         this.centerDialogVisible = false;
       },
       getRealName() {
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         let role = window.localStorage.getItem('dian_role');
-        if (role !== '1' && role !== '12') {
+        if (  role !== '1' && role !== '12') {
           this.$router.push({path: '/home/release'});
+          return false;
         }
-        if (window.localStorage.getItem('dian_isAuthentication') !== '2') {
-          this.$router.push({path: '/home/myAccount'});
-        }
+
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
             this.realName = res.data;
@@ -445,7 +447,9 @@
       },
       get_serviceType() {
 
-
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         let param = {
           serviceType: this.ruleForm.serviceType,
           releaseType: this.ruleForm.releaseType,
@@ -471,6 +475,9 @@
         });
       },
       create_serviceType() {
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         this.fullscreenLoading = true;
         if (this.ruleForm.releaseType === '') {
           this.$message.error("请先选择:发布类型")

@@ -240,7 +240,6 @@
         addOrder(param).then((res) => { //获取实名信息填充
           this.fullscreenLoading=false;
           if(res.status ===0 ) {
-            console.log(res.data)
             this.$message.success('提交成功');
             this.isReceipt=false;
             this.isReceiptTrue=true;

@@ -397,32 +397,33 @@
       },
 
       checke_isButten() {
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         let role = window.localStorage.getItem('dian_role');
-        if (role === null || role === '') {
-          this.$router.push({path: '/home/release'});
-        }
         if (role === '1' || role === '2') {
           let isAuthentication = window.localStorage.getItem('dian_isAuthentication');
-          if (isAuthentication !== '2') {
+          if (isAuthentication===null ||  isAuthentication !== '2') {
             this.$router.push({path: '/home/myAccount'});
+            return false;
           }
-          getPurchaseCreateOrderVo().then(res => {
-            if (res.status === 0) {
-              if (res.data.isCommonMenu === 1) {
-                this.isCommonMenuButton = true;
-                this.myCommonMenuTableData = res.data.myCommonMenu;
-              } else {
-                this.maxHeight = 470;
-              }
-              this.form.isCommonMenu = res.data.isCommonMenu;
-              this.allCommonMenuTableData = res.data.allCommonMenu;
+            getPurchaseCreateOrderVo().then(res => {
+              if (res.status === 0) {
+                if (res.data.isCommonMenu === 1) {
+                  this.isCommonMenuButton = true;
+                  this.myCommonMenuTableData = res.data.myCommonMenu;
+                } else {
+                  this.maxHeight = 470;
+                }
+                this.form.isCommonMenu = res.data.isCommonMenu;
+                this.allCommonMenuTableData = res.data.allCommonMenu;
 
-            } else {
-              this.$msgdeal(res.msg);
-            }
-          });
-        }
-        this.$router.push({path: '/home/release'});
+              } else {
+                this.$msgdeal(res.msg);
+              }
+            });
+          }
+          this.$router.push({path: '/home/release'});
       },
 
       getRealName() {
@@ -438,6 +439,9 @@
       },
       //提交
       submitForm() {
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         if (this.fromData.length === 0) {
           this.$message.error("采购列表不能为空")
           return false;

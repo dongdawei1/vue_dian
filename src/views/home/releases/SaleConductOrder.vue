@@ -145,6 +145,9 @@
         this.get_myPurchase_Order();
       },
       get_myPurchase_Order() {
+        if ( window.localStorage.getItem('dian_isAuthentication')===null || window.localStorage.getItem('dian_isAuthentication') !== '2' ) {
+          return false;
+        }
         this.fullscreenLoading=true;
         mySaleOrder(this.releaseWelfare).then((res) => {
           this.fullscreenLoading=false;

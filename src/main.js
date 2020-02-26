@@ -21,6 +21,9 @@ import {msgdealft} from './common/msgdeal.js';
 
 Vue.prototype.$msgdeal = msgdealft;
 
+import {isAuthentication} from './common/userinifjs.js';
+
+Vue.prototype.$fsAuthent = isAuthentication;
 
 import {getisAut} from './common/userinifjs.js';
 Vue.prototype.$isAuthentication = getisAut;

@@ -21,7 +21,7 @@
         <!--@select="handleSelect"-->
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getmrpList">查询</el-button>
+        <el-button type="primary" @click="get_button">查询</el-button>
       </el-form-item>
       <el-form-item  v-if="isCreate">
         <el-button type="primary"><router-link
@@ -47,10 +47,7 @@
 
 <script>
   import { getRealName } from '../../api/api';
-  import {  checke_isButten } from '../../api/api';
-  import {  isRoleMessage } from '../../api/api';
   import {  getReleaseTitleList } from '../../api/api';
-  import { get_user_info_sign } from '../../api/api';
   import { regionData } from 'element-china-area-data'
   import { getmrpList } from '../../api/api';
   import VmRpList from '../../components/vm-mrp-list';
@@ -65,9 +62,6 @@
         timeout:  null,
 
         isCreate:false,
-        pathString:'/home/createMAndRAndP',
-        StringPath:'menuAndRenovationAndPestControl',
-        resdata:'',
         options: regionData,//城市
         tableData: {
           tableDatas:[],
@@ -92,34 +86,24 @@
 
     created () {
       this.tableData.releaseType =this.tableDataEnter;
-      this.jurisdiction()
+      this.getRealName()
     },
     methods: {
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        get_user_info_sign(this.pathString);
-      },
-      //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
-      jurisdiction(){
-        checke_isButten(this.StringPath).then((res) => {
-          if(res.status===0){
-            if(res.data.isAuthentication !==2 ){
-              this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
-                dangerouslyUseHTMLString: true
-              });
-              this.$router.push({ path: '/home/myAccount' });
-            }else{
-
-              this.isCreate=res.data.isCreate; //是否展示发布键
-              this.resdata=res.data.data; //用户信息
-              this.getRealName();          //获取实名信息,初始化城市
-            }}else{isRoleMessage(res.msg);}
-        });
+        this.$router.push({path:'/home/createMAndRAndP'});
       },
 
 
       //获取用户实名信息判断展示哪个城市的信息
       getRealName(){
+        if(!this.$fsAuthent()){
+          return false;
+        };
+        let role = window.localStorage.getItem('dian_role');
+        if (role === '1' || role === '7') {
+          this.isCreate = true; //是否展示发布键
+        }
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
@@ -128,6 +112,8 @@
             this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
             this.releaseWelfare.releaseType=this.tableDataEnter;
             this.getmrpList();     //获取列表
+          }else{
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -136,13 +122,20 @@
         this.releaseWelfare.currentPage=currentPage;
         this.getmrpList()
       },
+      get_button() {
+        this.releaseWelfare.currentPage = 1;
+        this.getmrpList();
+      },
       getmrpList(){
+        if(!this.$fsAuthent()){
+          return false;
+        };
         getmrpList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData.tableDatas = res.data.datas;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -157,7 +150,7 @@
             }
             this.restaurants=releaseTitleList;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

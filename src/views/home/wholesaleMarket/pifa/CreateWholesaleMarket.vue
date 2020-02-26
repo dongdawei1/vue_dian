@@ -25,7 +25,7 @@
       </el-form-item>
 
       <div>
-        <div v-if="commodityUrl!= null && commodityUrl!=''">
+        <div v-if="commodityUrl!== null && commodityUrl!==''">
           &nbsp;&nbsp; &nbsp; 参照图片 <img :src="commodityUrl"  >
         </div>
       </div>
@@ -208,14 +208,8 @@
   </div>
 </template>
 <script>
-
-
-  import {  isRoleMessage } from '../../../../api/api';
   import { getRealName } from '../../../../api/api';
-
   import { uploadDown_update } from '../../../../api/api';
-  import {  checke_isButten } from '../../../../api/api';
-
   import {   get_serviceTypeUrl } from '../../../../api/api';
   import {   create_wholesaleCommodity } from '../../../../api/api';
   import { regionData } from 'element-china-area-data';
@@ -355,7 +349,7 @@
     },
 
     created () {
-      this.checke_isButten();
+      this.getRealName();
     },
     methods: {
       goRelease(){
@@ -364,17 +358,17 @@
       },
       //提交
       submitForm(ruleForm) {
-
+        if (!this.$fsAuthent()) {
+          return false;
+        };
        this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-
             if(this.ruleForm.pictureUrl.length<1){
               this.$message.error("图片不能为空");
               this.fullscreenLoading=false;
               return false;
             }
-
             create_wholesaleCommodity(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
@@ -383,7 +377,7 @@
                 this.ruleForm.pictureUrl=[];
                 this.centerDialogVisible=true;
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {
@@ -397,29 +391,20 @@
         this.centerDialogVisible=false;
       },
       getRealName(){
+        if (!this.$fsAuthent()) {
+          return false;
+        };
+        let role = window.localStorage.getItem('dian_role');
+        if (  role !== '1' && role !== '13') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
+            this.ruleForm.userId=this.realName.userId;
           }else {
-            isRoleMessage(res.msg);
-          }
-        });
-      },
-
-      checke_isButten(){
-        checke_isButten(this.StringPath).then((res) => {
-          if(res.status===0){
-            if (res.data.isCreate === true) {
-              if (res.data.isAuthentication !== 2) {
-                this.$router.push({path: '/home/myAccount'});
-              }else {
-                this.resdata =res.data.data;
-                this.ruleForm.userId=this.resdata.id;
-                this.getRealName();
-              }} else {
-              this.$router.push({path: '/home/release'});
-            }}else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -524,7 +509,7 @@
               this.$message.error("没有找到您输入的:商品名称,可联系客服添加");
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

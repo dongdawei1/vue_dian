@@ -1,6 +1,6 @@
 <template>
   <div class="mrpbody">
-    <!-- 筛选区 -->
+    <!-- 百货 公共 -->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
       <el-form-item label="所在城区">
         <el-cascader
@@ -43,7 +43,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="getmrpList">查询</el-button>
+        <el-button type="primary" @click="get_button">查询</el-button>
       </el-form-item>
       <el-form-item v-if="isCreate">
         <el-button type="primary">
@@ -122,21 +122,13 @@
 
       //获取用户实名信息判断展示哪个城市的信息
       getRealName() {
-
+        if(!this.$fsAuthent()){
+          return false;
+        };
         let role = window.localStorage.getItem('dian_role');
-        if (role === null || role === '') {
-          this.$router.push({path: '/home/release'});
-        }
-        if (window.localStorage.getItem('dian_isAuthentication') !== '2') {
-          this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
-            dangerouslyUseHTMLString: true
-          });
-          this.$router.push({path: '/home/myAccount'});
-        }
         if (role === '1' || role === '12') {
           this.isCreate = true; //是否展示发布键
         }
-
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
             this.realName = res.data;
@@ -144,6 +136,9 @@
             this.releaseWelfare.selectedOptions[1] = this.realName.cityId;
             this.releaseWelfare.selectedOptions[2] = this.realName.districtCountyId;
             this.getmrpList();     //获取列表
+          }else{
+            this.$msgdeal(res.msg);
+            return false;
           }
         });
       },
@@ -152,7 +147,14 @@
         this.releaseWelfare.currentPage = currentPage;
         this.getmrpList();
       },
+      get_button() {
+        this.releaseWelfare.currentPage = 1;
+        this.getmrpList();
+      },
       getmrpList() {
+        if(!this.$fsAuthent()){
+          return false;
+        };
         getDepartmentStorePublicList(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
             this.total = res.data.totalno; //总条数
@@ -180,6 +182,7 @@
 
           } else {
             this.$msgdeal(res.msg);
+            return false;
           }
         });
       },

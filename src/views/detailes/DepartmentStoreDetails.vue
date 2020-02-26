@@ -61,7 +61,6 @@
 </template>
 <script>
 
-  import {  isRoleMessage } from '../../api/api';
   import { getDepartmentStoreDetails } from '../../api/api';
   import { getRealNameById } from '../../api/api';
 
@@ -119,7 +118,7 @@
             this.tableData=res.data.evaluate;
             this. getRealName();
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         }); },
 
@@ -128,7 +127,7 @@
           if(res.status===0){
             this.realName=res.data;
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       }

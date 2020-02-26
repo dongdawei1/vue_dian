@@ -4,9 +4,10 @@
       <p>请认真填写信息</p>
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
-          <el-radio-group v-model="ruleForm.releaseType"  disabled>
-            <el-radio :label="14" >店面/窗口出租</el-radio>
-            <el-radio :label="15" >摊位出租转让</el-radio>
+          <el-radio-group v-model="ruleForm.releaseType">
+            <el-radio :label="13">菜谱/广告</el-radio>
+            <el-radio :label="17">装修</el-radio>
+            <el-radio :label="19">灭虫</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -14,13 +15,14 @@
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
-      <el-form-item label="面积" prop="fouseSize">
-        <el-input  v-model.number="ruleForm.fouseSize" placeholder="只能是1-10000之间的整数"></el-input>
+      <el-form-item label="起步价格" prop="startPrice">
+        <el-input v-model="ruleForm.startPrice" placeholder="起步价格(元)"></el-input>
       </el-form-item>
-      <el-form-item label="具体描述" prop="serviceIntroduction">
+
+      <el-form-item label="服务描述" prop="serviceIntroduction">
         <el-input
           type="textarea"
-          placeholder="如：可以经营的范围，或者租金支付方式"
+          placeholder="如：服务范围，或者服务时间"
           v-model="ruleForm.serviceIntroduction"
           maxlength="500"
           show-word-limit
@@ -32,11 +34,14 @@
         <el-input v-model="ruleForm.remarks" placeholder="备注30字以内"></el-input>
       </el-form-item>
 
-      <el-form-item label="详细地址"  prop="serviceDetailed">
-        <el-input v-model="ruleForm.serviceDetailed" placeholder="100字以内"></el-input>
+      <el-form-item label="服务地域"  prop="serviceDetailed">
+        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务区域">
+          <el-option label="全市" value="全市"></el-option>
+          <el-option label="来电确认" value="来电确认"></el-option>
+        </el-select>
       </el-form-item>
 
-      <el-form-item label="图片" prop="pictureUrl">
+      <el-form-item label="服务图片" prop="pictureUrl">
         <el-upload
           ref="upload"
           :action="uploadDownUrl"
@@ -56,7 +61,6 @@
           <img width="100%"   :src="dialogImageUrl" alt="">
         </el-dialog>
       </el-form-item>
-
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
@@ -64,7 +68,11 @@
         <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
 
-      <el-form-item label="所在城市" >
+      <p>实名信息</p>
+      <el-form-item label="公司名称"  >
+        <el-input v-model="ruleForm.companyName" :disabled="true" autocomplete="off" :placeholder="ruleForm.companyName"></el-input>
+      </el-form-item>
+      <el-form-item label="实名城市" >
         <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off" :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
 
@@ -72,43 +80,36 @@
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布</el-button>
       </el-form-item>
     </el-form>
-
+    <!-- 成功弹窗  -->
+    <el-dialog
+      title="发布成功"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+      :before-close="cntinue"
+    >
+      <span>请关注审核状态，约24小时内完成审核</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary"><router-link
+      v-on:click.native="goRelease"
+      to="" class="a" >查看我的发布</router-link></el-button>
+     </span>
+    </el-dialog>
+    <!-- 成功弹窗结束  -->
   </div>
 </template>
 <script>
-
-
-  import {  isRoleMessage } from '../../../api/api';
-  import {  operation_userment } from '../../../api/api';
-
-
-  import {  get_userrent_id } from '../../../api/api';
-  import { echo_display } from '../../../api/api';
+  import { getRealName } from '../../../../api/api';
+  import { create_menuAndRenovationAndPestControl } from '../../../../api/api';
+  import { uploadDown_update } from '../../../../api/api';
   export default {
-
     data() {
-      var checkAge = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('面积不能为空'));
-        }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字值'));
-          } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
-            } else {
-              callback();
-            }
-          }
-        }, 100);
-      };
       return {
-        id:this.$route.params.id,
         fileList:[],
+        centerDialogVisible: false,//成功弹窗
         fullscreenLoading:false,
         resdata:'',//获取的用户信息
-
+        realName:'',//用户实名信息
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
@@ -116,40 +117,43 @@
           userId:'',
           releaseType:'',//发布类型
           releaseTitle:'',//标题
-          fouseSize:'',//面积
-          serviceIntroduction:'',//描述
+          serviceIntroduction:'',//服务描述
           remarks:'',//备注
-          serviceDetailed:'',//详细地址
-          pictureUrl:[],//图片
+          startPrice:'',//起步价格
+          serviceDetailed:'',//服务城区
+          pictureUrl:[],//服务图片
           //实名中获取
-          contact:'',  //实名联系联系方式 回显可修改
-          consigneeName:'', //联系人姓名 回显可修改
-          detailed:'',//所在城区
+          companyName:'',//公司名称
+          contact:'',  //实名联系联系方式 回显置灰 不可修改
+          consigneeName:'', //联系人姓名 回显置灰 不可修改
+          detailed:'',//实名城区
+          StringPath:'menuAndRenovationAndPestControl',
+
         },
 
         rules: {
           releaseType: [
             { required: true, message: '发布类型不能为空', trigger: 'change' },
           ],
-
+          companyName: [
+            { required: true, message: '公司名称不能为空', trigger: 'blur' },
+          ],
           serviceDetailed: [
-            { required: true, message: '详细地址不能为空', trigger: 'blur' },
-            {  max: 100, message: '详细地址不大于100字' }
+            { required: true, message: '请选服务城区', trigger: 'change' }
           ],
           releaseTitle:[
             {  required: true, message: '标题不能为空', trigger: 'blur'},
             { min: 6, max: 14, message: '标题在6-14字之内' }
           ],
           serviceIntroduction:[
-            {  required: true, message: '具体描述不能为空', trigger: 'blur' },
-            { min: 1, max: 500, message: '具体描述不能超过500个字' }
+            {  required: true, message: '服务描述不能为空', trigger: 'blur' },
+            { min: 1, max: 500, message: '服务描述不能超过500个字' }
           ],
           remarks:[
             {  max: 30, message: '备注小于30字' }
           ],
-          fouseSize:[
-            { required: true,validator: checkAge, trigger: 'blur'},
-            // { type: 'number', message: '年龄必须为数字值'}
+          startPrice:[
+            {  required: true, message: '起步价格不能为空', trigger: 'blur' }
           ],
           pictureUrl:[
             { required: true, message: '如果已上传请继续提交' },
@@ -166,35 +170,30 @@
     },
 
     created () {
-      this.checke_isButten();
+      this.getRealName();
     },
     methods: {
-
+      goRelease(){
+        this.centerDialogVisible=false;
+        this.$router.push({path: '/home/myRelease'});
+      },
       //提交
       submitForm(ruleForm) {
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            let length=0;
-            for(let i=0;i<this.ruleForm.pictureUrl.length;i++){
-              if(this.ruleForm.pictureUrl[i].useStatus===1 ||this.ruleForm.pictureUrl[i].useStatus===3){
-                length++;
-              }
-            }
-            if(length<=0){
-              this.$message.error("图片不能为空");
-              this.fullscreenLoading=false;
-              return false;
-            }
-            this.ruleForm.type=6;
-
-            operation_userment(this.ruleForm).then(res => {
+            create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
-                this.$message.success('编辑成功，审核约24小时内完成');
-                this.$router.push('/home/myRelease');
+                //成功弹窗
+                this.fileList=[];
+                this.ruleForm.pictureUrl=[];
+                this.centerDialogVisible=true;
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {
@@ -204,19 +203,28 @@
         });
       },
 
-
-
-
-      checke_isButten(){
-        get_userrent_id(this.id).then((res) => {
-          if(res.status===0){
-            this.ruleForm=res.data;
-            let fileListAndPictureUrl=  echo_display(this.ruleForm);
-            //图片回显和表格参数
-            this.ruleForm.pictureUrl=fileListAndPictureUrl.pictureUrl;
-            this.fileList=fileListAndPictureUrl.fileList;
-            }else{
-            isRoleMessage(res.msg);
+      cntinue(){  //留在本页继续发布
+        this.centerDialogVisible=false;
+      },
+      getRealName(){
+        if (!this.$fsAuthent()) {
+          return false;
+        };
+        let role = window.localStorage.getItem('dian_role');
+        if (  role !== '1' && role !== '7') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
+        getRealName().then((res) => { //获取实名信息填充
+          if(res.status ===0 ) {
+            this.realName=res.data;
+            this.ruleForm.userId=this.realName.userId;
+            this.ruleForm.contact= this.realName.contact;
+            this.ruleForm.consigneeName= this.realName.consigneeName;
+            this.ruleForm.companyName= this.realName.companyName;
+            this.ruleForm.detailed= this.realName.detailed;
+          }else {
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -231,17 +239,18 @@
           this.ruleForm.pictureUrl= this.ruleForm.pictureUrl.concat(picture);
         }
       },
-
       //删除文件之前的钩子函数
       handleRemove(file,fileList) {
+
+        let resdata=file.response.data;
         for(var i=0;i< this.ruleForm.pictureUrl.length;i++){
-          if(file.id===undefined){
-            if(file.response.data.id===this.ruleForm.pictureUrl[i].id){
-              this.ruleForm.pictureUrl[i].useStatus=2;
-              break;
-            }
-          }else if(file.id===this.ruleForm.pictureUrl[i].id){
-            this.ruleForm.pictureUrl[i].useStatus=2;
+          if(resdata.id===this.ruleForm.pictureUrl[i].id){
+            uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
+              if(res.status!==0 ){
+                this.$message.error(res.msg);
+              }
+              this.ruleForm.pictureUrl.splice(i,1)
+            });
             break;
           }
         }

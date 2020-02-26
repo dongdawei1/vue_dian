@@ -5,29 +5,32 @@
       <el-form-item label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType" :disabled="true">
-            <el-radio :label="7">酒水/饮料</el-radio>
-            <el-radio :label="8">消毒餐具</el-radio>
+            <el-radio :label="33">电器/设备出售</el-radio>
+            <el-radio :label="34">二手电器/设备出售</el-radio>
+            <el-radio :label="18">维修电器/设备</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
 
-      <el-form-item label="商品类型" prop="serviceType">
+      <el-form-item label="具体类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"
           :fetch-suggestions="querySearchAsync"
-          placeholder="请输入或点击选择销售商品类型"
+          placeholder="请输入或点击选择服务/销售类型"
           clearable></el-autocomplete>
         <!--@select="handleSelect"-->
         <el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>
       </el-form-item>
 
 
-      <!--动态添加开始-->
+      <div class="form-zhushi">
+        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
+      </div>
       <div v-for="(item, index) in ruleForm.serviceAndprice" :key="index">
         <el-row>
           <el-col :span="7">
-            <el-form-item label="商品详情" prop="project" class="el-form-itemUser">
-              <el-input v-model="item.project" placeholder="商品名及规格"></el-input>
+            <el-form-item label="项目/规格" prop="project" class="el-form-itemUser">
+              <el-input v-model="item.project" placeholder="服务项目或商品型号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="5">
@@ -36,7 +39,6 @@
               </el-input>
             </el-form-item>
           </el-col>
-
 
           <div v-if="index==0">
             <el-col :span="6" class="el-form-itemUser">
@@ -50,12 +52,8 @@
             </el-col>
           </div>
         </el-row>
+      </div>
 
-      </div>
-      <!--动态添加结束-->
-      <div class="form-zhushi">
-        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
-      </div>
 
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
@@ -109,7 +107,8 @@
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
       <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true"  :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off"
+                  :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
 
       <el-form-item label="所在城市">
@@ -125,9 +124,9 @@
 
 
     <!--添加商品/服务类型弹窗开始-->
-    <el-dialog title="添加商品类型" :visible.sync="dialogFormVisible">
+    <el-dialog title="添加商品/服务具体类型" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="商品名称" :label-width="formLabelWidth" prop="serviceTypeName">
+        <el-form-item label="商品/设备名" :label-width="formLabelWidth" prop="serviceTypeName">
           <el-input v-model="form.serviceTypeName" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -144,8 +143,8 @@
 <script>
   import {get_serviceType} from '../../../../api/api';
   import {create_serviceType} from '../../../../api/api';
-  import {operation_userWineAndTableware} from '../../../../api/api';
-  import {get_userWineAndTableware_id} from '../../../../api/api';
+  import {operation_userequipment} from '../../../../api/api';
+  import {get_userequipment_id} from '../../../../api/api';
   import {echo_display} from '../../../../api/api';
 
   export default {
@@ -170,6 +169,7 @@
         timeout: null,
         dialogFormVisible: false,//添加商品类型弹窗
         fileList: [],
+        StringPath: '/home/equipment',
         fullscreenLoading: false,
 
         //文件上传的参数
@@ -182,7 +182,6 @@
 
           serviceType: '',//商品/服务类型
           serviceAndprice: [],//项目及价格KEY，vaule
-
           project: '', //项目
           price: '',//价格
 
@@ -197,7 +196,7 @@
         },
         form: {
           serviceTypeName: '',
-          releaseType: '',
+          releaseType: 18,
         },
         formLabelWidth: '100px',
         rules: {
@@ -209,7 +208,7 @@
             {required: true, message: '请选服务/销售城区', trigger: 'change'}
           ],
           serviceType: [
-            {required: true, message: '请选销售类型', trigger: 'change'}
+            {required: true, message: '请选服务/销售类型', trigger: 'change'}
           ],
           releaseTitle: [
             {required: true, message: '标题不能为空', trigger: 'blur'},
@@ -236,7 +235,7 @@
             {min: 2, max: 12, message: '长度在2至11位之间', trigger: 'blur'}
           ],
           serviceTypeName: [
-            {required: true, message: '请输入商品类型'},
+            {required: true, message: '请输入商品/服务类型'},
             {min: 2, max: 15, message: '长度在2至15位之间', trigger: 'blur'}
           ],
           project: [
@@ -266,6 +265,7 @@
               for (let a = 0; a < length; a++) {
                 let serviceAndpriceNoa = this.ruleForm.serviceAndprice[a];
                 if (serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
+                  this.deleteItem(serviceAndpriceNoa, length - 1)
                   this.$message.error("新增加:项目/规格或者价格不能有空值")
                   return false;
                 }
@@ -285,11 +285,11 @@
             }
             this.ruleForm.type = 6;
 
-            operation_userWineAndTableware(this.ruleForm).then(res => {
+            operation_userequipment(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
               if (res.status === 0) {
                 this.$message.success('编辑成功，审核约24小时内完成');
-                this.$router.push({path: '/home/myRelease'});
+                this.$router.push('/home/myRelease');
               } else {
                 this.$msgdeal(res.msg);
               }
@@ -304,21 +304,23 @@
 
       //检查登陆和权限
       checke_isButten() {
-
         if (!this.$fsAuthent()) {
           return false;
         };
-        get_userWineAndTableware_id(this.id).then(res => {
+        get_userequipment_id(this.id).then(res => {
           if (res.status === 0) {
             this.ruleForm = res.data;
             let fileListAndPictureUrl = echo_display(this.ruleForm);
             //图片回显和表格参数
             this.ruleForm.pictureUrl = fileListAndPictureUrl.pictureUrl;
             this.fileList = fileListAndPictureUrl.fileList;
+
             let serviceAndpricelist = JSON.parse(this.ruleForm.serviceAndprice);
             this.ruleForm.project = serviceAndpricelist[0].project; //没有这两个输入框失去焦点会报错
             this.ruleForm.price = serviceAndpricelist[0].price;
+
             this.ruleForm.serviceAndprice = serviceAndpricelist;
+
           } else {
             this.$msgdeal(res.msg);
           }
@@ -402,7 +404,7 @@
       get_serviceType() {
         let param = {
           serviceType: this.ruleForm.serviceType,
-          releaseType: this.ruleForm.releaseType,
+          releaseType: 18
         };
         get_serviceType(param).then((res) => {
           if (res.status === 0) {
@@ -426,7 +428,6 @@
       },
       create_serviceType() {
         this.fullscreenLoading = true;
-        this.form.releaseType = this.ruleForm.releaseType;
         this.$refs['form'].validate((valid) => {
           if (valid) {
             create_serviceType(this.form).then(res => {

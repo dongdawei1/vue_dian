@@ -17,6 +17,25 @@ function getisAut() {
   }
 }
 
+function isAuthentication() {
+  let role = window.localStorage.getItem('dian_role');
+  if (role === null || role === '') {
+    this.$alert('<strong>获取用户信息失败！</strong>', '请重新登陆', {
+      dangerouslyUseHTMLString: true
+    });
+    this.$router.push({path: '/home/release'});
+    return false;
+  }
+  if (window.localStorage.getItem('dian_isAuthentication')===null || window.localStorage.getItem('dian_isAuthentication') !== '2') {
+    this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
+      dangerouslyUseHTMLString: true
+    });
+    this.$router.push({path: '/home/myAccount'});
+    return false;
+  }
+  return true;
+}
+
 function getupAut() {
   get_user_info().then((res) => {
     if (checkLog(res)) {
@@ -53,5 +72,6 @@ function getrole() {
 export { //很关键
   getisAut,
   getrole,
-  getupAut
+  getupAut,
+  isAuthentication
 }

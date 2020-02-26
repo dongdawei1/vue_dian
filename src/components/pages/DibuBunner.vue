@@ -98,7 +98,7 @@
                 }
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
 

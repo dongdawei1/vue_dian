@@ -404,7 +404,7 @@ export const get_userDepartmentStore_id= params => {
   }).then(res => res.data); };
 export const getDepartmentStoreTitleList= params => { return axios.post(`${base}${pcApi}departmentStore/getDepartmentStoreTitleList`, params).then(res => res.data); };
 export const getDepartmentStorePublicList= params => { return axios.post(`${base}${pcApi}departmentStore/getDepartmentStorePublicList`, params).then(res => res.data); };
-
+//市场名
 export const getwholesale= params => { return axios.post(`${base}${pcApi}wholesale/getwholesale`, params).then(res => res.data); };
 
 export const getDepartmentStoreDetails= params => {

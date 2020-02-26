@@ -309,13 +309,9 @@
 
       //检查登陆和权限
       checke_isButten() {
-        let role = window.localStorage.getItem('dian_role');
-        if (role !== '1' && role !== '12') {
-          this.$router.push({path: '/home/release'});
-        }
-        if (window.localStorage.getItem('dian_isAuthentication') !== '2') {
-          this.$router.push({path: '/home/myAccount'});
-        }
+        if (!this.$fsAuthent()) {
+          return false;
+        };
         get_userDepartmentStore_id(this.id).then(res => {
           if (res.status === 0) {
             this.ruleForm = res.data;

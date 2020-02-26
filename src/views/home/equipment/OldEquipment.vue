@@ -1,4 +1,5 @@
 <template>
+  <!--二手设备-->
   <div >
     <EquipmentAll :tableDataEnter="34" class="vm-margin"></EquipmentAll>
   </div>
