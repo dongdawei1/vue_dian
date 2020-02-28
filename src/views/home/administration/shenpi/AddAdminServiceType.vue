@@ -1,96 +1,105 @@
 <template>
   <div>
-  <el-form :model="form" :rules="rules" ref="form"  class="demo-ruleForm" label-width="100px">
-    <el-form-item  label="发布类型" prop="releaseType">
-      <template>
-        <el-radio-group v-model="form.releaseType">
-          <el-radio :label="33" >电器/设备出售</el-radio>
-          <el-radio :label="34" >二手电器/设备出售</el-radio>
-          <el-radio :label="18" >维修电器/设备</el-radio>
-          <el-radio :label="7" >酒水/饮料</el-radio>
-          <el-radio :label="8" >消毒餐具</el-radio>
-          <el-radio :label="4" >蔬菜出售</el-radio>
-          <el-radio :label="5" >粮油出售</el-radio>
-          <el-radio :label="6" >调料/副食出售</el-radio>
-          <el-radio :label="29" >水产/禽蛋出售</el-radio>
-          <el-radio :label="9" >清洁用品</el-radio>
-          <el-radio :label="11" >桌椅餐具</el-radio>
-        </el-radio-group>
-      </template>
-    </el-form-item>
+    <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm" label-width="100px">
+      <el-form-item label="发布类型" prop="releaseType">
+        <template>
+          <el-radio-group v-model="form.releaseType">
+            <el-radio :label="33">电器/设备出售</el-radio>
+            <el-radio :label="34">二手电器/设备出售</el-radio>
+            <el-radio :label="18">维修电器/设备</el-radio>
+            <el-radio :label="7">酒水/饮料</el-radio>
+            <el-radio :label="8">消毒餐具</el-radio>
+            <el-radio :label="4">蔬菜出售</el-radio>
+            <el-radio :label="5">粮油出售</el-radio>
+            <el-radio :label="6">调料/副食出售</el-radio>
+            <el-radio :label="29">水产/禽蛋出售</el-radio>
+            <el-radio :label="9">清洁用品</el-radio>
+            <el-radio :label="11">桌椅餐具</el-radio>
+          </el-radio-group>
+        </template>
+      </el-form-item>
 
-    <el-form-item label="名  称"  prop="serviceTypeName">
-      <el-input v-model="form.serviceTypeName" autocomplete="off"></el-input>
-    </el-form-item>
+      <el-form-item label="名  称" prop="serviceTypeName">
+        <el-input v-model="form.serviceTypeName" autocomplete="off"></el-input>
+      </el-form-item>
 
-   蔬菜类型必须上传示例图片<br>
-    <br><el-form-item label="示例图片" >
-      <el-upload
-        ref="upload"
-        :action="uploadDownUrl"
-        name="picture"
-        list-type="picture-card"
-        :limit="1"
-        :on-exceed="onExceed"
-        :before-upload="beforeUpload"
-        :on-preview="handlePreview"
-        :on-success="handleSuccess"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-      >
-        <i class="el-icon-plus"></i>
-      </el-upload>
-      <el-dialog :visible.sync="dialogVisible"   >
-        <img width="100%"   :src="dialogImageUrl" alt="">
-      </el-dialog>
-    </el-form-item>
+      蔬菜类型必须上传示例图片<br>
+      <br>
+      <el-form-item label="示例图片">
+        <el-upload
+          ref="upload"
+          :action="uploadDownUrl"
+          name="picture"
+          list-type="picture-card"
+          :limit="1"
+          :on-exceed="onExceed"
+          :before-upload="beforeUpload"
+          :on-preview="handlePreview"
+          :on-success="handleSuccess"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </el-form-item>
 
-    <el-form-item>
-      <el-button type="primary" @click="submitServiceType('form')"  v-loading.fullscreen.lock="fullscreenLoading"  >添加</el-button>
-    </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitServiceType('form')" v-loading.fullscreen.lock="fullscreenLoading">添加
+        </el-button>
+      </el-form-item>
 
-  </el-form>
+    </el-form>
   </div>
 </template>
 <script>
-  import { isRoleMessage } from '../../../../api/api';
-  import { admin_create_serviceType } from '../../../../api/api';
-  import { uploadDown_update } from '../../../../api/api';
+  import {admin_create_serviceType} from '../../../../api/api';
+  import {uploadDown_update} from '../../../../api/api';
+
   export default {
     data() {
       return {
         //文件上传的参数
         dialogImageUrl: '',
         dialogVisible: false,
-        fileList:[],
+        fileList: [],
 
-        fullscreenLoading:false,
+        fullscreenLoading: false,
         form: {   //审核表单
-          serviceTypeName:'',
-          releaseType:'',
-          pictureUrl:[]//蔬菜示例图片
+          serviceTypeName: '',
+          releaseType: '',
+          pictureUrl: []//蔬菜示例图片
         },
         rules: {
           releaseType: [
-            { required: true, message: '请选择类型', trigger: 'change' }
+            {required: true, message: '请选择类型', trigger: 'change'}
           ],
           serviceTypeName: [
-            { required: true, message: '名称不能为空', trigger: 'change' },
-            { min: 1, max: 20, message: '名称长度在 1 到 20个字符', trigger: 'blur' }
+            {required: true, message: '名称不能为空', trigger: 'change'},
+            {min: 1, max: 20, message: '名称长度在 1 到 20个字符', trigger: 'blur'}
           ]
         }
       }
     },
 
-    created () {
+    created() {
     },
     methods: {
       submitServiceType() {
-
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            if(this.form.releaseType===4){
-              if(this.form.pictureUrl.length===0){
+            if (this.form.releaseType === 4) {
+              if (this.form.pictureUrl.length === 0) {
                 this.$message.error("蔬菜出售必须添加示例图片");
                 return false;
               }
@@ -101,16 +110,16 @@
               this.fullscreenLoading = false;
               if (res.status === 0) {
                 this.$message.success("添加成功");
-                this.form.serviceTypeName='';
-                this.form.pictureUrl=[];
-                this.fileList=[];
+                this.form.serviceTypeName = '';
+                this.form.pictureUrl = [];
+                this.fileList = [];
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {
-              this.fullscreenLoading=false;
-              return false;
+            this.fullscreenLoading = false;
+            return false;
           }
         });
       },
@@ -118,23 +127,30 @@
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {
-        if(res.status===0){
-          let resdata=res.data;
-          var picture={"pictureName":resdata.pictureName ,"pictureUrl": resdata.pictureUrl, "useStatus":1,id:resdata.id,"userName":resdata.userName,"userId":resdata.userId};
-          this.form.pictureUrl= this.form.pictureUrl.concat(picture);
+        if (res.status === 0) {
+          let resdata = res.data;
+          var picture = {
+            "pictureName": resdata.pictureName,
+            "pictureUrl": resdata.pictureUrl,
+            "useStatus": 1,
+            id: resdata.id,
+            "userName": resdata.userName,
+            "userId": resdata.userId
+          };
+          this.form.pictureUrl = this.form.pictureUrl.concat(picture);
         }
       },
       //删除文件之前的钩子函数
-      handleRemove(file,fileList) {
+      handleRemove(file, fileList) {
 
-        let resdata=file.response.data;
-        for(var i=0;i< this.form.pictureUrl.length;i++){
-          if(resdata.id===this.form.pictureUrl[i].id){
+        let resdata = file.response.data;
+        for (var i = 0; i < this.form.pictureUrl.length; i++) {
+          if (resdata.id === this.form.pictureUrl[i].id) {
             uploadDown_update(this.form.pictureUrl[i]).then((res) => {
-              if(res.status!==0 ){
+              if (res.status !== 0) {
                 this.$message.error(res.msg);
               }
-              this.form.pictureUrl.splice(i,1)
+              this.form.pictureUrl.splice(i, 1)
             });
             break;
           }

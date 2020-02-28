@@ -173,7 +173,6 @@
 <script>
   import {  getReleaseWelfareAll } from '../../../../api/api';
   import {  examineAll } from '../../../../api/api';
-  import { isRoleMessage } from '../../../../api/api';
   export default {
     data() {
       return {
@@ -240,11 +239,10 @@
                 this.getReleaseWelfareAll(); //刷新列表
                 this.dialogFormVisible=false;
               }  else {
-                isRoleMessage(data.msg);
+                this.$msgdeal(data.msg);
               }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -262,13 +260,20 @@
          this.getReleaseWelfareAll();
       },
       getReleaseWelfareAll(){
-
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         getReleaseWelfareAll(this.realName).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       }

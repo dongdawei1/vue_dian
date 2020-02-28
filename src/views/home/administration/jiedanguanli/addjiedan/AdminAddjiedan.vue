@@ -105,9 +105,6 @@
 </template>
 <script>
 
-
-  import {isRoleMessage} from '../../../../../api/api';
-
   import {regionData} from 'element-china-area-data'
 
   import {admin_create_orderUser} from '../../../../../api/api';
@@ -211,7 +208,6 @@
     },
 
     created() {
-
       this.checke_isButten();
     },
     methods: {
@@ -232,7 +228,7 @@
                 this.ruleForm = {};
                 this.$router.push('/home/businessEnquiry');
               } else {
-                isRoleMessage(res.msg);
+                this.$msgdeal(res.msg);
               }
             });
           } else {
@@ -245,6 +241,14 @@
 
       //检查登陆和权限
       checke_isButten() {
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         this.ruleForm = {};
         admin_select_signingOrderById(this.id).then(res => {
           if (res.status === 0) {
@@ -264,7 +268,7 @@
 
             this.ruleForm = res.data;
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

@@ -242,7 +242,7 @@
         get_user_info().then((res) => {
           let status=res.status;
           if (status === 0) {
-            this.user=JSON.parse(res.data);
+            this.user=res.data;
             let role=this.user.role;
             this.form.username=this.user.username;
             this.form.mobilePhone=this.user.mobilePhone;

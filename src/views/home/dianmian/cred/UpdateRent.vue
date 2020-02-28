@@ -209,7 +209,6 @@
         if (!this.$fsAuthent()) {
           return false;
         }
-        ;
         get_userrent_id(this.id).then((res) => {
           if (res.status === 0) {
             this.ruleForm = res.data;

@@ -193,7 +193,6 @@
   import { get_user_info } from '../../../api/api';
   import {  newRealName } from '../../../api/api';
   import { regionData } from 'element-china-area-data';
-  import {  isRoleMessage} from '../../../api/api';
   import {  getwholesale} from '../../../api/api';
 
 
@@ -306,7 +305,7 @@
         get_user_info().then((res) => {
           let status=res.status;
           if (status === 0) {
-            let user=JSON.parse(res.data);
+            let user=res.data;
             if( user.isAuthentication!==4){
               this.$router.push({ path: '/home/myAccount' });
             }
@@ -365,7 +364,7 @@
                 this.$message.success(data.msg);
                this.$router.push({ path: '/home/myAccount' });
               }  else {
-                isRoleMessage(data.msg);
+                this.$message.error(data.msg);
               }
             });
           } else {
@@ -467,7 +466,7 @@
               this.$message.error("没有找到您输入的:市场名称可以联系客服添加");
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$message.error(res.msg);
           }
         });
       },

@@ -8,8 +8,7 @@
           size="large"
           :options="options"
           v-model="releaseWelfare.selectedOptions"
-          @change="handleChange"
-          clearable>
+          @change="handleChange">
         </el-cascader>
       </el-form-item>
       <el-form-item label="详细地址">
@@ -188,7 +187,7 @@
         this.releaseWelfare.releaseType = this.tableDataEnter.releaseType;
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (this.releaseWelfare.releaseType === 15) {
           if (role === '1' || role === '4' || role === '13' || role === '6' || role === '5') {
@@ -208,9 +207,11 @@
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
             this.realName = res.data;
-            this.releaseWelfare.selectedOptions[0] = this.realName.provincesId;
-            this.releaseWelfare.selectedOptions[1] = this.realName.cityId;
-            this.releaseWelfare.selectedOptions[2] = this.realName.districtCountyId;
+            let selectedOptions = [];
+            selectedOptions[0] = this.realName.provincesId.toString();
+            selectedOptions[1] = this.realName.cityId.toString();
+            selectedOptions[2] =  this.realName.districtCountyId.toString();
+            this.releaseWelfare.selectedOptions =selectedOptions;
             this.getrent_List();     //获取列表
           }else{
             this.$msgdeal(res.msg);
@@ -238,7 +239,7 @@
         }
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         getrentList(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
             this.total = res.data.totalno; //总条数
@@ -256,7 +257,7 @@
         }
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         getServiceDetailedList(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
             let list = res.data;
@@ -288,16 +289,6 @@
       },
       //城市组件
       handleChange(value) {
-        if (value.length === 0) {
-          this.releaseWelfare.selectedOptions[0] = this.realName.provincesId;
-          this.releaseWelfare.selectedOptions[1] = this.realName.cityId;
-          this.releaseWelfare.selectedOptions[2] = this.realName.districtCountyId;
-        } else {
-          this.releaseWelfare.selectedOptions[0] = value[0];
-          this.releaseWelfare.selectedOptions[1] = value[1];
-          this.releaseWelfare.selectedOptions[2] = value[2];
-        }
-
       },
     }
   }

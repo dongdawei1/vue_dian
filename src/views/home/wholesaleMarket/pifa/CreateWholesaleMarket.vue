@@ -360,7 +360,7 @@
       submitForm(ruleForm) {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
        this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
@@ -393,7 +393,7 @@
       getRealName(){
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (  role !== '1' && role !== '13') {
           this.$router.push({path: '/home/release'});

@@ -75,8 +75,6 @@
   import { uploadDown_update } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
   import {  examineRealName } from '../../../api/api';
-  import { isRoleMessage } from '../../../api/api';
-  import {  checke_isButten } from '../../../api/api';
   export default {
     data() {
       return {
@@ -147,11 +145,14 @@
     methods: {
       //判断是否登录
       islogin_getuserinif(){
-        checke_isButten(this.ruleForm.StringPath).then((res) => {
-          if(res.status!==0){
-            isRoleMessage(res.msg);
-          }
-        });
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
       },
 
       //城市组件
@@ -175,12 +176,11 @@
                 this.ruleForm.licenseUrl=[];
                 this.fileList=[];
               }  else {
-                isRoleMessage(data.msg);
+                this.$msgdeal(data.msg);
               }
             });
 
           } else {
-            console.log('error submit!!');
             return false;
           }
         });

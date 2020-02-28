@@ -207,8 +207,6 @@
   import { adminEquipment} from '../../../../api/api';
   import { examineAll} from '../../../../api/api';
 
-  import { isRoleMessage } from '../../../../api/api';
-
   import { admin_create_serviceType } from '../../../../api/api';
   import { newstr } from '../../../../api/api';
   export default {
@@ -306,7 +304,7 @@
             this.get_position_list(); //刷新列表
             this.dialogFormVisible=false;
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
 
@@ -333,11 +331,10 @@
                 this.get_position_list(); //刷新列表
                 this.dialogFormVisible=false;
               }  else {
-                isRoleMessage(data.msg);
+                this.$msgdeal(data.msg);
               }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -358,12 +355,20 @@
         this.get_position_list();
       },
       get_position_list(){
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         adminEquipment(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

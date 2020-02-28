@@ -343,7 +343,7 @@
       getRealName() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (role !== '1' && role !== '4') {
           this.$router.push({path: '/home/release'});
@@ -451,7 +451,7 @@
       get_serviceType() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let param = {
           serviceType: this.ruleForm.serviceType,
           releaseType: this.ruleForm.releaseType,
@@ -480,7 +480,7 @@
       create_serviceType() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         this.fullscreenLoading = true;
         if (this.ruleForm.releaseType === '') {
           this.$message.error("请先选择:发布类型")

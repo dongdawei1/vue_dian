@@ -160,7 +160,6 @@
   </div>
 </template>
 <script>
-  import { isRoleMessage } from '../../../../api/api';
   import { admin_select_signingOrder } from '../../../../api/api';
   import { getAccurateressDetailed } from '../../../../api/api';
 
@@ -241,6 +240,14 @@
         this.getReleaseWelfareAll();
       },
       getReleaseWelfareAll(){
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         if(this.realName.value2===null){
           this.realName.value2=[];
         }
@@ -249,7 +256,7 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -294,7 +301,7 @@
               this.$message.error("该城市下没有签约地点！");
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

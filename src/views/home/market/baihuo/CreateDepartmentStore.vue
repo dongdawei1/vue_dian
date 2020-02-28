@@ -175,11 +175,9 @@
 <script>
 
 
-  import {isRoleMessage} from '../../../../api/api';
   import {getRealName} from '../../../../api/api';
 
   import {uploadDown_update} from '../../../../api/api';
-  import {checke_isButten} from '../../../../api/api';
 
   import {get_serviceType} from '../../../../api/api';
   import {create_serviceType} from '../../../../api/api';
@@ -346,7 +344,7 @@
       getRealName() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (  role !== '1' && role !== '12') {
           this.$router.push({path: '/home/release'});
@@ -449,7 +447,7 @@
 
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let param = {
           serviceType: this.ruleForm.serviceType,
           releaseType: this.ruleForm.releaseType,

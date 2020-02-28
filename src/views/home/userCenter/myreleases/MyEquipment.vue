@@ -190,9 +190,7 @@
 </template>
 <script>
   import {  operation_userequipment } from '../../../../api/api';
-  import { get_user_info } from '../../../../api/api';
   import { get_myEquipment_list} from '../../../../api/api';
-  import { isRoleMessage } from '../../../../api/api';
   import {   getRealName } from '../../../../api/api';
   export default {
     inject: ["reload"],
@@ -243,7 +241,6 @@
       }
     },
     created () {
-      this.get_position_list();
       this.getRealName();
     },
     methods: {
@@ -277,7 +274,7 @@
             if (data && data.status === 0) {
               this.$message.success(msg);
             }  else {
-              isRoleMessage(msg);
+              this.$msgdeal(msg);
             }
           });
         }else{
@@ -315,34 +312,31 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
 
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        get_user_info().then((res) => {
-          if(res.status===0){
-            if(JSON.parse(res.data).isAuthentication===2){
-              this.$router.push({ path: this.pathString });
-            }else{
-              this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能发布信息！</strong>', '用户信息不完善', {
-                dangerouslyUseHTMLString: true
-              });
-              this.$router.push({ path: '/home/myAccount' });
-            }}else {
-            isRoleMessage(res.msg);
-          }
-        });
+        if (window.localStorage.getItem('dian_isAuthentication')===null || window.localStorage.getItem('dian_isAuthentication') !== '2') {
+          this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
+            dangerouslyUseHTMLString: true
+          });
+          this.$router.push({path: '/home/myAccount'});
+          return false;
+        }else{
+          this.$router.push({ path: this.pathString });
+        }
       },
       //获取实名信息
       getRealName(){
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
+            this.get_position_list();
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

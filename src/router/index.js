@@ -47,6 +47,10 @@ import RecruitWorkers from '../views/home/recruit/RecruitWorkers'
 import JobWanted from '../views/home/recruit/JobWanted'
 import ReleaseWelfare from '../views/home/recruit/zhaopin/ReleaseWelfare'
 
+import CreateResume from '../views/home/recruit/jianli/CreateResume'
+import UpResume from '../views/home/recruit/jianli/UpResume'
+
+
 import Renovation from '../views/home/meichong/Renovation'
 import PestControl from '../views/home/meichong/PestControl'
 
@@ -447,6 +451,17 @@ export default new VueRouter ({
           path: '/home/releaseWelfare',
           component:   ReleaseWelfare  //发布招聘
         },
+        {
+          hidden: true , //用户包中
+          path: '/home/createResume',
+          component:   CreateResume  //发布简历
+        },
+        {
+          hidden: true , //用户包中
+          path: '/home/upResume',
+          component:   UpResume  //修改简历
+        },
+
         {
           hidden: true , //用户包中
           path: '/home/createMAndRAndP',

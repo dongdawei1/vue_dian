@@ -15,8 +15,6 @@
   import AdminSellectAddOrder from './jiedanguanli/AdminSellectAddOrder'
   import AdminAddAddOrder from './jiedanguanli/AdminAddAddOrder'
 
-  import {  checke_isButten } from '../../../api/api';
-  import {  isRoleMessage } from '../../../api/api';
 
   export default {
     components: {

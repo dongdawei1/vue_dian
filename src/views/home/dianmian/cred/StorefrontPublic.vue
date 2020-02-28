@@ -222,7 +222,7 @@
       submitForm(ruleForm) {
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         this.fullscreenLoading = true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
@@ -264,7 +264,7 @@
       checke_isButten() {
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (role === '2' || role === '3') {
           this.isLease = true;

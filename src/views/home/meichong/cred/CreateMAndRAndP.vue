@@ -65,7 +65,7 @@
         <el-input v-model="ruleForm.consigneeName"  autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
       <el-form-item label="联系方式"  prop="contact">
-        <el-input v-model="ruleForm.contact"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
 
       <p>实名信息</p>

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { get_user_info_sign } from '../api/api';
+  import { get_user_info } from '../api/api';
   export default {
 
 
@@ -44,7 +44,14 @@
 
       //判断是否实名和登陆状态 没有登陆点击控制台跳转登录页
       isAuthenticationM() {
-        get_user_info_sign(this.pathString);
+        get_user_info().then((res) => {
+          let status=res.status;
+          if (status === 0) {
+            this.$router.push({ path: '/home/release' });
+          }else{
+            this.$router.push({ path: '/login/sign' });
+          }
+        });
       },
 
     }}

@@ -232,7 +232,6 @@
 </template>
 <script>
   import {  admin_update_addOrder } from '../../../../api/api';
-  import { isRoleMessage } from '../../../../api/api';
   import { admin_select_addOrder } from '../../../../api/api';
   import { getAddressDetailed } from '../../../../api/api';
   import { createAddressDetailed } from '../../../../api/api';
@@ -364,11 +363,10 @@
                 this.dialogFormVisible=false;
                 this.form.addressDetailed=this.addPeixun.addressDetailed;
               }  else {
-                isRoleMessage(data.msg);
+                this.$msgdeal(data.msg);
               }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -394,11 +392,10 @@
                 this.form.id='';
                 this.getReleaseWelfareAll();
               }  else {
-                isRoleMessage(data.msg);
+                this.$msgdeal(data.msg);
               }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -417,6 +414,14 @@
         this.getReleaseWelfareAll();
       },
       getReleaseWelfareAll(){
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         if(this.realName.value2===null){
           this.realName.value2=[];
         }
@@ -425,7 +430,7 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           }else{
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -469,7 +474,7 @@
               this.ruleForm.serviceType='';
             }
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

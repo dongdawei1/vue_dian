@@ -4,7 +4,7 @@ import { Message } from 'element-ui';
 let base = '';
 let pcApi='/api/v1/vp/';
 let v1Api='/api/v3/'; //图片上传相关
-let commonApi='/api/v2/';
+let commonApi='/api/v2/log/';
 
 //登陆
 
@@ -14,12 +14,12 @@ axios.defaults.headers.common["appid"] = "p";
 
 
 
-export const requestLogin = params => { return axios.post(`${base}${commonApi}log/login`, params).then(res => res.data); };
+export const requestLogin = params => { return axios.post(`${base}${commonApi}login`, params).then(res => res.data); };
 
 
 //获取验证码
 export const getCaptcha1 = params => { return axios({
-    url: `${base}${commonApi}log/captcha`,
+    url: `${base}${commonApi}captcha`,
     params: { uuid: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
@@ -34,38 +34,29 @@ export const uploadDown_update = params   => { return axios.post( `${base}${v1Ap
 
 export const get_user_info = params => {
   return axios({
-    url: `${base}${commonApi}log/get_user_info`,
+    url: `${base}${commonApi}get_user_info`,
     params: { uuid: new Date().getTime() },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
     // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
   }).then(res => res.data); };
 
-//登陆过期跳登陆页，为过期跳传入的地址
-export const get_user_info_sign = params => {
-  get_user_info().then((res) => {
-    if (res.msg==='用户未登录,无法获取当前用户的信息') {
-      router.push('/login/sign')
-    }else{
-      router.push(params)
-    }
-  }) };
-
-
-//检查权限
-export const checke_isButten=  params => {
-  return axios({
-  url: `${base}${commonApi}getRole/getIsRole`,
-  params: { StringPath: params },
-  method: 'get',
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
-  // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
-
-}).then(res => res.data); };
-
 
 //注册
-export const requestCreate = params => { return axios.post(`${base}${commonApi}log/create`, params).then(res => res.data); };
+export const requestCreate = params => { return axios.post(`${base}${commonApi}create`, params).then(res => res.data); };
+//获取实名信息
+export const getRealName = params => {
+
+  return axios({
+    url: `${base}${commonApi}getRealName`,
+    // params: { uuid: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
+
+  }).then(res => res.data); };
+
+
 //修改用户基本信息
 export const update_information = params => { return axios.post(`${base}${pcApi}user/update_information`, params).then(res => res.data); };
 //退出
@@ -77,17 +68,7 @@ export const updateRealName = params => { return axios.post(`${base}${pcApi}real
 export const addOrder = params => { return axios.post(`${base}${pcApi}realName/addOrder`, params).then(res => res.data); };
 
 
-//获取实名信息
-export const getRealName = params => {
 
-  return axios({
-    url: `${base}${pcApi}realName/getRealName`,
-    // params: { uuid: params },
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
-    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
-
-  }).then(res => res.data); };
 
 
 //获取实名信息
@@ -1012,17 +993,6 @@ export const newstr= params => {
   }
 };
 
-//根据错误跳转页面和报错
-  export const isRoleMessage = params => {
-    Message.error(params);
-    if (params === '用户登陆已过期' || params === '用户未登录,无法获取当前用户的信息') {
-      router.push({path: '/login/sign'});
-    } else if (params === '没有权限') {
-      router.push({path: '/home/release'});
-    } else {
-
-    }
-  };
 //参数n为休眠时间，单位为毫秒:
   export const sleep = params => {
     var start = new Date().getTime();
@@ -1034,7 +1004,3 @@ export const newstr= params => {
     }
     // console.log('休眠后：' + new Date().getTime());
   };
-
-
-
-

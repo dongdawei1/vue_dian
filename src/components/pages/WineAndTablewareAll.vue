@@ -8,8 +8,7 @@
           size="large"
           :options="options"
           v-model="releaseWelfare.selectedOptions"
-          @change="handleChange"
-          clearable>
+          @change="handleChange">
         </el-cascader>
       </el-form-item>
       <el-form-item label="关键字">
@@ -102,7 +101,7 @@
       getRealName() {
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
 
         if (role === '1' || role === '5') {
@@ -114,9 +113,11 @@
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
             this.realName = res.data;
-            this.releaseWelfare.selectedOptions[0] = this.realName.provincesId;
-            this.releaseWelfare.selectedOptions[1] = this.realName.cityId;
-            this.releaseWelfare.selectedOptions[2] = this.realName.districtCountyId;
+            let selectedOptions = [];
+            selectedOptions[0] = this.realName.provincesId.toString();
+            selectedOptions[1] = this.realName.cityId.toString();
+            selectedOptions[2] =  this.realName.districtCountyId.toString();
+            this.releaseWelfare.selectedOptions =selectedOptions;
             this.releaseWelfare.releaseType = this.tableDataEnter;
             this.getmrpList();     //获取列表
           } else {
@@ -137,7 +138,7 @@
       getmrpList() {
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         getWineAndTablewarePublicList(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
             this.total = res.data.totalno; //总条数
@@ -180,16 +181,6 @@
       },
       //城市组件
       handleChange(value) {
-        if (value.length === 0) {
-          this.releaseWelfare.selectedOptions[0] = this.realName.provincesId;
-          this.releaseWelfare.selectedOptions[1] = this.realName.cityId;
-          this.releaseWelfare.selectedOptions[2] = this.realName.districtCountyId;
-        } else {
-          this.releaseWelfare.selectedOptions[0] = value[0];
-          this.releaseWelfare.selectedOptions[1] = value[1];
-          this.releaseWelfare.selectedOptions[2] = value[2];
-        }
-
       },
     }
   }

@@ -79,7 +79,6 @@
 </template>
 <script>
   import {peceiptGetPendingOrders} from '../../../api/api';
-  import {isRoleMessage} from '../../../api/api';
   import {regionData} from 'element-china-area-data'
 
 
@@ -125,7 +124,7 @@
               this.beforeDestroy();
             }
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

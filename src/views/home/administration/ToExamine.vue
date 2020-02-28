@@ -56,8 +56,7 @@
   import AddAdminServiceType from './shenpi/AddAdminServiceType'
   import AdminDepartmentStore from './shenpi/AdminDepartmentStore'
   import  AdminWholesaleCommodity from './shenpi/AdminWholesaleCommodity'
-  import {  checke_isButten } from '../../../api/api';
-  import {  isRoleMessage } from '../../../api/api';
+
 
   export default {
     components: {
@@ -239,11 +238,14 @@
 
       //判断是否登录
       islogin(){
-        checke_isButten(this.StringPath).then((res) => {
-        if(res.status!==0){
-          isRoleMessage(res.msg);
+        if (!this.$fsAuthent()) {
+          return false;
         }
-        });
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
       },
     }
   };

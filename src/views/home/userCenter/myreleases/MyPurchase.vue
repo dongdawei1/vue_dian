@@ -114,10 +114,7 @@
   </div>
 </template>
 <script>
-  import {isRoleMessage} from '../../../../api/api';
   import {myPurchaseOrder} from '../../../../api/api';
-
-
   export default {
     data() {
       return {
@@ -151,6 +148,9 @@
         this.get_myPurchase_Order();
       },
       get_myPurchase_Order() {
+        if(!this.$fsAuthent()){
+          return false;
+        }
         this.fullscreenLoading=true;
         myPurchaseOrder(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
@@ -158,7 +158,7 @@
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
           } else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },

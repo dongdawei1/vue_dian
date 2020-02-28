@@ -138,7 +138,6 @@
   import { get_position } from '../../../api/api';
   import { getResumeAll } from '../../../api/api';
   import { getContact} from '../../../api/api';
-  import {  isRoleMessage } from '../../../api/api';
   import { regionData } from 'element-china-area-data'
   export default {
 
@@ -192,7 +191,7 @@
             this.contact=res.data;
             this.dialogVisible=true;//联系方式弹窗
           }else {
-            isRoleMessage(res.msg);
+            this.$msgdeal(res.msg);
           }
         });
       },
@@ -214,9 +213,11 @@
         getRealName().then((res) => { //获取实名信息填充
           if(res.status ===0 ) {
             this.realName=res.data;
-            this.releaseWelfare.provincesId=this.realName.provincesId;
-            this.releaseWelfare.cityId=this.realName.cityId;
-            this.releaseWelfare.districtCountyId=this.realName.districtCountyId;
+            let selectedOptions = [];
+            selectedOptions[0] = this.realName.provincesId.toString();
+            selectedOptions[1] = this.realName.cityId.toString();
+            selectedOptions[2] =  this.realName.districtCountyId.toString();
+            this.releaseWelfare.selectedOptions =selectedOptions;
 
             this.getResumeAll(); //分页查询
             this.loadAll();
@@ -258,9 +259,6 @@
 
       //城市组件
       handleChange (value) {
-        this.releaseWelfare.provincesId=value[0];
-        this.releaseWelfare.cityId=value[1];
-        this.releaseWelfare.districtCountyId=value[2];
       },
 
 

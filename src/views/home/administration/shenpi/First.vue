@@ -9,7 +9,7 @@
         <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getRealNameAll">查询</el-button>
+        <el-button type="primary" @click="getTrialResumeAllselect">查询</el-button>
         <el-button type="primary" plain> <router-link
           v-on:click.native=""
           to="/home/addRealName"  class="a">添加实名 </router-link></el-button>
@@ -170,7 +170,6 @@
 <script>
   import {  getRealNameAll } from '../../../../api/api';
   import {  examineRealName } from '../../../../api/api';
-  import { isRoleMessage } from '../../../../api/api';
   export default {
     data() {
       return {
@@ -241,11 +240,10 @@
                 this.getRealNameAll(); //刷新列表
                 this.dialogFormVisible=false;
               }  else {
-                isRoleMessage(data.msg);
+                this.$msgdeal(data.msg);
               }
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -258,7 +256,20 @@
 
       },
 
+      getTrialResumeAllselect(){
+        this.realName.currentPage=1;
+        this.getRealNameAll();
+      },
+
       getRealNameAll(){
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         getRealNameAll(this.realName).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数

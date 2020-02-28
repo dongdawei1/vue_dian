@@ -399,7 +399,7 @@
       checke_isButten() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (role === '1' || role === '2') {
           let isAuthentication = window.localStorage.getItem('dian_isAuthentication');
@@ -441,7 +441,7 @@
       submitForm() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         if (this.fromData.length === 0) {
           this.$message.error("采购列表不能为空")
           return false;
