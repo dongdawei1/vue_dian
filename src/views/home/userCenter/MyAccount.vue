@@ -342,6 +342,13 @@
       handleChange (value) {
       },
 
+    },
+    watch: {
+      "$route"(to, from) {
+        if (to.path === '/home/myAccount') {
+          this.islogin_getuserinif();
+        }
+      }
     }
   }
 </script>
