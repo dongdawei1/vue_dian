@@ -67,7 +67,7 @@ import MyAccount from '../views/home/userCenter/MyAccount'
 import Detailed from '../views/home/userCenter/Detailed'
 import RealName  from '../views/home/shiming/RealName'
 import UpdateRealName  from '../views/home/shiming/UpdateRealName'
-import AddRealName  from '../views/home/shiming/AddAdminRealName'
+
 import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
 import CreateMAndRAndP  from '../views/home/meichong/cred/CreateMAndRAndP'
 import EditMAndRAndP  from '../views/home/meichong/cred/EditMAndRAndP'
@@ -81,9 +81,10 @@ import CreateWholesaleMarket from '../views/home/wholesaleMarket/pifa/CreateWhol
 import EditWholesaleMarket from '../views/home/wholesaleMarket/pifa/EditWholesaleMarket'
 
 import ToExamine from '../views/home/administration/ToExamine'
+import Guanggao from '../views/home/administration/Guanggao'
 import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 import AdminAddjiedan from '../views/home/administration/jiedanguanli/addjiedan/AdminAddjiedan'
-
+import AddRealName  from '../views/home/administration/tianjiashiming/AddAdminRealName'
 
 import Details from '../views/Details.vue'
 import MrpDetails  from '../views/detailes/MrpDetails'
@@ -408,6 +409,13 @@ export default new VueRouter ({
           component: ToExamine,
 
         },
+        {
+          path: '/home/guanggao',
+          component: Guanggao,
+
+        },
+
+
         {
           path: '/home/businessEnquiry',
           component: BusinessEnquiry

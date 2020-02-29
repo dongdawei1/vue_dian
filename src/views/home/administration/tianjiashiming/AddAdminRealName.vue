@@ -72,9 +72,9 @@
 
 <script>
 
-  import { uploadDown_update } from '../../../api/api';
+  import { uploadDown_update } from '../../../../api/api';
   import { regionData } from 'element-china-area-data'
-  import {  examineRealName } from '../../../api/api';
+  import {  examineRealName } from '../../../../api/api';
   export default {
     data() {
       return {

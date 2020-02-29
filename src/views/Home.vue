@@ -187,7 +187,9 @@
         ],
         businessList: [
           {name: '注册', url: '/home/toExamine'},
-          {name: '接单', url: '/home/businessEnquiry'}
+          {name: '接单', url: '/home/businessEnquiry'},
+          {name: '广告', url:  '/home/guanggao'}
+
         ],
         integralList: [
           {name: '积分', url: '/home/integral'},

@@ -1,10 +1,10 @@
 import axios from 'axios';
-import router from "../router";
-import { Message } from 'element-ui';
+
 let base = '';
 let pcApi='/api/v1/vp/';
 let v1Api='/api/v3/'; //图片上传相关
 let commonApi='/api/v2/log/';
+let v5Api='/api/v5/'; //图片上传相关
 
 //登陆
 
@@ -107,45 +107,55 @@ export const getRealNameByuserId = params => {
   }).then(res => res.data); };
 
 //待审核实名
-export const getRealNameAll = params => { return axios.post(`${base}${pcApi}toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
-export const admin_select_addOrder = params => { return axios.post(`${base}${pcApi}toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
-export const admin_select_signingOrder = params => { return axios.post(`${base}${pcApi}toExamine/admin_select_signingOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
+export const getRealNameAll = params => { return axios.post(`${base}${v5Api}toExamine/getRealNameAll`, params).then(res => isButtonAndListusermrp(res.data,9)); };
+export const admin_select_addOrder = params => { return axios.post(`${base}${v5Api}toExamine/admin_select_addOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
+export const admin_select_signingOrder = params => { return axios.post(`${base}${v5Api}toExamine/admin_select_signingOrder`, params).then(res => isButtonAndListusermrp(res.data,10) );};
 export const admin_select_signingOrderById = params => {
   return axios({
-    url: `${base}${pcApi}toExamine/admin_select_signingOrderById`,
+    url: `${base}${v5Api}toExamine/admin_select_signingOrderById`,
     params:{ id: params },
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
-export const admin_create_orderUser = params => { return axios.post(`${base}${pcApi}toExamine/admin_create_orderUser`, params).then(res => res.data);};
+export const admin_guangggao_realName = params => {
+  return axios({
+    url: `${base}${v5Api}toExamine/admin_guangggao_realName`,
+    params:{ userName: params },
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data); };
+
+
+
+export const admin_create_orderUser = params => { return axios.post(`${base}${v5Api}toExamine/admin_create_orderUser`, params).then(res => res.data);};
 
 //待审批招聘
-export const getReleaseWelfareAll = params => { return axios.post(`${base}${pcApi}toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+export const getReleaseWelfareAll = params => { return axios.post(`${base}${v5Api}toExamine/getReleaseWelfareAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核简历
-export const getTrialResumeAll = params => { return axios.post(`${base}${pcApi}toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
+export const getTrialResumeAll = params => { return axios.post(`${base}${v5Api}toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data,3)); };
 //待审核装修灭虫列表
-export const getmrpAll= params => { return axios.post(`${base}${pcApi}toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
+export const getmrpAll= params => { return axios.post(`${base}${v5Api}toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data,2) ); };
 //待审核出租房
-export const adminMent= params => { return axios.post(`${base}${pcApi}toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
+export const adminMent= params => { return axios.post(`${base}${v5Api}toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data,6) ); };
 //待审核电器二手
-export const adminEquipment= params => { return axios.post(`${base}${pcApi}toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminEquipment= params => { return axios.post(`${base}${v5Api}toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审核菜
-export const adminFoodAndGrain= params => { return axios.post(`${base}${pcApi}toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminFoodAndGrain= params => { return axios.post(`${base}${v5Api}toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
 //待审核批发菜
-export const adminWholesaleCommodity= params => { return axios.post(`${base}${pcApi}toExamine/adminWholesaleCommodity`, params).then(res => isButtonAndListusermrp(res.data,14) ); };
+export const adminWholesaleCommodity= params => { return axios.post(`${base}${v5Api}toExamine/adminWholesaleCommodity`, params).then(res => isButtonAndListusermrp(res.data,14) ); };
 
 //待审批酒
-export const adminWineAndTableware= params => { return axios.post(`${base}${pcApi}toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-export const adminDepartmentStore= params => { return axios.post(`${base}${pcApi}toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
-export const getAddressDetailed= params => { return axios.post(`${base}${pcApi}toExamine/getAddressDetailed`, params).then(res =>  res.data);  };
-export const getAccurateressDetailed= params => { return axios.post(`${base}${pcApi}toExamine/getAccurateressDetailed`, params).then(res =>  res.data);  };
-export const createAddressDetailed= params => { return axios.post(`${base}${pcApi}toExamine/createAddressDetailed`, params).then(res =>  res.data);  };
-export const admin_update_addOrder= params => { return axios.post(`${base}${pcApi}toExamine/admin_update_addOrder`, params).then(res =>  res.data);  };
+export const adminWineAndTableware= params => { return axios.post(`${base}${v5Api}toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const adminDepartmentStore= params => { return axios.post(`${base}${v5Api}toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data,8) ); };
+export const getAddressDetailed= params => { return axios.post(`${base}${v5Api}toExamine/getAddressDetailed`, params).then(res =>  res.data);  };
+export const getAccurateressDetailed= params => { return axios.post(`${base}${v5Api}toExamine/getAccurateressDetailed`, params).then(res =>  res.data);  };
+export const createAddressDetailed= params => { return axios.post(`${base}${v5Api}toExamine/createAddressDetailed`, params).then(res =>  res.data);  };
+export const admin_update_addOrder= params => { return axios.post(`${base}${v5Api}toExamine/admin_update_addOrder`, params).then(res =>  res.data);  };
 
 //除实名外所有审核
-export const examineAll= params => { return axios.post(`${base}${pcApi}toExamine/examineAll`, params).then(res => res.data);};
+export const examineAll= params => { return axios.post(`${base}${v5Api}toExamine/examineAll`, params).then(res => res.data);};
 //实名审核
-export const examineRealName = params => { return axios.post(`${base}${pcApi}toExamine/examineRealName`, params).then(res => res.data); };
+export const examineRealName = params => { return axios.post(`${base}${v5Api}toExamine/examineRealName`, params).then(res => res.data); };
 
 //分页查询招聘
 export const getPositionAll = params => { return axios.post(`${base}${pcApi}releaseWelfare/get_position_all`, params).then(res => res.data);};
@@ -306,7 +316,7 @@ export const get_serviceTypeUrl = params => {
 
 
 export const create_serviceType= params => { return axios.post(`${base}${pcApi}serviceType/create_serviceType`, params).then(res => res.data);};
-export const admin_create_serviceType= params => { return axios.post(`${base}/api/toExamine/admin_create_serviceType`, params).then(res => res.data);};
+export const admin_create_serviceType= params => { return axios.post(`${base}${v5Api}toExamine/admin_create_serviceType`, params).then(res => res.data);};
 
 //创建电器/维修
 export const create_equipment= params => { return axios.post(`${base}${pcApi}equipment/create_equipment`, params).then(res => res.data); };
