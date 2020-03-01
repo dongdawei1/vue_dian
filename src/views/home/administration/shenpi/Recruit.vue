@@ -2,8 +2,8 @@
   <div class="vm-image-list">
     <!--c查询框开始-->
     <el-form :inline="true" :model="realName" class="demo-form-inline">
-      <el-form-item label="用户名">
-        <el-input v-model="realName.companyName" placeholder="用户名" clearable></el-input>
+      <el-form-item label="实名公司名">
+        <el-input v-model="realName.companyName" placeholder="实名公司名" clearable></el-input>
       </el-form-item>
       <el-form-item label="手机号">
         <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
@@ -111,7 +111,9 @@
       <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
       <span>联系方式 : {{tableDataNo.contact }}</span><br>
       <span>城区 : {{tableDataNo.detailed }}</span><br>
-      <span>地址详情 : {{tableDataNo.addressDetailed }}</span><br>
+      <span>实名地址 : {{tableDataNo.realNameId }}</span><br>
+      <span>工作地址 : {{tableDataNo.workingAddress }}</span><br>
+
       <span>职位类型 : {{tableDataNo.position }}</span><br>
       <span>招聘人数 : {{tableDataNo.number }}</span><br>
       <span>薪水 : {{tableDataNo.salary }}</span><br>

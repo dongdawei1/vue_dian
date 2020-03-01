@@ -130,6 +130,7 @@
                   :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
       <!--实名中的信息不提交-->
+
       <el-form-item label="实名地址">
         <el-input v-model="realName.addressDetailed" :disabled="true" autocomplete="off"
                   :placeholder="ruleForm.addressDetailed"></el-input>
@@ -203,7 +204,7 @@
           workingAddress: '', //工作地址，默认填充实名中的地址，可以修改
           //实名中获取
           detailed: '',//省市区  回显置灰
-          contact: '',  //实名联系联系方式  可修改
+          contact: '',  //实名联系联系方式  不修改
           consigneeName: '', //联系人姓名 可修改
           realNameId: '',//实名id
         },
