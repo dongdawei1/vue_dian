@@ -6,10 +6,10 @@
         <div class="mrpDetailsfuwu">
           发布类型 : {{result.releaseType}}<br>
           联 系 人 : {{result.consigneeName}}<br>
-          联系方式 : {{result.contact}}<br>
+
           备 注 : {{result.remarks}}<br>
           发布时间 : {{result.createTime}}<br>
-          所在城区 : {{result.detailed}}<br>
+
           服务区域 : {{result.serviceDetailed}}<br>
           <div>
             <el-table
@@ -32,9 +32,11 @@
           </div>
 
           <br>实名详情<br>
-          企业名称 : {{realName.companyName}}<br>
-          实名城市 : {{realName.detailed}}<br>
-          实名地址 : {{realName.addressDetailed}}<br>
+          企业名称 : {{result.realNameId}}<br>
+          联系方式 : {{result.contact}}<br>
+          所在城区 : {{result.detailed}}<br>
+          联系地址 : {{result.examineTime}}<br>
+
         </div>
 
         <ReservationService></ReservationService>
@@ -62,8 +64,6 @@
 <script>
 
   import {getFoodAndGrainDetails} from '../../api/api';
-  import {getRealNameById} from '../../api/api';
-
   import ReservationService from "../../components/pages/ReservationService";
   import DibuBunner from "../../components/pages/DibuBunner";
 
@@ -120,7 +120,6 @@
             }
             this.fileList = list;
             this.tableData = res.data.evaluate;
-            this.getRealName();
           } else {
             this.$msgdeal(res.msg);
             return false;
@@ -128,16 +127,6 @@
         });
       },
 
-      getRealName() {
-        getRealNameById(this.result.realNameId).then(res => {
-          if (res.status === 0) {
-            this.realName = res.data;
-          } else {
-            this.$msgdeal(res.msg);
-            return false;
-          }
-        });
-      }
     }
   }
 </script>

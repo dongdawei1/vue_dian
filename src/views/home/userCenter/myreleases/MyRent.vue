@@ -116,16 +116,14 @@
       <div class="parent">
         <div class="left">
           <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
-          <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-          <span>联系方式 : {{tableDataNo.contact }}</span><br>
-          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
-          <span>地址详情 : {{tableDataNo.serviceDetailed }}</span><br>
+          <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
+          <span>使用面积: {{tableDataNo.fouseSize }} (平米)</span><br>
+          <span>出租地址 : {{tableDataNo.serviceDetailed }}</span><br>
         </div>
         <div class="right">
           <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}<br></span>
           <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
-          <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
-          <span>使用面积: {{tableDataNo.fouseSize }} (平米)</span><br>
+          <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
           <span>失效时间 : {{tableDataNo.termOfValidity }}</span><br>
 
 
@@ -134,7 +132,9 @@
         <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
         <span>实名信息  ------- </span><br>
         <span>公司名称: {{realName.companyName }}</span><br>
+        <span>所在城区 : {{tableDataNo.detailed }}</span><br>
         <span>实名地址: {{realName.addressDetailed }}</span><br>
+        <span>联系方式 : {{tableDataNo.contact }}</span><br>
         <span>现场图片 : </span><br>
         <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
           <img :src="p.pictureUrl" width="100%">

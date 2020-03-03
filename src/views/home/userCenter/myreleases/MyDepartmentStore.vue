@@ -3,7 +3,7 @@
     <!--我的发布 已发布的电器。查询开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
-      <el-form-item label="发布类型"  >
+      <el-form-item label="发布类型">
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
           <el-option label="工服" value="101"></el-option>
           <el-option label="百货" value="102"></el-option>
@@ -12,7 +12,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="发布状态"  >
+      <el-form-item label="发布状态">
         <template>
           <el-select v-model="releaseWelfare.welfareStatus" clearable placeholder="请选择发布状态">
             <el-option
@@ -26,9 +26,12 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="get_position_listselect">查询</el-button>
-        <el-button type="primary"><router-link
-          v-on:click.native="isAuthenticationM()"
-          to="" class="a" >发布商品</router-link></el-button>
+        <el-button type="primary">
+          <router-link
+            v-on:click.native="isAuthenticationM()"
+            to="" class="a">发布商品
+          </router-link>
+        </el-button>
       </el-form-item>
 
     </el-form>
@@ -104,14 +107,26 @@
         label="操作"
         width="210">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
-          <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
-          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
-          <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
-          <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
-          <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.isDisplaySee">查看
+          </el-button>
+          <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"
+                     v-loading.fullscreen.lock="fullscreenLoading">刷新
+          </el-button>
+          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay"
+                     v-loading.fullscreen.lock="fullscreenLoading">延期
+          </el-button>
+          <el-button @click="submitForm(scope.row, 3)" type="text" size="small" v-if="scope.row.isDisplayHide"
+                     v-loading.fullscreen.lock="fullscreenLoading">隐藏
+          </el-button>
+          <el-button @click="submitForm(scope.row, 4)" type="text" size="small" v-if="scope.row.isDisplayRelease"
+                     v-loading.fullscreen.lock="fullscreenLoading">发布
+          </el-button>
+          <el-button @click="open(scope.row, 5)" type="text" size="small" v-if="scope.row.isDisplayDelete"
+                     v-loading.fullscreen.lock="fullscreenLoading">删除
+          </el-button>
           <!-- 只有失败的才显示 编辑键 -->
-          <el-button @click="examineClick(scope.row)" type="text" size="small"   v-if="scope.row.isDisplayEdit" >编辑</el-button>
+          <el-button @click="examineClick(scope.row)" type="text" size="small" v-if="scope.row.isDisplayEdit">编辑
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -125,19 +140,19 @@
       <div class="parent">
         <div class="left">
           <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+
           <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
-          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
           <span v-if="tableDataNo.authentiCationStatus===2">失效时间 : {{tableDataNo.termOfValidity }}<br></span>
           <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
           <span>商品名称 : {{tableDataNo.serviceType}}</span><br>
           <!--在这里加服务项目-->
-          <div >
+          <div>
             <el-table
               :data="tableDataNo.serviceAndprice"
               style="width: 80%">
-              <el-table-column label="商品规格和价格" >
+              <el-table-column label="商品规格和价格">
                 <el-table-column
                   prop="project"
                   label="具体类型"
@@ -152,8 +167,10 @@
             </el-table>
 
           </div>
-          <span>公司名称: {{realName.companyName }}</span><br>
-          <span>实名地址: {{realName.addressDetailed }}</span><br>
+          <span>公司名称: {{tableDataNo.realNameId }}</span><br>
+          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+          <span>实名地址: {{tableDataNo.examineTime }}</span><br>
         </div>
         <div class="right">
           <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
@@ -188,101 +205,101 @@
   </div>
 </template>
 <script>
-  import {  operation_userDepartmentStore } from '../../../../api/api';
-  import { get_myDepartmentStore_list} from '../../../../api/api';
-  import {   getRealName } from '../../../../api/api';
+  import {operation_userDepartmentStore} from '../../../../api/api';
+  import {get_myDepartmentStore_list} from '../../../../api/api';
+
   export default {
     inject: ["reload"],
     data() {
       return {
-        fullscreenLoading:false,
-        realName:'',//实名信息
+        fullscreenLoading: false,
         //分页开始
         total: 0,
         //分页结束
-        welfareStatuss:[
-          { "value": "发布中", "label": "1" },
-          { "value": "隐藏中", "label": "2" },
-          { "value": "审核中", "label": "4" },
-          { "value": "已过期", "label": "5" },
+        welfareStatuss: [
+          {"value": "发布中", "label": "1"},
+          {"value": "隐藏中", "label": "2"},
+          {"value": "审核中", "label": "4"},
+          {"value": "已过期", "label": "5"},
         ],//查询条件职位状态
         releaseWelfare: { //查询条件
-          releaseType:'101', //服务类型
-          welfareStatus:'',//发布状态
+          releaseType: '101', //服务类型
+          welfareStatus: '',//发布状态
           currentPage: 1,
           pageSize: 20,//每页显示的数量
         },
-        tableData:[], //全部数据
-        tableDataNo:{
-          pictureUrl:'',
-          serviceAndprice:'',
+        tableData: [], //全部数据
+        tableDataNo: {
+          pictureUrl: '',
+          serviceAndprice: '',
         }, //某一个数据
         dialogVisible: false,  //查看详情弹窗
         formLabelWidth: '120px',
         rules: {
           workingAddress: [
-            {  required: true, message: '工作地址不能为空', trigger: 'change' },
-            { min: 1, max: 100, message: '地址不能超过100个字', trigger: 'blur' }
+            {required: true, message: '工作地址不能为空', trigger: 'change'},
+            {min: 1, max: 100, message: '地址不能超过100个字', trigger: 'blur'}
           ],
-          describeOne:[
-            {  required: true, message: '职位描述不能为空', trigger: 'change' },
-            { min: 1, max: 100, message: '职位描述不能超过100个字', trigger: 'blur' }
+          describeOne: [
+            {required: true, message: '职位描述不能为空', trigger: 'change'},
+            {min: 1, max: 100, message: '职位描述不能超过100个字', trigger: 'blur'}
           ],
           isPublishContact: [
-            { required: true, message: '请勾选是否公开电话', trigger: 'blur' }
-          ],},
+            {required: true, message: '请勾选是否公开电话', trigger: 'blur'}
+          ],
+        },
       }
     },
-    created () {
-      this.getRealName();
+    created() {
+      this.get_position_list();
     },
     methods: {
-      examineClick(row){
+      examineClick(row) {
         this.reload();
-        this.$router.push('/home/editDepartmentStore/'+row.id);  //带参数页面跳转  name:'editMAndRAndP',
+        this.$router.push('/home/editDepartmentStore/' + row.id);  //带参数页面跳转  name:'editMAndRAndP',
         // id:this.$route.params.id,
       },
 
 
       handleClick(row) {  //点击查看详细
-        this.tableDataNo=row;
-        this.dialogVisible=true;
+        this.tableDataNo = row;
+        this.dialogVisible = true;
       },
 
       handleClose(done) { //关闭查看详情
-        this.dialogVisible=false;
+        this.dialogVisible = false;
       },
 
       //操作
-      submitForm(form,type) {
-        this.fullscreenLoading=true;
-        let data={};
-        data.type=type;
-        data.userId= form.userId;
-        data.id=form.id;
-        if(type===1 || type===2||  type===3|| type===4 || type===5){
+      submitForm(form, type) {
+        this.fullscreenLoading = true;
+        let data = {};
+        data.type = type;
+        data.userId = form.userId;
+        data.id = form.id;
+        if (type === 1 || type === 2 || type === 3 || type === 4 || type === 5) {
           operation_userDepartmentStore(data).then(data => {
-            this.fullscreenLoading=false;
-            let msg=data.msg;
+            this.fullscreenLoading = false;
+            let msg = data.msg;
             if (data && data.status === 0) {
               this.$message.success(msg);
-            }  else {
+            } else {
               this.$msgdeal(msg);
             }
           });
-        }else{
+        } else {
           this.$message.error("操作类型错误");
         }
         this.get_position_list(); //刷新列表
       },
       //删除
-      open(form,type) {
+      open(form, type) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this. submitForm(form,type);
+          this.submitForm(form, type);
         }).catch(() => {
 
         });
@@ -291,67 +308,67 @@
       handleCurrentChange(currentPage) {
         // currentPage为当前的页数
         // 显示当前页数对应的数据
-        this.releaseWelfare.currentPage=currentPage;
+        this.releaseWelfare.currentPage = currentPage;
         this.get_position_list();
 
       },
-      get_position_listselect(){
-        this.releaseWelfare.currentPage=1;
+      get_position_listselect() {
+        this.releaseWelfare.currentPage = 1;
         this.get_position_list();
       },
-      get_position_list(){
+      get_position_list() {
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1' && role !== '12') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         get_myDepartmentStore_list(this.releaseWelfare).then((res) => {
-          if(res.status===0) {
+          if (res.status === 0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
-          }else{
+          } else {
             this.$msgdeal(res.msg);
           }
         });
       },
 
       //判断是否实名和登陆状态
-      isAuthenticationM(){
-        if (window.localStorage.getItem('dian_isAuthentication')===null || window.localStorage.getItem('dian_isAuthentication') !== '2') {
+      isAuthenticationM() {
+        if (window.localStorage.getItem('dian_isAuthentication') === null || window.localStorage.getItem('dian_isAuthentication') !== '2') {
           this.$alert('<strong>您需要在用户中心下的我的账户完善商户信息才能查看信息！</strong>', '用户信息不完善', {
             dangerouslyUseHTMLString: true
           });
           this.$router.push({path: '/home/myAccount'});
           return false;
-        }else{
-          this.$router.push({ path: '/home/createDepartmentStore' });
+        } else {
+          this.$router.push({path: '/home/createDepartmentStore'});
         }
       },
-      //获取实名信息
-      getRealName(){
-        getRealName().then((res) => { //获取实名信息填充
-          if(res.status ===0 ) {
-            this.realName=res.data;
-            this.get_position_list();
-          }else {
-            this.$msgdeal(res.msg);
-          }
-        });
-      },
+
 
     }
   }
 </script>
 <style>
   .parent {
-    padding:0px 15px 25px 40px;
+    padding: 0px 15px 25px 40px;
     /*框间距上填充为25px
 右填充为50px
 下填充为75px
 左填充为100px*/
-    line-height:30px;  /*行间距*/
-    font-size:16px;
+    line-height: 30px; /*行间距*/
+    font-size: 16px;
   }
-  .left{
+
+  .left {
     width: 40%;
     display: table-cell;
   }
-  .right{
+
+  .right {
     width: 50%;
     display: table-cell;
   }

@@ -127,9 +127,7 @@
 
       <span>用户类型 : {{tableDataNo.userType }}</span><br>
       <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>地址详情 : {{tableDataNo.serviceDetailed }}</span><br>
-      <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+      <span>出租地址 : {{tableDataNo.serviceDetailed }}</span><br>
 
       <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
       <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
@@ -140,6 +138,15 @@
       <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
+      <br>实名详情<br>
+
+      <span>实名公司 : {{tableDataNo.companyName }}</span><br>
+      <span>实名电话 : {{tableDataNo.contact }}</span><br>
+      <span>实名城市 : {{tableDataNo.detailed }}</span><br>
+      <span>实名地址 : {{tableDataNo.realNameId }}</span><br>
+
+
+
       <span>图片 : </span><br>
       <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
         <img :src="p.pictureUrl" width="100%">

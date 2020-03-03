@@ -107,13 +107,8 @@
       :before-close="handleClose">
 
       <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>企业名称 : {{tableDataNo.companyName }}</span><br>
       <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
-      <span>城区 : {{tableDataNo.detailed }}</span><br>
-      <span>实名地址 : {{tableDataNo.realNameId }}</span><br>
       <span>工作地址 : {{tableDataNo.workingAddress }}</span><br>
-
       <span>职位类型 : {{tableDataNo.position }}</span><br>
       <span>招聘人数 : {{tableDataNo.number }}</span><br>
       <span>薪水 : {{tableDataNo.salary }}</span><br>
@@ -125,13 +120,17 @@
       <span>详情 : {{tableDataNo.describeOne }}</span><br>
       <span>奖励 : {{tableDataNo.introductoryAward }}</span><br>
       <span>邮箱 : {{tableDataNo.email }}</span><br>
-      <span>公开手机 : {{tableDataNo.isPublishContact }}</span><br>
-      <span>地址一致 : {{tableDataNo.addressConsistency }}</span><br>
+      <span>公开手机（1为公开）: {{tableDataNo.isPublishContact }}</span><br>
+      <span>地址一致（1为一致） : {{tableDataNo.addressConsistency }}</span><br>
       <span>申请时间 : {{tableDataNo.createTime }}</span><br>
       <span>审批状态 : {{tableDataNo.authentiCationStatus }}</span><br>
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
-
+    <br>实名信息<br>
+      <span>公司名称 : {{tableDataNo.companyName }}</span><br>
+      <span>实名电话 : {{tableDataNo.contact }}</span><br>
+      <span>实名城区 : {{tableDataNo.detailed }}</span><br>
+      <span>实名地址 : {{tableDataNo.realNameId }}</span><br>
 
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>

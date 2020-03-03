@@ -106,17 +106,8 @@
         </el-dialog>
       </el-form-item>
 
-
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off"   :placeholder="ruleForm.consigneeName"></el-input>
-      </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true"  :placeholder="ruleForm.contact"></el-input>
-      </el-form-item>
-
-      <el-form-item label="所在城市">
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
 
       <el-form-item>

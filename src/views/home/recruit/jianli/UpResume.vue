@@ -316,11 +316,7 @@
     line-height: 30px; /*行间距*/
     font-size: 16px;
   }
-  .authentiCationFailureClass{
-    font-size: 16px;
-    padding: 0px 10px 25px 38px;
-    color:#FC716F;
-  }
+
   .left {
     width: 50%;
     display: table-cell;

@@ -11,6 +11,11 @@
   font-size: 15px;
   color: #FC3729;
 }
+.authentiCationFailureClass{
+  font-size: 16px;
+  padding: 0px 10px 25px 38px;
+  color:#FC716F;
+}
 .titleAll{
   font-size: 20px;
   padding: 15px 10px 1px 10px;

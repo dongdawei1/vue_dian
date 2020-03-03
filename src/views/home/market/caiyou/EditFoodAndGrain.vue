@@ -14,7 +14,9 @@
           </el-radio-group>
         </template>
       </el-form-item>
-
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        失败原因:{{ruleForm.authentiCationFailure}}
+      </div>
       <el-form-item label="商品类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"
@@ -79,7 +81,6 @@
         <el-input v-model="ruleForm.remarks" placeholder="备注30字以内"></el-input>
       </el-form-item>
 
-
       <el-form-item label="服务区域" prop="serviceDetailed">
         <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务/销售区域">
           <el-option label="全市" value="全市"></el-option>
@@ -111,15 +112,6 @@
 
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
-      </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.contact"></el-input>
-      </el-form-item>
-
-      <el-form-item label="所在城市">
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.detailed"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -185,20 +177,15 @@
           userId: '',
           releaseType: '',//发布类型
           releaseTitle: '',//标题
-
           serviceType: '',//商品/服务类型
           serviceAndprice: [],//项目及价格KEY，vaule
-
           project: '', //项目
           price: '',//价格
-
           serviceIntroduction: '',//介绍
           remarks: '',//备注
           serviceDetailed: '',//服务地址 来电确认和全市
           pictureUrl: [],//图片
           //实名中获取
-
-          contact: '',  //实名联系联系方式 回显 可修改
           consigneeName: '', //联系人姓名 回显可修改
         },
         form: {
@@ -311,6 +298,11 @@
       //检查登陆和权限
       checke_isButten() {
         if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1' && role !== '4') {
+          this.$router.push({path: '/home/release'});
           return false;
         }
         get_userFoodAndGrain_id(this.id).then(res => {

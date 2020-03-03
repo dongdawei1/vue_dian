@@ -51,7 +51,6 @@
 
 <script>
   import { getBunner }  from '../../api/api';
-  import {  isRoleMessage } from '../../api/api';
   export default {
     props: ["tableData"],
     data: function () {

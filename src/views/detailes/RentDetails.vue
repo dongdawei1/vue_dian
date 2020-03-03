@@ -6,17 +6,15 @@
         <div class="mrpDetailsfuwu">
           出租类别 : {{rent.releaseType}}<br>
           联 系 人 : {{rent.consigneeName}}<br>
-          联系方式 : {{rent.contact}}<br>
           备 注 : {{rent.remarks}}<br>
           发布时间 : {{rent.createTime}}<br>
           使用面积 : {{rent.fouseSize}}<br>
-          所在城区 : {{rent.detailed}}<br>
-          地址详情 : {{rent.serviceDetailed}}<br>
-
+          出租地址 : {{rent.serviceDetailed}}<br>
           <br>实名详情<br>
-          企业名称 : {{realName.companyName}}<br>
-          实名城市 : {{realName.detailed}}<br>
-          实名地址 : {{realName.addressDetailed}}<br>
+          企业名称 : {{rent.companyName}}<br>
+          联系方式 : {{rent.contact}}<br>
+          所在城区 : {{rent.detailed}}<br>
+          联系地址 : {{rent.realNameId}}<br>
         </div>
 
         <ReservationService></ReservationService>
@@ -44,8 +42,6 @@
 <script>
 
   import {get_rent_id} from '../../api/api';
-  import {getRealNameById} from '../../api/api';
-
   import ReservationService from "../../components/pages/ReservationService";
   import DibuBunner from "../../components/pages/DibuBunner";
 
@@ -65,7 +61,6 @@
           releaseType: '',
         },
         fileList: [],
-        realName: '',
       }
     },
 
@@ -102,16 +97,6 @@
         });
       },
 
-      getRealName() {
-        getRealNameById(this.rent.realNameId).then(res => {
-          if (res.status === 0) {
-            this.realName = res.data;
-          } else {
-            this.$msgdeal(res.msg);
-            return false;
-          }
-        });
-      }
     }
   }
 </script>

@@ -302,7 +302,7 @@
           return false;
         };
         let role = window.localStorage.getItem('dian_role');
-        if (  role !== '1' && role !== '5' && role === '2') {
+        if (  role !== '1' && role !== '5' && role !== '2') {
           this.$router.push({path: '/home/release'});
           return false;
         }

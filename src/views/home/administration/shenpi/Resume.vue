@@ -2,9 +2,9 @@
   <div class="vm-image-list">
     <!--c查询框开始-->
     <el-form :inline="true" :model="realName" class="demo-form-inline">
-      <el-form-item label="用户名">
-        <el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>
-      </el-form-item>
+      <!--<el-form-item label="用户名">-->
+        <!--<el-input v-model="realName.userName" placeholder="用户名" clearable></el-input>-->
+      <!--</el-form-item>-->
       <el-form-item label="手机号">
         <el-input v-model="realName.contact" placeholder="手机号" clearable></el-input>
       </el-form-item>
@@ -125,9 +125,7 @@
       :before-close="handleClose">
 
       <span>用户类型 : {{tableDataNo.userType }}</span><br>
-      <span>用户名 : {{tableDataNo.userName }}</span><br>
-      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
-      <span>联系方式 : {{tableDataNo.contact }}</span><br>
+
       <span>求职地域 : {{tableDataNo.detailed }}</span><br>
       <span>现居住地 : {{tableDataNo.addressDetailed }}</span><br>
       <span>职位类型 : {{tableDataNo.position }}</span><br>
@@ -144,8 +142,9 @@
       <span>失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
       <span>审核时间 : {{tableDataNo. examineTime }}</span><br>
-
-
+      <br>实名信息<br>
+      <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
+      <span>联系方式 : {{tableDataNo.contact }}</span><br>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
   </span>

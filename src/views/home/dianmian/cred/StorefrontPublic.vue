@@ -37,14 +37,14 @@
       <el-form-item label="备注" prop="remarks">
         <el-input v-model="ruleForm.remarks" placeholder="备注30字以内"></el-input>
       </el-form-item>
-      <el-form-item label="所在城区" prop="selectedOptions">
-        <el-cascader
-          size="large"
-          :options="options"
-          v-model="ruleForm.selectedOptions"
-          @change="handleChange">
-        </el-cascader>
-      </el-form-item>
+      <!--<el-form-item label="所在城区" prop="selectedOptions">-->
+        <!--<el-cascader-->
+          <!--size="large"-->
+          <!--:options="options"-->
+          <!--v-model="ruleForm.selectedOptions"-->
+          <!--@change="handleChange">-->
+        <!--</el-cascader>-->
+      <!--</el-form-item>-->
       <el-form-item label="详细地址" prop="serviceDetailed">
         <el-input v-model="ruleForm.serviceDetailed" placeholder="地址详情100字以内"></el-input>
       </el-form-item>
@@ -73,10 +73,11 @@
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
+      实名信息
+      <el-form-item label="联系方式" >
         <el-input v-model="ruleForm.contact"  :disabled="true"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
-      实名信息
+
       <el-form-item label="公司名称">
         <el-input v-model="realName.companyName" :disabled="true" autocomplete="off"
                   :placeholder="ruleForm.companyName"></el-input>
@@ -147,7 +148,7 @@
         //城市组件相关开始
         options: regionData,//城市   npm install element-china-area-data -S  城市联动组件 @4.1.2
         ruleForm: {
-          selectedOptions: [], //三级联动城市
+         // selectedOptions: [], //三级联动城市
 
           userId: '',
           releaseType: '',//发布类型

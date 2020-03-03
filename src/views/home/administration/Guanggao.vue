@@ -1,7 +1,7 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
 
-    <el-tab-pane label="添加广告" name="sellectAddOrder" :key="'sellectAddOrder'">
+    <el-tab-pane label="添加广告/发布管理" name="sellectAddOrder" :key="'sellectAddOrder'">
       <AdminSellectAddOrder v-if="isAdminSellectAddOrder"></AdminSellectAddOrder>
     </el-tab-pane>
 

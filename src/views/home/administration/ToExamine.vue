@@ -49,7 +49,7 @@
   import Recruit from './shenpi/Recruit'
   import Resume from './shenpi/Resume'
   import Mrp from './shenpi/Mrp'
-  import AdminMent from './shenpi/AdminMent'
+  import AdminMent from './shenpi/AdminRent'
   import AdminEquipment from './shenpi/AdminEquipment'
   import AdminFoodAndGrain from './shenpi/AdminFoodAndGrain'
   import AdminWineAndTableware from './shenpi/AdminWineAndTableware'

@@ -1,6 +1,6 @@
 <template>
   <div class="vm-image-list">
-    <!--我的发布 已发布过的职位  c查询框开始-->
+    <!--我的发布 已发布过的 c查询框开始-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
       <el-form-item label="发布类型"  >
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
@@ -186,9 +186,10 @@
       <span>审核人员 : {{tableDataNo.examineName }}</span><br>
 
       <br>实名信息<br>
-      <span>所在地 : {{realName.detailed }}</span><br>
-      <span>市场详情 : {{realName.addressDetailed }}</span><br>
+      <span>实名城市 : {{realName.detailed }}</span><br>
+      <span>实名地址 : {{realName.addressDetailed }}</span><br>
       <span>市场名: {{realName.companyName }}</span><br>
+
       <span>图片 : </span><br>
       <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
         <img :src="p.pictureUrl" width="100%">

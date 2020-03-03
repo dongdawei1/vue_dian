@@ -11,6 +11,8 @@
         </template>
       </el-form-item>
 
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">失败原因:{{ruleForm.authentiCationFailure}}</div>
+
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
@@ -60,14 +62,22 @@
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.contact"></el-input>
+      实名信息
+      <el-form-item label="联系方式" >
+        <el-input v-model="ruleForm.contact"  :disabled="true"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
 
-      <el-form-item label="所在城市">
+      <el-form-item label="公司名称">
+        <el-input v-model="ruleForm.companyName" :disabled="true" autocomplete="off"
+                  :placeholder="ruleForm.companyName"></el-input>
+      </el-form-item>
+      <el-form-item label="实名城市">
         <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
                   :placeholder="ruleForm.detailed"></el-input>
+      </el-form-item>
+      <el-form-item label="实名地址">
+        <el-input v-model="ruleForm.realNameId" :disabled="true" autocomplete="off"
+                  :placeholder="ruleForm.realNameId"></el-input>
       </el-form-item>
 
       <el-form-item>
