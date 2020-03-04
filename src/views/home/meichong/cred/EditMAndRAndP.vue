@@ -11,7 +11,9 @@
           </el-radio-group>
         </template>
       </el-form-item>
-
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        审核失败原因: {{ruleForm.authentiCationFailure}};
+      </div>
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="标题6-14字之内"></el-input>
       </el-form-item>
@@ -19,6 +21,9 @@
         <el-input v-model="ruleForm.startPrice" placeholder="起步价格(元)"></el-input>
       </el-form-item>
 
+      <div class="authentiCationFailureClass">
+        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
+      </div>
       <el-form-item label="服务描述" prop="serviceIntroduction">
         <el-input
           type="textarea"
@@ -62,21 +67,12 @@
         </el-dialog>
       </el-form-item>
 
-      <p>实名信息</p>
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off" :placeholder="ruleForm.contact"></el-input>
-      </el-form-item>
-      <el-form-item label="公司名称">
-        <el-input v-model="ruleForm.companyName" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.companyName"></el-input>
-      </el-form-item>
-      <el-form-item label="实名城市">
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.detailed"></el-input>
-      </el-form-item>
+
+
+
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布

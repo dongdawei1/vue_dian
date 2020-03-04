@@ -167,6 +167,13 @@
         this.$router.push({path: '/home/purchaseCreateOrder'});
       },
 
+    },
+    watch: {
+      "$route"(to, from) {
+        if (to.path === '/home/myRelease') {
+          this.get_myPurchase_Order();
+        }
+      }
     }
   }
 </script>

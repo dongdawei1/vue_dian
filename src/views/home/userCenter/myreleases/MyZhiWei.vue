@@ -442,6 +442,13 @@
         this.$router.push({path: this.pathString});
       },
 
+    },
+    watch: {
+      "$route"(to, from) {
+        if (to.path === '/home/myRelease') {
+          this.get_position_list();
+        }
+      }
     }
   }
 </script>

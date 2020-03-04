@@ -149,6 +149,7 @@
       getMrpDetails(){
         getWholesaleCommodityPublicId(this.id).then(res =>{
           if(res.status===0){
+
             this.wholesaleCommodity=res.data.wholesaleCommodity;
             let  releaseType= this.wholesaleCommodity.releaseType;
              if(releaseType===4){

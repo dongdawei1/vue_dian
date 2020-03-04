@@ -13,7 +13,9 @@
           </el-radio-group>
         </template>
       </el-form-item>
-
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        审核失败原因: {{ ruleForm.authentiCationFailure }};
+      </div>
       <el-form-item label="商品名称" prop="serviceType">
         <el-input v-model="ruleForm.serviceType" :disabled="true"></el-input>
       </el-form-item>
@@ -256,7 +258,7 @@
           deliveryCollect: 0,
           pictureUrl: [],//图片
           //实名中获取
-
+          contact:''
         },
 
         rules: {
@@ -376,6 +378,7 @@
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
             this.realName = res.data;
+            this.ruleForm.contact= this.realName.contact;
           } else {
             this.$msgdeal(res.msg);
           }
@@ -384,6 +387,11 @@
 
       checke_isButten() {
         if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (  role !== '1' && role !== '13') {
+          this.$router.push({path: '/home/release'});
           return false;
         }
         get_userWholesaleCommodity_id(this.id).then(res => {
@@ -400,16 +408,16 @@
             //图片回显和表格参数
             this.ruleForm.pictureUrl = fileListAndPictureUrl.pictureUrl;
             this.fileList = fileListAndPictureUrl.fileList;
-            let value1 = [];
-            value1[0] = this.ruleForm.startTime;
-            value1[1] = this.ruleForm.endTime;
-            this.ruleForm.value1 = value1;
+
+            //this.ruleForm.value1=[];
             this.ruleForm.commodityJiage = toDecimal(this.ruleForm.commodityJiage);
             this.ruleForm.deliveryCollect = toDecimal(this.ruleForm.deliveryCollect);
             this.commodityPackingChange();
             this.reserveChange();
             this.deliveryTypeChange();
             this.ruleForm.cations = this.ruleForm.authentiCationFailure;
+
+            console.log(this.ruleForm)
             this.getRealName();
           } else {
             this.$msgdeal(res.msg);

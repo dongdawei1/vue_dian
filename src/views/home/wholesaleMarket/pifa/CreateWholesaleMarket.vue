@@ -285,6 +285,7 @@
           pictureUrl:[],//图片
           //实名中获取
           serviceDetailed:'',
+          contact:'',
         },
 
         rules: {
@@ -403,6 +404,7 @@
           if(res.status ===0 ) {
             this.realName=res.data;
             this.ruleForm.userId=this.realName.userId;
+            this.ruleForm.contact= this.realName.contact;
           }else {
             this.$msgdeal(res.msg);
           }

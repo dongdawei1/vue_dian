@@ -124,22 +124,26 @@
       :before-close="handleClose">
       <div class="parent">
         <div class="left">
-          <span>实名姓名 : {{tableDataNo.consigneeName }}</span><br>
-          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+          <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
+          <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
           <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
-          <span>实名城区 : {{tableDataNo.detailed }}</span><br>
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
           <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
-          <span>公司名称 : {{tableDataNo.companyName }}</span><br>
+
+          <span>公司名称: {{tableDataNo.realNameId }}</span><br>
+          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+          <span>实名地址: {{tableDataNo.examineTime }}</span><br>
         </div>
         <div class="right">
           <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
           <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
-          <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
           <span>备注 : {{tableDataNo.remarks }}</span><br>
           <span>起步价格 : {{tableDataNo.startPrice }}</span><br>
           <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
         </div>
+
+
       <span>服务介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
       <span>服务图片 : </span><br>
         <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
@@ -281,7 +285,12 @@
         this.get_position_list();
       },
       get_position_list(){
-        if(!this.$fsAuthent()){
+        if (!this.$fsAuthent()) {
+          return false;
+        };
+        let role = window.localStorage.getItem('dian_role');
+        if (  role !== '1' && role !== '7') {
+          this.$router.push({path: '/home/release'});
           return false;
         }
         get_usermrp_list(this.releaseWelfare).then((res) => {
@@ -302,6 +311,13 @@
           this.$router.push({path: '/home/createMAndRAndP'});
       },
 
+    },
+    watch: {
+      "$route"(to, from) {
+        if (to.path === '/home/myRelease') {
+          this.get_position_list();
+        }
+      }
     }
   }
 </script>

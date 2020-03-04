@@ -117,6 +117,7 @@ export const admin_select_signingOrderById = params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+
 export const admin_guangggao_realName = params => {
   return axios({
     url: `${base}${v5Api}toExamine/admin_guangggao_realName`,
@@ -124,6 +125,7 @@ export const admin_guangggao_realName = params => {
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data); };
+
 
 
 
