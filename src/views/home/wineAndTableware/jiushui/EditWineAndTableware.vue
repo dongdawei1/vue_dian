@@ -10,7 +10,9 @@
           </el-radio-group>
         </template>
       </el-form-item>
-
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        审核失败原因: {{ruleForm.authentiCationFailure}};
+      </div>
       <el-form-item label="商品类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"
@@ -53,7 +55,7 @@
 
       </div>
       <!--动态添加结束-->
-      <div class="form-zhushi">
+      <div class="authentiCationFailureClass">
         注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
       </div>
 
@@ -104,18 +106,10 @@
         </el-dialog>
       </el-form-item>
 
-
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true"  :placeholder="ruleForm.contact"></el-input>
-      </el-form-item>
 
-      <el-form-item label="所在城市">
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.detailed"></el-input>
-      </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布

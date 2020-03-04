@@ -138,7 +138,7 @@
     </el-pagination>
     <!-- 电话-->
     <el-dialog
-      title="禁止将商户联系方式提供给他人"
+      title="请勿将求职者联系方式提供给他人"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">

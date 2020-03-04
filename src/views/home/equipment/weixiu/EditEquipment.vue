@@ -11,7 +11,9 @@
           </el-radio-group>
         </template>
       </el-form-item>
-
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        审核失败原因: {{ruleForm.authentiCationFailure}};
+      </div>
       <el-form-item label="具体类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"
@@ -23,7 +25,7 @@
       </el-form-item>
 
 
-      <div class="form-zhushi">
+      <div class="authentiCationFailureClass">
         注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
       </div>
       <div v-for="(item, index) in ruleForm.serviceAndprice" :key="index">
@@ -106,15 +108,7 @@
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.contact"></el-input>
-      </el-form-item>
 
-      <el-form-item label="所在城市">
-        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.detailed"></el-input>
-      </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布
@@ -305,6 +299,11 @@
       //检查登陆和权限
       checke_isButten() {
         if (!this.$fsAuthent()) {
+          return false;
+        }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1' && role !== '3' ) {
+          this.$router.push({path: '/home/release'});
           return false;
         }
         get_userequipment_id(this.id).then(res => {

@@ -127,9 +127,7 @@
       <div class="parent">
         <div class="left">
           <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-          <span>联系方式 : {{tableDataNo.contact }}</span><br>
           <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
-          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
           <span>服务类型 : {{tableDataNo.releaseType}}</span><br>
           <span>服务项目 : {{tableDataNo.serviceType}}</span><br>
@@ -153,8 +151,11 @@
             </el-table>
 
           </div>
-          <span>公司名称: {{realName.companyName }}</span><br>
-          <span>实名地址: {{realName.addressDetailed }}</span><br>
+          <br>实名信息<br>
+          <span>公司名称: {{tableDataNo.examineTime }}</span><br>
+          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+          <span>联系地址: {{tableDataNo.realNameId}}</span><br>
         </div>
         <div class="right">
           <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>

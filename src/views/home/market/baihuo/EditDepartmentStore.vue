@@ -12,7 +12,9 @@
           </el-radio-group>
         </template>
       </el-form-item>
-
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        失败原因:{{ruleForm.authentiCationFailure}}
+      </div>
       <el-form-item label="商品类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"

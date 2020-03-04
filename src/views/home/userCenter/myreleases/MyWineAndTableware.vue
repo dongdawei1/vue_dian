@@ -122,9 +122,8 @@
       <div class="parent">
         <div class="left">
           <span>联系人 : {{tableDataNo.consigneeName }}</span><br>
-          <span>联系方式 : {{tableDataNo.contact }}</span><br>
           <span>服务区域 : {{tableDataNo.serviceDetailed }}</span><br>
-          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+
           <span>申请时间 : {{tableDataNo.createTime }}</span><br>
           <span>发布类型 : {{tableDataNo.releaseType}}</span><br>
           <span>商品名称 : {{tableDataNo.serviceType}}</span><br>
@@ -148,8 +147,11 @@
             </el-table>
 
           </div>
-          <span>公司名称: {{realName.companyName }}</span><br>
-          <span>实名地址: {{realName.addressDetailed }}</span><br>
+          <br>实名信息<br>
+          <span>公司名称: {{tableDataNo.examineTime }}</span><br>
+          <span>联系方式 : {{tableDataNo.contact }}</span><br>
+          <span>所在城区 : {{tableDataNo.detailed }}</span><br>
+          <span>联系地址: {{tableDataNo.realNameId}}</span><br>
         </div>
         <div class="right">
           <span>交易次数 : {{tableDataNo.servicFrequenc }}</span><br>
@@ -158,6 +160,8 @@
           <span>发布状态 : {{tableDataNo.welfareStatus }}</span><br>
           <span v-if="tableDataNo.welfareStatus === '审核失败'">失败原因 : {{tableDataNo.authentiCationFailure }}</span><br>
         </div>
+
+
         <span>具体介绍 : {{tableDataNo.serviceIntroduction }}</span><br>
         <span>商品图片 : </span><br>
         <li v-for="(p, index) in this.tableDataNo.pictureUrl" :key="index">
@@ -186,13 +190,11 @@
 <script>
   import {  operation_userWineAndTableware } from '../../../../api/api';
   import { get_myWineAndTableware_list} from '../../../../api/api';
-  import {   getRealName } from '../../../../api/api';
   export default {
     inject: ["reload"],
     data() {
       return {
         fullscreenLoading:false,
-        realName:'',//实名信息
         pathString:'/home/createWineAndTableware',
         //分页开始
         total: 0,
@@ -231,7 +233,6 @@
     },
     created () {
       this.get_position_list();
-      this.getRealName();
     },
     methods: {
       examineClick(row){
@@ -300,7 +301,13 @@
         if (!this.$fsAuthent()) {
           return false;
         }
+        let role = window.localStorage.getItem('dian_role');
+        if (role !== '1' && role !== '5') {
+          this.$router.push({path: '/home/release'});
+          return false;
+        }
         get_myWineAndTableware_list(this.releaseWelfare).then((res) => {
+
           if(res.status===0) {
             this.total = res.data.totalno; //总条数
             this.tableData = res.data.datas;
@@ -318,15 +325,7 @@
         this.$router.push({ path: this.pathString });
       },
       //获取实名信息
-      getRealName(){
-        getRealName().then((res) => { //获取实名信息填充
-          if(res.status ===0 ) {
-            this.realName=res.data;
-          }else {
-            this.$msgdeal(res.msg);
-          }
-        });
-      },
+
 
     }
   }

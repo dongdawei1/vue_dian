@@ -38,7 +38,7 @@
           <el-button type="primary" @click="addItem" plain>增加一行商品详情</el-button>
         </el-col>
       </el-row>
-      <div class="form-zhushi">
+      <div class="authentiCationFailureClass">
         注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
       </div>
 
@@ -116,10 +116,10 @@
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
+      实名信息
       <el-form-item label="联系方式" prop="contact">
         <el-input v-model="ruleForm.contact" :disabled="true"  autocomplete="off" :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
-      实名信息
       <el-form-item label="公司名称">
         <el-input v-model="realName.companyName" :disabled="true" autocomplete="off"
                   :placeholder="ruleForm.companyName"></el-input>
