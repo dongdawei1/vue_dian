@@ -206,7 +206,7 @@
           queriesType: type,
           id: form.id,
           selectType:1
-        }
+        };
         getContact(params).then((res) => {
           if(res.status===0) {
             this.contact=res.data;
@@ -226,9 +226,9 @@
       getRealName(){
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
-        if (role === '1' || role === '5'|| role === '2') {
+        if (role !== '11' ) {
           this.isCreate=true;
         }
         getRealName().then((res) => { //获取实名信息填充

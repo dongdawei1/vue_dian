@@ -43,6 +43,12 @@
       max-height="500">
       <el-table-column
         fixed
+        prop="id"
+        label="id"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="releaseType"
         label="服务类型"
         width="120"
@@ -52,6 +58,13 @@
         prop="welfareStatus"
         label="发布状态"
         width="90">
+      </el-table-column>
+
+      <el-table-column
+        prop="termOfValidity"
+        label="过期时间"
+        width="120"
+        :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="authentiCationFailure"
@@ -86,7 +99,7 @@
       <el-table-column
         prop="contact"
         label="联系方式"
-        width="110">
+        width="115">
       </el-table-column>
       <el-table-column
         prop="consigneeName"
@@ -107,6 +120,7 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="scope.row.isDisplaySee">查看</el-button>
           <el-button @click="submitForm(scope.row, 1)" type="text" size="small" v-if="scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
+          <el-button @click="submitForm(scope.row, 2)" type="text" size="small" v-if="scope.row.isDisplayDelay" v-loading.fullscreen.lock="fullscreenLoading" >延期</el-button>
           <el-button @click="submitForm(scope.row, 3)" type="text" size="small"  v-if="scope.row.isDisplayHide" v-loading.fullscreen.lock="fullscreenLoading">隐藏</el-button>
           <el-button @click="submitForm(scope.row, 4)" type="text" size="small"  v-if="scope.row.isDisplayRelease" v-loading.fullscreen.lock="fullscreenLoading">发布</el-button>
           <el-button @click="open(scope.row, 5)" type="text" size="small"  v-if="scope.row.isDisplayDelete"   v-loading.fullscreen.lock="fullscreenLoading">删除</el-button>
@@ -245,7 +259,7 @@
         data.userId= form.userId;
         data.id=form.id;
         data.StringPath=this.releaseWelfare.StringPath;
-        if(type===1 ||  type===3|| type===4 || type===5){
+        if(type===1 ||  type===3|| type===4 || type===5 || type===2){
           operation_usermrp(data).then(data => {
             this.fullscreenLoading=false;
             let msg=data.msg;
@@ -331,12 +345,5 @@
     line-height:30px;  /*行间距*/
     font-size:16px;
   }
-  .left{
-    width: 40%;
-    display: table-cell;
-  }
-  .right{
-    width: 50%;
-    display: table-cell;
-  }
+
 </style>

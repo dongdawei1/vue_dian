@@ -14,6 +14,7 @@
       <h4><span>简历详情</span></h4>
       <div class="gerentablecss_content">
         <div class="left">
+          <span>id : {{da.id }}</span><br>
           <span>求职类型 : {{da.position }}</span><br>
           <span>学历 : {{da.education }}</span><br>
           <span>年龄 : {{da.age }}</span><br>
@@ -23,7 +24,7 @@
           <span>联系方式 : {{da.contact }}</span><br>
           <span>是否公开电话 : {{da.isPublishContact }}</span><br>
           <span>创建时间 : {{da.createTime }}</span><br>
-          <span>刷新时间 : {{da.updateTime }}</span><br>
+          <span>失效时间 : {{da.termOfValidity }}</span><br>
         </div>
         <div class="right">
           <span>工资要求 : {{da.salary }}</span><br>
@@ -48,7 +49,9 @@
       <el-button type="primary" @click="operation(4)" v-if="da.isRelease"
                  v-loading.fullscreen.lock="fullscreenLoading">显示简历
       </el-button>
-
+      <el-button type="primary" @click="operation(5)" v-if="da.yanqi"
+                 v-loading.fullscreen.lock="fullscreenLoading">延期
+      </el-button>
       <el-button type="primary" @click="endAndAgain()" v-if="da.isAgain">重新发布</el-button>
     </div>
 
@@ -79,11 +82,12 @@
         data.type = type;
         data.userId = this.da.userId;
         data.id = this.da.id;
-        if (type === 1 || type === 2 || type === 4) {
+        if (type === 1 || type === 2 || type === 4 || type === 5) {
           this.fullscreenLoading = true;
           operation_resume(data).then(res => {
             this.fullscreenLoading = false;
             if (res.status === 0) {
+              this.$message.success("操作成功");
               this.jurisdiction();
             } else {
               this.$msgdeal(res.msg);
@@ -155,6 +159,10 @@
                   this.da.isDel = true;
                   this.da.authentication_status = true;
                 }
+              } else if (welfareStatus === 5) {
+                this.da.authentiCationStatus = '已过期未显示'
+                this.da.isDel = true;
+                this.da.yanqi = true;
               }
               this.isDetails = true;  //详情
               this.isCreate = false;
@@ -171,7 +179,7 @@
       isAuthenticationM() {
         this.$router.push({path: '/home/createResume'});
       },
-      endAndAgain(){
+      endAndAgain() {
         this.$router.push({path: '/home/upResume'});
       }
 
@@ -196,15 +204,6 @@
     font-size: 16px;
   }
 
-  .left {
-    width: 50%;
-    display: table-cell;
-  }
-
-  .right {
-    width: 50%;
-    display: table-cell;
-  }
 
   .isCreateClass {
     padding: 20px;

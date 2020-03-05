@@ -190,7 +190,7 @@
         }
         let role = window.localStorage.getItem('dian_role');
         if (this.releaseWelfare.releaseType === 15) {
-          if (role === '1' || role === '4' || role === '13' || role === '6' || role === '5') {
+          if (role === '1' || role === '4' || role === '13' || role === '6' || role === '5'  || role === '12') {
             this.isCreate = true; //是否展示发布键
           }
         } else if (this.releaseWelfare.releaseType === 14) {  //店面窗口

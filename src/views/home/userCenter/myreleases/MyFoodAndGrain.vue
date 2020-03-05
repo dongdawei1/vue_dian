@@ -46,6 +46,12 @@
       max-height="500">
       <el-table-column
         fixed
+        prop="id"
+        label="id"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="releaseType"
         label="发布类型"
         width="120"
@@ -61,6 +67,12 @@
         prop="welfareStatus"
         label="发布状态"
         width="90">
+      </el-table-column>
+      <el-table-column
+        prop="termOfValidity"
+        label="过期时间"
+        width="120"
+        :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="authentiCationFailure"
@@ -90,7 +102,7 @@
       <el-table-column
         prop="contact"
         label="联系方式"
-        width="110">
+        width="115">
       </el-table-column>
       <el-table-column
         prop="consigneeName"
@@ -370,14 +382,5 @@
     font-size: 16px;
   }
 
-  .left {
-    width: 40%;
-    display: table-cell;
-  }
-
-  .right {
-    width: 50%;
-    display: table-cell;
-  }
 
 </style>

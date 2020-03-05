@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <p>职位信息,有效期30天，在我的发布刷新即可增加有效期</p>
+      请认真填写信息(信息有效期为30天)
       <el-form-item label="职位类型" prop="position">
         <template>
           <el-select v-model="ruleForm.position" filterable placeholder="选择职位类型">
@@ -302,7 +302,7 @@
           return false;
         };
         let role = window.localStorage.getItem('dian_role');
-        if (  role !== '1' && role !== '5' && role !== '2') {
+        if (  role === '11' ) {
           this.$router.push({path: '/home/release'});
           return false;
         }

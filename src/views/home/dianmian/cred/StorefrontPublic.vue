@@ -3,7 +3,7 @@
   <div>
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      请认真填写信息
+      请认真填写信息(信息有效期为90天)
       <el-form-item label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
@@ -269,7 +269,7 @@
         let role = window.localStorage.getItem('dian_role');
         if (role === '2' || role === '3') {
           this.isLease = true;
-        } else if (role === '4' || role === '5' || role === '13') {
+        } else if (role === '4' || role === '5' || role === '13' || role === '12') {
           this.isRentalBooth = true;
         } else if (role === '1' || role === '6') {
           this.isLease = true;

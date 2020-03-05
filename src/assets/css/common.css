@@ -30,3 +30,12 @@ li{
   text-decoration: none;
   /*text-align:center    居中不好看*/
 }
+.left {
+  width: 40%;
+  display: table-cell;
+}
+
+.right {
+  width: 50%;
+  display: table-cell;
+}

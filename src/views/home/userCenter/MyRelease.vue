@@ -314,23 +314,27 @@
              this.isRent=true; //窗口123456
               this.isWindowRental=true;
               this.isMyEquipment=true;//发布电器二手
+             this.isCreatePosition=true;  //招聘
              this.activeName='myEquipment';
             }else if(role===4){
              this.isFoodAndGrain=true;  //蔬菜调料
-             this.isRent=true; //窗口123456
+             this.isCreatePosition=true;  //招聘
+             this.isRent=true; //摊位
              this.activeName='createFoodAndGrain';
             }else if(role===5){
               this.isCreatePosition=true;
-             this.isRent=true; //窗口123456
+             this.isRent=true; //摊位
              this.isWineAndTableware=true;
              this.activeName='myWineAndTableware';
             }else if(role===6){
              this.rent=true;
+             this.isCreatePosition=true;  //招聘
              this.isRent=true; //窗口123456
              this.activeName='rent';
             }else if(role===7){
               this.isMenuAndRenovationAndPestControl=true;//菜谱 7//装修7//灭虫7
              this.mAndRAndP=true;
+             this.isCreatePosition=true;  //招聘
              this.activeName='mrp';
             }else if(role===11){
               this.activeName='myJobWanted';
@@ -339,11 +343,14 @@
             }else if(role===12){
               this.isDepartmentStore=true;
               this.departmentStore=true;
+             this.isCreatePosition=true;  //招聘
              this.activeName='myDepartmentStore';
             }
            else if(role===13){
              this.isWholesaleCommodity=true;
              this.wholesaleCommodity=true;
+             this.isCreatePosition=true;  //招聘
+             this.isRent=true; //摊位出租
              this.isWholesaleCommodityOrder=true;
              this.activeName='myWholesaleCommodity';
            }

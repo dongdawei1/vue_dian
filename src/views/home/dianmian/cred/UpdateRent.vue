@@ -106,9 +106,12 @@
           if (!Number.isInteger(value)) {
             callback(new Error('请输入数字值'));
           } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
-            } else {
+            if (value < 0) {
+              callback(new Error('面积必须大于0'));
+            } else if (value >100000) {
+              callback(new Error('面积不能大于10万'));
+            }
+            else {
               callback();
             }
           }
@@ -158,7 +161,7 @@
           ],
           fouseSize: [
             {required: true, validator: checkAge, trigger: 'blur'},
-            // { type: 'number', message: '年龄必须为数字值'}
+
           ],
           pictureUrl: [
             {required: true, message: '如果已上传请继续提交'},

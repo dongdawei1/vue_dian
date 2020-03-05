@@ -45,9 +45,14 @@
       border
       style="width: 100%"
       max-height="500">
-
       <el-table-column
         fixed
+        prop="id"
+        label="id"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="position"
         label="职位类型"
         width="120"
@@ -58,6 +63,13 @@
         label="状态"
         width="90">
       </el-table-column>
+      <el-table-column
+        prop="termOfValidity"
+        label="过期时间"
+        width="120"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+
       <el-table-column
         prop="authentiCationFailure"
         label="失败原因"
@@ -73,7 +85,7 @@
       <el-table-column
         prop="contact"
         label="联系方式"
-        width="110">
+        width="115">
       </el-table-column>
 
       <el-table-column
@@ -464,13 +476,5 @@
     font-size: 16px;
   }
 
-  .left {
-    width: 40%;
-    display: table-cell;
-  }
 
-  .right {
-    width: 30%;
-    display: table-cell;
-  }
 </style>

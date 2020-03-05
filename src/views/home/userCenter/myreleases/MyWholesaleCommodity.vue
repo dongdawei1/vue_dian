@@ -68,17 +68,18 @@
       max-height="500">
       <el-table-column
         fixed
+        prop="id"
+        label="id"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="releaseType"
         label="商品类型"
         width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column
-        prop="id"
-        label="商品编号"
-        width="100"
-        :show-overflow-tooltip="true">
-      </el-table-column>
+
       <el-table-column
         prop="serviceType"
         label="商品名称"
@@ -94,6 +95,12 @@
         prop="isValidity"
         label="显示状态"
         width="190"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="endTime"
+        label="过期时间(约延后一小时)"
+        width="180"
         :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
@@ -123,12 +130,7 @@
         width="110"
         :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column
-        prop="endTime"
-        label="价格结束时间"
-        width="110"
-        :show-overflow-tooltip="true">
-      </el-table-column>
+
 
       <el-table-column
         fixed="right"
@@ -456,15 +458,7 @@
     font-size: 16px;
   }
 
-  .left {
-    width: 40%;
-    display: table-cell;
-  }
 
-  .right {
-    width: 50%;
-    display: table-cell;
-  }
 
 </style>
 

@@ -79,11 +79,7 @@
           </el-menu-item-group>
         </el-submenu>
 
-        <el-menu-item index="批发市场" v-if="isrolewholesaleMarket">
-            <span slot="title">
-            <router-link to="/home/wholesaleMarket" class="a">批发市场</router-link>
-            </span>
-        </el-menu-item>
+
 
         <el-submenu index="用户中心">
           <template slot="title">用户中心</template>
@@ -103,6 +99,12 @@
         </el-submenu>
 
 
+        <!--<el-menu-item index="批发市场" v-if="isrolewholesaleMarket">-->
+        <el-menu-item index="其他" v-if="isrole1">
+            <span slot="title">
+            <router-link to="/home/wholesaleMarket" class="a">批发市场</router-link>
+            </span>
+        </el-menu-item>
         <el-submenu index="其他" v-if="isrole1">
           <template slot="title">其他</template>
           <el-menu-item-group>

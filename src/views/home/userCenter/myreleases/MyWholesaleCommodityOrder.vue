@@ -69,6 +69,12 @@
       max-height="500">
       <el-table-column
         fixed
+        prop="id"
+        label="id"
+        width="100"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
         prop="releaseType"
         label="商品类型"
         width="120"
@@ -384,15 +390,7 @@
     font-size: 16px;
   }
 
-  .left {
-    width: 40%;
-    display: table-cell;
-  }
 
-  .right {
-    width: 50%;
-    display: table-cell;
-  }
 
 </style>
 
