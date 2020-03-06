@@ -157,6 +157,10 @@ export const admin_guangggao_realName = params => {
 export const admin_create_orderUser = params => {
   return axios.post(`${base}${v5Api}toExamine/admin_create_orderUser`, params).then(res => res.data);
 };
+export const adminupall = params => {
+  return axios.post(`${base}${v5Api}toExamine/adminupall`, params).then(res => res.data);
+};
+
 
 //待审批招聘
 export const getReleaseWelfareAll = params => {

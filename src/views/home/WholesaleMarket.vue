@@ -37,11 +37,11 @@
       <el-form-item  label="商品类型" prop="releaseType">
         <template>
           <el-radio-group v-model="releaseWelfare.releaseType">
-            <el-radio :label="4" >蔬菜</el-radio>
-            <el-radio :label="5" >粮油</el-radio>
-            <el-radio :label="6" >调料/副食</el-radio>
-            <el-radio :label="29" >水产/禽蛋</el-radio>
-            <el-radio :label="9" >清洁用品</el-radio>
+            <el-radio :label="401" >蔬菜出售</el-radio>
+            <el-radio :label="405" >粮油出售</el-radio>
+            <el-radio :label="406" >调料/副食出售</el-radio>
+            <el-radio :label="429" >水产/禽蛋出售</el-radio>
+            <el-radio :label="409" >清洁用品</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
@@ -106,7 +106,7 @@
           currentPage: 1,
           pageSize: 12,//每页显示的数量
           //分页结束
-          releaseType:4,
+          releaseType:401,
           serviceType:'',
           companyName:'',//市场名
         },

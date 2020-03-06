@@ -100,7 +100,8 @@
 
 
         <!--<el-menu-item index="批发市场" v-if="isrolewholesaleMarket">-->
-        <el-menu-item index="其他" v-if="isrole1">
+        <!--<el-menu-item index="其他" v-if="isrole1">-->
+          <el-menu-item index="其他1" >
             <span slot="title">
             <router-link to="/home/wholesaleMarket" class="a">批发市场</router-link>
             </span>

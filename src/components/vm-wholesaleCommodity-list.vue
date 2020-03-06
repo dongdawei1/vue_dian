@@ -27,7 +27,7 @@
             <div class="xiangqing">
               <el-button type="text"><router-link
                 v-on:click.native=""
-                :to="'/details/wholesaleCommodityDetailes/'+ item.id+'/'+item.releaseType+'01'" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
+                :to="'/details/wholesaleCommodityDetailes/'+ item.id+'/'+item.releaseType" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
             </div>
             <!--<p>{{ item.brand }}</p>-->
             <!--<p>{{ item.commodityName }}</p>-->
