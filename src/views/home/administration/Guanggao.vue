@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import AdminSellectAddOrder from './guanggao/CreateGuanggao'
+  import AdminSellectAddOrder from './guanggao/GuanliFabu'
   import AdminAddAddOrder from './guanggao/GuangliGuanggao'
 
 

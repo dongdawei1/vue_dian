@@ -154,6 +154,14 @@ export const admin_guangggao_realName = params => {
 };
 
 
+export const isguanggao = params => {
+  return axios.post(`${base}${v5Api}toExamine/isguanggao`, params).then(res => res.data);
+};
+
+export const crguanggao = params => {
+  return axios.post(`${base}${v5Api}toExamine/crguanggao`, params).then(res => res.data);
+};
+
 export const admin_create_orderUser = params => {
   return axios.post(`${base}${v5Api}toExamine/admin_create_orderUser`, params).then(res => res.data);
 };
