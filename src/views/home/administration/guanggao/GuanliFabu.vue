@@ -56,15 +56,23 @@
           <el-table-column
             prop="id"
             label="id"
-            width="80">
+            width="70">
           </el-table-column>
 
           <el-table-column
-            label="显示位置" width="110">
+            label="显示位置" width="95">
             <template slot-scope="scope5">
               <span v-if="scope5.row.bunnerType===0">首页弹窗</span>
               <span v-if="scope5.row.bunnerType===1">首页轮播</span>
               <span v-if="scope5.row.bunnerType===2">详情页轮播</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="显示范围" width="80">
+            <template slot-scope="scope6">
+              <span v-if="scope6.row.fanwei===0">全国</span>
+              <span v-if="scope6.row.fanwei===1">全省/市</span>
+              <span v-if="scope6.row.fanwei===2">全区/县</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -78,7 +86,7 @@
 
 
           <el-table-column
-            label="优先级别" width="100">
+            label="优先级别" width="90">
             <template slot-scope="scope3"  >
               <span v-if="scope3.row.moren===0">默认显示</span>
               <span v-if="scope3.row.moren===1">优先显示</span>
@@ -86,7 +94,7 @@
           </el-table-column>
 
           <el-table-column
-            label="显示状态" width="100">
+            label="显示状态" width="80">
             <template slot-scope="scope4">
               <span v-if="scope4.row.bunnerStatus===0">未开始</span>
               <span v-if="scope4.row.bunnerStatus===1">显示中</span>
@@ -101,6 +109,7 @@
             prop="detailed"
             label="显示城区" :show-overflow-tooltip="true"  width="160">
           </el-table-column>
+
           <el-table-column
             prop="releaseType"
             label="发布类型" :show-overflow-tooltip="true" >
@@ -134,19 +143,20 @@
                 <el-radio :label="0">全国</el-radio>
                 <el-radio :label="1">全省/市</el-radio>
                 <el-radio :label="2">区/县</el-radio>
-                <el-radio :label="3">手动自选省(选择省/市后，区县任意即可)</el-radio>
+                <el-radio :label="3">手动自选省</el-radio>
                 <el-radio :label="4">手动自选县/区</el-radio>
               </el-radio-group>
             </template>
           </el-form-item>
 
-          <el-form-item label="自选城市" prop="selectedOptions" v-if="iszixuanchengshi">
+          <el-form-item label="请选择城市" prop="selectedOptions" v-if="iszixuanchengshi" class="authentiCationFailureClass">
             <el-cascader
               size="large"
               :options="options"
               v-model="ruleForm.selectedOptions"
               @change="handleChange">
             </el-cascader>
+            若 -显示城市 -选择自选省,选该省任意市区即可，自选县区需要选择精确地址
           </el-form-item>
 
           <el-form-item label="优先级别" prop="moren" >
@@ -461,6 +471,7 @@
                 this.ruleForm={};
                 this.fileList=[];
                 this.isguanggao = false;
+                this.iszixuanchengshi=false;
                 this.getReleaseWelfareAll();
               } else {
                 this.$message.error(res.msg);
@@ -537,6 +548,7 @@
         list[1] = this.userRealName.cityId.toString();
         list[2] = this.userRealName.districtCountyId.toString();
         this.ruleForm.selectedOptions = list;
+        this.iszixuanchengshi=false;
         let pas = {
           selectedOptions: this.ruleForm.selectedOptions,
           bunnerType: this.ruleForm.bunnerType,
@@ -590,6 +602,7 @@
         }
         admin_guangggao_realName(this.realName.userName).then((res) => {
           this.fullscreenLoading = false;
+          this.iszixuanchengshi=false;
           this.isguanggao = false;
           if (res.status === 0) {
             this.isxianshi = true;
@@ -665,8 +678,11 @@
         return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
       },
       reserveChange() {
+        this.listdi=[];
+        this.iszixuanchengshi=false;
         if (this.ruleForm.fanwei === 3 || this.ruleForm.fanwei === 4) {
           this.iszixuanchengshi = true;
+          this.handleChange();
         } else {
           this.iszixuanchengshi = false;
           this.handleChange();
