@@ -161,6 +161,14 @@ export const isguanggao = params => {
 export const crguanggao = params => {
   return axios.post(`${base}${v5Api}toExamine/crguanggao`, params).then(res => res.data);
 };
+export const agetguangaoAll = params => {
+  return axios.post(`${base}${v5Api}toExamine/agetguangaoAll`, params).then(res => res.data);
+};
+export const aupguangao = params => {
+  return axios.post(`${base}${v5Api}toExamine/aupguangao`, params).then(res => res.data);
+};
+
+
 
 export const admin_create_orderUser = params => {
   return axios.post(`${base}${v5Api}toExamine/admin_create_orderUser`, params).then(res => res.data);

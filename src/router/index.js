@@ -85,7 +85,6 @@ import Guanggao from '../views/home/administration/Guanggao'
 import BusinessEnquiry from '../views/home/administration/BusinessEnquiry'
 import AdminAddjiedan from '../views/home/administration/jiedanguanli/addjiedan/AdminAddjiedan'
 import AddRealName  from '../views/home/administration/tianjiashiming/AddAdminRealName'
-import CreateGuanggao from '../views/home/administration/guanggao/CreateGuanggao'
 
 import Details from '../views/Details.vue'
 import MrpDetails  from '../views/detailes/MrpDetails'
@@ -427,13 +426,7 @@ export default new VueRouter ({
           component: AdminAddjiedan
         },
 
-        // {
-        //   hidden: true , //用户包中
-        //   path: '/home/createGuanggao/:id/:releaseType/:',
-        //   name: 'createGuanggao',
-        //   component:   CreateGuanggao  //发布灭虫等
-        //
-        // },
+
 
         {
           path: '',

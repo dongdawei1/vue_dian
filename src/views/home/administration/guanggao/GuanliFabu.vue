@@ -41,12 +41,11 @@
       </div>
 
       <!--添加广告模块开始-->
-      <div v-if="isguanggao" class="isguanggaoClasss">
+      <div v-if="isguanggao" >
         <!--表格开始-->
         <div class="authentiCationFailureClass">
           <span> 首页弹窗同时段只能有一个，首页轮播和详情页轮播同时段只能有3个<br></span>
           <span> 默认显示可以有多个，只能发布内部创建的广告<br></span>
-          <span> 切换广告类型或者显示类型，列表会更新，请重新查看<br></span>
         </div>
         <el-table
           :data="listdi"
@@ -138,16 +137,16 @@
 
           <!--fanwei:'',//范围范围 0全国优先级最高，1全市，2全区-->
           <el-form-item label="显示城市" prop="fanwei">
-            <template>
-              <el-radio-group v-model="ruleForm.fanwei" @change="reserveChange">
-                <el-radio :label="0">全国</el-radio>
-                <el-radio :label="1">全省/市</el-radio>
-                <el-radio :label="2">区/县</el-radio>
-                <el-radio :label="3">手动自选省</el-radio>
-                <el-radio :label="4">手动自选县/区</el-radio>
-              </el-radio-group>
-            </template>
-          </el-form-item>
+          <template>
+            <el-radio-group v-model="ruleForm.fanwei" @change="reserveChange">
+              <el-radio :label="0">全国</el-radio>
+              <el-radio :label="1">全省/市</el-radio>
+              <el-radio :label="2">区/县</el-radio>
+              <el-radio :label="3">手动自选省</el-radio>
+              <el-radio :label="4">手动自选县/区</el-radio>
+            </el-radio-group>
+          </template>
+        </el-form-item>
 
           <el-form-item label="请选择城市" prop="selectedOptions" v-if="iszixuanchengshi" class="authentiCationFailureClass">
             <el-cascader
@@ -454,7 +453,6 @@
       }
     },
     methods: {
-//z222222221
       createForm() {
         this.fullscreenLoading = true;
         this.$refs['ruleForm'].validate((valid) => {
@@ -472,7 +470,7 @@
                 this.fileList=[];
                 this.isguanggao = false;
                 this.iszixuanchengshi=false;
-                this.getReleaseWelfareAll();
+               this.getReleaseWelfareAll();
               } else {
                 this.$message.error(res.msg);
               }
@@ -686,15 +684,6 @@
         } else {
           this.iszixuanchengshi = false;
           this.handleChange();
-        }
-      }
-
-
-    },
-    watch: {
-      "$route"(to, from) {
-        if (to.path === '/home/businessEnquiry') {
-          this.getReleaseWelfareAllSelect();
         }
       }
 
