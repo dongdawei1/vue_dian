@@ -87,8 +87,8 @@
           permissionid:''
         },
         tableBunner:{
-          permissionid:'',
-          bunnerType:1
+          permissionid:9,
+          bunnerType:2
         },
         realName:'',
         fileList:[],

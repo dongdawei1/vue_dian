@@ -78,8 +78,15 @@
       },
 
       getBunner(){
+        this.tableData={
+          permissionid:6,
+          bunnerType:0
+        };
+
         getBunner(this.tableData).then((res) => {
+          console.log(this.tableData)
           if(res.status===0) {
+            console.log(res)
             if(res.data.length!==0){
              let list=res.data;
                 if(list.length===1){

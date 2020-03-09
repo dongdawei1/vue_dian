@@ -382,7 +382,7 @@ export const getServiceDetailedList = params => {
 //获取bunner
 export const getBunner = params => {
   return axios({
-    url: `${base}${pcApi}bunner/getBunner`,
+    url: `${base}${pcApi}bunner/getpguang`,
     method: 'get',    //application/x-www-form-urlencoded    ,
     params: {
       permissionid: params.permissionid,

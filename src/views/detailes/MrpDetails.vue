@@ -59,8 +59,8 @@
           permissionid: 13
         },
         tableBunner: {
-          permissionid: '',
-          bunnerType: 1
+          permissionid: 4,
+          bunnerType: 2
         },
         StringPath: 'menuAndRenovationAndPestControl',
         mrp: {

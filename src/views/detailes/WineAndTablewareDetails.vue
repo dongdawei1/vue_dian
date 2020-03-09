@@ -72,8 +72,8 @@
         id: this.$route.params.id,
         releaseType: this.$route.params.releaseType,
         tableBunner: {
-          permissionid: '',
-          bunnerType: 1
+          permissionid: 1,
+          bunnerType: 2
         },
         result: {
           releaseType: '',

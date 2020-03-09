@@ -53,8 +53,8 @@
         id: this.$route.params.id,
         releaseType: this.$route.params.releaseType,
         tableBunner: {
-          permissionid: '',
-          bunnerType: 1
+          permissionid: 3,
+          bunnerType: 2
         },
         StringPath: 'menuAndRenovationAndPestControl',
         rent: {
