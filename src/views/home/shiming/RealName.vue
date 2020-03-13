@@ -120,7 +120,10 @@
       <el-form-item label="姓名"    prop="consignee_name"  >
         <el-input v-model="ruleForm.consignee_name"  placeholder="请输入姓名"></el-input>
       </el-form-item>
-
+      <el-form-item label="性别"        placeholder="请选择性别" >
+        <el-radio v-model="ruleForm.gender" label="男">男</el-radio>
+        <el-radio v-model="ruleForm.gender" label="女">女</el-radio>
+      </el-form-item>
 
       <el-form-item label="邮箱"    prop="email"  >
         <el-input v-model="ruleForm.email"  placeholder="请输入收邮箱用于找回密码"></el-input>
@@ -342,7 +345,7 @@
           var data ={
             'ruleForm': this.ruleForm,
             'isbusiness': type   //是否是商家
-                      }
+                      };
           if (valid) {
             this.fullscreenLoading = true;
             let length=0;

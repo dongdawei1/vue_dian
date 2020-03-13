@@ -244,7 +244,7 @@
 
         <template slot-scope="scope">
           <el-button @click="operationRow(scope.row,3)" type="text" size="small"
-                     v-if="scope.row.orderStatu11 || scope.row.orderStatu12 || scope.row.orderStatu21"
+                     v-if="scope.row.orderStatu11 || scope.row.orderStatu18 || scope.row.orderStatu12 || scope.row.orderStatu21"
                      v-loading.fullscreen.lock="fullscreenLoading">关单
           </el-button>
 
@@ -292,11 +292,7 @@
                      v-if="scope.row.orderStatu13"
                      disabled>待销售商支付保证金
           </el-button>
-          <!--有人报价可以选择关单-->
-          <el-button @click="operationRow(scope.row,3)" type="text" size="small"
-                     v-if="scope.row.orderStatu18"
-                     v-loading.fullscreen.lock="fullscreenLoading">关单
-          </el-button>
+
 
         </template>
       </el-table-column>
@@ -367,7 +363,7 @@
       checke_isButten() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (role === '1' || role === '2') {
           let isAuthentication = window.localStorage.getItem('dian_isAuthentication');

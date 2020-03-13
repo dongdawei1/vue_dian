@@ -100,7 +100,7 @@
 
 
     <!--如果是求职就展示下边的开始-->
-    <el-form :model="ruleForm" :rules="rules" ref="ruleFormnotbusiness" label-width="100px"   v-if ="iswanted" class="demo-ruleForm">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"   v-if ="iswanted" class="demo-ruleForm">
       <el-form-item label="求职地域"   prop="selectedOptions">
         <el-cascader
           size="large"

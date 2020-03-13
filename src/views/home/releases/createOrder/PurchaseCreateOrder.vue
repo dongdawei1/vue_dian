@@ -449,7 +449,7 @@
         this.getRealName();
         let fromData = {
           fromData: this.fromData
-        }
+        };
         create_order_evaluation(fromData).then(res => {
           this.fullscreenLoading = false;
           if (res.status === 0) {
@@ -473,7 +473,7 @@
                 this.fromData = [];
                 this.form.fromData = [];
                 this.centerDialogVisible = true;
-                this.checke_isButten();
+
               } else {
                 this.$msgdeal(res.msg);
               }
