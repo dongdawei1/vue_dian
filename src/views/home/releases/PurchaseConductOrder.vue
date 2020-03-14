@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="voSocket" class="voSocketClass">
-      有进行中订单,数据每2分钟刷新一次
+      有进行中订单,数据每分钟刷新一次
     </div>
     <div v-if="voSocketPay" class="voSocketClass">
       有未支付的订单,请及时处理,超时将关单！
@@ -95,8 +95,8 @@
                   <template slot-scope="scope">
                     <div class="pingjiaClass">
                       品质高:{{scope.row.evaluate.zhilianghao}}人次<br>
-                      品质中:{{scope.row.evaluate.zhilianghao}}人次<br>
-                      品质差:{{scope.row.evaluate.zhilianghao}}人次<br>
+                      品质中:{{scope.row.evaluate.zhiliangyiban}}人次<br>
+                      品质差:{{scope.row.evaluate.zhiliangcha}}人次<br>
                     </div>
                   </template>
                 </el-table-column>
@@ -379,7 +379,7 @@
               }
               this.tableData = res.data.listPurchaseSeeOrderVo;
               if (res.data.voSocket === 0) {
-                this.initList(0.2);
+                this.initList(1);
                 this.voSocket = true;
               } else {
                 this.voSocket = false;
@@ -387,7 +387,7 @@
                 get_pay_order_all().then(date => { //检查是否有待支付的订单
                   if (date.status === 0) {
                     if (date.data === 'YES') {
-                      this.initList(1);
+                      this.initList(0.3);
                       this.voSocketPay = true;
                     } else {
                       this.voSocketPay = false;
