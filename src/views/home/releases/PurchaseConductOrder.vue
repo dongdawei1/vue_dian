@@ -413,7 +413,7 @@
         native_pay_order(id).then(res => {
           this.fullscreenLoading = false;
           if (res.status === 0) {
-            this.useqrcode(res.msg, id)
+            this.useqrcode(res.data, id)
           } else {
             this.$msgdeal(res.msg);
           }
