@@ -121,7 +121,7 @@
                 v-if="props.row.orderStatu11 || props.row.orderStatu18 ">
 
                 <template slot-scope="scope">
-                  <el-button @click="choice(scope.row,props.row, 13)" type="text" size="small"
+                  <el-button @click="choice(scope.row,props.row, 12)" type="text" size="small"
 
                              v-loading.fullscreen.lock="fullscreenLoading">选择此商户
                   </el-button>
@@ -167,74 +167,15 @@
       </el-table-column>
 
       <el-table-column
-        label="该状态剩余处理时间"
+        label="操作结束时间"
         prop="orderStatuName"
         width="180"
         show-overflow-tooltip>
         <template slot-scope="props">
-          <span v-if="props.row.orderStatu11" class="orderStatuNameClass">
-          <MvCountDown
-            @startCallback=""
-            @endCallback="checke_isButten"
-            :startTime="new Date().getTime()"
-            :endTime="headercell(props.row)"
-            :endText="'报价结束'"
-            :nameText="'报价剩余'"
-            :dayTxt="'天'"
-            :hourTxt="'小时'"
-            :minutesTxt="'分'"
-            :secondsTxt="'秒'"
-            :isStart="props.row.orderStatu11"
-          ></MvCountDown>
-          </span>
-          <span v-if="props.row.orderStatu18" class="orderStatuNameClass">
-          <MvCountDown
-            @startCallback="countDownS"
-            @endCallback="operationRow(props.row,18)"
-            :startTime="new Date().getTime()"
-            :endTime="headercel8(props.row)"
-            :endText="'超时未选择商家-关单'"
-            :nameText="'选择商家剩余'"
-            :dayTxt="'天'"
-            :hourTxt="'小时'"
-            :minutesTxt="'分'"
-            :secondsTxt="'秒'"
-            :isStart="props.row.orderStatu18"
-          ></MvCountDown>
-          </span>
-          <span v-if="props.row.orderStatu13" class="orderStatuNameClass">
-                      <MvCountDown15
-                        @startCallback=""
-                        @endCallback=""
-                        :startTime="new Date().getTime()"
-                        :endTime="headercel3(props.row,15)"
-                        :endText="'超时未支付质保金-关单'"
-                        :nameText="'付质保金剩余'"
-                        :dayTxt="'天'"
-                        :hourTxt="'小时'"
-                        :minutesTxt="'分'"
-                        :secondsTxt="'秒'"
-                        :isStart="props.row.orderStatu13"
-                      ></MvCountDown15>
-          </span>
-
-          <span v-if="props.row.orderStatu12" class="orderStatuNameClass">
-                      <MvCountDown12
-                        @startCallback=""
-                        @endCallback="operationRow(props.row,19)"
-                        :startTime="new Date().getTime()"
-                        :endTime="headercel3(props.row,15)"
-                        :endText="'超时未支付定金-关单'"
-                        :nameText="'付定金剩余'"
-                        :dayTxt="'天'"
-                        :hourTxt="'小时'"
-                        :minutesTxt="'分'"
-                        :secondsTxt="'秒'"
-                        :isStart="props.row.orderStatu12"
-                      ></MvCountDown12>
-          </span>
+ <span
+   v-if="props.row.orderStatu11 || props.row.orderStatu18  || props.row.orderStatu12">{{props.row.voOrder.confirmTime}}</span>
           <span
-            v-if="!props.row.orderStatu11 && !props.row.orderStatu18 && !props.row.orderStatu13 && !props.row.orderStatu12">--</span>
+            v-if="!props.row.orderStatu11 && !props.row.orderStatu18  && !props.row.orderStatu12">--</span>
         </template>
       </el-table-column>
 
@@ -244,33 +185,18 @@
 
         <template slot-scope="scope">
           <el-button @click="operationRow(scope.row,3)" type="text" size="small"
-                     v-if="scope.row.orderStatu11 || scope.row.orderStatu18 || scope.row.orderStatu12 || scope.row.orderStatu21"
+                     v-if="scope.row.orderStatu11 || scope.row.orderStatu18 || scope.row.orderStatu12 "
                      v-loading.fullscreen.lock="fullscreenLoading">关单
           </el-button>
-
           <el-button @click="payOrder(scope.row.voOrder.id)" type="text" size="small"
-                     v-if="scope.row.orderStatu12 || scope.row.orderStatu21"
+                     v-if="scope.row.orderStatu12 "
                      v-loading.fullscreen.lock="fullscreenLoading">定金二维码(微信扫码)
           </el-button>
-
-
           <el-button @click="operationRow(scope.row,11)" type="text" size="small"
-                     v-if="scope.row.orderStatu3 "
+                     v-if="scope.row.orderStatu3 || scope.row.orderStatu17 ||scope.row.orderStatu19 "
                      v-loading.fullscreen.lock="fullscreenLoading">再次开启发布
           </el-button>
-          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
-                     v-if=" scope.row.orderStatu17"
-                     v-loading.fullscreen.lock="fullscreenLoading">无销售商报价重新发布
-          </el-button>
 
-          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
-                     v-if=" scope.row.orderStatu20"
-                     v-loading.fullscreen.lock="fullscreenLoading">未支付质保金重新发布
-          </el-button>
-          <el-button @click="operationRow(scope.row,11)" type="text" size="small"
-                     v-if=" scope.row.orderStatu19"
-                     v-loading.fullscreen.lock="fullscreenLoading">未支付定金重新发布
-          </el-button>
           <el-button @click="operationRow(scope.row,5)" type="text" size="small"
                      v-if="scope.row.orderStatu16"
                      v-loading.fullscreen.lock="fullscreenLoading">确认收货
@@ -288,11 +214,6 @@
                      v-if="scope.row.orderStatu6"
                      disabled>已完成
           </el-button>
-          <el-button @click="" type="text" size="small"
-                     v-if="scope.row.orderStatu13"
-                     disabled>待销售商支付保证金
-          </el-button>
-
 
         </template>
       </el-table-column>
@@ -327,15 +248,9 @@
   import {get_pay_order_byOrderId} from '../../../api/api';
 
   import QRCode from 'qrcode'; //引入生成二维码插件
-  import MvCountDown from '../../../components/MvCountDown/MvCountDown.vue'
-  import MvCountDown15 from '../../../components/MvCountDown/MvCountDown15.vue'
-  import MvCountDown12 from '../../../components/MvCountDown/MvCountDown12.vue'
 
   export default {
     components: {
-      MvCountDown,
-      MvCountDown12,
-      MvCountDown15,
       QRCode: QRCode
 
     },
@@ -367,7 +282,7 @@
         let role = window.localStorage.getItem('dian_role');
         if (role === '1' || role === '2') {
           let isAuthentication = window.localStorage.getItem('dian_isAuthentication');
-          if (isAuthentication===null ||  isAuthentication !== '2') {
+          if (isAuthentication === null || isAuthentication !== '2') {
             this.$router.push({path: '/home/myAccount'});
             return false;
           }
@@ -525,62 +440,8 @@
 
         // -->状态==5  （去评价）   status==3|| 17   传给后端 11再次开启
       },
-      //倒计时相关开始
-      headercell(row) {
-        if (row.orderStatu11 === true) {
-          //获取创建时间
-          let newDateGetTime = new Date().getTime();
-          let date2 = new Date(row.voOrder.createTime);
-          //获取时间差 毫秒，getTime()获取毫秒值
-          let second = newDateGetTime - date2.getTime();
-          if (second < 1800000) {
-            return newDateGetTime + 1800000 - second;
-          } else {
-            return 0;
-          }
-        }
-      },
-      //超过30分钟有报价，给15分钟buffer
-      headercel8(row) {
-        if (row.orderStatu18 === true) {
-          //获取创建时间
-          let newDateGetTime = new Date().getTime();
-          let date2 = new Date(row.voOrder.createTime);
-          //获取时间差 毫秒，getTime()获取毫秒值
-          let second = newDateGetTime - date2.getTime();
-          if (second > 1800000 && second <= 45 * 60 * 1000) {
-            return newDateGetTime + 45 * 60 * 1000 - second;
-          } else {
-            return 0;
-          }
-        }
-      },
-      //待销售支付定金15分钟
-      headercel3(row, num) {
-        if (row.orderStatu13 === true || row.orderStatu12 === true) {
-          //获取创建时间
-          let newDateGetTime = new Date().getTime();
-          let date2 = new Date(row.voOrder.updateTime);
-          //获取时间差 毫秒，getTime()获取毫秒值
-          let second = newDateGetTime - date2.getTime();
-          if (second < num * 60 * 1000) {
-            return newDateGetTime + num * 60 * 1000 - second;
-          } else {
-            return 0;
-          }
-        }
-      },
 
 
-      countDownS(x) {
-        // 开始倒计时回调
-        // console.log(x)
-      },
-      countDownE() {
-        // 结束倒计时回调
-        this.checke_isButten();
-      }
-      //倒计时相关结束
     },
     watch: {
       "$route"(to, from) {

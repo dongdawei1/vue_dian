@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" >
-      <p>请认真填写信息</p>
+      <p>请认真填写信息(信息有效期为365天)</p>
       <el-form-item  label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
@@ -15,8 +15,8 @@
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
-      <el-form-item label="起步价格" prop="startPrice">
-        <el-input v-model="ruleForm.startPrice" placeholder="起步价格(元)"></el-input>
+      <el-form-item label="起步价格" prop="mianjia">
+        <el-input v-model="ruleForm.mianjia" placeholder="起步价格(元)"></el-input>
       </el-form-item>
 
       <div class="authentiCationFailureClass">
@@ -50,7 +50,7 @@
           :action="uploadDownUrl"
           name="picture"
           list-type="picture-card"
-          :limit="8"
+          :limit="5"
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -105,7 +105,7 @@
 </template>
 <script>
   import { getRealName } from '../../../../api/api';
-  import { create_menuAndRenovationAndPestControl } from '../../../../api/api';
+  import { createfabu } from '../../../../api/api';
   import { uploadDown_update } from '../../../../api/api';
   export default {
     data() {
@@ -124,7 +124,7 @@
           releaseTitle:'',//标题
           serviceIntroduction:'',//服务描述
           remarks:'',//备注
-          startPrice:'',//起步价格
+          mianjia:'',//起步价格
           serviceDetailed:'',//服务城区
           pictureUrl:[],//服务图片
           //实名中获取
@@ -157,7 +157,7 @@
           remarks:[
             {  max: 30, message: '备注小于30字' }
           ],
-          startPrice:[
+          mianjia:[
             {  required: true, message: '起步价格不能为空', trigger: 'blur' }
           ],
           pictureUrl:[
@@ -186,11 +186,11 @@
       submitForm(ruleForm) {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         this.fullscreenLoading=true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            create_menuAndRenovationAndPestControl(this.ruleForm).then(res => {
+            createfabu(this.ruleForm).then(res => {
               this.fullscreenLoading=false;
               if (res.status === 0) {
                 //成功弹窗
@@ -267,7 +267,7 @@
       onExceed(files, fileList) {
         this.$message({
           type: 'info',
-          message: '最多只能上传8张图片',
+          message: '最多只能上传5张图片',
           duration: 2000
         });
 

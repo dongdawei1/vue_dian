@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      请认真填写信息
+      请认真填写信息(信息有效期为365天)
       <el-form-item label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
@@ -97,7 +97,7 @@
           :action="uploadDownUrl"
           name="picture"
           list-type="picture-card"
-          :limit="8"
+          :limit="5"
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -179,7 +179,7 @@
 
   import {get_serviceType} from '../../../../api/api';
   import {create_serviceType} from '../../../../api/api';
-  import {create_equipment} from '../../../../api/api';
+  import {createfabu} from '../../../../api/api';
 
 
   export default {
@@ -213,7 +213,6 @@
           userId: '',
           releaseType: '',//发布类型
           releaseTitle: '',//标题
-
           serviceType: '',//商品/服务类型
           serviceAndprice: [],//项目及价格KEY，vaule
 
@@ -315,7 +314,7 @@
               }
             }
 
-            create_equipment(this.ruleForm).then(res => {
+            createfabu(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
               if (res.status === 0) {
                 //成功弹窗
@@ -400,7 +399,7 @@
       onExceed(files, fileList) {
         this.$message({
           type: 'info',
-          message: '最多只能上传8张图片',
+          message: '最多只能上传5张图片',
           duration: 2000
         });
 

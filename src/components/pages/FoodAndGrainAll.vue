@@ -105,13 +105,13 @@
     methods: {
       //判断是否实名和登陆状态
       isAuthenticationM() {
-        this.$router.push({path: '/home/createFoodAndGrain'});
+        this.$router.push({path: '/home/crinformation/4'});
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction() {
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (role === '1' || role === '4') {
           this.isCreate = true; //是否展示发布键
@@ -150,7 +150,7 @@
       getmrpList() {
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         getFoodAndGrainPublicList(this.releaseWelfare).then((res) => {
           if (res.status === 0) {
             this.total = res.data.totalno; //总条数

@@ -100,7 +100,7 @@
     methods: {
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        this.$router.push({path:'/home/createEquipment'});
+        this.$router.push({path: '/home/crinformation/33'});
       },
 
 

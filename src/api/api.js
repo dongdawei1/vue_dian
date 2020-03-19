@@ -300,8 +300,8 @@ export const select_resume_by_id = params => {
 };
 
 //灭虫广告装修
-export const create_menuAndRenovationAndPestControl = params => {
-  return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/create_menuAndRenovationAndPestControl`, params).then(res => res.data);
+export const createfabu = params => {
+  return axios.post(`${base}${pcApi}fabu/createfabu`, params).then(res => res.data);
 };
 //用户查询自己发布的装修等
 export const get_usermrp_list = params => {

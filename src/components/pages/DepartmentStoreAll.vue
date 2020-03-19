@@ -115,7 +115,7 @@
     methods: {
       //判断是否实名和登陆状态
       isAuthenticationM() {
-        this.$router.push({path: '/home/createDepartmentStore'});
+        this.$router.push({path: '/home/crinformation/101'});
       },
 
 

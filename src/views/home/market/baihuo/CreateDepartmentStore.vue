@@ -181,7 +181,7 @@
 
   import {get_serviceType} from '../../../../api/api';
   import {create_serviceType} from '../../../../api/api';
-  import {create_departmentStore} from '../../../../api/api';
+  import {createfabu} from '../../../../api/api';
 
 
   export default {
@@ -319,7 +319,7 @@
               }
             }
 
-            create_departmentStore(this.ruleForm).then(res => {
+            createfabu(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
               if (res.status === 0) {
                 //成功弹窗
@@ -475,7 +475,7 @@
       create_serviceType() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         this.fullscreenLoading = true;
         if (this.ruleForm.releaseType === '') {
           this.$message.error("请先选择:发布类型")

@@ -1,34 +1,29 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      请认真填写信息(信息有效期为180天)
+      请认真填写信息(信息有效期为{{youxiaoqi}}天)
       <el-form-item label="发布类型" prop="releaseType">
         <template>
-          <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="4">蔬菜出售</el-radio>
-            <el-radio :label="5">粮油出售</el-radio>
-            <el-radio :label="6">调料/副食出售</el-radio>
-            <el-radio :label="29">水产/禽蛋出售</el-radio>
-            <el-radio :label="9">清洁用品</el-radio>
-            <el-radio :label="11">桌椅餐具</el-radio>
+          <el-radio-group @change="qingchureleaseType" v-model="ruleForm.releaseType" v-for="item in releaseTypeList" :key="item.id">
+            <el-radio :label="item.id" class="releaseType" >{{item.name}}</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
 
-      <el-form-item label="商品类型" prop="serviceType">
+      <el-form-item label="具体类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"
           :fetch-suggestions="querySearchAsync"
-          placeholder="请输入或点击选择销售商品类型"
+          placeholder="请输入或点击选择服务/销售类型"
           clearable></el-autocomplete>
         <!--@select="handleSelect"-->
-        <el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>
+        <el-button type="primary" @click="tiaojianserviceType" plain>添加具体类型</el-button>
       </el-form-item>
 
       <el-row>
         <el-col :span="7">
-          <el-form-item label="商品详情" prop="project" class="el-form-itemUser">
-            <el-input v-model="ruleForm.project" placeholder="商品名及规格"></el-input>
+          <el-form-item label="项目/规格" prop="project" class="el-form-itemUser">
+            <el-input v-model="ruleForm.project" placeholder="服务项目或商品型号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -38,9 +33,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6" class="el-form-itemUser">
-          <el-button type="primary" @click="addItem" plain>增加一行商品详情</el-button>
+          <el-button type="primary" @click="addItem" plain>增加一行项目/规格</el-button>
         </el-col>
       </el-row>
+
       <div class="authentiCationFailureClass">
         注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
       </div>
@@ -49,8 +45,8 @@
       <div v-for="(item, index) in ruleForm.serviceAndprice" :key="index">
         <el-row>
           <el-col :span="7">
-            <el-form-item label="商品详情" prop="project" class="el-form-itemUser">
-              <el-input v-model="item.project" placeholder="商品名及规格"></el-input>
+            <el-form-item label="项目/规格" prop="project" class="el-form-itemUser">
+              <el-input v-model="item.project" placeholder="服务项目或商品型号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="5">
@@ -63,7 +59,6 @@
             <el-button type="info" @click="deleteItem(item, index)">删除</el-button>
           </el-col>
         </el-row>
-
       </div>
       <!--动态添加结束-->
 
@@ -121,9 +116,9 @@
       </el-form-item>
       实名信息
       <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true" :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true"
+                  :placeholder="ruleForm.contact"></el-input>
       </el-form-item>
-
       <el-form-item label="公司名称">
         <el-input v-model="realName.companyName" :disabled="true" autocomplete="off"
                   :placeholder="ruleForm.companyName"></el-input>
@@ -151,17 +146,17 @@
     >
       <span>请关注审核状态，约24小时内完成审核</span>
       <span slot="footer" class="dialog-footer">
-    <el-button type="primary"><router-link
-      v-on:click.native="goRelease"
-      to="" class="a">查看我的发布</router-link></el-button>
+   <el-button type="primary"><router-link
+     v-on:click.native="goRelease"
+     to="" class="a">查看我的发布</router-link></el-button>
      </span>
     </el-dialog>
     <!-- 成功弹窗结束  -->
 
     <!--添加商品/服务类型弹窗开始-->
-    <el-dialog title="添加商品类型" :visible.sync="dialogFormVisible">
+    <el-dialog title="添加商品/服务具体类型" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="商品名称" :label-width="formLabelWidth" prop="serviceTypeName">
+        <el-form-item label="商品/设备名" :label-width="formLabelWidth" prop="serviceTypeName">
           <el-input v-model="form.serviceTypeName" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -176,15 +171,11 @@
   </div>
 </template>
 <script>
-
-
-  import {getRealName} from '../../../../api/api';
-
-  import {uploadDown_update} from '../../../../api/api';
-
-  import {get_serviceType} from '../../../../api/api';
-  import {create_serviceType} from '../../../../api/api';
-  import {createfabu} from '../../../../api/api';
+  import {getRealName} from '../../../api/api';
+  import {uploadDown_update} from '../../../api/api';
+  import {get_serviceType} from '../../../api/api';
+  import {create_serviceType} from '../../../api/api';
+  import {createfabu} from '../../../api/api';
 
 
   export default {
@@ -203,10 +194,15 @@
         }, 100);
       };
       return {
+
+        releaseType: this.$route.params.releaseType,
+        youxiaoqi: '',
+        releaseTypeList: [],
         restaurants: [],//标题下拉
+        fileList: [],
         timeout: null,
         dialogFormVisible: false,//添加商品类型弹窗
-        fileList: [],
+
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading: false,
         realName: '',//用户实名信息
@@ -220,10 +216,8 @@
           releaseTitle: '',//标题
           serviceType: '',//商品/服务类型
           serviceAndprice: [],//项目及价格KEY，vaule
-
           project: '', //项目
           price: '',//价格
-
           serviceIntroduction: '',//介绍
           remarks: '',//备注
           serviceDetailed: '',//服务地址 来电确认和全市
@@ -246,7 +240,7 @@
             {required: true, message: '请选服务/销售城区', trigger: 'change'}
           ],
           serviceType: [
-            {required: true, message: '请选销售类型', trigger: 'change'}
+            {required: true, message: '请选服务/销售类型', trigger: 'change'}
           ],
           releaseTitle: [
             {required: true, message: '标题不能为空', trigger: 'blur'},
@@ -296,9 +290,6 @@
         this.centerDialogVisible = false;
         this.$router.push({path: '/home/myRelease'});
       },
-      cntinue() {  //留在本页继续发布
-        this.centerDialogVisible = false;
-      },
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading = true;
@@ -340,16 +331,60 @@
         });
       },
 
-
+      cntinue() {  //留在本页继续发布
+        this.centerDialogVisible = false;
+      },
       getRealName() {
         if (!this.$fsAuthent()) {
           return false;
         }
         let role = window.localStorage.getItem('dian_role');
-        if (role !== '1' && role !== '4') {
-          this.$router.push({path: '/home/release'});
-          return false;
+        if (this.releaseType === '33') {
+          this.releaseTypeList = [
+            {id: "33", name: "电器/设备出售"}, {id: "34", name: "二手电器/设备出售"}, {id: "18", name: "维修电器/设备"}
+          ];
+          this.youxiaoqi = 365;
+          if (role !== '1' && role !== '3') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '4') {
+          this.releaseTypeList = [
+            {id: "4", name: "蔬菜出售"}, {id: "5", name: "粮油出售"}, {id: "6", name: "调料/副食出售"}
+            , {id: "29", name: "水产/禽蛋出售"}, {id: "9", name: "清洁用品"}, {id: "11", name: "桌椅餐具"}
+          ];
+          this.youxiaoqi = 180;
+          if (role !== '1' && role !== '4') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '101') {
+          this.releaseTypeList = [
+            {id: "101", name: "工服"}, {id: "102", name: "百货"}, {id: "103", name: "绿植"}
+            , {id: "104", name: "装饰用品"}
+          ];
+          this.youxiaoqi = 180;
+          if (role !== '1' && role !== '12') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '7') {
+          this.releaseTypeList = [{id: "7", name: "酒水/饮料"}, {id: "8", name: "消毒餐具"}];
+          this.youxiaoqi = 365;
+          if (role !== '1' && role !== '5') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '7') {
+          this.releaseTypeList = [{id: "7", name: "酒水/饮料"}, {id: "8", name: "消毒餐具"}];
+          this.youxiaoqi = 365;
+          if (role !== '1' && role !== '5') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
         }
+
+
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
             this.realName = res.data;
@@ -358,6 +393,7 @@
             this.ruleForm.consigneeName = this.realName.consigneeName;
           } else {
             this.$msgdeal(res.msg);
+            return false;
           }
         });
       },
@@ -378,8 +414,7 @@
           };
           this.ruleForm.pictureUrl = this.ruleForm.pictureUrl.concat(picture);
         }
-      }
-      ,
+      },
       //删除文件之前的钩子函数
       handleRemove(file, fileList) {
 
@@ -395,12 +430,10 @@
             break;
           }
         }
-      }
-      ,
+      },
       //点击列表中已上传的文件事的钩子函数
       handlePreview(file) {
-      }
-      ,
+      },
       //上传的文件个数超出设定时触发的函数
       onExceed(files, fileList) {
         this.$message({
@@ -409,8 +442,7 @@
           duration: 2000
         });
 
-      }
-      ,
+      },
       //文件上传前的前的钩子函数
       //参数是上传的文件，若返回false，或返回Primary且被reject，则停止上传
       beforeUpload(file) {
@@ -426,33 +458,24 @@
           this.$message.error('上传图片大小不能超过 8MB!');
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
-      }
-      ,
+      },
 
       //下拉
       querySearchAsync(queryString, cb) {
+
         // this.releaseWelfare.releaseTitle=queryString;
-        if (this.ruleForm.releaseType === '') {
-          this.$message.error("请先选择:发布类型")
-          return false;
-        }
         this.get_serviceType();
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
           cb(this.restaurants);
         }, 3000 * Math.random());
-      }
-      ,
+      },
       createStateFilter(queryString) {
         return (state) => {
           return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
-      }
-      ,
+      },
       get_serviceType() {
-        if (!this.$fsAuthent()) {
-          return false;
-        }
         let param = {
           serviceType: this.ruleForm.serviceType,
           releaseType: this.ruleForm.releaseType,
@@ -476,20 +499,25 @@
             this.$msgdeal(res.msg);
           }
         });
-      }
-      ,
+      },
+      
+      tiaojianserviceType(){
+        if( this.ruleForm.releaseType=== undefined || this.ruleForm.releaseType==='' ){
+          this.$message.error("请先选择发布类型");
+          return false;
+        }
+        this.form.releaseType= this.ruleForm.releaseType;
+        this.dialogFormVisible= true;
+      },
+      qingchureleaseType(){
+        this.restaurants= [];
+        this.ruleForm.serviceType='';
+      },
       create_serviceType() {
         if (!this.$fsAuthent()) {
           return false;
         }
         this.fullscreenLoading = true;
-        if (this.ruleForm.releaseType === '') {
-          this.$message.error("请先选择:发布类型")
-          this.fullscreenLoading = false;
-          this.dialogFormVisible = false;
-          return false;
-        }
-        this.form.releaseType = this.ruleForm.releaseType;
         this.$refs['form'].validate((valid) => {
           if (valid) {
             create_serviceType(this.form).then(res => {
@@ -511,31 +539,68 @@
             return false;
           }
         });
-      }
-      ,
+      },
 
       addItem() {
         this.ruleForm.serviceAndprice.push({
           project: '',
           price: ''
         })
-      }
-      ,
+      },
       deleteItem(item, index) {
         this.ruleForm.serviceAndprice.splice(index, 1)
       }
+    },
+    watch: {
+      "$route"(to, from) {
+        if (from.path.indexOf('crinformation') !== -1) {
+          this.releaseTypeList = [];
+          this.youxiaoqi = '';
+          this.releaseType = '';
+          this.ruleForm = {
+            userId: '',
+            releaseType: '',//发布类型
+            releaseTitle: '',//标题
+            serviceType: '',//商品/服务类型
+            serviceAndprice: [],//项目及价格KEY，vaule
+            project: '', //项目
+            price: '',//价格
+            serviceIntroduction: '',//介绍
+            remarks: '',//备注
+            serviceDetailed: '',//服务地址 来电确认和全市
+            pictureUrl: [],//图片
+            contact: '',  //实名联系联系方式 回显 可修改
+            consigneeName: '', //联系人姓名 回显可修改
+          };
+          this.form= {
+            serviceTypeName: '',
+              releaseType: '',
+          };
+          this.restaurants = [];//标题下拉
+          this.fileList = [];
+        }
+        if (to.path.indexOf('crinformation') !== -1) {
+          this.releaseType = this.$route.params.releaseType;
+          this.getRealName();
+        }
+      }
     }
+
+
   }
 
 </script>
 <style>
 
+  .releaseType {
+    padding: 0 10px 0 0;
+  }
 
   .el-form-itemUser {
     display: block;
     float: left;
-    margin: 1px 0px 8px 1px;
-    padding: 1px 0px 10px 1px;
+    margin: 1px 0 8px 1px;
+    padding: 1px 0 10px 1px;
 
   }
 

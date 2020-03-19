@@ -60,7 +60,7 @@ import OldEquipment from '../views/home/equipment/OldEquipment'
 import CreateEquipment from '../views/home/equipment/weixiu/CreateEquipment'
 import EditEquipment from '../views/home/equipment/weixiu/EditEquipment'
 
-
+import crinformation  from '../views/home/fabu/crinformation'
 
 import MyRelease from '../views/home/userCenter/MyRelease'
 import MyAccount from '../views/home/userCenter/MyAccount'
@@ -277,6 +277,15 @@ export default new VueRouter ({
           name:'editFoodAndGrain',
           component: EditFoodAndGrain
         },
+
+        {
+          path: '/home/crinformation/:releaseType',
+          component: crinformation  //创建发布
+        },
+
+
+
+
         {
           path: '/home/createWineAndTableware',
           component: CreateWineAndTableware  //创建角色4下的菜单

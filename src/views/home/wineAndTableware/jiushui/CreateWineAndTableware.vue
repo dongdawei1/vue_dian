@@ -2,7 +2,7 @@
   <!--创建酒水餐具-->
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      请认真填写信息
+      请认真填写信息(信息有效期为365天)
       <el-form-item label="发布类型" prop="releaseType">
         <template>
           <el-radio-group v-model="ruleForm.releaseType">
@@ -97,7 +97,7 @@
           :action="uploadDownUrl"
           name="picture"
           list-type="picture-card"
-          :limit="8"
+          :limit="5"
           :on-exceed="onExceed"
           :before-upload="beforeUpload"
           :on-preview="handlePreview"
@@ -177,7 +177,7 @@
   import {uploadDown_update} from '../../../../api/api';
   import {get_serviceType} from '../../../../api/api';
   import {create_serviceType} from '../../../../api/api';
-  import {create_wineAndTableware} from '../../../../api/api';
+  import {createfabu} from '../../../../api/api';
 
 
   export default {
@@ -314,7 +314,7 @@
               }
             }
 
-            create_wineAndTableware(this.ruleForm).then(res => {
+            createfabu(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
               if (res.status === 0) {
                 //成功弹窗

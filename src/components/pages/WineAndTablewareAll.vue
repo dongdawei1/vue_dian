@@ -94,7 +94,7 @@
     methods: {
       //判断是否实名和登陆状态
       isAuthenticationM() {
-        this.$router.push({path: '/home/createWineAndTableware'});
+        this.$router.push({path: '/home/crinformation/7'});
       },
 
       //获取用户实名信息判断展示哪个城市的信息
