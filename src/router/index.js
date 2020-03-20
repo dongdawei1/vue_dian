@@ -20,7 +20,7 @@ import Seasoning from '../views/home/market/Seasoning'
 import Wine from '../views/home/wineAndTableware/Wine'
 import Tableware from '../views/home/wineAndTableware/Tableware'
 
-import CreateWineAndTableware from '../views/home/wineAndTableware/jiushui/CreateWineAndTableware'
+
 import EditWineAndTableware from '../views/home/wineAndTableware/jiushui/EditWineAndTableware'
 
 import Clean from '../views/home/market/Clean'
@@ -28,19 +28,16 @@ import DepartmentStore from '../views/home/market/DepartmentStore'
 import KitchenUtensils from '../views/home/market/KitchenUtensils'
 import AquaticProduct from '../views/home/market/AquaticProduct'
 
-import CreateFoodAndGrain from '../views/home/market/caiyou/CreateFoodAndGrain'
+
 import EditFoodAndGrain from '../views/home/market/caiyou/EditFoodAndGrain'
 
 
-import CreateDepartmentStore from '../views/home/market/baihuo/CreateDepartmentStore'
 import EditDepartmentStore from '../views/home/market/baihuo/EditDepartmentStore'
 
 import Menu from '../views/home/meichong/Menu'
 import Lease from '../views/home/dianmian/Lease'
 import RentalBooth from '../views/home/dianmian/RentalBooth'
 
-import CreateLease from '../views/home/dianmian/cred/CreateLease'
-import CreateRentalBooth from '../views/home/dianmian/cred/CreateRentalBooth'
 import UpdateRent from '../views/home/dianmian/cred/UpdateRent'
 
 import RecruitWorkers from '../views/home/recruit/RecruitWorkers'
@@ -57,11 +54,12 @@ import PestControl from '../views/home/meichong/PestControl'
 import Repair from '../views/home/equipment/Repair'
 import NewEquipment from '../views/home/equipment/NewEquipment'
 import OldEquipment from '../views/home/equipment/OldEquipment'
-import CreateEquipment from '../views/home/equipment/weixiu/CreateEquipment'
+
 import EditEquipment from '../views/home/equipment/weixiu/EditEquipment'
 
 import crinformation  from '../views/home/fabu/crinformation'
-
+import upinformation  from '../views/home/fabu/upinformation'
+import crzuAndmie  from '../views/home/fabu/crzuAndmie'
 import MyRelease from '../views/home/userCenter/MyRelease'
 import MyAccount from '../views/home/userCenter/MyAccount'
 import Detailed from '../views/home/userCenter/Detailed'
@@ -69,7 +67,7 @@ import RealName  from '../views/home/shiming/RealName'
 import UpdateRealName  from '../views/home/shiming/UpdateRealName'
 
 import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
-import CreateMAndRAndP  from '../views/home/meichong/cred/CreateMAndRAndP'
+
 import EditMAndRAndP  from '../views/home/meichong/cred/EditMAndRAndP'
 
 
@@ -268,38 +266,40 @@ export default new VueRouter ({
               path: '/home/aquaticProduct',
               component: AquaticProduct  //水产禽蛋
            },
-        {
-          path: '/home/createFoodAndGrain',
-          component: CreateFoodAndGrain  //创建角色4下的菜单
-        },
+
         {
           path: '/home/editFoodAndGrain/:id',  //编辑备电气维修
           name:'editFoodAndGrain',
           component: EditFoodAndGrain
         },
 
+
+
         {
           path: '/home/crinformation/:releaseType',
           component: crinformation  //创建发布
         },
 
+        {
+          path: '/home/upinformation/:releaseType/:id',
+          component: upinformation  //编辑发布
+        },
 
 
 
         {
-          path: '/home/createWineAndTableware',
-          component: CreateWineAndTableware  //创建角色4下的菜单
+          path: '/home/crzuAndmie/:releaseType',
+          component: crzuAndmie  //创建发布
         },
+
+
         {
           path: '/home/editWineAndTableware/:id',  //编辑备电气维修
           name:'editWineAndTableware',
           component: EditWineAndTableware
         },
 
-        {
-          path: '/home/createDepartmentStore',
-          component: CreateDepartmentStore  //创建角色4下的菜单
-        },
+
         {
           path: '/home/editDepartmentStore/:id',  //编辑备电气维修
           name:'editDepartmentStore',
@@ -330,14 +330,8 @@ export default new VueRouter ({
           path: '/home/rentalBooth',  //出租摊位列表
           component: RentalBooth
         },
-        {
-          path: '/home/createLease',  //创建店面
-          component: CreateLease
-        },
-        {
-          path: '/home/createRentalBooth',  //创建摊位
-          component: CreateRentalBooth
-        },
+
+
         {
           path: '/home/updateRent/:id',  //编辑摊位
           component: UpdateRent
@@ -369,10 +363,7 @@ export default new VueRouter ({
           path: '/home/oldEquipment',  //旧设备电气
           component: OldEquipment
         },
-        {
-          path: '/home/createEquipment',  //新建备电气维修
-          component: CreateEquipment
-        },
+
         {
           path: '/home/editEquipment/:id',  //编辑备电气维修
           name:'editEquipment',
@@ -481,11 +472,7 @@ export default new VueRouter ({
           component:   UpResume  //修改简历
         },
 
-        {
-          hidden: true , //用户包中
-          path: '/home/createMAndRAndP',
-          component:   CreateMAndRAndP  //发布灭虫等
-        },
+
         {
           hidden: true , //用户包中
           path: '/home/editMAndRAndP/:id',

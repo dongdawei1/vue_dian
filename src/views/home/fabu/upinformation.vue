@@ -1,20 +1,18 @@
 <template>
   <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      请认真填写信息(信息有效期为180天)
+
       <el-form-item label="发布类型" prop="releaseType">
         <template>
-          <el-radio-group v-model="ruleForm.releaseType">
-            <el-radio :label="4">蔬菜出售</el-radio>
-            <el-radio :label="5">粮油出售</el-radio>
-            <el-radio :label="6">调料/副食出售</el-radio>
-            <el-radio :label="29">水产/禽蛋出售</el-radio>
-            <el-radio :label="9">清洁用品</el-radio>
-            <el-radio :label="11">桌椅餐具</el-radio>
+          <el-radio-group @change="qingchureleaseType" v-model="ruleForm.releaseType" v-for="item in releaseTypeList" :key="item.id" :disabled="true">
+            <el-radio :label="item.id" class="releaseType" >{{item.name}}</el-radio>
           </el-radio-group>
         </template>
       </el-form-item>
 
+      <div v-if="ruleForm.authentiCationStatus===3" class="authentiCationFailureClass">
+        失败原因:{{ruleForm.authentiCationFailure}}
+      </div>
       <el-form-item label="商品类型" prop="serviceType">
         <el-autocomplete
           v-model="ruleForm.serviceType"
@@ -25,25 +23,6 @@
         <el-button type="primary" @click="dialogFormVisible = true" plain>添加具体类型</el-button>
       </el-form-item>
 
-      <el-row>
-        <el-col :span="7">
-          <el-form-item label="商品详情" prop="project" class="el-form-itemUser">
-            <el-input v-model="ruleForm.project" placeholder="商品名及规格"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="参考价格" prop="price" class="el-form-itemUser">
-            <el-input v-model.number="ruleForm.price" placeholder="请输入整数">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6" class="el-form-itemUser">
-          <el-button type="primary" @click="addItem" plain>增加一行商品详情</el-button>
-        </el-col>
-      </el-row>
-      <div class="authentiCationFailureClass">
-        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
-      </div>
 
       <!--动态添加开始-->
       <div v-for="(item, index) in ruleForm.serviceAndprice" :key="index">
@@ -59,14 +38,26 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6" class="el-form-itemUser">
-            <el-button type="info" @click="deleteItem(item, index)">删除</el-button>
-          </el-col>
+
+
+          <div v-if="index==0">
+            <el-col :span="6" class="el-form-itemUser">
+              <el-button type="primary" @click="addItem" plain>增加一行商品详情</el-button>
+            </el-col>
+          </div>
+
+          <div v-if="index>0">
+            <el-col :span="6" class="el-form-itemUser">
+              <el-button type="info" @click="deleteItem(item, index)">删除</el-button>
+            </el-col>
+          </div>
         </el-row>
 
       </div>
       <!--动态添加结束-->
-
+      <div class="form-zhushi">
+        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
+      </div>
 
       <el-form-item label="标题" prop="releaseTitle">
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
@@ -115,48 +106,16 @@
         </el-dialog>
       </el-form-item>
 
-
       <el-form-item label="联系人" prop="consigneeName">
-        <el-input v-model="ruleForm.consigneeName" autocomplete="off" :placeholder="ruleForm.consigneeName"></el-input>
-      </el-form-item>
-      实名信息
-      <el-form-item label="联系方式" prop="contact">
-        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true" :placeholder="ruleForm.contact"></el-input>
+        <el-input v-model="ruleForm.consigneeName" autocomplete="off"   :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
 
-      <el-form-item label="公司名称">
-        <el-input v-model="realName.companyName" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.companyName"></el-input>
-      </el-form-item>
-      <el-form-item label="实名城市">
-        <el-input v-model="realName.detailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.detailed"></el-input>
-      </el-form-item>
-      <el-form-item label="实名地址">
-        <el-input v-model="realName.addressDetailed" :disabled="true" autocomplete="off"
-                  :placeholder="ruleForm.addressDetailed"></el-input>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布
         </el-button>
       </el-form-item>
     </el-form>
-    <!-- 成功弹窗  -->
-    <el-dialog
-      title="发布成功"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-      :before-close="cntinue"
-    >
-      <span>请关注审核状态，约24小时内完成审核</span>
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary"><router-link
-      v-on:click.native="goRelease"
-      to="" class="a">查看我的发布</router-link></el-button>
-     </span>
-    </el-dialog>
-    <!-- 成功弹窗结束  -->
+
 
     <!--添加商品/服务类型弹窗开始-->
     <el-dialog title="添加商品类型" :visible.sync="dialogFormVisible">
@@ -178,16 +137,15 @@
 <script>
 
 
-  import {getRealName} from '../../../../api/api';
 
-  import {uploadDown_update} from '../../../../api/api';
-
-  import {get_serviceType} from '../../../../api/api';
-  import {create_serviceType} from '../../../../api/api';
-  import {createfabu} from '../../../../api/api';
-
+  import {get_serviceType} from '../../../api/api';
+  import {create_serviceType} from '../../../api/api';
+  import {operation_userDepartmentStore} from '../../../api/api';
+  import {getmyfabubyid} from '../../../api/api';
+  import {echo_display} from '../../../api/api';
 
   export default {
+    name: 'editDepartmentStore',
     data() {
       var checkAge = (rule, value, callback) => {
         if (!value) {
@@ -203,13 +161,16 @@
         }, 100);
       };
       return {
+        id: this.$route.params.id,
+        releaseType: this.$route.params.releaseType,
         restaurants: [],//标题下拉
+
+        releaseTypeList: [],
+
         timeout: null,
         dialogFormVisible: false,//添加商品类型弹窗
         fileList: [],
-        centerDialogVisible: false,//成功弹窗
         fullscreenLoading: false,
-        realName: '',//用户实名信息
 
         //文件上传的参数
         dialogImageUrl: '',
@@ -218,6 +179,7 @@
           userId: '',
           releaseType: '',//发布类型
           releaseTitle: '',//标题
+
           serviceType: '',//商品/服务类型
           serviceAndprice: [],//项目及价格KEY，vaule
 
@@ -229,6 +191,7 @@
           serviceDetailed: '',//服务地址 来电确认和全市
           pictureUrl: [],//图片
           //实名中获取
+
           contact: '',  //实名联系联系方式 回显 可修改
           consigneeName: '', //联系人姓名 回显可修改
         },
@@ -273,7 +236,7 @@
             {min: 2, max: 12, message: '长度在2至11位之间', trigger: 'blur'}
           ],
           serviceTypeName: [
-            {required: true, message: '请输入商品/服务类型'},
+            {required: true, message: '请输入商品类型'},
             {min: 2, max: 15, message: '长度在2至15位之间', trigger: 'blur'}
           ],
           project: [
@@ -289,46 +252,43 @@
     },
 
     created() {
-      this.getRealName();
+      this.checke_isButten();
     },
     methods: {
-      goRelease() {
-        this.centerDialogVisible = false;
-        this.$router.push({path: '/home/myRelease'});
-      },
-      cntinue() {  //留在本页继续发布
-        this.centerDialogVisible = false;
-      },
+
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading = true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            let serviceAndpriceNo = {
-              project: this.ruleForm.project,
-              price: this.ruleForm.price,
-            };
-            this.ruleForm.serviceAndprice = this.ruleForm.serviceAndprice.concat(serviceAndpriceNo);
             let length = this.ruleForm.serviceAndprice.length;
             if (length > 1) {
               for (let a = 0; a < length; a++) {
                 let serviceAndpriceNoa = this.ruleForm.serviceAndprice[a];
                 if (serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
-                  this.deleteItem(serviceAndpriceNo, length - 1)
                   this.$message.error("新增加:项目/规格或者价格不能有空值")
                   return false;
                 }
               }
             }
 
-            createfabu(this.ruleForm).then(res => {
+            length = 0;
+            for (let i = 0; i < this.ruleForm.pictureUrl.length; i++) {
+              if (this.ruleForm.pictureUrl[i].useStatus === 1 || this.ruleForm.pictureUrl[i].useStatus === 3) {
+                length++;
+              }
+            }
+            if (length <= 0) {
+              this.$message.error("图片不能为空");
+              this.fullscreenLoading = false;
+              return false;
+            }
+            this.ruleForm.type = 6;
+            operation_userDepartmentStore(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
               if (res.status === 0) {
-                //成功弹窗
-                this.fileList = [];
-                this.ruleForm.pictureUrl = [];
-                this.ruleForm.serviceAndprice = [];
-                this.centerDialogVisible = true;
+                this.$message.success('编辑成功，审核约24小时内完成');
+                this.$router.push('/home/myRelease');
               } else {
                 this.$msgdeal(res.msg);
               }
@@ -341,27 +301,67 @@
       },
 
 
-      getRealName() {
+      //检查登陆和权限
+      checke_isButten() {
         if (!this.$fsAuthent()) {
           return false;
         }
         let role = window.localStorage.getItem('dian_role');
-        if (role !== '1' && role !== '4') {
-          this.$router.push({path: '/home/release'});
-          return false;
+        if (this.releaseType === '33' || this.releaseType === '34' || this.releaseType === '18') {
+          this.releaseTypeList = [
+            {id: "33", name: "电器/设备出售"}, {id: "34", name: "二手电器/设备出售"}, {id: "18", name: "维修电器/设备"}
+          ];
+          if (role !== '1' && role !== '3') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '4' || this.releaseType === '5' || this.releaseType === '6' ||
+          this.releaseType === '29' || this.releaseType === '9' || this.releaseType === '11') {
+          this.releaseTypeList = [
+            {id: "4", name: "蔬菜出售"}, {id: "5", name: "粮油出售"}, {id: "6", name: "调料/副食出售"}
+            , {id: "29", name: "水产/禽蛋出售"}, {id: "9", name: "清洁用品"}, {id: "11", name: "桌椅餐具"}
+          ];
+          if (role !== '1' && role !== '4') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '101' || this.releaseType === '102' || this.releaseType === '103'
+         || this.releaseType === '104') {
+          this.releaseTypeList = [
+            {id: "101", name: "工服"}, {id: "102", name: "百货"}, {id: "103", name: "绿植"}
+            , {id: "104", name: "装饰用品"}
+          ];
+          if (role !== '1' && role !== '12') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
+        } else if (this.releaseType === '7' || this.releaseType === '8') {
+          this.releaseTypeList = [{id: "7", name: "酒水/饮料"}, {id: "8", name: "消毒餐具"}];
+          if (role !== '1' && role !== '5') {
+            this.$router.push({path: '/home/release'});
+            return false;
+          }
         }
-        getRealName().then((res) => { //获取实名信息填充
+        getmyfabubyid(this.id).then(res => {
           if (res.status === 0) {
-            this.realName = res.data;
-            this.ruleForm.userId = this.realName.userId;
-            this.ruleForm.contact = this.realName.contact;
-            this.ruleForm.consigneeName = this.realName.consigneeName;
+            this.ruleForm = res.data;
+            let fileListAndPictureUrl = echo_display(this.ruleForm);
+            //图片回显和表格参数
+            this.ruleForm.pictureUrl = fileListAndPictureUrl.pictureUrl;
+            this.fileList = fileListAndPictureUrl.fileList;
+
+            let serviceAndpricelist = JSON.parse(this.ruleForm.serviceAndprice);
+
+            this.ruleForm.project = serviceAndpricelist[0].project; //没有这两个输入框失去焦点会报错
+            this.ruleForm.price = serviceAndpricelist[0].price;
+
+            this.ruleForm.serviceAndprice = serviceAndpricelist;
+
           } else {
             this.$msgdeal(res.msg);
           }
         });
       },
-
 
       //图片上传相关
       //文件上传成功的钩子函数
@@ -378,29 +378,25 @@
           };
           this.ruleForm.pictureUrl = this.ruleForm.pictureUrl.concat(picture);
         }
-      }
-      ,
+      },
+
       //删除文件之前的钩子函数
       handleRemove(file, fileList) {
-
-        let resdata = file.response.data;
         for (var i = 0; i < this.ruleForm.pictureUrl.length; i++) {
-          if (resdata.id === this.ruleForm.pictureUrl[i].id) {
-            uploadDown_update(this.ruleForm.pictureUrl[i]).then((res) => {
-              if (res.status !== 0) {
-                this.$message.error(res.msg);
-              }
-              this.ruleForm.pictureUrl.splice(i, 1)
-            });
+          if (file.id === undefined) {
+            if (file.response.data.id === this.ruleForm.pictureUrl[i].id) {
+              this.ruleForm.pictureUrl[i].useStatus = 2;
+              break;
+            }
+          } else if (file.id === this.ruleForm.pictureUrl[i].id) {
+            this.ruleForm.pictureUrl[i].useStatus = 2;
             break;
           }
         }
-      }
-      ,
+      },
       //点击列表中已上传的文件事的钩子函数
       handlePreview(file) {
-      }
-      ,
+      },
       //上传的文件个数超出设定时触发的函数
       onExceed(files, fileList) {
         this.$message({
@@ -409,8 +405,7 @@
           duration: 2000
         });
 
-      }
-      ,
+      },
       //文件上传前的前的钩子函数
       //参数是上传的文件，若返回false，或返回Primary且被reject，则停止上传
       beforeUpload(file) {
@@ -426,33 +421,23 @@
           this.$message.error('上传图片大小不能超过 8MB!');
         }
         return (isJPG || isBMP || isGIF || isPNG) && isLt8M;
-      }
-      ,
+      },
 
       //下拉
       querySearchAsync(queryString, cb) {
         // this.releaseWelfare.releaseTitle=queryString;
-        if (this.ruleForm.releaseType === '') {
-          this.$message.error("请先选择:发布类型")
-          return false;
-        }
         this.get_serviceType();
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
           cb(this.restaurants);
         }, 3000 * Math.random());
-      }
-      ,
+      },
       createStateFilter(queryString) {
         return (state) => {
           return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
-      }
-      ,
+      },
       get_serviceType() {
-        if (!this.$fsAuthent()) {
-          return false;
-        }
         let param = {
           serviceType: this.ruleForm.serviceType,
           releaseType: this.ruleForm.releaseType,
@@ -476,19 +461,9 @@
             this.$msgdeal(res.msg);
           }
         });
-      }
-      ,
+      },
       create_serviceType() {
-        if (!this.$fsAuthent()) {
-          return false;
-        }
         this.fullscreenLoading = true;
-        if (this.ruleForm.releaseType === '') {
-          this.$message.error("请先选择:发布类型")
-          this.fullscreenLoading = false;
-          this.dialogFormVisible = false;
-          return false;
-        }
         this.form.releaseType = this.ruleForm.releaseType;
         this.$refs['form'].validate((valid) => {
           if (valid) {
@@ -498,10 +473,6 @@
                 this.$message.success("添加成功");
                 this.ruleForm.serviceType = this.form.serviceTypeName;
                 this.dialogFormVisible = false;
-                //成功弹窗
-                // this.fileList=[];
-                // this.ruleForm.pictureUrl=[];
-                // this.centerDialogVisible=true;
               } else {
                 this.$msgdeal(res.msg);
               }
@@ -511,16 +482,14 @@
             return false;
           }
         });
-      }
-      ,
+      },
 
       addItem() {
         this.ruleForm.serviceAndprice.push({
           project: '',
           price: ''
         })
-      }
-      ,
+      },
       deleteItem(item, index) {
         this.ruleForm.serviceAndprice.splice(index, 1)
       }
@@ -534,8 +503,8 @@
   .el-form-itemUser {
     display: block;
     float: left;
-    margin: 1px 0px 8px 1px;
-    padding: 1px 0px 10px 1px;
+    margin: 1px 0 8px 1px;
+    padding: 1px 0 10px 1px;
 
   }
 

@@ -257,7 +257,7 @@
         form: {   //审核表单
           authentiCationStatus: '',
           authentiCationFailure:'', //失败原因
-          tabuleType:35, //维修，电器，二手
+          tabuleType:35, //
 
 
         },

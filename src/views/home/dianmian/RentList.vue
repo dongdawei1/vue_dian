@@ -176,11 +176,7 @@
 
       //判断是否实名和登陆状态
       isAuthenticationM() {
-        if (this.tableDataEnter.releaseType === 14) {
-          this.$router.push({path: '/home/createLease'});
-        } else {
-          this.$router.push({path: '/home/createRentalBooth'});
-        }
+          this.$router.push({path: '/home/crzuAndmie/14'});
       },
       //判断是否登录 获取用户权限，并根据权限判断是否展示按钮
       jurisdiction() {

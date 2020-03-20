@@ -381,7 +381,7 @@
 </script>
 <style>
   .parent {
-    padding: 0px 15px 25px 40px;
+    padding: 0 15px 25px 40px;
     /*框间距上填充为25px
 右填充为50px
 下填充为75px

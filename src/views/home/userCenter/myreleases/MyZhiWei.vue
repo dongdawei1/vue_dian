@@ -467,7 +467,7 @@
 <style>
   .zhiweixiangqi {
     width: 100%;
-    padding: 0px 10px 25px 16px;
+    padding: 0 10px 25px 16px;
     /*框间距上填充为25px
 右填充为50px
 下填充为75px

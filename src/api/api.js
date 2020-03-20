@@ -186,34 +186,18 @@ export const getReleaseWelfareAll = params => {
 export const getTrialResumeAll = params => {
   return axios.post(`${base}${v5Api}toExamine/getTrialResumeAll`, params).then(res => isButtonAndListusermrp(res.data, 3));
 };
-//待审核装修灭虫列表
-export const getmrpAll = params => {
-  return axios.post(`${base}${v5Api}toExamine/getmrpAll`, params).then(res => isButtonAndListusermrp(res.data, 2));
-};
-//待审核出租房
-export const adminMent = params => {
-  return axios.post(`${base}${v5Api}toExamine/adminMent`, params).then(res => isButtonAndListusermrp(res.data, 6));
-};
-//待审核电器二手
-export const adminEquipment = params => {
-  return axios.post(`${base}${v5Api}toExamine/adminEquipment`, params).then(res => isButtonAndListusermrp(res.data, 8));
-};
+
+
 //待审核菜
-export const adminFoodAndGrain = params => {
-  return axios.post(`${base}${v5Api}toExamine/adminFoodAndGrain`, params).then(res => isButtonAndListusermrp(res.data, 8));
+export const getfabuad = params => {
+  return axios.post(`${base}${v5Api}toExamine/getfabuad`, params).then(res => res.data);
 };
 //待审核批发菜
 export const adminWholesaleCommodity = params => {
   return axios.post(`${base}${v5Api}toExamine/adminWholesaleCommodity`, params).then(res => isButtonAndListusermrp(res.data, 14));
 };
 
-//待审批酒
-export const adminWineAndTableware = params => {
-  return axios.post(`${base}${v5Api}toExamine/adminWineAndTableware`, params).then(res => isButtonAndListusermrp(res.data, 8));
-};
-export const adminDepartmentStore = params => {
-  return axios.post(`${base}${v5Api}toExamine/adminDepartmentStore`, params).then(res => isButtonAndListusermrp(res.data, 8));
-};
+
 export const getAddressDetailed = params => {
   return axios.post(`${base}${v5Api}toExamine/getAddressDetailed`, params).then(res => res.data);
 };
@@ -336,10 +320,7 @@ export const getMrpDetails = params => {
   }).then(res => res.data);
 };
 
-//创建租房
-export const create_rent = params => {
-  return axios.post(`${base}${pcApi}rent/create_rent`, params).then(res => res.data);
-};
+
 //获取自己发布的租房信息
 export const get_myRent_list = params => {
   return axios.post(`${base}${pcApi}rent/get_myRent_list`, params).then(res => isButtonAndListusermrp(res.data, 5));
@@ -459,10 +440,7 @@ export const admin_create_serviceType = params => {
   return axios.post(`${base}${v5Api}toExamine/admin_create_serviceType`, params).then(res => res.data);
 };
 
-//创建电器/维修
-export const create_equipment = params => {
-  return axios.post(`${base}${pcApi}equipment/create_equipment`, params).then(res => res.data);
-};
+
 //用户获取自己创建电器/维修
 export const get_myEquipment_list = params => {
   return axios.post(`${base}${pcApi}equipment/get_myEquipment_list`, params).then(res => isButtonAndListusermrp(res.data, 7));
@@ -497,12 +475,10 @@ export const getEquipmentPublicList = params => {
   return axios.post(`${base}${pcApi}equipment/getEquipmentPublicList`, params).then(res => res.data);
 };
 
-export const create_foodAndGrain = params => {
-  return axios.post(`${base}${pcApi}foodAndGrain/create_foodAndGrain`, params).then(res => res.data);
-};
+
 //用户获取自己创建菜
-export const get_myFoodAndGrain_list = params => {
-  return axios.post(`${base}${pcApi}foodAndGrain/get_myFoodAndGrain_list`, params).then(res => isButtonAndListusermrp(res.data, 7));
+export const upfabu = params => {
+  return axios.post(`${base}${pcApi}fabu/upfabu`, params).then(res =>  res.data);
 };
 //操作菜
 export const operation_userFoodAndGrain = params => {
@@ -533,11 +509,9 @@ export const get_userFoodAndGrain_id = params => {
   }).then(res => res.data);
 };
 //酒水
-export const create_wineAndTableware = params => {
-  return axios.post(`${base}${pcApi}wineAndTableware/create_wineAndTableware`, params).then(res => res.data);
-};
-export const get_myWineAndTableware_list = params => {
-  return axios.post(`${base}${pcApi}wineAndTableware/get_myWineAndTableware_list`, params).then(res => isButtonAndListusermrp(res.data, 7));
+
+export const getmyfabu = params => {
+  return axios.post(`${base}${pcApi}fabu/getmyfabu`, params).then(res => res.data);
 };
 export const operation_userWineAndTableware = params => {
   return axios.post(`${base}${pcApi}wineAndTableware/operation_userWineAndTableware`, params).then(res => res.data);
@@ -558,9 +532,7 @@ export const getWineAndTablewareDetails = params => {
 };
 
 //b百货工服
-export const create_departmentStore = params => {
-  return axios.post(`${base}${pcApi}departmentStore/create_departmentStore`, params).then(res => res.data);
-};
+
 export const get_myDepartmentStore_list = params => {
   return axios.post(`${base}${pcApi}departmentStore/get_myDepartmentStore_list`, params).then(res => isButtonAndListusermrp(res.data, 7));
 };
@@ -568,9 +540,9 @@ export const operation_userDepartmentStore = params => {
   return axios.post(`${base}${pcApi}departmentStore/operation_userDepartmentStore`, params).then(res => res.data);
 };
 //用户根据id获取
-export const get_userDepartmentStore_id = params => {
+export const getmyfabubyid = params => {
   return axios({
-    url: `${base}${pcApi}departmentStore/get_userDepartmentStore_id`,
+    url: `${base}${pcApi}fabu/getmyfabubyid`,
     params: {id: params},
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -1024,7 +996,7 @@ function isButtonAndListusermrp(res, type) {
         }
       }
       //管理员租房
-      else if (type === 6 || type === 8 || type === 14) {
+      else if (type === 6 ||  type === 14) {
         for (let a = 0; a < list.length; a++) {
           if (type === 8) {
             list[a].serviceAndprice = JSON.parse(list[a].serviceAndprice);
@@ -1177,14 +1149,6 @@ function isButtonAndListusermrp(res, type) {
         }
       }
 
-      //查看和删除全部有 除了审批scope.row.isDisplaySee">查看，scope.row.isDisplayDelete"   >删除，
-//       </el-button>
-//       scope.row.isDisplayRefresh"  v-loading.fullscreen.lock="fullscreenLoading" >刷新</el-button>
-//       scope.row.isDisplayDelay" >延期</el-button>
-//       "scope.row.isDisplayHide">隐藏</el-button>
-//       scope.row.isDisplayRelease" >发布</el-button>
-//       </el-button>
-//       scope.row.isDisplayEdit" >编辑</el-button>
       res.data.datas = list;
       return res;
     } else {
@@ -1215,14 +1179,3 @@ export const newstr = params => {
   }
 };
 
-//参数n为休眠时间，单位为毫秒:
-export const sleep = params => {
-  var start = new Date().getTime();
-  //  console.log('休眠前：' + start);
-  while (true) {
-    if (new Date().getTime() - start > params) {
-      break;
-    }
-  }
-  // console.log('休眠后：' + new Date().getTime());
-};

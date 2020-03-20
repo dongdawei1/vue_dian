@@ -1,6 +1,6 @@
 <template>
   <div class="vm-image-list">
-    <!--我的发布 已发布过的装修等  c查询框开始-->
+    <!--我的采购订单-->
     <el-form :inline="true" :model="releaseWelfare" class="demo-form-inline">
 
       <el-form-item label="发布日期">

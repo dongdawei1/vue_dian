@@ -90,7 +90,7 @@
     methods: {
       //判断是否实名和登陆状态
       isAuthenticationM(){
-        this.$router.push({path:'/home/createMAndRAndP'});
+        this.$router.push({path: '/home/crzuAndmie/13'});
       },
 
 
@@ -130,7 +130,7 @@
       getmrpList(){
         if(!this.$fsAuthent()){
           return false;
-        };
+        }
         getmrpList(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数

@@ -36,11 +36,6 @@
           <el-button type="primary" @click="addItem" plain>增加一行项目/规格</el-button>
         </el-col>
       </el-row>
-
-      <div class="authentiCationFailureClass">
-        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
-      </div>
-
       <!--动态添加开始-->
       <div v-for="(item, index) in ruleForm.serviceAndprice" :key="index">
         <el-row>
@@ -59,6 +54,9 @@
             <el-button type="info" @click="deleteItem(item, index)">删除</el-button>
           </el-col>
         </el-row>
+      </div>
+      <div class="authentiCationFailureClass">
+        注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
       </div>
       <!--动态添加结束-->
 
@@ -189,7 +187,6 @@
             callback(new Error('请输入数字值'));
           } else {
             callback();
-
           }
         }, 100);
       };
@@ -375,13 +372,6 @@
             this.$router.push({path: '/home/release'});
             return false;
           }
-        } else if (this.releaseType === '7') {
-          this.releaseTypeList = [{id: "7", name: "酒水/饮料"}, {id: "8", name: "消毒餐具"}];
-          this.youxiaoqi = 365;
-          if (role !== '1' && role !== '5') {
-            this.$router.push({path: '/home/release'});
-            return false;
-          }
         }
 
 
@@ -500,7 +490,7 @@
           }
         });
       },
-      
+
       tiaojianserviceType(){
         if( this.ruleForm.releaseType=== undefined || this.ruleForm.releaseType==='' ){
           this.$message.error("请先选择发布类型");
