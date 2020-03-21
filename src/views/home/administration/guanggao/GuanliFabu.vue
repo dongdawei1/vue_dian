@@ -490,13 +490,13 @@
           return true;
         } else if (row.tablenameid === 1) {
           this.jianlidialogVisible = false;
-          this.tableDataNo = row.dataObject
+          this.tableDataNo = row.dataObject;
           this.zhiweidialogVisible = true;
 
           return true;
         } else if (row.tablenameid === 3) {
           this.zhiweidialogVisible = false;
-          this.tableDataNo = row.dataObject
+          this.tableDataNo = row.dataObject;
           this.jianlidialogVisible = true;
 
           return true;
@@ -694,7 +694,7 @@
 <style>
   .userxinxi {
     font-size: 16px;
-    padding: 0px 10px 10px 10px;
+    padding: 0 10px 10px 10px;
   }
 
   .userxinxiTitle {
@@ -704,7 +704,7 @@
 
   .zhiweixiangqi {
     width: 100%;
-    padding: 0px 10px 25px 16px;
+    padding: 0 10px 25px 16px;
     /*框间距上填充为25px
 右填充为50px
 下填充为75px
@@ -715,6 +715,6 @@
 
   .isguanggaoClasss {
     width: 99%;
-    padding: 0px 10px 10px 10px;
+    padding: 0 10px 10px 10px;
   }
 </style>
