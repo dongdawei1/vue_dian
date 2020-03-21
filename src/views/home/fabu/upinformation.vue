@@ -4,7 +4,7 @@
 
       <el-form-item label="发布类型" prop="releaseType">
         <template>
-          <el-radio-group @change="qingchureleaseType" v-model="ruleForm.releaseType" v-for="item in releaseTypeList" :key="item.id" :disabled="true">
+          <el-radio-group  v-model="ruleForm.releaseType" v-for="item in releaseTypeList" :key="item.id" :disabled="true">
             <el-radio :label="item.id" class="releaseType" >{{item.name}}</el-radio>
           </el-radio-group>
         </template>
@@ -109,7 +109,24 @@
       <el-form-item label="联系人" prop="consigneeName">
         <el-input v-model="ruleForm.consigneeName" autocomplete="off"   :placeholder="ruleForm.consigneeName"></el-input>
       </el-form-item>
+      实名信息
 
+      <el-form-item label="联系方式">
+        <el-input v-model="ruleForm.contact" autocomplete="off" :disabled="true"
+                  :placeholder="ruleForm.contact"></el-input>
+      </el-form-item>
+      <el-form-item label="公司名称">
+        <el-input v-model="ruleForm.userType" :disabled="true" autocomplete="off"
+                  :placeholder="ruleForm.userType"></el-input>
+      </el-form-item>
+      <el-form-item label="实名城市">
+        <el-input v-model="ruleForm.detailed" :disabled="true" autocomplete="off"
+                  :placeholder="ruleForm.detailed"></el-input>
+      </el-form-item>
+      <el-form-item label="实名地址">
+        <el-input v-model="ruleForm.realNameId" :disabled="true" autocomplete="off"
+                  :placeholder="ruleForm.realNameId"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')" v-loading.fullscreen.lock="fullscreenLoading">立即发布
         </el-button>
@@ -140,11 +157,12 @@
 
   import {get_serviceType} from '../../../api/api';
   import {create_serviceType} from '../../../api/api';
-  import {operation_userDepartmentStore} from '../../../api/api';
+  import {upfabu} from '../../../api/api';
   import {getmyfabubyid} from '../../../api/api';
   import {echo_display} from '../../../api/api';
 
   export default {
+
     name: 'editDepartmentStore',
     data() {
       var checkAge = (rule, value, callback) => {
@@ -164,7 +182,6 @@
         id: this.$route.params.id,
         releaseType: this.$route.params.releaseType,
         restaurants: [],//标题下拉
-
         releaseTypeList: [],
 
         timeout: null,
@@ -176,13 +193,12 @@
         dialogImageUrl: '',
         dialogVisible: false,
         ruleForm: {
+          id:'',
           userId: '',
           releaseType: '',//发布类型
           releaseTitle: '',//标题
-
           serviceType: '',//商品/服务类型
           serviceAndprice: [],//项目及价格KEY，vaule
-
           project: '', //项目
           price: '',//价格
 
@@ -191,9 +207,12 @@
           serviceDetailed: '',//服务地址 来电确认和全市
           pictureUrl: [],//图片
           //实名中获取
-
-          contact: '',  //实名联系联系方式 回显 可修改
           consigneeName: '', //联系人姓名 回显可修改
+          contact: '',  //实名联系联系方式 回显 可修改
+          detailed:'',
+          realNameId:'',
+          userType:''
+
         },
         form: {
           serviceTypeName: '',
@@ -265,8 +284,9 @@
             if (length > 1) {
               for (let a = 0; a < length; a++) {
                 let serviceAndpriceNoa = this.ruleForm.serviceAndprice[a];
-                if (serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
-                  this.$message.error("新增加:项目/规格或者价格不能有空值")
+                if (serviceAndpriceNoa.project===undefined || serviceAndpriceNoa.price === undefined || serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
+                  this.$message.error("新增加:项目/规格或者价格不能有空值");
+                  this.fullscreenLoading = false;
                   return false;
                 }
               }
@@ -284,7 +304,7 @@
               return false;
             }
             this.ruleForm.type = 6;
-            operation_userDepartmentStore(this.ruleForm).then(res => {
+            upfabu(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
               if (res.status === 0) {
                 this.$message.success('编辑成功，审核约24小时内完成');
@@ -356,7 +376,7 @@
             this.ruleForm.price = serviceAndpricelist[0].price;
 
             this.ruleForm.serviceAndprice = serviceAndpricelist;
-
+            this.ruleForm.releaseType=this.ruleForm.releaseType.toString();
           } else {
             this.$msgdeal(res.msg);
           }
@@ -492,6 +512,65 @@
       },
       deleteItem(item, index) {
         this.ruleForm.serviceAndprice.splice(index, 1)
+      }
+    },
+    watch: {
+      "$route"(to, from) {
+        if (from.path.indexOf('upinformation') !== -1) {
+          this.releaseTypeList = [];
+          this.releaseType = '';
+          this.id= '';
+          this.ruleForm = {
+            userId: '',
+            releaseType: '',//发布类型
+            releaseTitle: '',//标题
+            serviceType: '',//商品/服务类型
+            serviceAndprice: [],//项目及价格KEY，vaule
+            project: '', //项目
+            price: '',//价格
+            serviceIntroduction: '',//介绍
+            remarks: '',//备注
+            serviceDetailed: '',//服务地址 来电确认和全市
+            pictureUrl: [],//图片
+            //实名中获取
+            consigneeName: '', //联系人姓名 回显可修改
+            contact: '',  //实名联系联系方式 回显 可修改
+            detailed:'',
+            realNameId:'',
+            userType:''
+          };
+          this.restaurants = [];//标题下拉
+          this.fileList = [];
+        }
+        if (to.path.indexOf('upinformation') !== -1) {
+          this.ruleForm = {
+            id:'',
+            userId: '',
+            releaseType: '',//发布类型
+            releaseTitle: '',//标题
+            serviceType: '',//商品/服务类型
+            serviceAndprice: [],//项目及价格KEY，vaule
+            project: '', //项目
+            price: '',//价格
+            serviceIntroduction: '',//介绍
+            remarks: '',//备注
+            serviceDetailed: '',//服务地址 来电确认和全市
+            pictureUrl: [],//图片
+            //实名中获取
+            consigneeName: '', //联系人姓名 回显可修改
+            contact: '',  //实名联系联系方式 回显 可修改
+            detailed:'',
+            realNameId:'',
+            userType:''
+          };
+          this.releaseTypeList = [];
+          this.restaurants = [];//标题下拉
+          this.fileList = [];
+          this.releaseType = this.$route.params.releaseType;
+          this.id= this.$route.params.id;
+
+          this.checke_isButten();
+        }
       }
     }
   }

@@ -1,15 +1,14 @@
 <template>
   <!--装修专区-->
   <div >
-    <MapAll :tableDataEnter="17" class="vm-margin"></MapAll>
+    <Fabulist :tableDataEnter="17" class="vm-margin"></Fabulist>
   </div>
 </template>
-
 <script>
-  import MapAll from '../../../components/pages/MapAll';
+  import Fabulist from '../../home/fabu/fabulist';
   export default {
     components: {
-      MapAll
+      Fabulist
     }
   }
 </script>

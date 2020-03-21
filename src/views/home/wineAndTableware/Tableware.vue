@@ -1,15 +1,15 @@
 <template>
   <!--消毒餐具-->
   <div >
-    <WineAndTablewareAll :tableDataEnter="8" class="vm-margin"></WineAndTablewareAll>
+    <Fabulist :tableDataEnter="8" class="vm-margin"></Fabulist>
   </div>
 </template>
 
 <script>
-  import WineAndTablewareAll from '../../../components/pages/WineAndTablewareAll';
+  import Fabulist from '../../home/fabu/fabulist';
   export default {
     components: {
-      WineAndTablewareAll
+      Fabulist
     }
   }
 </script>

@@ -1,15 +1,16 @@
 <template>
   <!--百货 等-->
   <div >
-    <DepartmentStoreAll :tableDataEnter="12" class="vm-margin"></DepartmentStoreAll>
+    <Fabulist :tableDataEnter="101" class="vm-margin"></Fabulist>
   </div>
 </template>
 
+
 <script>
-  import DepartmentStoreAll from '../../../components/pages/DepartmentStoreAll';
+  import Fabulist from '../../home/fabu/fabulist';
   export default {
     components: {
-      DepartmentStoreAll
+      Fabulist
     }
   }
 </script>

@@ -4,11 +4,25 @@
       <div class="titleAll">{{result.releaseTitle}}</div>
       <div class="mrpDetailsJichu">
         <div class="mrpDetailsfuwu">
-          发布类型 : {{result.releaseType}}<br>
+          发布类型 : {{result.userType}}<br>
+          <span v-if="result.releaseType===13 || result.releaseType===17 || result.releaseType===19">
+           起步价格(元)： {{result.mianjia}}<br>
+          </span>
           联 系 人 : {{result.consigneeName}}<br>
           备 注 : {{result.remarks}}<br>
-          发布时间 : {{result.createTime}}<br>
-          服务区域 : {{result.serviceDetailed}}<br>
+
+          <span v-if="result.releaseType!==14 && result.releaseType!==15">
+           服务区域 : {{result.serviceDetailed}}<br>
+          </span>
+          <span v-if="result.releaseType===14 || result.releaseType===15">
+           出租面积(平米)： {{result.mianjia}}<br>
+           出租地址： {{result.serviceDetailed}}<br>
+          </span>
+          <span v-if="result.serviceType!==14 && result.releaseType!==15 &&
+             result.releaseType!==13 && result.releaseType!==17 && result.releaseType!==19">
+           类型： {{result.serviceType}}<br>
+          </span>
+
           <div>
             <el-table
               :data="result.serviceAndprice"
@@ -30,12 +44,13 @@
           </div>
 
           <br>实名详情<br>
-          企业名称 : {{result.realNameId}}<br>
+          企业名称 : {{result.updateTime}}<br>
           联系方式 : {{result.contact}}<br>
           所在城区 : {{result.detailed}}<br>
-          联系地址 : {{result.examineTime}}<br>
+          联系地址 : {{result.realNameId}}<br>
+          发布时间 : {{result.createTime}}<br>
         </div>
-
+        <!-- 线上操作 提示敬请期待-->
         <ReservationService></ReservationService>
       </div>
 
@@ -53,28 +68,35 @@
         </li>
       </div>
     </div>
-
     <!--引入评价-->
+    <Evaluate :tableData="tableData"></Evaluate>
+    <!-- 轮播广告-->
     <DibuBunner :tableData="tableBunner"></DibuBunner>
   </div>
 </template>
 <script>
 
-  import {getEquipmentDetails} from '../../api/api';
+  import {getfabubyid} from '../../api/api';
 
   import ReservationService from "../../components/pages/ReservationService";
   import DibuBunner from "../../components/pages/DibuBunner";
+  import Evaluate from '../../components/pages/Evaluate';
 
   export default {
     name: 'equipmentDetails',
-    components: {ReservationService, DibuBunner},
+    components: {
+      ReservationService,
+      DibuBunner,
+      Evaluate
+    },
     data() {
       return {
         id: this.$route.params.id,
         releaseType: this.$route.params.releaseType,
+        tableData: {}, //评价
         tableBunner: {
-          permissionid: 2,
-          bunnerType: 2
+          permissionid: '',
+          bunnerType: 2 //详情页轮播
         },
         result: {
           releaseType: '',
@@ -92,17 +114,16 @@
     },
     methods: {
       getMrpDetails() {
-
-        getEquipmentDetails(this.id).then(res => {
+        if (!this.$fsAuthent()) {
+          return false;
+        }
+        getfabubyid(this.id).then(res => {
+          console.log(res)
           if (res.status === 0) {
-            this.result = res.data.result;
-            if (this.result.releaseType === 18) {
-              this.result.releaseType = '电器/设备维修';
-            } else if (this.result.releaseType === 33) {
-              this.result.releaseType = '电器/设备出售';
-            } else if (this.result.releaseType === 34) {
-              this.result.releaseType = '二手电器/设备';
-            }
+            this.result = res.data.fabu;
+            //传入评价
+            this.tableData = res.data.evaluate;
+
             let pictureUrl = JSON.parse(this.result.pictureUrl);
             this.result.serviceAndprice = JSON.parse(this.result.serviceAndprice);
             let list = [];
@@ -112,7 +133,6 @@
               list = list.concat(filepicture);
             }
             this.fileList = list;
-            this.tableData = res.data.evaluate;
           } else {
             this.$msgdeal(res.msg);
           }

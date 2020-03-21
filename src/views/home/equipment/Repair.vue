@@ -1,15 +1,15 @@
 <template>
   <!--设备维修-->
   <div >
-    <EquipmentAll :tableDataEnter="18" class="vm-margin"></EquipmentAll>
+    <Fabulist :tableDataEnter="18" class="vm-margin"></Fabulist>
   </div>
 </template>
 
 <script>
-  import EquipmentAll from '../../../components/pages/EquipmentAll';
+  import Fabulist from '../../home/fabu/fabulist';
   export default {
     components: {
-      EquipmentAll
+      Fabulist
     }
   }
 </script>

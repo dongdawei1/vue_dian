@@ -216,7 +216,11 @@
         if( tableDataNo.releaseType!==14 && tableDataNo.releaseType!==15   && tableDataNo.releaseType!==13
           && tableDataNo.releaseType!==17 && tableDataNo.releaseType!==19  ){
         this.$router.push('/home/upinformation/'+tableDataNo.releaseType+'/'+tableDataNo.id);  //带参数页面跳转  name:'editMAndRAndP',
+
+        }else{
+          this.$router.push('/home/upzuAndmie/'+tableDataNo.releaseType+'/'+tableDataNo.id);  //带参数
         }
+
       },
 
 

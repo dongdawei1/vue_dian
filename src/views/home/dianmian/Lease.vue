@@ -1,23 +1,14 @@
 <template>
   <div >
     <!--出租店面-->
-    <RentList :tableDataEnter="tableDataEnter" class="vm-margin"></RentList>
+    <Fabulist :tableDataEnter="14" class="vm-margin"></Fabulist>
   </div>
 </template>
-
 <script>
-  import RentList from './RentList';
+  import Fabulist from '../../home/fabu/fabulist';
   export default {
     components: {
-      RentList
-    },
-    data() {
-      return {
-        tableDataEnter:{
-          StringPath:'/home/lease',
-          releaseType:14
-        },
-      }
+      Fabulist
     }
   }
 </script>

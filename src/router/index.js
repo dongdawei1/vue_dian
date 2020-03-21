@@ -20,25 +20,19 @@ import Seasoning from '../views/home/market/Seasoning'
 import Wine from '../views/home/wineAndTableware/Wine'
 import Tableware from '../views/home/wineAndTableware/Tableware'
 
-
-import EditWineAndTableware from '../views/home/wineAndTableware/jiushui/EditWineAndTableware'
-
 import Clean from '../views/home/market/Clean'
 import DepartmentStore from '../views/home/market/DepartmentStore'
 import KitchenUtensils from '../views/home/market/KitchenUtensils'
 import AquaticProduct from '../views/home/market/AquaticProduct'
 
 
-import EditFoodAndGrain from '../views/home/market/caiyou/EditFoodAndGrain'
 
-
-import EditDepartmentStore from '../views/home/market/baihuo/EditDepartmentStore'
 
 import Menu from '../views/home/meichong/Menu'
 import Lease from '../views/home/dianmian/Lease'
 import RentalBooth from '../views/home/dianmian/RentalBooth'
 
-import UpdateRent from '../views/home/dianmian/cred/UpdateRent'
+
 
 import RecruitWorkers from '../views/home/recruit/RecruitWorkers'
 import JobWanted from '../views/home/recruit/JobWanted'
@@ -55,11 +49,11 @@ import Repair from '../views/home/equipment/Repair'
 import NewEquipment from '../views/home/equipment/NewEquipment'
 import OldEquipment from '../views/home/equipment/OldEquipment'
 
-import EditEquipment from '../views/home/equipment/weixiu/EditEquipment'
-
 import crinformation  from '../views/home/fabu/crinformation'
 import upinformation  from '../views/home/fabu/upinformation'
 import crzuAndmie  from '../views/home/fabu/crzuAndmie'
+import upzuAndmie  from '../views/home/fabu/upzuAndmie'
+
 import MyRelease from '../views/home/userCenter/MyRelease'
 import MyAccount from '../views/home/userCenter/MyAccount'
 import Detailed from '../views/home/userCenter/Detailed'
@@ -68,7 +62,6 @@ import UpdateRealName  from '../views/home/shiming/UpdateRealName'
 
 import MyJobWanted  from '../views/home/userCenter/myreleases/MyJobWanted'
 
-import EditMAndRAndP  from '../views/home/meichong/cred/EditMAndRAndP'
 
 
 import Integral from '../views/home/Integral'
@@ -76,7 +69,7 @@ import Characteristic from '../views/home/Characteristic'
 
 import WholesaleMarket from '../views/home/WholesaleMarket'
 import CreateWholesaleMarket from '../views/home/wholesaleMarket/pifa/CreateWholesaleMarket'
-import EditWholesaleMarket from '../views/home/wholesaleMarket/pifa/EditWholesaleMarket'
+
 
 import ToExamine from '../views/home/administration/ToExamine'
 import Guanggao from '../views/home/administration/Guanggao'
@@ -85,13 +78,8 @@ import AdminAddjiedan from '../views/home/administration/jiedanguanli/addjiedan/
 import AddRealName  from '../views/home/administration/tianjiashiming/AddAdminRealName'
 
 import Details from '../views/Details.vue'
-import MrpDetails  from '../views/detailes/MrpDetails'
 
-import RentDetails  from '../views/detailes/RentDetails'
 import EquipmentDetails  from '../views/detailes/EquipmentDetails'
-import FoodAndGrainDetails  from '../views/detailes/FoodAndGrainDetails'
-import WineAndTablewareDetails  from '../views/detailes/WineAndTablewareDetails'
-import DepartmentStoreDetails  from '../views/detailes/DepartmentStoreDetails'
 import WholesaleCommodityDetailes  from '../views/detailes/WholesaleCommodityDetailes'
 
 import PurchaseCreateOrder from '../views/home/releases/createOrder/PurchaseCreateOrder'
@@ -150,43 +138,15 @@ export default new VueRouter ({
       path:'/details',
       component: Details,
       children:[
-        {
-          hidden: true , //用户包中
-          path: '/details/mrpDetails/:id/:releaseType',
-          name: 'mrpDetails',
-          component:   MrpDetails  //发布灭虫等
 
-        },
-        {
-          hidden: true , //用户包中
-          path: '/details/rentDetails/:id/:releaseType',
-          name: 'rentDetails',
-          component:   RentDetails  //发布出租等
-        },
         {
           hidden: true , //用户包中
           path: '/details/equipmentDetails/:id/:releaseType',
-          name: 'equipmentDetails',
+          name: 'rentDetails',
           component:   EquipmentDetails  //发布出租等
         },
-        {
-          hidden: true , //用户包中
-          path: '/details/foodAndGrainDetails/:id/:releaseType',
-          name: 'foodAndGrainDetails',
-          component:   FoodAndGrainDetails  //发菜等
-        },
-        {
-          hidden: true , //用户包中
-          path: '/details/wineAndTablewareDetails/:id/:releaseType',
-          name: 'wineAndTablewareDetails',
-          component:   WineAndTablewareDetails  //酒等
-        },
-        {
-          hidden: true , //用户包中
-          path: '/details/departmentStoreDetails/:id/:releaseType',
-          name: 'departmentStoreDetails',
-          component:   DepartmentStoreDetails  //酒等
-        },
+
+
         {
           hidden: true , //用户包中
           path: '/details/wholesaleCommodityDetailes/:id/:releaseType',
@@ -221,10 +181,6 @@ export default new VueRouter ({
         {
           path: '/home/createWholesaleMarket',  //批发市场创建商品
           component: CreateWholesaleMarket
-        },
-        {
-          path: '/home/editWholesaleMarket/:id',  //批发市场编辑商品
-          component: EditWholesaleMarket
         },
 
 
@@ -267,11 +223,6 @@ export default new VueRouter ({
               component: AquaticProduct  //水产禽蛋
            },
 
-        {
-          path: '/home/editFoodAndGrain/:id',  //编辑备电气维修
-          name:'editFoodAndGrain',
-          component: EditFoodAndGrain
-        },
 
 
 
@@ -284,7 +235,10 @@ export default new VueRouter ({
           path: '/home/upinformation/:releaseType/:id',
           component: upinformation  //编辑发布
         },
-
+        {
+          path: '/home/upzuAndmie/:releaseType/:id',
+          component: upzuAndmie  //编辑灭虫，出租
+        },
 
 
         {
@@ -293,18 +247,10 @@ export default new VueRouter ({
         },
 
 
-        {
-          path: '/home/editWineAndTableware/:id',  //编辑备电气维修
-          name:'editWineAndTableware',
-          component: EditWineAndTableware
-        },
 
 
-        {
-          path: '/home/editDepartmentStore/:id',  //编辑备电气维修
-          name:'editDepartmentStore',
-          component: EditDepartmentStore
-        },
+
+
         /*市场区结束*/
 
 
@@ -332,10 +278,7 @@ export default new VueRouter ({
         },
 
 
-        {
-          path: '/home/updateRent/:id',  //编辑摊位
-          component: UpdateRent
-        },
+
         /*招聘开始*/
              {
                    path: '/home/recruitWorkers',
@@ -363,13 +306,6 @@ export default new VueRouter ({
           path: '/home/oldEquipment',  //旧设备电气
           component: OldEquipment
         },
-
-        {
-          path: '/home/editEquipment/:id',  //编辑备电气维修
-          name:'editEquipment',
-          component: EditEquipment
-        },
-
 
 
         {
@@ -473,12 +409,7 @@ export default new VueRouter ({
         },
 
 
-        {
-          hidden: true , //用户包中
-          path: '/home/editMAndRAndP/:id',
-          name: 'editMAndRAndP',
-          component:   EditMAndRAndP  //发布灭虫等
-        },
+
       ]
     },
 

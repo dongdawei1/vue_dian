@@ -1,19 +1,18 @@
 <template>
   <!--水产蛋禽-->
   <div >
-    <FoodAndGrainAll :tableDataEnter="29" class="vm-margin"></FoodAndGrainAll>
+    <Fabulist :tableDataEnter="29" class="vm-margin"></Fabulist>
   </div>
 </template>
 
 <script>
-  import FoodAndGrainAll from '../../../components/pages/FoodAndGrainAll';
+  import Fabulist from '../../home/fabu/fabulist';
   export default {
     components: {
-      FoodAndGrainAll
+      Fabulist
     }
   }
 </script>
-
 
 <style >
 </style>

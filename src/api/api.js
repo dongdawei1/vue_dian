@@ -100,18 +100,7 @@ export const getUserRealName = params => {
   }).then(res => res.data);
 };
 
-//根据id获取实名信息
-export const getRealNameById = params => {
 
-  return axios({
-    url: `${base}${pcApi}realName/getRealNameById`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    // headers: { 'Content-Type': 'application/json; charset=utf-8'}  这种方法后端拿不到参数
-
-  }).then(res => res.data);
-};
 
 export const getRealNameByuserId = params => {
 
@@ -268,10 +257,6 @@ export const create_resume = params => {
 export const operation_resume = params => {
   return axios.post(`${base}${pcApi}resume/operation_resume`, params).then(res => res.data);
 };
-//操作灭虫
-export const operation_usermrp = params => {
-  return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/operation_usermrp`, params).then(res => res.data);
-};
 
 
 //获取自己发布的简历
@@ -287,78 +272,16 @@ export const select_resume_by_id = params => {
 export const createfabu = params => {
   return axios.post(`${base}${pcApi}fabu/createfabu`, params).then(res => res.data);
 };
-//用户查询自己发布的装修等
-export const get_usermrp_list = params => {
-  return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/get_usermrp_list`, params).then(res => isButtonAndListusermrp(res.data, 1));
-};
-//根据id获取发布的装修
-export const get_usermrp_id = params => {
-  return axios({
-    url: `${base}${pcApi}menuAndRenovationAndPestControl/get_usermrp_id`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-//获取装修等标题（灭虫等列表页）
-export const getReleaseTitleList = params => {
-  return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/getReleaseTitleList`, params).then(res => res.data);
-};
-
-//获取装修等标题（灭虫等列表页）
-export const getmrpList = params => {
-  return axios.post(`${base}${pcApi}menuAndRenovationAndPestControl/getmrpList`, params).then(res => res.data);
-};
-//获取装修详情公开
-
-export const getMrpDetails = params => {
-  return axios({
-    url: `${base}${pcApi}menuAndRenovationAndPestControl/getMrpDetails`,
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    params: {id: params},
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-
-
-//获取自己发布的租房信息
-export const get_myRent_list = params => {
-  return axios.post(`${base}${pcApi}rent/get_myRent_list`, params).then(res => isButtonAndListusermrp(res.data, 5));
-};
-//操作自己发布的租房信息
-export const operation_userment = params => {
-  return axios.post(`${base}${pcApi}rent/operation_userment`, params).then(res => res.data);
-};
-//根据id查询自己发布租房
-export const get_userrent_id = params => {
-  return axios({
-    url: `${base}${pcApi}rent/get_userrent_id`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-//公开概览租房
-export const getrentList = params => {
-  return axios.post(`${base}${pcApi}rent/getrentList`, params).then(res => res.data);
-};
 //租房详情
 
-export const get_rent_id = params => {
+export const getfabubyid = params => {
   return axios({
-    url: `${base}${pcApi}rent/get_rent_id`,
+    url: `${base}${pcApi}fabu/getfabubyid`,
     params: {id: params},
     method: 'get',    //application/x-www-form-urlencoded    ,
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data);
 };
-
-
-//获取租房title
-export const getServiceDetailedList = params => {
-  return axios.post(`${base}${pcApi}rent/getServiceDetailedList`, params).then(res => res.data);
-};
-
 
 //获取bunner
 export const getBunner = params => {
@@ -441,40 +364,12 @@ export const admin_create_serviceType = params => {
 };
 
 
-//用户获取自己创建电器/维修
-export const get_myEquipment_list = params => {
-  return axios.post(`${base}${pcApi}equipment/get_myEquipment_list`, params).then(res => isButtonAndListusermrp(res.data, 7));
+export const getfabutiao = params => {
+  return axios.post(`${base}${pcApi}fabu/getfabutiao`, params).then(res => res.data);
 };
-//电器操作列
-export const operation_userequipment = params => {
-  return axios.post(`${base}${pcApi}equipment/operation_userequipment`, params).then(res => res.data);
+export const getfabulist = params => {
+  return axios.post(`${base}${pcApi}fabu/getfabulist`, params).then(res => res.data);
 };
-//用户根据id获取
-export const get_userequipment_id = params => {
-  return axios({
-    url: `${base}${pcApi}equipment/get_userequipment_id`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-//公开根据id获取
-export const getEquipmentDetails = params => {
-  return axios({
-    url: `${base}${pcApi}equipment/getEquipmentDetails`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-
-export const getEquipmentReleaseTitleList = params => {
-  return axios.post(`${base}${pcApi}equipment/getEquipmentReleaseTitleList`, params).then(res => res.data);
-};
-export const getEquipmentPublicList = params => {
-  return axios.post(`${base}${pcApi}equipment/getEquipmentPublicList`, params).then(res => res.data);
-};
-
 
 //用户获取自己创建菜
 export const upfabu = params => {
@@ -484,61 +379,15 @@ export const upfabu = params => {
 export const operation_userFoodAndGrain = params => {
   return axios.post(`${base}${pcApi}foodAndGrain/operation_userFoodAndGrain`, params).then(res => res.data);
 };
-export const getFoodAndGrainTitleList = params => {
-  return axios.post(`${base}${pcApi}foodAndGrain/getFoodAndGrainTitleList`, params).then(res => res.data);
-};
-export const getFoodAndGrainPublicList = params => {
-  return axios.post(`${base}${pcApi}foodAndGrain/getFoodAndGrainPublicList`, params).then(res => res.data);
-};
-//公开根据id获取
-export const getFoodAndGrainDetails = params => {
-  return axios({
-    url: `${base}${pcApi}foodAndGrain/getFoodAndGrainDetails`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-//用户根据id获取
-export const get_userFoodAndGrain_id = params => {
-  return axios({
-    url: `${base}${pcApi}foodAndGrain/get_userFoodAndGrain_id`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
+
+
 //酒水
 
 export const getmyfabu = params => {
   return axios.post(`${base}${pcApi}fabu/getmyfabu`, params).then(res => res.data);
 };
-export const operation_userWineAndTableware = params => {
-  return axios.post(`${base}${pcApi}wineAndTableware/operation_userWineAndTableware`, params).then(res => res.data);
-};
-export const getWineAndTablewareTitleList = params => {
-  return axios.post(`${base}${pcApi}wineAndTableware/getWineAndTablewareTitleList`, params).then(res => res.data);
-};
-export const getWineAndTablewarePublicList = params => {
-  return axios.post(`${base}${pcApi}wineAndTableware/getWineAndTablewarePublicList`, params).then(res => res.data);
-};
-export const getWineAndTablewareDetails = params => {
-  return axios({
-    url: `${base}${pcApi}wineAndTableware/getWineAndTablewareDetails`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
 
-//b百货工服
 
-export const get_myDepartmentStore_list = params => {
-  return axios.post(`${base}${pcApi}departmentStore/get_myDepartmentStore_list`, params).then(res => isButtonAndListusermrp(res.data, 7));
-};
-export const operation_userDepartmentStore = params => {
-  return axios.post(`${base}${pcApi}departmentStore/operation_userDepartmentStore`, params).then(res => res.data);
-};
 //用户根据id获取
 export const getmyfabubyid = params => {
   return axios({
@@ -548,34 +397,15 @@ export const getmyfabubyid = params => {
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data);
 };
-export const getDepartmentStoreTitleList = params => {
-  return axios.post(`${base}${pcApi}departmentStore/getDepartmentStoreTitleList`, params).then(res => res.data);
-};
-export const getDepartmentStorePublicList = params => {
-  return axios.post(`${base}${pcApi}departmentStore/getDepartmentStorePublicList`, params).then(res => res.data);
-};
+
+
 //市场名
 export const getwholesale = params => {
   return axios.post(`${base}${pcApi}wholesale/getwholesale`, params).then(res => res.data);
 };
 
-export const getDepartmentStoreDetails = params => {
-  return axios({
-    url: `${base}${pcApi}departmentStore/getDepartmentStoreDetails`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
-//用户根据id获取
-export const get_userWineAndTableware_id = params => {
-  return axios({
-    url: `${base}${pcApi}wineAndTableware/get_userWineAndTableware_id`,
-    params: {id: params},
-    method: 'get',    //application/x-www-form-urlencoded    ,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  }).then(res => res.data);
-};
+
+
 
 export const create_wholesaleCommodity = params => {
   return axios.post(`${base}${pcApi}wholesaleCommodity/create_wholesaleCommodity`, params).then(res => res.data);

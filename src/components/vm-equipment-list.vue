@@ -20,13 +20,28 @@
           <div class="card-desc">
             <div class="releaseTitle"> {{ item.releaseTitle}}</div>
             <div class="jieshao">
+              <!--商品名称： {{item.serviceType}}<br>-->
+              <!--服务城区： {{item.serviceDetailed}}<br>-->
+
+
+              <span v-if="item.releaseType!==13 && item.releaseType!==17 && item.releaseType!==19
+                      && item.releaseType!==14 && item.releaseType!==15">
               商品名称： {{item.serviceType}}<br>
               服务城区： {{item.serviceDetailed}}<br>
+              </span>
+              <span v-if=" item.releaseType===14 || item.releaseType===15">
+              出租面积(平米)： {{item.mianjia}}<br>
+              出租地址： {{item.serviceDetailed}}<br>
+              </span>
+              <span v-if=" item.releaseType===13 || item.releaseType===17 || item.releaseType===19">
+              起步价格(元)： {{item.mianjia}}<br>
+              服务城区： {{item.serviceDetailed}}<br>
+              </span>
             </div>
             <div class="xiangqing">
               <el-button type="text"><router-link
                 v-on:click.native=""
-                :to="'/details/equipmentDetails/'+ item.id+'/'+releaseType" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
+                :to="'/details/equipmentDetails/'+ item.id+'/'+item.releaseType" class="xiangqing" target='_blank'>查看详情</router-link></el-button>
             </div>
             <!--<p>{{ item.brand }}</p>-->
             <!--<p>{{ item.commodityName }}</p>-->

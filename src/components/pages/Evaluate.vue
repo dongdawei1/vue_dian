@@ -90,9 +90,9 @@
       zhanshi(){
         if(this.tableData.permissionid!=='' && this.tableData.permissionid!==null){
           let permissionid=this.tableData.permissionid;
-          if(permissionid===13){
-            this.shouhou=true;
-            this.zhuangye=true;
+          if(permissionid!==0) {
+            this.shouhou = true;
+            this.zhuangye = true;
           }else if(permissionid==='401'|| permissionid==='501' || permissionid==='601' || permissionid==='901' || permissionid==='2901'){
             this.zhilian=true;
           }

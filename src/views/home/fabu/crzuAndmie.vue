@@ -134,7 +134,6 @@
   export default {
     data() {
       var checkAge = (rule, value, callback) => {
-        console.log(value)
         if (!value) {
           return callback(new Error('价格/面积不能为空'));
         }
@@ -153,11 +152,9 @@
         releaseType: this.$route.params.releaseType,
         youxiaoqi: '',
         releaseTypeList: [],
-
         fileList: [],
         timeout: null,
         isLease: false,
-
         centerDialogVisible: false,//成功弹窗
         fullscreenLoading: false,
         realName: '',//用户实名信息
@@ -175,8 +172,9 @@
           serviceDetailed: '',//服务地址 来电确认和全市
           pictureUrl: [],//图片
           //实名中获取
-          contact: '',  //实名联系联系方式 回显 可修改
           consigneeName: '', //联系人姓名 回显可修改
+
+          contact: '',  //实名联系联系方式 回显 可修改
         },
 
         formLabelWidth: '100px',
@@ -234,6 +232,33 @@
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading = true;
+
+        let length = this.ruleForm.serviceAndprice.length;
+        if (length > 1) {
+          for (let a = 0; a < length; a++) {
+            let serviceAndpriceNoa = this.ruleForm.serviceAndprice[a];
+            if (serviceAndpriceNoa.project===undefined || serviceAndpriceNoa.price === undefined || serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
+              this.$message.error("新增加:项目/规格或者价格不能有空值");
+              this.fullscreenLoading = false;
+              return false;
+            }
+          }
+        }
+
+        length = 0;
+        for (let i = 0; i < this.ruleForm.pictureUrl.length; i++) {
+          if (this.ruleForm.pictureUrl[i].useStatus === 1 || this.ruleForm.pictureUrl[i].useStatus === 3) {
+            length++;
+          }
+        }
+        if (length <= 0) {
+          this.$message.error("图片不能为空");
+          this.fullscreenLoading = false;
+          return false;
+        }
+
+
+
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             createfabu(this.ruleForm).then(res => {
@@ -265,7 +290,7 @@
         let role = window.localStorage.getItem('dian_role');
 
 
-        if (this.releaseType === '14') {
+        if (this.releaseType === '14' || this.releaseType === '15') {
           this.youxiaoqi = 90;
           if (role === '2' || role === '3'  ) {
             this.releaseTypeList = [{id: "14", name: "店面/窗口出租"}];
@@ -282,7 +307,7 @@
             return false;
           }
 
-        } else if (this.releaseType === '13') {
+        } else if (this.releaseType === '13' || this.releaseType === '17' || this.releaseType === '19') {
           this.releaseTypeList = [
             {id: "13", name: "菜谱/广告"}, {id: "17", name: "装修"}, {id: "19", name: "灭虫"}
           ];

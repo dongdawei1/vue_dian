@@ -336,7 +336,7 @@
           return false;
         }
         let role = window.localStorage.getItem('dian_role');
-        if (this.releaseType === '33') {
+        if (this.releaseType === '33' || this.releaseType === '34' || this.releaseType === '18') {
           this.releaseTypeList = [
             {id: "33", name: "电器/设备出售"}, {id: "34", name: "二手电器/设备出售"}, {id: "18", name: "维修电器/设备"}
           ];
@@ -345,7 +345,8 @@
             this.$router.push({path: '/home/release'});
             return false;
           }
-        } else if (this.releaseType === '4') {
+        } else if (this.releaseType === '4' || this.releaseType === '5' || this.releaseType === '6' ||
+          this.releaseType === '29' || this.releaseType === '9' || this.releaseType === '11') {
           this.releaseTypeList = [
             {id: "4", name: "蔬菜出售"}, {id: "5", name: "粮油出售"}, {id: "6", name: "调料/副食出售"}
             , {id: "29", name: "水产/禽蛋出售"}, {id: "9", name: "清洁用品"}, {id: "11", name: "桌椅餐具"}
@@ -355,7 +356,8 @@
             this.$router.push({path: '/home/release'});
             return false;
           }
-        } else if (this.releaseType === '101') {
+        } else if (this.releaseType === '101' || this.releaseType === '102' || this.releaseType === '103'
+          || this.releaseType === '104') {
           this.releaseTypeList = [
             {id: "101", name: "工服"}, {id: "102", name: "百货"}, {id: "103", name: "绿植"}
             , {id: "104", name: "装饰用品"}
@@ -365,7 +367,7 @@
             this.$router.push({path: '/home/release'});
             return false;
           }
-        } else if (this.releaseType === '7') {
+        } else if (this.releaseType === '7' || this.releaseType === '8') {
           this.releaseTypeList = [{id: "7", name: "酒水/饮料"}, {id: "8", name: "消毒餐具"}];
           this.youxiaoqi = 365;
           if (role !== '1' && role !== '5') {
