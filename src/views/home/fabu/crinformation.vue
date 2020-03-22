@@ -81,10 +81,9 @@
 
 
       <el-form-item label="服务区域" prop="serviceDetailed">
-        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务/销售区域">
-          <el-option label="全市" value="全市"></el-option>
-          <el-option label="来电确认" value="来电确认"></el-option>
-        </el-select>
+        <el-checkbox-group v-model="ruleForm.serviceDetailed" size="mini">
+          <el-checkbox-button v-for="city in quxian" :label="city" :key="city">{{city}}</el-checkbox-button>
+        </el-checkbox-group>
       </el-form-item>
 
       <el-form-item label="图片" prop="pictureUrl">
@@ -175,6 +174,8 @@
   import {create_serviceType} from '../../../api/api';
   import {createfabu} from '../../../api/api';
 
+  import {getquxian} from '../../../api/api';
+
 
   export default {
     data() {
@@ -191,7 +192,7 @@
         }, 100);
       };
       return {
-
+        quxian:[],
         releaseType: this.$route.params.releaseType,
         youxiaoqi: '',
         releaseTypeList: [],
@@ -217,7 +218,7 @@
           price: '',//价格
           serviceIntroduction: '',//介绍
           remarks: '',//备注
-          serviceDetailed: '',//服务地址 来电确认和全市
+          serviceDetailed: [],//服务地址 来电确认和全市
           pictureUrl: [],//图片
           //实名中获取
           contact: '',  //实名联系联系方式 回显 可修改
@@ -281,6 +282,7 @@
 
     created() {
       this.getRealName();
+      this.getQuxian();
     },
     methods: {
       goRelease() {
@@ -302,8 +304,8 @@
               for (let a = 0; a < length; a++) {
                 let serviceAndpriceNoa = this.ruleForm.serviceAndprice[a];
                 if (serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
-                  this.deleteItem(serviceAndpriceNo, length - 1)
-                  this.$message.error("新增加:项目/规格或者价格不能有空值")
+                  this.deleteItem(serviceAndpriceNo, length - 1);
+                  this.$message.error("新增加:项目/规格或者价格不能有空值");
                   return false;
                 }
               }
@@ -311,11 +313,12 @@
 
             createfabu(this.ruleForm).then(res => {
               this.fullscreenLoading = false;
+              this.ruleForm.serviceAndprice = [];
               if (res.status === 0) {
                 //成功弹窗
                 this.fileList = [];
                 this.ruleForm.pictureUrl = [];
-                this.ruleForm.serviceAndprice = [];
+
                 this.centerDialogVisible = true;
               } else {
                 this.$msgdeal(res.msg);
@@ -327,7 +330,16 @@
           }
         });
       },
-
+      getQuxian(){
+        getquxian().then((res) => { //获取实名信息填充
+          if (res.status === 0) {
+            this.quxian = res.data;
+          } else {
+            this.$msgdeal(res.msg);
+            return false;
+          }
+        });
+      },
       cntinue() {  //留在本页继续发布
         this.centerDialogVisible = false;
       },
@@ -559,7 +571,7 @@
             price: '',//价格
             serviceIntroduction: '',//介绍
             remarks: '',//备注
-            serviceDetailed: '',//服务地址 来电确认和全市
+            serviceDetailed: [],//服务地址 来电确认和全市
             pictureUrl: [],//图片
             contact: '',  //实名联系联系方式 回显 可修改
             consigneeName: '', //联系人姓名 回显可修改

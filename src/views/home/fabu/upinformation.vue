@@ -79,10 +79,9 @@
 
 
       <el-form-item label="服务区域" prop="serviceDetailed">
-        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务/销售区域">
-          <el-option label="全市" value="全市"></el-option>
-          <el-option label="来电确认" value="来电确认"></el-option>
-        </el-select>
+        <el-checkbox-group v-model="ruleForm.serviceDetailed" size="mini">
+          <el-checkbox-button v-for="city in quxian" :label="city" :key="city">{{city}}</el-checkbox-button>
+        </el-checkbox-group>
       </el-form-item>
 
       <el-form-item label="图片" prop="pictureUrl">
@@ -160,7 +159,7 @@
   import {upfabu} from '../../../api/api';
   import {getmyfabubyid} from '../../../api/api';
   import {echo_display} from '../../../api/api';
-
+  import {getquxian} from '../../../api/api';
   export default {
 
     name: 'editDepartmentStore',
@@ -183,7 +182,7 @@
         releaseType: this.$route.params.releaseType,
         restaurants: [],//标题下拉
         releaseTypeList: [],
-
+        quxian:[],
         timeout: null,
         dialogFormVisible: false,//添加商品类型弹窗
         fileList: [],
@@ -204,7 +203,7 @@
 
           serviceIntroduction: '',//介绍
           remarks: '',//备注
-          serviceDetailed: '',//服务地址 来电确认和全市
+          serviceDetailed: [],//服务地址 来电确认和全市
           pictureUrl: [],//图片
           //实名中获取
           consigneeName: '', //联系人姓名 回显可修改
@@ -271,10 +270,20 @@
     },
 
     created() {
+      this.getQuxian();
       this.checke_isButten();
     },
     methods: {
-
+      getQuxian(){
+        getquxian().then((res) => { //获取实名信息填充
+          if (res.status === 0) {
+            this.quxian = res.data;
+          } else {
+            this.$msgdeal(res.msg);
+            return false;
+          }
+        });
+      },
       //提交
       submitForm(ruleForm) {
         this.fullscreenLoading = true;
@@ -376,6 +385,7 @@
             this.ruleForm.price = serviceAndpricelist[0].price;
 
             this.ruleForm.serviceAndprice = serviceAndpricelist;
+            this.ruleForm.serviceDetailed=[];
             this.ruleForm.releaseType=this.ruleForm.releaseType.toString();
           } else {
             this.$msgdeal(res.msg);

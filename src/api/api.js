@@ -398,7 +398,14 @@ export const getmyfabubyid = params => {
   }).then(res => res.data);
 };
 
-
+export const getquxian = params => {
+  return axios({
+    url: `${base}${pcApi}fabu/getquxian`,
+    params: {},
+    method: 'get',    //application/x-www-form-urlencoded    ,
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+  }).then(res => res.data);
+};
 //市场名
 export const getwholesale = params => {
   return axios.post(`${base}${pcApi}wholesale/getwholesale`, params).then(res => res.data);
@@ -511,6 +518,8 @@ export const getPurchaseCreateOrderVo = params => {
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   }).then(res => res.data);
 };
+
+
 
 
 //制保留2位小数，如：2，会在2后面补上00.即2.00

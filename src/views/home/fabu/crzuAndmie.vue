@@ -19,14 +19,15 @@
         <el-input v-model="ruleForm.releaseTitle" placeholder="用户关键字搜索6-14字"></el-input>
       </el-form-item>
 
-      <el-form-item label="起步价格" prop="mianjia" v-if="releaseType === '13'">
+      <el-form-item label="起步价格" prop="mianjia" v-if="releaseType === '13' ||
+        releaseType === '17' ||releaseType === '19'">
         <el-input v-model.number="ruleForm.mianjia" placeholder="起步价格整数(元)"></el-input>
       </el-form-item>
 
       <div class="authentiCationFailureClass">
         注: 如果参考价格与真实价格差异较大可能会引起投诉或者审批失败；
       </div>
-      <el-form-item label="面积" prop="mianjia" v-if="releaseType === '14'">
+      <el-form-item label="面积" prop="mianjia" v-if="releaseType === '14' ||releaseType === '15' ">
         <el-input v-model.number="ruleForm.mianjia" placeholder="只能是1-10000之间的整数"></el-input>
       </el-form-item>
 
@@ -47,13 +48,13 @@
       </el-form-item>
 
 
-      <el-form-item label="服务区域" prop="serviceDetailed" v-if="releaseType === '13'">
-        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务/销售区域">
-          <el-option label="全市" value="全市"></el-option>
-          <el-option label="来电确认" value="来电确认"></el-option>
-        </el-select>
+      <el-form-item label="服务区域" prop="serviceDetailed" v-if="releaseType === '13' ||
+        releaseType === '17' ||releaseType === '19'">
+          <el-checkbox-group v-model="ruleForm.serviceDetailed" size="mini">
+            <el-checkbox-button v-for="city in quxian" :label="city" :key="city">{{city}}</el-checkbox-button>
+          </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="详细地址" prop="serviceDetailed" v-if="releaseType === '14'">
+      <el-form-item label="详细地址" prop="serviceDetailed" v-if="releaseType === '14' ||releaseType === '15'">
         <el-input v-model="ruleForm.serviceDetailed" placeholder="地址详情100字以内"></el-input>
       </el-form-item>
 
@@ -130,7 +131,7 @@
   import {uploadDown_update} from '../../../api/api';
   import {createfabu} from '../../../api/api';
 
-
+  import {getquxian} from '../../../api/api';
   export default {
     data() {
       var checkAge = (rule, value, callback) => {
@@ -148,7 +149,7 @@
         }, 100);
       };
       return {
-
+        quxian:[],
         releaseType: this.$route.params.releaseType,
         youxiaoqi: '',
         releaseTypeList: [],
@@ -223,6 +224,7 @@
 
     created() {
       this.getRealName();
+
     },
     methods: {
       goRelease() {
@@ -233,19 +235,7 @@
       submitForm(ruleForm) {
         this.fullscreenLoading = true;
 
-        let length = this.ruleForm.serviceAndprice.length;
-        if (length > 1) {
-          for (let a = 0; a < length; a++) {
-            let serviceAndpriceNoa = this.ruleForm.serviceAndprice[a];
-            if (serviceAndpriceNoa.project===undefined || serviceAndpriceNoa.price === undefined || serviceAndpriceNoa.project === '' || serviceAndpriceNoa.price === '') {
-              this.$message.error("新增加:项目/规格或者价格不能有空值");
-              this.fullscreenLoading = false;
-              return false;
-            }
-          }
-        }
-
-        length = 0;
+        let  length = 0;
         for (let i = 0; i < this.ruleForm.pictureUrl.length; i++) {
           if (this.ruleForm.pictureUrl[i].useStatus === 1 || this.ruleForm.pictureUrl[i].useStatus === 3) {
             length++;
@@ -267,7 +257,6 @@
                 //成功弹窗
                 this.fileList = [];
                 this.ruleForm.pictureUrl = [];
-                this.ruleForm.serviceAndprice = [];
                 this.centerDialogVisible = true;
               } else {
                 this.$msgdeal(res.msg);
@@ -308,6 +297,8 @@
           }
 
         } else if (this.releaseType === '13' || this.releaseType === '17' || this.releaseType === '19') {
+          this.getQuxian();
+
           this.releaseTypeList = [
             {id: "13", name: "菜谱/广告"}, {id: "17", name: "装修"}, {id: "19", name: "灭虫"}
           ];
@@ -323,8 +314,10 @@
             this.ruleForm.userId = this.realName.userId;
             this.ruleForm.contact = this.realName.contact;
             this.ruleForm.consigneeName = this.realName.consigneeName;
-            if (this.releaseType === '14') {
+            if (this.releaseType === '14' ||this.releaseType === '15' ) {
               this.ruleForm.serviceDetailed = this.realName.addressDetailed;
+            }else{
+              this.ruleForm.serviceDetailed =[];
             }
 
           } else {
@@ -334,7 +327,16 @@
         });
       },
 
-
+      getQuxian(){
+        getquxian().then((res) => { //获取实名信息填充
+          if (res.status === 0) {
+            this.quxian = res.data;
+          } else {
+            this.$msgdeal(res.msg);
+            return false;
+          }
+        });
+      },
       //图片上传相关
       //文件上传成功的钩子函数
       handleSuccess(res, file) {

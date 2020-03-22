@@ -56,10 +56,9 @@
 
 
       <el-form-item label="服务区域" prop="serviceDetailed"  v-if="releaseType === '13' || releaseType === '17' || releaseType === '19'">
-        <el-select v-model="ruleForm.serviceDetailed" placeholder="请选择服务/销售区域">
-          <el-option label="全市" value="全市"></el-option>
-          <el-option label="来电确认" value="来电确认"></el-option>
-        </el-select>
+        <el-checkbox-group v-model="ruleForm.serviceDetailed" size="mini">
+          <el-checkbox-button v-for="city in quxian" :label="city" :key="city">{{city}}</el-checkbox-button>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item label="详细地址" prop="serviceDetailed" v-if="releaseType === '14' || releaseType === '15'">
         <el-input v-model="ruleForm.serviceDetailed" placeholder="地址详情100字以内"></el-input>
@@ -122,7 +121,7 @@
   import {upfabu} from '../../../api/api';
   import {getmyfabubyid} from '../../../api/api';
   import {echo_display} from '../../../api/api';
-
+  import {getquxian} from '../../../api/api';
   export default {
 
     data() {
@@ -143,6 +142,8 @@
       return {
         id: this.$route.params.id,
         releaseType: this.$route.params.releaseType,
+        serviceDetailed1:'',
+        quxian:[],
         fileList: [],
         fullscreenLoading: false,
         releaseTypeList:[],
@@ -157,7 +158,7 @@
           mianjia: '',//面积
           serviceIntroduction: '',//描述
           remarks: '',//备注
-          serviceDetailed: '',//详细地址
+         serviceDetailed: [],//详细地址
           pictureUrl: [],//图片
           //实名中获取
           consigneeName: '', //联系人姓名 回显可修改
@@ -173,9 +174,9 @@
           ],
 
           serviceDetailed: [
-            {required: true, message: '详细地址不能为空', trigger: 'blur'},
-            {max: 100, message: '详细地址不大于100字'}
+            {required: true, message: '详细地址不能为空', trigger: 'change'},
           ],
+
           releaseTitle: [
             {required: true, message: '标题不能为空', trigger: 'blur'},
             {min: 6, max: 14, message: '标题在6-14字之内'}
@@ -208,6 +209,7 @@
 
     created() {
       this.checke_isButten();
+
     },
     methods: {
 
@@ -267,6 +269,7 @@
           }
 
         } else if (this.releaseType === '13' || this.releaseType === '17'|| this.releaseType === '19') {
+          this.getQuxian();
           this.releaseTypeList = [
             {id: "13", name: "菜谱/广告"}, {id: "17", name: "装修"}, {id: "19", name: "灭虫"}
           ];
@@ -277,19 +280,33 @@
         }
         getmyfabubyid(this.id).then((res) => {
           if (res.status === 0) {
+
             this.ruleForm = res.data;
             let fileListAndPictureUrl = echo_display(this.ruleForm);
             //图片回显和表格参数
             this.ruleForm.pictureUrl = fileListAndPictureUrl.pictureUrl;
             this.fileList = fileListAndPictureUrl.fileList;
             this.ruleForm.releaseType=this.ruleForm.releaseType.toString();
+            if (this.releaseType !== '14' && this.releaseType !== '15' ) {
+              this.ruleForm.serviceDetailed =[];
+            }
+
           } else {
             this.$msgdeal(res.msg);
             return false;
           }
         });
       },
-
+      getQuxian(){
+        getquxian().then((res) => { //获取实名信息填充
+          if (res.status === 0) {
+            this.quxian = res.data;
+          } else {
+            this.$msgdeal(res.msg);
+            return false;
+          }
+        });
+      },
 
       //图片上传相关
       //文件上传成功的钩子函数
@@ -387,7 +404,7 @@
             mianjia: '',//面积
             serviceIntroduction: '',//描述
             remarks: '',//备注
-            serviceDetailed: '',//详细地址
+            serviceDetailed: [],//详细地址
             pictureUrl: [],//图片
             //实名中获取
             consigneeName: '', //联系人姓名 回显可修改
