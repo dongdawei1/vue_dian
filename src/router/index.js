@@ -69,7 +69,7 @@ import Characteristic from '../views/home/Characteristic'
 
 import WholesaleMarket from '../views/home/WholesaleMarket'
 import CreateWholesaleMarket from '../views/home/wholesaleMarket/pifa/CreateWholesaleMarket'
-
+import EditWholesaleMarket from '../views/home/wholesaleMarket/pifa/EditWholesaleMarket'
 
 import ToExamine from '../views/home/administration/ToExamine'
 import Guanggao from '../views/home/administration/Guanggao'
@@ -181,6 +181,10 @@ export default new VueRouter ({
         {
           path: '/home/createWholesaleMarket',  //批发市场创建商品
           component: CreateWholesaleMarket
+        },
+        {
+          path: '/home/editWholesaleMarket/:id',  //批发市场创建商品
+          component: EditWholesaleMarket
         },
 
 

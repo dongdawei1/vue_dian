@@ -153,7 +153,7 @@
             this.isCreate = true; //是否展示发布键
             this.createName = '发布摊位出租信息';
           }
-        } else if (this.releaseWelfare.releaseType === 14) {  //店面窗口
+        } else if (this.tableDataEnter === 14) {  //店面窗口
           if (role === '1' || role === '2' || role === '6' || role === '3') {
             this.isCreate = true; //是否展示发布键
             this.createName = '发布店面窗口出租信息';

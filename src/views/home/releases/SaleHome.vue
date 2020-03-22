@@ -22,12 +22,12 @@
       <el-row  v-if="isButton">
 
         <el-button type="primary" v-if="isRent"><router-link
-          v-on:click.native="isAuthenticationM('/home/createLease')"
+          v-on:click.native="isAuthenticationM('/home/crzuAndmie/15')"
           to="" class="a" >发布摊位店面出租转让信息</router-link></el-button>
 
 
         <el-button type="primary" v-if="isFoodAndGrain"><router-link
-          v-on:click.native="isAuthenticationM('/home/createFoodAndGrain')"
+          v-on:click.native="isAuthenticationM('/home/crinformation/4')"
           to="" class="a" >发布蔬菜米面粮油水产、清洁用品、桌椅餐具等销售信息</router-link></el-button>
 
 
@@ -36,21 +36,21 @@
           to="" class="a" >发布招聘信息</router-link></el-button>
 
         <el-button type="primary" v-if="isDepartmentStore"><router-link
-          v-on:click.native="isAuthenticationM('/home/createDepartmentStore')"
+          v-on:click.native="isAuthenticationM('/home/crinformation/101')"
           to="" class="a" >发布工服、百货、绿植等销售信息</router-link></el-button>
 
         <el-button type="primary" v-if="isMyEquipment"><router-link
-          v-on:click.native="isAuthenticationM('/home/createEquipment')"
+          v-on:click.native="isAuthenticationM('/home/crinformation/33')"
           to="" class="a" >发布电器、维修、二手电器等服务和销售信息</router-link></el-button>
 
         <el-button type="primary" v-if="isWineAndTableware"><router-link
-          v-on:click.native="isAuthenticationM('/home/createWineAndTableware')"
+          v-on:click.native="isAuthenticationM('/home/crinformation/7')"
           to="" class="a" >发布酒水饮料、消毒餐具等销售信息</router-link></el-button>
 
 
 
         <el-button type="primary" v-if="isMenuAndRenovationAndPestControl"><router-link
-          v-on:click.native="isAuthenticationM('/home/createMAndRAndP')"
+          v-on:click.native="isAuthenticationM('/home/crzuAndmie/13')"
           to="" class="a" >发布菜谱制作、装修、灭虫等服务信息</router-link></el-button>
 
         <el-button type="primary" v-if="isJobWanted"><router-link

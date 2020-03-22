@@ -5,11 +5,12 @@
 
       <el-form-item label="发布类型">
         <el-select v-model="releaseWelfare.releaseType" placeholder="服务类型">
-          <el-option label="蔬菜" value="4"></el-option>
-          <el-option label="粮油" value="5"></el-option>
-          <el-option label="副食/调料" value="6"></el-option>
-          <el-option label="水产/禽蛋" value="29"></el-option>
-          <el-option label="清洁用品" value="9"></el-option>
+          <el-option label="蔬菜" value="401"></el-option>
+          <el-option label="粮油" value="405"></el-option>
+          <el-option label="副食/调料" value="406"></el-option>
+          <el-option label="水产/禽蛋" value="429"></el-option>
+          <el-option label="清洁用品" value="409"></el-option>
+
         </el-select>
       </el-form-item>
 
@@ -71,12 +72,6 @@
         prop="id"
         label="id"
         width="100"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="releaseType"
-        label="商品类型"
-        width="120"
         :show-overflow-tooltip="true">
       </el-table-column>
 
@@ -169,7 +164,6 @@
       <div class="parent">
         <div class="left">
           <span>标题 : {{tableDataNo.releaseTitle }}</span><br>
-          <span>商品类型 : {{tableDataNo.releaseType }}</span><br>
           <span>下单方式 : {{tableDataNo.reserve }}</span><br>
           <span>商品名 : {{tableDataNo.serviceType }}</span><br>
           <span>包装规格 : {{tableDataNo.commoditySpecifications }}</span><br>
@@ -257,7 +251,7 @@
           {"value": "审核中", "label": "4"}
         ],//查询条件职位状态
         releaseWelfare: { //查询条件
-          releaseType: '4', //服务类型
+          releaseType: '401', //服务类型
           welfareStatus: '',//发布状态
           serviceType: '', //商品名称
           commodityType: '',//是否在价格有效期内

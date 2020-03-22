@@ -453,7 +453,11 @@
         create_order_evaluation(fromData).then(res => {
           this.fullscreenLoading = false;
           if (res.status === 0) {
+            if(res.data==='0'){
+              this.form.commodityJiage ='未获取到预估价格';
+            }else{
             this.form.commodityJiage = res.data;
+            }
           } else {
             this.$msgdeal(res.msg);
           }
@@ -465,6 +469,10 @@
         this.$refs['form'].validate((valid) => {
           this.fullscreenLoading = true;
           if (valid) {
+
+            if(this.form.commodityJiage ==='为获取到预估价格'){
+              this.form.commodityJiage =0;
+            }
             this.form.fromData = this.fromData;
             create_purchase_order(this.form).then(res => {
               this.fullscreenLoading = false;

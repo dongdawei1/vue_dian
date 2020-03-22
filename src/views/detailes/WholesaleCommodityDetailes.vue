@@ -4,7 +4,6 @@
       <div class="titleAll">{{wholesaleCommodity.releaseTitle}}</div>
       <div  class="mrpDetailsJichu">
         <div  class="mrpDetailsfuwu">
-          服务类别 : {{releaseTypeName}}<br>
           商品名称 : {{wholesaleCommodity.serviceType}}<br>
           单价(元) : {{wholesaleCommodity.commodityJiage}}<br>
           包装方式 : {{commodityPackingName}}<br>

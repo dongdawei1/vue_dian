@@ -38,7 +38,7 @@
 
         <el-button type="primary">
           <router-link
-            v-on:click.native="isAuthenticationM('/home/createLease')"
+            v-on:click.native="isAuthenticationM('/home/crzuAndmie/14')"
             to="" class="a">发布窗口/早点出租信息
           </router-link>
         </el-button>
