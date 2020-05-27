@@ -300,7 +300,7 @@
       getRealName() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (  role === '11' ) {
           this.$router.push({path: '/home/release'});

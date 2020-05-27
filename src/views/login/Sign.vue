@@ -47,7 +47,7 @@
 import { requestLogin } from '../../api/api';
 import { getCaptcha1 } from '../../api/api';
 import { get_user_info } from '../../api/api';
-import { checkLog } from '../../common/logmainjs.js';
+import { checkLog1 } from '../../common/logmainjs.js';
 
 export default {
  data () {
@@ -94,7 +94,7 @@ export default {
          this.fullscreenLoading = true;
          requestLogin(loginParams).then(data => {
              this.fullscreenLoading = false;
-           if(!checkLog(data)) {
+           if(!checkLog1(data)) {
              this.getCaptcha();
              this.$message.error(data.msg);
              return false;
@@ -114,8 +114,6 @@ export default {
        let status=res.status;
        if (status === 0) {
           this.$router.push({ path: '/home/release' });
-       }else{
-         this.$router.push({ path: '/login/sign' });
        }
      });
    },

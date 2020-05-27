@@ -395,7 +395,7 @@
           this.fromData = this.fromData.concat(row);
         }
       },
-
+//获取菜单列表
       checke_isButten() {
         if (!this.$fsAuthent()) {
           return false;
@@ -422,8 +422,8 @@
                 this.$msgdeal(res.msg);
               }
             });
-          }
-          this.$router.push({path: '/home/release'});
+          }else{ this.$router.push({path: '/home/release'});}
+
       },
 
       getRealName() {
@@ -437,7 +437,7 @@
           }
         });
       },
-      //提交
+      //获取预估价格
       submitForm() {
         if (!this.$fsAuthent()) {
           return false;
@@ -480,6 +480,15 @@
                 this.dialogFormVisible = false;
                 this.fromData = [];
                 this.form.fromData = [];
+                for(let a=0; a<this.myCommonMenuTableData.length;a++){
+                  this.myCommonMenuTableData[a].number = '';
+                  this.myCommonMenuTableData[a].placing = false;
+                }
+                for(let a=0; a<this.allCommonMenuTableData.length;a++){
+                  this.allCommonMenuTableData[a].number = '';
+                  this.allCommonMenuTableData[a].placing = false;
+                }
+                this.isFromData=false;
                 this.centerDialogVisible = true;
 
               } else {
@@ -505,13 +514,13 @@
 </script>
 <style>
   .tableClass {
-    margin: 1px 0px 8px 1px;
-    padding: 5px 0px 10px 10px;
+    margin: 1px 0 8px 1px;
+    padding: 5px 0 10px 10px;
   }
 
   .fromDataClass {
     border: 1px solid #E7E3E6;
-    padding: 5px 0px 10px 10px;
+    padding: 5px 0 10px 10px;
     color: #918D90;
   }
 

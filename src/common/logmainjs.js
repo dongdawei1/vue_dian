@@ -1,13 +1,25 @@
 function checkLog(res) {
-  if(res.status===0){
-    let user=res.data;
-    window.localStorage.setItem('dian_isAuthentication',user.isAuthentication);
-    window.localStorage.setItem('dian_role',user.role);
+  if (res.status === 0) {
+    let user = res.data;
+    window.localStorage.setItem('dian_isAuthentication', user.isAuthentication);
+    window.localStorage.setItem('dian_role', user.role);
     return true;
   }
   return false;
 }
-function logOu(){
+
+function checkLog1(res) {
+  if (res.status === 0) {
+    let user = res.data.user;
+    window.localStorage.setItem('dian_isAuthentication', user.isAuthentication);
+    window.localStorage.setItem('dian_role', user.role);
+     window.localStorage.setItem('dian_token', res.data.dian_token);
+    return true;
+  }
+  return false;
+}
+
+function logOu() {
   window.localStorage.removeItem('dian_isAuthentication');
   window.localStorage.removeItem('dian_role');
 }
@@ -22,5 +34,6 @@ function logOu(){
 // window.localStorage.getItem()   如果读取不到返回    null
 export { //很关键
   checkLog,
-  logOu
+  logOu,
+  checkLog1
 }

@@ -138,7 +138,7 @@
     </el-pagination>
     <!-- 电话-->
     <el-dialog
-      title="请勿将求职者联系方式提供给他人"
+      title="请勿将联系方式提供给他人"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
@@ -292,7 +292,7 @@
       getPositionAll(){
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         getPositionAll(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数

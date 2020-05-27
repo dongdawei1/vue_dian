@@ -109,19 +109,14 @@
       //判断是否登录 获取用户权限
       peceiptGetPendingOrders() {
         peceiptGetPendingOrders(this.params).then((res) => {
-          var vm = this;
           if (res.status === 0) {
             if (res.msg === 'YES' && res.data.datas !== null) {
-              this.initList(1);
               this.tableData=res.data.datas;
-              vm.$forceUpdate();
             } else if (res.msg === 'YES') {
               this.tableData=[];
-              this.initList(0.5);
             } else {
               this.tableData=[];
               this.isReceipt=false;
-              this.beforeDestroy();
             }
           } else {
             this.$msgdeal(res.msg);
@@ -139,30 +134,12 @@
       handleChange(value) {
       },
 
-      //订单状态轮询开始
-      initList(num) {
-        if (num === null || num === '' || num === undefined) {
-          num = 2;
-        }
-        this.beforeDestroy();
-        this.myInterval = window.setInterval(() => {
-          setTimeout(() => {
-            this.peceiptGetPendingOrders() //调用接口的方法
-          }, 1)
-        }, num * 1000 * 60);
-      },
 
-      //订单状态轮询关闭
-      beforeDestroy() {
-        clearInterval(this.myInterval);
-        this.myInterval = null;
-      },
+
+
     },
     watch: {
       "$route"(to, from) {
-        if (from.path === '/home/release') {
-          this.beforeDestroy();
-        }
         if (to.path === '/home/release') {
           this.peceiptGetPendingOrders();
 

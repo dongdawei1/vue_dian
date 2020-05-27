@@ -185,7 +185,7 @@
           queriesType: type,
           id: form.id,
           selectType:2
-        }
+        };
         getContact(params).then((res) => {
           if(res.status===0) {
             this.contact=res.data;
@@ -205,7 +205,7 @@
       getRealName(){
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         let role = window.localStorage.getItem('dian_role');
         if (role === '1' || role === '11' || role === '4') {
           this.isCreate=true;
@@ -276,7 +276,7 @@
       getResumeAll(){
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         getResumeAll(this.releaseWelfare).then((res) => {
           if(res.status===0) {
             this.total = res.data.totalno; //总条数

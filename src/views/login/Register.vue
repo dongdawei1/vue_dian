@@ -74,7 +74,7 @@
 
   import { requestCreate } from '../../api/api';
   import { getCaptcha1 } from '../../api/api';
-  import { checkLog } from '../../common/logmainjs.js';
+  import { checkLog1 } from '../../common/logmainjs.js';
   export default {
     data() {
       var validatePass = (rule, value, callback) => {
@@ -148,7 +148,7 @@
             requestCreate(this.ruleForm).then(data => {
               this.fullscreenLoading = false;
 
-                if(!checkLog(data)){
+                if(!checkLog1(data)){
                   this.getCaptcha();
                   this.$message.error(data.msg);
                   return false;

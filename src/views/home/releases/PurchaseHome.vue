@@ -122,6 +122,6 @@
 
 <style>
   .relsasesButton {
-    padding: 10px 0px 10px 50px;
+    padding: 10px 0 10px 50px;
   }
 </style>
