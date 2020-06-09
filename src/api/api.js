@@ -560,7 +560,7 @@ export const toDecimal = x => {
     s += '0';
   }
   return s;
-}
+};
 
 function isButtonAndListusermrp(res, type) {
 
@@ -936,7 +936,7 @@ function isButtonAndListusermrp(res, type) {
         for (let a = 0; a < list.length; a++) {
           let isReceipt = list[a].isReceipt;
           if (isReceipt === 3) {
-            list[a].qianyueTime = ''
+            list[a].qianyueTime = '';
             list[a].qianyueDetailed = '';  //审核失败原因
             list[a].isReceipt = '未通知';
             list[a].istongzhi = true;
