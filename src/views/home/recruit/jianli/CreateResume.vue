@@ -143,7 +143,6 @@
         ruleForm: {
           selectedOptions: [],
           selectedOptions1: [],
-          userId: '',
           position: '',  //职位类型
           salary: '', //
           education: '', //学历
@@ -222,9 +221,7 @@
         });
       },
 
-      cntinue() {  //留在本页继续发布
-        this.centerDialogVisible = false;
-      },
+   
       getRealName() {
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {
@@ -233,7 +230,7 @@
             if (em !== '' && em !== null) {
               this.ruleForm.email = em;
             }
-            this.ruleForm.userId = this.realName.userId;
+
             this.ruleForm.contact = this.realName.contact;
             this.ruleForm.consigneeName = this.realName.consigneeName;
 
