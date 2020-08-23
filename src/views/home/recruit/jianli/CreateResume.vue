@@ -221,7 +221,7 @@
         });
       },
 
-   
+
       getRealName() {
         getRealName().then((res) => { //获取实名信息填充
           if (res.status === 0) {

@@ -161,7 +161,7 @@
       center
       :before-close="cntinue"
     >
-      <span>请关注审核状态，约24小时内完成审核</span>
+      <span>请关注审核状态，我们将尽快完成审核</span>
       <span slot="footer" class="dialog-footer">
     <el-button @click="cntinue">继续发布</el-button>
     <el-button type="primary"><router-link
@@ -277,7 +277,7 @@
       submitForm(ruleForm) {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         this.fullscreenLoading = true;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
@@ -330,7 +330,7 @@
       loadAll() {
         if (!this.$fsAuthent()) {
           return false;
-        };
+        }
         get_position().then((res) => {
           let datalist = res.data;
           var all = [];

@@ -93,7 +93,7 @@
       </el-table-column>
       <el-table-column
         label="接单商户名称"
-        prop="addressDetailed"
+        prop="saleUserName"
         show-overflow-tooltip>
       </el-table-column>
 
